@@ -89,13 +89,6 @@ public class RconConnectionHandler extends ChannelInboundHandlerAdapter {
                     }
 
                     break;
-                    /*case KICK_USER:
-                    Player onlineKick = PlayerManager.getInstance().getPlayerById(Integer.parseInt(message.getValues().get("userIdKick")));
-
-                    if (onlineKick != null) {
-                        onlineKick.send(new HOTEL_VIEW());
-                    }
-                    break;*/
                 case MOD_ALERT_USER:
                     Player playerAlert = PlayerManager.getInstance().getPlayerByName(message.getValues().get("receiver"));
                     String alertMessageUser = message.getValues().get("message");
