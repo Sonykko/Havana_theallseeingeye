@@ -31,14 +31,20 @@ Download the latest development build from the [releases page](https://github.co
 1. Run the theallseeingeye.sql from root folder of Git repro in your DB in order to do work properly this project
 
 2. Insert this SQL if you want a custom path for Housekeeping:
-"INSERT INTO `settings` (`setting`, `value`, `category`)
-VALUES ('site.housekeeping', 'http://localhost/', 'hotel');"
+```sql
+INSERT INTO `settings` (`setting`, `value`, `category`)
+VALUES ('site.housekeeping', 'http://localhost/', 'hotel');
+```
 
 3. Go to your tpl folder and go to /base/header.tpl and edit the URL of the Housekeeping with this:
-{{ site.sitePath }}/ase/housekeeping/es <-- use this for no custom HK folder
-{{ site.housekeeping }}/ase/housekeeping/es <-- use this for custom HK folder
+```html
+{{ site.sitePath }}/ase/housekeeping/es <-- use this for no custom HK folder -->
+{{ site.housekeeping }}/ase/housekeeping/es <-- use this for custom HK folder -->
+```
 
 4. Move the www and www_tpl folder from Git repro to your Havana tool path
+
+#
 
 ![](https://i.imgur.com/alAG9uW.png)
 
