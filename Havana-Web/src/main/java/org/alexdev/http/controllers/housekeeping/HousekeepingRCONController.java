@@ -1,0 +1,124 @@
+package org.alexdev.http.controllers.housekeeping;
+
+import org.alexdev.duckhttpd.server.connection.WebConnection;
+import org.alexdev.duckhttpd.template.Template;
+import org.alexdev.havana.dao.mysql.PlayerDao;
+import org.alexdev.havana.game.moderation.actions.ModeratorBanUserAction;
+import org.alexdev.havana.game.player.PlayerDetails;
+import org.alexdev.havana.server.rcon.messages.RconHeader;
+import org.alexdev.http.Routes;
+import org.alexdev.http.dao.housekeeping.HousekeepingCommandsDao;
+import org.alexdev.http.game.housekeeping.HousekeepingManager;
+import org.alexdev.http.util.RconUtil;
+import org.alexdev.http.util.SessionUtil;
+
+import java.util.HashMap;
+
+public class HousekeepingRCONController {
+    public static void massalertRCON(WebConnection client) { // Añadir BOLEAN para mostrar todos los chats chatlogs de manera predifinida o buscar por nombre, id o dueño o etc...
+        if (!client.session().getBoolean(SessionUtil.LOGGED_IN_HOUSKEEPING)) {
+            client.redirect("/" + Routes.HOUSEKEEPING_DEFAULT_PATH);
+            return;
+        }
+
+        Template tpl = client.template("housekeeping/admin_tools/mass_alert");
+        tpl.set("housekeepingManager", HousekeepingManager.getInstance());
+
+        PlayerDetails playerDetails = (PlayerDetails) tpl.get("playerDetails");
+
+        if (!HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "user/create")) {
+            client.redirect("/" + Routes.HOUSEKEEPING_PATH);
+            return;
+        }
+
+        int currentPage = 0;
+
+        if (client.get().contains("page")) {
+            currentPage = Integer.parseInt(client.get().getString("page"));
+        }
+
+        String sortBy = "id";
+
+        if (client.get().contains("sort")) {
+            if (client.get().getString("sort").equals("user") ||
+                    client.get().getString("sort").equals("id")) {
+                sortBy = client.get().getString("sort");
+            }
+        }
+
+        if (client.post().contains("sender") && client.post().contains("message")) {
+            String sender = playerDetails.getName();
+            String message = client.post().getString("message");
+
+            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/api/massalert?user=" + sender + "&ha=" + message);
+            return;
+        }
+
+        tpl.set("housekeepingManager", HousekeepingManager.getInstance());
+
+        tpl.set("pageName", "Hotel Alert - Mass alert");
+        tpl.set("hotelAlertLogs", HousekeepingCommandsDao.MassAlertsLogs(currentPage, sortBy));
+        tpl.set("nexthotelAlertLogs", HousekeepingCommandsDao.MassAlertsLogs(currentPage + 1, sortBy));
+        tpl.set("previoushotelAlertLogs", HousekeepingCommandsDao.MassAlertsLogs(currentPage - 1, sortBy));
+        tpl.set("page", currentPage);
+        tpl.set("sortBy", sortBy);
+        tpl.render();
+
+        // Delete alert after it's been rendered
+        client.session().delete("alertMessage");
+    }
+
+    public static void alertuserRCON(WebConnection client) { // Añadir BOLEAN para mostrar todos los chats chatlogs de manera predifinida o buscar por nombre, id o dueño o etc...
+        if (!client.session().getBoolean(SessionUtil.LOGGED_IN_HOUSKEEPING)) {
+            client.redirect("/" + Routes.HOUSEKEEPING_DEFAULT_PATH);
+            return;
+        }
+
+        Template tpl = client.template("housekeeping/admin_tools/alert");
+        tpl.set("housekeepingManager", HousekeepingManager.getInstance());
+
+        PlayerDetails playerDetails = (PlayerDetails) tpl.get("playerDetails");
+
+        if (!HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "user/create")) {
+            client.redirect("/" + Routes.HOUSEKEEPING_PATH);
+            return;
+        }
+
+        int currentPage = 0;
+
+        if (client.get().contains("page")) {
+            currentPage = Integer.parseInt(client.get().getString("page"));
+        }
+
+        String sortBy = "id";
+
+        if (client.get().contains("sort")) {
+            if (client.get().getString("sort").equals("user") ||
+                    client.get().getString("sort").equals("id")) {
+                sortBy = client.get().getString("sort");
+            }
+        }
+
+        if (client.post().contains("user") && client.post().contains("message")) {
+            String user = client.post().getString("user");
+            String message = client.post().getString("message");
+
+            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/api/alert?user=" + user + "&message=" + message);
+            return;
+        }
+
+        //Template tpl = client.template("housekeeping/dashboard");
+        tpl.set("housekeepingManager", HousekeepingManager.getInstance());
+
+        tpl.set("pageName", "User Alert");
+        tpl.set("remoteAlertLogs", HousekeepingCommandsDao.RemoteAlertLogs(currentPage, sortBy));
+        tpl.set("nextremoteAlertLogs", HousekeepingCommandsDao.RemoteAlertLogs(currentPage + 1, sortBy));
+        tpl.set("previousremoteAlertLogs", HousekeepingCommandsDao.RemoteAlertLogs(currentPage - 1, sortBy));
+        tpl.set("page", currentPage);
+        tpl.set("sortBy", sortBy);
+        tpl.render();
+
+        // Delete alert after it's been rendered
+        client.session().delete("alertMessage");
+    }
+}
