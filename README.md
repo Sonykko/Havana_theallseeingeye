@@ -1,3 +1,45 @@
+![](https://cdn.habtium.com/habtium/articles/hobbanet.gif)
+# Information
+
+This is a project to recreate the supossed "Hobbanet" or theallseeingeye Habbo Housekeeping. Developed by Sonykko.
+
+# Features
+
+- All features from standar Havana
+- Remote Alerting
+- Remote Kicking
+- Remote Kicking walking
+- Remote way ban
+- Remote Hotel Alert
+- Chatlogs from given user in room
+- Chatlogs from given user in messenger with friends
+- Chatlogs from all rooms
+- Chatlogs from a specific room
+- CFH logs
+- CFH Implementation with client
+- CFH chat.action from cry
+- Room admin
+- Re-organized configuration settings
+- theallseeingeye - Hobbanet design
+
+# Download
+
+Download the latest development build from the [releases page](https://github.com/Sonykko/Havana_theallseeingeye/releases).
+
+# Installation
+
+1. Run the theallseeingeye.sql from root folder of Git repro in your DB in order to do work properly this project
+
+2. Insert this SQL if you want a custom path for Housekeeping:
+"INSERT INTO `settings` (`setting`, `value`, `category`)
+VALUES ('site.housekeeping', 'http://localhost/', 'hotel');"
+
+3. Go to your tpl folder and go to /base/header.tpl and edit the URL of the Housekeeping with this:
+{{ site.sitePath }}/ase/housekeeping/es <-- use this for no custom HK folder
+{{ site.housekeeping }}/ase/housekeeping/es <-- use this for custom HK folder
+
+4. Move the www and www_tpl folder from Git repro to your Havana tool path
+
 ![](https://i.imgur.com/alAG9uW.png)
 
 # Information
