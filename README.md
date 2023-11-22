@@ -38,8 +38,8 @@ VALUES ('site.housekeeping', 'http://localhost/', 'hotel');
 
 3. Go to your tpl folder and go to /base/header.tpl and edit the URL of the Housekeeping with this:
 ```html
-{{ site.sitePath }}/ase/housekeeping/es <-- use this for no custom HK folder -->
-{{ site.housekeeping }}/ase/housekeeping/es <-- use this for custom HK folder -->
+{{ site.sitePath }}/ase/housekeeping/es <!-- use this for no custom HK folder -->
+{{ site.housekeeping }}/ase/housekeeping/es <!-- use this for custom HK folder -->
 ```
 
 4. Move the www and www_tpl folder from Git repro to your Havana tool path
