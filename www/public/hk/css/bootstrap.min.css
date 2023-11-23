@@ -11025,7 +11025,7 @@ a.list-group-item-danger.active:hover, a.list-group-item-danger.active:focus {
     padding: 5px 5px 5px 5px;
     margin: 10px;
     background-color: #ececec;
-    display: list-item;
+    /*display: list-item;*/
 }
 
 .header-links {
@@ -11033,7 +11033,7 @@ a.list-group-item-danger.active:hover, a.list-group-item-danger.active:focus {
     float: right;
     text-decoration: underline;
     color: #404eb2;
-	padding-inline: inherit;
+	padding-inline-end: inherit;
 }
 
 .nav-fix {
@@ -11053,7 +11053,7 @@ a.list-group-item-danger.active:hover, a.list-group-item-danger.active:focus {
     align-items: center;
     display: flex;
     justify-content: center;
-    width: 209px;
+    min-width: 209px;
     text-decoration: underline;
 }
 
@@ -11066,7 +11066,7 @@ margin: 22px 9px 0px 9px;
     align-items: center;
     display: flex;
     justify-content: center;
-    width: 209px;
+    min-width: 209px;
     text-decoration: underline;
 }
 

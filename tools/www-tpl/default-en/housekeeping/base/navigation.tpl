@@ -1,19 +1,6 @@
 <nav class="header-box">
         <!--<button class="btn btn-primary" id="menu-toggle">Toggle Menu</button>-->
-		<text style="padding-inline: inherit;">Logged in as: <b>{{ playerDetails.getName() }}</b> (Prevous login at {{ playerDetails.formatLastOnline("dd-MM-yyyy HH:mm:ss") }} from 
-		<!--<script type="application/javascript">
-  function getIP(json) {
-    document.write("", json.ip);
-  }
-</script>-->
-
-<script type="application/javascript" src="https://api.ipify.org?format=jsonp&callback=getIP"></script>) <!--{{ playerDetails.getMachineId() }})--></text>	
-        
-
-        
-          
-              
-            
+		<text style="padding-inline: inherit;">Logged in as: <b>{{ playerDetails.getName() }}</b> (Prevous login at {{ playerDetails.formatLastOnline("dd-MM-yyyy HH:mm:ss") }} from {{ playerDetails.getMachineId() }})</text>	                                  
             
               <a class="header-links" href="{{ site.sitePath }}/ase/housekeeping/es/logout">Logout</a>
 			  

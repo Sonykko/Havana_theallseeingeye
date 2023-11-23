@@ -33,13 +33,7 @@
  <div class="subnav-header">Supervisor Hobba tools</div>
       <div class="list-group list-group-flush" style="padding-left: 2px;">        
 			{% if housekeepingManager.hasPermission(playerDetails.getRank(), 'bans') %}
-			<text>- Mass ban</text>
-			{% endif %}
-			{% if housekeepingManager.hasPermission(playerDetails.getRank(), 'bans') %}
 			<text>- <a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/mass_alert" class="subnav-link">Mass alert</a></text>
-			{% endif %}
-			{% if housekeepingManager.hasPermission(playerDetails.getRank(), 'bans') %}
-			<text>- <a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/iot_help" class="subnav-link">iot Help tool</a></text>
 			{% endif %}
       </div>
     </div>
@@ -82,9 +76,6 @@
 			{% endif %}
 			{% if housekeepingManager.hasPermission(playerDetails.getRank(), 'user/edit') %}
 			<text>- <a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/cfh_logs" class="subnav-link">CFH action log</a></text>
-			{% endif %}
-			{% if housekeepingManager.hasPermission(playerDetails.getRank(), 'user/create') %}
-			<text>- <a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/iot_help_logs" class="subnav-link">iot Help action log</a></text>
 			{% endif %}
       </div>
     </div>
