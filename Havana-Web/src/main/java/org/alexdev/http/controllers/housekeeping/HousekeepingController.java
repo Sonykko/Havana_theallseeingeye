@@ -166,6 +166,8 @@ public class HousekeepingController {
             return;
         }
 
+        HousekeepingPlayerDao.logLogin(playerDetails.getId(), playerDetails.getName(), client.getIpAddress());
+
         client.session().set(SessionUtil.LOGGED_IN_HOUSKEEPING, true);
         client.session().set(SessionUtil.USER_ID, String.valueOf(playerDetails.getId()));
         client.redirect("/ase/habbo/es/housekeeping/extra/hobba/statistics");

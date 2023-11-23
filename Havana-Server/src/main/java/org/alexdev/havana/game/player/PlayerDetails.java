@@ -542,4 +542,8 @@ public class PlayerDetails {
     public String getIpAddress() {
        return PlayerDao.getLatestIp(this.getId());
     }
+
+    public String getLastLoginIPHK() { return PlayerDao.getLastLoginIPHK(this.getId()); }
+
+    public String getLastLoginTimeHK() { return PlayerDao.getLastLoginTimeHK(this.getId()); }
 }

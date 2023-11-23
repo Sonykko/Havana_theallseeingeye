@@ -60,6 +60,20 @@ CREATE TABLE `housekeeping_rcon_logs` (
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `housekeeping_login_log`
+--
+
+CREATE TABLE `housekeeping_login_log` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `username` varchar(255) DEFAULT NULL,
+  `ip_address` varchar(255) DEFAULT NULL,
+  `login_time` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `settings_desc`
 --
 
@@ -259,6 +273,12 @@ ALTER TABLE `housekeeping_rcon_logs`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indices de la tabla `housekeeping_login_log`
+--
+ALTER TABLE `housekeeping_login_log`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indices de la tabla `settings_desc`
 --
 ALTER TABLE `settings_desc`
@@ -278,6 +298,13 @@ ALTER TABLE `cfh_logs`
 -- AUTO_INCREMENT de la tabla `housekeeping_rcon_logs`
 --
 ALTER TABLE `housekeeping_rcon_logs`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+COMMIT;
+
+--
+-- AUTO_INCREMENT de la tabla `housekeeping_login_log`
+--
+ALTER TABLE `housekeeping_login_log`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 COMMIT;
 
