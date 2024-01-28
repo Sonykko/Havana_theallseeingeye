@@ -2,12 +2,9 @@ package org.alexdev.http.dao.housekeeping;
 
 import org.alexdev.havana.dao.Storage;
 import org.alexdev.havana.dao.mysql.PlayerDao;
-import org.alexdev.havana.dao.mysql.RoomDao;
 import org.alexdev.havana.game.moderation.ChatMessage;
 import org.alexdev.havana.game.player.PlayerDetails;
-import org.alexdev.havana.game.room.RoomData;
-import org.alexdev.havana.game.room.RoomManager;
-import org.alexdev.havana.game.room.RoomManager;
+import org.alexdev.havana.game.room.Room;
 import org.alexdev.havana.messages.outgoing.rooms.user.CHAT_MESSAGE;
 
 import java.sql.Connection;
@@ -19,9 +16,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.alexdev.havana.dao.mysql.RoomDao.getRoomById;
+
 public class HousekeepingRoomDao {
-    public static List<Map<String, Object>> searchRoom(String type, String field, String input) {
-        List<Map<String, Object>> RoomAdminList = new ArrayList<>();
+    public static List<Map<String, Object>> searchRoom1(String type, String field, String input) {
+        List<Map<String, Object>> rooms = new ArrayList<>();
 
         Connection sqlConnection = null;
         PreparedStatement preparedStatement = null;
@@ -30,57 +29,45 @@ public class HousekeepingRoomDao {
         try {
             sqlConnection = Storage.getStorage().getConnection();
 
-            if (type.equals("ownerName")) {
-                // Buscar el ID del usuario en la tabla users
-                preparedStatement = Storage.getStorage().prepare("SELECT id FROM users WHERE username = ?", sqlConnection);
+            if (type.equals("contains")) {
+                preparedStatement = Storage.getStorage().prepare("SELECT * FROM rooms WHERE " + field + " LIKE ? AND owner_id > 0 LIMIT 100", sqlConnection);
+                preparedStatement.setString(1, "%" + input + "%");
+            } else if (type.equals("starts_with")) {
+                preparedStatement = Storage.getStorage().prepare("SELECT * FROM rooms WHERE " + field + " LIKE ? AND owner_id > 0 LIMIT 100", sqlConnection);
+                preparedStatement.setString(1, input + "%");
+            } else if (type.equals("ends_with")) {
+                preparedStatement = Storage.getStorage().prepare("SELECT * FROM rooms WHERE " + field + " LIKE ? AND owner_id > 0 LIMIT 100", sqlConnection);
+                preparedStatement.setString(1, "%" + input);
+            } else if (type.equals("ownerName")) {
+                preparedStatement = Storage.getStorage().prepare("SELECT r.*, u.id as userId " +
+                        "FROM rooms r " +
+                        "INNER JOIN users u ON r.owner_id = u.id " +
+                        "WHERE u.username = ? AND r.owner_id > 0 LIMIT 100", sqlConnection);
                 preparedStatement.setString(1, input);
-
-                resultSet = preparedStatement.executeQuery();
-
-                // Verificar si se encontró un usuario con el nombre dado
-                if (resultSet.next()) {
-                    // Obtener el ID del usuario encontrado
-                    String userId = resultSet.getString("id");
-
-                    // Buscar en la tabla rooms usando el ID del usuario
-                    preparedStatement = Storage.getStorage().prepare("SELECT * FROM rooms WHERE owner_id = ?", sqlConnection);
-                    preparedStatement.setString(1, userId);
-                    resultSet = preparedStatement.executeQuery();
-                } else {
-                    // Si no se encontró el usuario, no hay necesidad de seguir buscando en rooms
-                    resultSet.close();
-                }
             } else {
-                sqlConnection = Storage.getStorage().getConnection();
-
-                if (type.equals("contains")) {
-                    preparedStatement = Storage.getStorage().prepare("SELECT * FROM rooms WHERE " + field + " LIKE ?", sqlConnection);
-                    preparedStatement.setString(1, "%" + input + "%");
-                } else if (type.equals("starts_with")) {
-                    preparedStatement = Storage.getStorage().prepare("SELECT * FROM rooms WHERE " + field + " LIKE ?", sqlConnection);
-                    preparedStatement.setString(1, input + "%");
-                } else if (type.equals("ends_with")) {
-                    preparedStatement = Storage.getStorage().prepare("SELECT * FROM rooms WHERE " + field + " LIKE ?", sqlConnection);
-                    preparedStatement.setString(1, "%" + input);
-                } else {
-                    preparedStatement = Storage.getStorage().prepare("SELECT * FROM rooms WHERE " + field + " = ?", sqlConnection);
-                    preparedStatement.setString(1, input);
-                }
-
-                resultSet = preparedStatement.executeQuery();
+                preparedStatement = Storage.getStorage().prepare("SELECT * FROM rooms WHERE " + field + " = ? AND owner_id > 0 LIMIT 100", sqlConnection);
+                preparedStatement.setString(1, input);
             }
+
+            resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
+                int roomSearch = resultSet.getInt("id");
+
+                Room room = getRoomById(roomSearch);
+
                 Map<String, Object> roomAdmin = new HashMap<>();
-                roomAdmin.put("roomId", resultSet.getInt("id"));
-                roomAdmin.put("ownerId", resultSet.getString("owner_id"));
-                roomAdmin.put("name", resultSet.getString("name"));
-                roomAdmin.put("description", resultSet.getString("description"));
+                roomAdmin.put("roomId", room.getId());
+                roomAdmin.put("ownerId", room.getData().getOwnerId());
+                roomAdmin.put("ownerName", room.getData().getOwnerName());
+                roomAdmin.put("name", room.getData().getName());
+                roomAdmin.put("description", room.getData().getDescription());
+                roomAdmin.put("status", room.getData().getAccessTypeId());
 
-                String ownerId = resultSet.getString("owner_id");
-                String ownerName = getOwnerName(sqlConnection, ownerId);
-                roomAdmin.put("ownerName", ownerName);
+                String categoryId = resultSet.getString("category");
+                String categoryName = getCategoryName1(sqlConnection, categoryId);
+                roomAdmin.put("categoryName", categoryName);
 
-                RoomAdminList.add(roomAdmin);
+                rooms.add(roomAdmin);
 
             }
 
@@ -92,53 +79,50 @@ public class HousekeepingRoomDao {
             Storage.closeSilently(sqlConnection);
         }
 
-        return RoomAdminList;
+        return rooms;
     }
 
-    private static String getOwnerName(Connection connection, String ownerId) throws SQLException {
+    private static String getCategoryName1(Connection connection, String categoryId) throws SQLException {
         PreparedStatement userStatement = null;
         ResultSet userResultSet = null;
 
         try {
-            // Consulta para obtener el nombre del dueño
-            userStatement = Storage.getStorage().prepare("SELECT username FROM users WHERE id = ?", connection);
-            userStatement.setString(1, ownerId);
+            userStatement = Storage.getStorage().prepare("SELECT name FROM rooms_categories WHERE id = ?", connection);
+            userStatement.setString(1, categoryId);
             userResultSet = userStatement.executeQuery();
 
             if (userResultSet.next()) {
-                return userResultSet.getString("username");
+                return userResultSet.getString("name");
             }
         } finally {
             Storage.closeSilently(userResultSet);
             Storage.closeSilently(userStatement);
         }
 
-        return null; // Retornar null si no se encuentra el nombre del dueño
+        return null;
     }
 
-    public static List<Map<String, Object>> getRoom(String roomId) {
+    public static List<Room> getRoom1(int roomAdminId) {
+        List<Room> rooms = new ArrayList<>();
+
         Connection sqlConnection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
-        List<Map<String, Object>> roomAdminDataList = new ArrayList<>();
 
         try {
             sqlConnection = Storage.getStorage().getConnection();
             preparedStatement = Storage.getStorage().prepare("SELECT * FROM rooms WHERE id = ?", sqlConnection);
-            preparedStatement.setString(1, roomId);
+            preparedStatement.setInt(1, roomAdminId);
             resultSet = preparedStatement.executeQuery();
 
-            if (resultSet.next()) {
-                Map<String, Object> roomAdminData = new HashMap<>();
-                roomAdminData.put("category", resultSet.getInt("category"));
-                roomAdminData.put("id", resultSet.getInt("id"));
-                roomAdminData.put("ownerId", resultSet.getString("owner_id"));
-                roomAdminData.put("name", resultSet.getString("name"));
-                roomAdminData.put("description", resultSet.getString("description"));
-                roomAdminData.put("accesstype", resultSet.getInt("accesstype"));
+            while (resultSet.next()) {
+                String roomAdmin = resultSet.getString("id");
 
-                roomAdminDataList.add(roomAdminData);
+                Room room = getRoomById(Integer.parseInt(roomAdmin));
+
+                rooms.add(room);
             }
+
         } catch (Exception e) {
             Storage.logError(e);
         } finally {
@@ -147,32 +131,32 @@ public class HousekeepingRoomDao {
             Storage.closeSilently(sqlConnection);
         }
 
-        return roomAdminDataList;
+        return rooms;
     }
 
-    public static void updateRoom(int roomId, int category, String name, String description, int accesstype) {
+    public static void updateRoom(int roomId, int category, String name, String description, int accesstype, String password) {
         Connection sqlConnection = null;
         PreparedStatement preparedStatement = null;
 
         try {
             sqlConnection = Storage.getStorage().getConnection();
-            preparedStatement = sqlConnection.prepareStatement("UPDATE rooms SET category = ?, name = ?, description = ?, accesstype = ? WHERE id = ?");
+            preparedStatement = sqlConnection.prepareStatement("UPDATE rooms SET category = ?, name = ?, description = ?, accesstype = ?, password = ? WHERE id = ?");
             preparedStatement.setInt(1, category);
             preparedStatement.setString(2, name);
             preparedStatement.setString(3, description);
             preparedStatement.setInt(4, accesstype);
-            preparedStatement.setInt(5, roomId);
+            preparedStatement.setString(5, password);
+            preparedStatement.setInt(6, roomId);
 
             int rowsUpdated = preparedStatement.executeUpdate();
 
-            // Comprueba si se actualizó al menos una fila
             if (rowsUpdated > 0) {
                 // Éxito: El registro se marcó como "Picked Up"
             } else {
-                // Error: El registro no se actualizó, maneja el error apropiadamente
+                // Error: El registro no se actualizó
             }
         } catch (Exception e) {
-            // Maneja los errores adecuadamente
+            // Manejar los errores adecuadamente
             Storage.logError(e);
         } finally {
             Storage.closeSilently(preparedStatement);

@@ -12,6 +12,7 @@ import org.alexdev.havana.game.infobus.InfobusManager;
 import org.alexdev.havana.game.item.Item;
 import org.alexdev.havana.game.item.ItemManager;
 import org.alexdev.havana.game.messenger.MessengerUser;
+import org.alexdev.havana.game.navigator.NavigatorManager;
 import org.alexdev.havana.game.pathfinder.Position;
 import org.alexdev.havana.game.player.Player;
 import org.alexdev.havana.game.player.PlayerDetails;
@@ -88,6 +89,10 @@ public class RconConnectionHandler extends ChannelInboundHandlerAdapter {
                         online.getRoomUser().refreshAppearance();
                     }
 
+                    break;
+                case REFRESH_NAVIGATOR:
+                    NavigatorManager.getInstance().reset();
+                    NavigatorManager.reset();
                     break;
                 case MOD_ALERT_USER:
                     Player playerAlert = PlayerManager.getInstance().getPlayerByName(message.getValues().get("receiver"));

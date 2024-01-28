@@ -2,6 +2,7 @@ package org.alexdev.havana.server.rcon.messages;
 
 public enum RconHeader {
     REFRESH_LOOKS("refresh_looks"),
+    REFRESH_NAVIGATOR("refresh_navigator"),
     MOD_ALERT_USER("mod_alert_user"),
     MOD_KICK_USER("mod_kick_user"),
     HOTEL_ALERT("hotel_alert"),

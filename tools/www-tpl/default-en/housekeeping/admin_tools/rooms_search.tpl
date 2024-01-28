@@ -14,7 +14,7 @@
 					<option value="name">Room Name</option>
 					<option value="description">Description</option>
 					<option value="owner_id">Owner ID</option>
-					<option value="ownerName">Owner Name</option>
+					<option value="ownerName">Owner Name (Need to type exact owner name)</option>
 				</select>
 			</div>
 			<div class="form-group">
@@ -40,8 +40,10 @@
             <table class="table table-striped">
               <thead>
                 <tr>
-                  <th>Room</th>
+				  <th>Category</th>
+                  <th>Room</th>                 
 				  <th>Description</th>
+				  <th>Status</th>
 				  <th>Owner</th>			  
 				  <th>Action</th>			  
                 </tr>
@@ -50,10 +52,12 @@
 			    {% set num = 1 %}
 				{% for roomAdmin in roomsAdmin %}
                 <tr>
-                  <td>{{ roomAdmin.name }} (id: {{ roomAdmin.roomId }})</td>
+                  <td>{{ roomAdmin.categoryName }}</td>
+				  <td>{{ roomAdmin.name }} (id: {{ roomAdmin.roomId }})</td>				  
 				  <td>{{ roomAdmin.description }}</td>
-                  <td>{{roomAdmin.ownerName }} (id: {{ roomAdmin.ownerId }})</td>
-				  <td><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/rooms/edit?id={{ roomAdmin.roomId }}"><button type="button">Admin Room</button></a></td>
+				  <td>{% if roomAdmin.status == 0 %}Opened{% endif %}{% if roomAdmin.status == 1 %}Doorbell{% endif %}{% if roomAdmin.status == 2 %}Password{% endif %}</td>
+                  <td>{{ roomAdmin.ownerName }} (id: {{ roomAdmin.ownerId }})</td>
+				  <td><a href="https://theallseeingeye.habbo.pro/{{ site.housekeepingPath }}/admin_tools/rooms/edit?id={{ roomAdmin.roomId }}"><button type="button">Admin Room</button></a></td>
                 </tr>
 			   {% set num = num + 1 %}
 			   {% endfor %}
