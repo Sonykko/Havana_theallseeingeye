@@ -19,7 +19,7 @@
 			<text>- <a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/alert" class="subnav-link">Remote alerting</a></text>
 			{% endif %}
 			{% if housekeepingManager.hasPermission(playerDetails.getRank(), 'bans') %}
-			<text>- <a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/bans" class="subnav-link">Remote banning and kicking</a></text>
+			<text>- <a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/bans_kicks" class="subnav-link">Remote banning and kicking</a></text>
 			{% endif %}
 			{% if housekeepingManager.hasPermission(playerDetails.getRank(), 'bans') %}
 			<text>- <a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/chatlog.action" class="subnav-link">User action log</a></text>

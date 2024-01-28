@@ -24,6 +24,19 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `bans_reasons`
+--
+
+CREATE TABLE `bans_reasons` (
+  `id` int(11) NOT NULL,
+  `sanctionReasonId` text DEFAULT NULL,
+  `sanctionReasonValue` text DEFAULT NULL,
+  `sanctionReasonDesc` text DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `cfh_logs`
 --
 
@@ -82,6 +95,15 @@ CREATE TABLE `settings_desc` (
   `description` longtext DEFAULT NULL,
   `category` varchar(55) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Volcado de datos para la tabla `bans_reasons`
+--
+
+INSERT INTO `bans_reasons` (`id`, `sanctionReasonId`, `sanctionReasonValue`, `sanctionReasonDesc`) VALUES
+(1, 'AUTO_TRIGGER', 'mal comportamiento', NULL);
+
+-- --------------------------------------------------------
 
 --
 -- Volcado de datos para la tabla `settings_desc`
@@ -260,6 +282,13 @@ INSERT INTO `settings_desc` (`setting`, `description`, `category`) VALUES
 -- Índices para tablas volcadas
 --
 
+
+--
+-- Indices de la tabla `bans_reasons`
+--
+ALTER TABLE `bans_reasons`
+  ADD PRIMARY KEY (`id`);
+  
 --
 -- Indices de la tabla `cfh_logs`
 --
@@ -287,6 +316,13 @@ ALTER TABLE `settings_desc`
 --
 -- AUTO_INCREMENT de las tablas volcadas
 --
+
+--
+-- AUTO_INCREMENT de la tabla `bans_reasons`
+--
+ALTER TABLE `bans_reasons`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+COMMIT;
 
 --
 -- AUTO_INCREMENT de la tabla `cfh_logs`

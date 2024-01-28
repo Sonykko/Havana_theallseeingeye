@@ -303,7 +303,7 @@ public class Routes {
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/api/massalert", HousekeepingCommandsController::massalert);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/transaction/lookup", HousekeepingTransactionsController::search);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/transaction/track_item", HousekeepingTransactionsController::item_lookup);
-        RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/bans", HousekeepingBansController::bans);
+        RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/bans_kicks", HousekeepingBansController::bans);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/cfh_logs", HousekeepingCFHController::cfh_logs);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/users", HousekeepingUsersController::users);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/users/search", HousekeepingUsersController::search);
