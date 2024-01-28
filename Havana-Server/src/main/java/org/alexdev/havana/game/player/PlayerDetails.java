@@ -543,7 +543,11 @@ public class PlayerDetails {
        return PlayerDao.getLatestIp(this.getId());
     }
 
-    public String getLastLoginIPHK() { return PlayerDao.getLastLoginIPHK(this.getId()); }
+    public String getLastLoginIPHK() {
+        return PlayerDao.getLastLoginIPHK(this.getId());
+    }
 
-    public String getLastLoginTimeHK() { return PlayerDao.getLastLoginTimeHK(this.getId()); }
+    public String getLastLoginTimeHK() {
+        return PlayerDao.getLastLoginTimeHK(this.getId());
+    }
 }

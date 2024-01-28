@@ -16,27 +16,27 @@ import java.util.List;
 public class HousekeepingBansController {
     public static void bans(WebConnection client) {
         if (!client.session().getBoolean(SessionUtil.LOGGED_IN_HOUSKEEPING)) {
-            client.redirect("/" + Routes.HOUSEKEEPING_PATH);
+            client.redirect("/" + Routes.HOUSEKEEPING_DEFAULT_PATH);
             return;
         }
 
-        Template tpl = client.template("housekeeping/admin_tools/users_bans");
+        Template tpl = client.template("housekeeping/admin_tools/users_banskicks");
         tpl.set("housekeepingManager", HousekeepingManager.getInstance());
 
         PlayerDetails playerDetails = (PlayerDetails) tpl.get("playerDetails");
 
         if (!HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "bans")) {
-            client.redirect("/" + Routes.HOUSEKEEPING_PATH);
+            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/permissions");
             return;
         }
 
-        tpl.set("bans", BanDao.getActiveBans());
-        tpl.render();
+        //tpl.set("bans", BanDao.getActiveBans());
+        //tpl.render();
 
         // Delete alert after it's been rendered
         client.session().delete("alertMessage");
         if (!HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "bans")) {
-            client.redirect("/" + Routes.HOUSEKEEPING_PATH);
+            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/permissions");
             return;
         }
 
@@ -77,20 +77,41 @@ public class HousekeepingBansController {
             tpl.set("players", players);
         }
 
-        tpl.set("bans", BanDao.getActiveBans());
+        int currentPageBan = 0;
 
-        int currentPage = 0;
+        if (client.get().contains("pageBan")) {
+            currentPageBan = Integer.parseInt(client.get().getString("pageBan"));
+        }
+
+        String sortByBan = "banned_at";
+
+        if (client.get().contains("sortBan")) {
+            if (client.get().getString("sortBan").equals("banned_at") ||
+                    client.get().getString("sortBan").equals("banned_until")) {
+                sortByBan = client.get().getString("sortBan");
+            }
+        }
+
+        tpl.set("pageName", "Remote Ban & Kick");
+        tpl.set("bans", BanDao.getActiveBans(currentPageBan, sortByBan));
+        tpl.set("nextBans", BanDao.getActiveBans(currentPageBan + 1, sortByBan));
+        tpl.set("previousBans", BanDao.getActiveBans(currentPageBan - 1, sortByBan));
+        tpl.set("pageBan", currentPageBan);
+        tpl.set("sortByBan", sortByBan);
+        tpl.render();
+
+        int currentPageKick = 0;
 
         if (client.get().contains("pageKick")) {
-            currentPage = Integer.parseInt(client.get().getString("pageKick"));
+            currentPageKick = Integer.parseInt(client.get().getString("pageKick"));
         }
 
         String kickSortBy = "id";
 
-        tpl.set("remoteKickLogs", HousekeepingCommandsDao.RemoteKickLogs(currentPage, kickSortBy));
-        tpl.set("nextremoteKickLogs", HousekeepingCommandsDao.RemoteKickLogs(currentPage + 1, kickSortBy));
-        tpl.set("previousremoteKickLogs", HousekeepingCommandsDao.RemoteKickLogs(currentPage - 1, kickSortBy));
-        tpl.set("page", currentPage);
+        tpl.set("remoteKickLogs", HousekeepingCommandsDao.RemoteKickLogs(currentPageKick, kickSortBy));
+        tpl.set("nextremoteKickLogs", HousekeepingCommandsDao.RemoteKickLogs(currentPageKick + 1, kickSortBy));
+        tpl.set("previousremoteKickLogs", HousekeepingCommandsDao.RemoteKickLogs(currentPageKick - 1, kickSortBy));
+        tpl.set("pageKick", currentPageKick);
         tpl.set("kickSortBy", kickSortBy);
         tpl.render();
 

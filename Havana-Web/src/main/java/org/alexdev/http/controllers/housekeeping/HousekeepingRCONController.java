@@ -121,4 +121,74 @@ public class HousekeepingRCONController {
         // Delete alert after it's been rendered
         client.session().delete("alertMessage");
     }
+
+    public static void banKickUserRCON(WebConnection client) { // Añadir BOLEAN para mostrar todos los chats chatlogs de manera predifinida o buscar por nombre, id o dueño o etc...
+        if (!client.session().getBoolean(SessionUtil.LOGGED_IN_HOUSKEEPING)) {
+            client.redirect("/" + Routes.HOUSEKEEPING_DEFAULT_PATH);
+            return;
+        }
+
+        Template tpl = client.template("housekeeping/admin_tools/users_modtool");
+        tpl.set("housekeepingManager", HousekeepingManager.getInstance());
+
+        PlayerDetails playerDetails = (PlayerDetails) tpl.get("playerDetails");
+
+        if (!HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "user/create")) {
+            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/permissions");
+            return;
+        }
+
+        String badguy = "";
+        badguy = client.get().getString("username");
+        client.session().set("badguy", badguy);
+
+        String action = client.post().getString("action");
+
+        if ("kick".equals(action)) {
+            String username = client.session().getString("badguy");
+            if (username != null && !username.isEmpty()) {
+                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/api/kick?user=" + username);
+                return;
+            } else {
+                client.session().set("alertColour", "danger");
+                client.session().set("alertMessage", "Please enter a valid username");
+            }
+        } else if ("ban".equals(action)) {
+            if (client.post().contains("username") && client.post().contains("alertMessage")) {
+                String username = client.session().getString("badguy");
+                String alertMessage = client.post().getString("alertMessage");
+                String notes = client.post().getString("notes");
+                int banSeconds = client.post().getInt("banSeconds");
+                boolean doBanMachine = client.post().getBoolean("doBanMachine");
+                boolean doBanIP = client.post().getBoolean("doBanIP");
+
+                if (username != null && !username.isEmpty()) {
+                    client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/api/ban?username=" + username + "&alertMessage=" + alertMessage + "&notes=" + notes + "&banSeconds=" + banSeconds + "&doBanMachine=" + doBanMachine + "&doBanIP=" + doBanIP);
+                    return;
+                } else {
+                    client.session().set("alertColour", "danger");
+                    client.session().set("alertMessage", "Please enter a valid username");
+                }
+            }
+        }
+
+        if (badguy == null || badguy.isEmpty() || badguy.isBlank()) {
+
+            tpl.set("isValidUser", false);
+            client.session().set("alertColour", "danger");
+            client.session().set("alertMessage", "Please enter a valid username");
+        } else {
+            tpl.set("isValidUser", true);
+        }
+
+        tpl.set("housekeepingManager", HousekeepingManager.getInstance());
+
+        tpl.set("pageName", "User Ban & Kick Tool");
+        tpl.set("userBan", badguy);
+        tpl.set("CFHTopics", HousekeepingCommandsDao.getCFHTopics());
+        tpl.render();
+
+        // Delete alert after it's been rendered
+        client.session().delete("alertMessage");
+    }
 }

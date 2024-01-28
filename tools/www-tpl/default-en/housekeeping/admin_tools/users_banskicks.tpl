@@ -4,7 +4,7 @@
 	{% include "housekeeping/base/navigation.tpl" %}
 	{% include "housekeeping/base/navigation_admin_tools.tpl" %}
      <h2 class="mt-4">Remote banning and kicking</h2>		
-		<p>Give a remoting way ban or kick to a user on the hotel.</p>
+		<p>Here can search a user for give a remoting way kick, ban or super ban to a user on the hotel.</p>
 		{% include "housekeeping/base/alert.tpl" %}
 		<form class="table-responsive col-md-4" method="post">
 			<div class="form-group">
@@ -53,8 +53,9 @@
 				  <td>{{ player.formatJoinDate("dd-MM-yyyy HH:mm:ss") }}</td>
 				  <td>{{ player.formatLastOnline("dd-MM-yyyy HH:mm:ss") }}</td>				  
 				  <td>
-				  <a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/api/ban?username={{ player.name }}"><button type="button">Permanently Ban User</button></a>
-				  <a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/api/kick?user={{ player.name }}"><button type="button">Kick User</button></a>
+				  <a href="https://theallseeingeye.habbo.pro/{{ site.housekeepingPath }}/admin_tools/users/mod_tool?username={{ player.name }}"><button type="button">Mod Tool User</button></a>
+				  <a href="https://theallseeingeye.habbo.pro/{{ site.housekeepingPath }}/admin_tools/api/superban?username={{ player.name }}"><button type="button">Permanently Ban User</button></a>				  
+				  <!--<a href="https://theallseeingeye.habbo.pro/{{ site.housekeepingPath }}/admin_tools/api/kick?user={{ player.name }}"><button type="button">Kick User</button></a>-->
 				  </td>
                 </tr>
 			   {% set num = num + 1 %}
@@ -62,20 +63,19 @@
               </tbody>
             </table>
           </div>
-		{% endif %}
-		
-			<div style="margin:10px">
+		{% endif %}			
+			<h3 class="mt-4">View bans</h3>
+		<p>Manage all currently active bans on the hotel</p>
+		<div style="margin:10px">
 			{% if nextBans|length > 0 %}
-				{% set ourNextPage = page + 1 %}
-				<a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/bans?page={{ ourNextPage }}&sort={{ sortBy }}"><button type="button" class="btn btn-info">Next Page</button></a>
+				{% set ourNextPageBan = pageBan + 1 %}
+				<a href="https://theallseeingeye.habbo.pro/{{ site.housekeepingPath }}/admin_tools/bans_kicks?pageBan={{ ourNextPageBan }}&sortBan={{ sortByBan }}"><button type="button">Next Page</button></a>
 			{% endif %}
 			{% if previousBans|length > 0 %}
-				{% set ourNextPage = page - 1 %}
-				<a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/bans?page={{ ourNextPage }}&sort={{ sortBy }}"><button type="button" class="btn btn-warning">Go back</button></a>
+				{% set ourNextPageBan = pageBan - 1 %}
+				<a href="https://theallseeingeye.habbo.pro/{{ site.housekeepingPath }}/admin_tools/bans_kicks?pageBan={{ ourNextPageBan }}&sortBan={{ sortByBan }}"><button type="button">Go back</button></a>
 			{% endif %}
 			</div>
-			<h2 class="mt-4">View bans</h2>
-		<p>Manage all currently active bans on the hotel</p>
 		  <div class="table-responsive">
 		    <form method="post">
             <table class="table table-striped">
@@ -84,8 +84,8 @@
 				  <th>Type</th>
 				  <th>Value</th>
 				  <th>Message</th>
-				  <th><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/bans?page={{ page }}&sort=banned_at">Banned At</a></th>
-				  <th><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/bans?page={{ page }}&sort=banned_until">Banned Util</a></th>				  
+				  <th><a href="https://theallseeingeye.habbo.pro/{{ site.housekeepingPath }}/admin_tools/bans_kicks?pageBan={{ pageBan }}&sortBan=banned_at">Banned At</a></th>
+				  <th><a href="https://theallseeingeye.habbo.pro/{{ site.housekeepingPath }}/admin_tools/bans_kicks?pageBan={{ pageBan }}&sortBan=banned_until">Banned Util</a></th>				  
 				  <th>Moderator</th>
                 </tr>
               </thead>
@@ -133,17 +133,18 @@
             </table>
 		</form>
       </div>
-	  <h2 class="mt-4">View kicks</h2>
+	  <h3 class="mt-4">View kicks</h3>
 		  <p>Here can see the most recent logs of Kicks created via RCON.</p>
+		  <div style="margin:10px">
 			{% if nextremoteKickLogs|length > 0 %}
-				{% set ourNextPage = page + 1 %}
-				<a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/bans?page={{ ourNextPage }}&sort={{ kickSortBy }}"><button type="button">Next Page</button></a>
+				{% set ourNextPageKick = pageKick + 1 %}
+				<a href="https://theallseeingeye.habbo.pro/{{ site.housekeepingPath }}/admin_tools/bans_kicks?pageKick={{ ourNextPageKick }}&sort={{ kickSortBy }}"><button type="button">Next Page</button></a>
 			{% endif %}
 			{% if previousremoteKickLogs|length > 0 %}
-				{% set ourNextPage = page - 1 %}
-				<a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/bans?page={{ ourNextPage }}&sort={{ kickSortBy }}"><button type="button">Go back</button></a>
+				{% set ourNextPageKick = pageKick - 1 %}
+				<a href="https://theallseeingeye.habbo.pro/{{ site.housekeepingPath }}/admin_tools/bans_kicks?pageKick={{ ourNextPageKick }}&sort={{ kickSortBy }}"><button type="button">Go back</button></a>
 			{% endif %}
-			
+			</div>
           <div class="table-responsive">
             <table class="table table-striped">
               <thead>

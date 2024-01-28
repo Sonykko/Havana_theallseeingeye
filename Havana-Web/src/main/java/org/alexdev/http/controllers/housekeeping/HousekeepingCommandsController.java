@@ -20,7 +20,7 @@ public class HousekeepingCommandsController {
      *
      * @param client the connection
      */
-    public static void ban(WebConnection client) {
+    public static void superban(WebConnection client) {
         // If they are logged in, send them to the /me page
         if (!client.session().getBoolean(SessionUtil.LOGGED_IN_HOUSKEEPING)) {
             client.send("");
@@ -38,6 +38,39 @@ public class HousekeepingCommandsController {
 
             //ModerationDao.addLog(ModerationActionType.ALERT_USER, player.getDetails().getId(), playerDetails.getId(), "Banned for breaking the HabboWay", "");
             client.send(ModeratorBanUserAction.ban(banningPlayerDetails, "Has sido baneado por no respetar la Manera Habbo", "", playerDetails.getName(), 999999999, true, true));
+            return;
+        }
+
+        client.send("User doesn't exist");
+    }
+
+    public static void banuser(WebConnection client) {
+        // If they are logged in, send them to the /me page
+        if (!client.session().getBoolean(SessionUtil.LOGGED_IN_HOUSKEEPING)) {
+            client.send("");
+        }
+
+        var playerDetails = PlayerDao.getDetails(client.get().getString("username"));
+
+        if (playerDetails != null) {
+            RconUtil.sendCommand(RconHeader.DISCONNECT_USER, new HashMap<>() {{
+                put("userId", playerDetails.getId());
+            }});
+
+            int banningId = client.session().getInt("user.id");
+            var banningPlayerDetails = PlayerDao.getDetails(banningId);
+            String alertMessage = client.get().getString("alertMessage");
+            String notes = client.get().getString("notes");
+            int banSeconds = client.get().getInt("banSeconds");
+            boolean doBanMachine = client.get().getBoolean("doBanMachine");
+            boolean doBanIP = client.get().getBoolean("doBanIP");
+
+            //ModerationDao.addLog(ModerationActionType.ALERT_USER, player.getDetails().getId(), playerDetails.getId(), "Banned for breaking the HabboWay", "");
+            client.send(ModeratorBanUserAction.ban(banningPlayerDetails, alertMessage, notes, playerDetails.getName(), banSeconds, doBanMachine, doBanIP));
+            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/bans_kicks");
+
+            client.session().set("alertColour", "success");
+            client.session().set("alertMessage", "The user " + banningPlayerDetails + " has been banned.");
             return;
         }
 
@@ -94,7 +127,7 @@ public class HousekeepingCommandsController {
         PlayerDetails playerDetails = PlayerDao.getDetails(userId);
 
         if (!HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "user/create")) {
-            client.redirect("/" + Routes.HOUSEKEEPING_DEFAULT_PATH);
+            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/permissions");
             return;
         }
 
@@ -122,7 +155,7 @@ public class HousekeepingCommandsController {
             client.session().set("alertMessage", "Error sending the Kick: " + e.getMessage());
         }
 
-        client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/bans");
+        client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/bans_kicks");
     }
 
     public static void alertuser(WebConnection client) {
