@@ -57,7 +57,7 @@
 				  <td>{{ roomAdmin.description }}</td>
 				  <td>{% if roomAdmin.status == 0 %}Opened{% endif %}{% if roomAdmin.status == 1 %}Doorbell{% endif %}{% if roomAdmin.status == 2 %}Password{% endif %}</td>
                   <td>{{ roomAdmin.ownerName }} (id: {{ roomAdmin.ownerId }})</td>
-				  <td><a href="https://theallseeingeye.habbo.pro/{{ site.housekeepingPath }}/admin_tools/rooms/edit?id={{ roomAdmin.roomId }}"><button type="button">Admin Room</button></a></td>
+				  <td><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/rooms/edit?id={{ roomAdmin.roomId }}"><button type="button">Admin Room</button></a></td>
                 </tr>
 			   {% set num = num + 1 %}
 			   {% endfor %}
