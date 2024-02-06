@@ -40,12 +40,34 @@
     </div>
 {% endif %}
 	
+{% if housekeepingManager.hasPermission(playerDetails.getRank(), 'catalogue/edit_frontpage') %}	
 	<div class="subnav-box">
 <div class="subnav-header">Catalogue tools</div>
       <div class="list-group list-group-flush" style="padding-left: 2px;">        
-			<text>- <a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/campaign_management/catalogue/edit_frontpage" class="subnav-link">Edit catalogue front data</a></text>					
+			<text><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/campaign_management/catalogue/edit_frontpage" class="subnav-link">Edit catalogue front data</a></text>					
       </div>
     </div>
+{% endif %}
+	
+{% if housekeepingManager.hasPermission(playerDetails.getRank(), 'articles/create') %}
+	<div class="subnav-box">
+ <div class="subnav-header">Promotion tools</div>
+      <div class="list-group list-group-flush" style="padding-left: 2px;">
+			{% if housekeepingManager.hasPermission(playerDetails.getRank(), 'articles/create') %}	  
+			<text><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/campaign_management/banners" class="subnav-link">Ads banners</a></text>
+			{% endif %}
+			{% if housekeepingManager.hasPermission(playerDetails.getRank(), 'articles/create') %}	  
+			<text><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/campaign_management/staff_picks" class="subnav-link">Staff picks</a></text>
+			{% endif %}
+			{% if housekeepingManager.hasPermission(playerDetails.getRank(), 'articles/create') %}  
+			<text><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/campaign_management/recommended" class="subnav-link">Recommended groups</a></text>
+			{% endif %}
+			{% if housekeepingManager.hasPermission(playerDetails.getRank(), 'articles/create') %}  
+			<text><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/campaign_management/hot_campaigns" class="subnav-link">Hot campaigns</a></text>
+			{% endif %}				
+      </div>
+    </div>
+{% endif %}
 	{% include "housekeeping/base/navigation_time.tpl" %}
 </div>
 
