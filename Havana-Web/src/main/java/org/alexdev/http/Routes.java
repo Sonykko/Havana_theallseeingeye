@@ -315,6 +315,8 @@ public class Routes {
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/mass_alert", HousekeepingRCONController::massalertRCON);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/alert", HousekeepingRCONController::alertuserRCON);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/users/mod_tool", HousekeepingRCONController::banKickUserRCON);
+        RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/vouchers", HousekeepingCoinsController::vouchers);
+        RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/wordfilter", HousekeepingWordfilterController::wordfilter);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/chatlog.action", HousekeepingChatLogsController::userchatlogs);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/users/imitate/*", HousekeepingUsersController::imitate);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/campaign_management/infobus_polls", HousekeepingInfobusController::polls);

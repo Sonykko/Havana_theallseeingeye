@@ -35,6 +35,9 @@
 			{% if housekeepingManager.hasPermission(playerDetails.getRank(), 'bans') %}
 			<text>- <a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/mass_alert" class="subnav-link">Mass alert</a></text>
 			{% endif %}
+			{% if housekeepingManager.hasPermission(playerDetails.getRank(), 'bans') %}
+			<text><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/wordfilter" class="subnav-link">Wordfilter tool</a></text>
+			{% endif %}
       </div>
     </div>
 {% endif %}
@@ -76,6 +79,9 @@
 			{% endif %}
 			{% if housekeepingManager.hasPermission(playerDetails.getRank(), 'user/edit') %}
 			<text>- <a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/cfh_logs" class="subnav-link">CFH action log</a></text>
+			{% endif %}
+			{% if housekeepingManager.hasPermission(playerDetails.getRank(), 'user/create') %}
+			<text><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/vouchers" class="subnav-link">Voucher codes tool</a></text>
 			{% endif %}
       </div>
     </div>
