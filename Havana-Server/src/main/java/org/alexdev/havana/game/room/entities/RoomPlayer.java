@@ -283,6 +283,8 @@ public class RoomPlayer extends RoomEntity {
         if (this.getRoom() != null) {
             this.getRoom().send(new FIGURE_CHANGE(this.getInstanceId(), this.player.getDetails()));
         }
+
+        this.player.getBadgeManager().refreshBadges();
     }
 
     public void refreshTags() {

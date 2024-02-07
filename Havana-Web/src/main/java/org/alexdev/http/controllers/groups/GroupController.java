@@ -95,7 +95,15 @@ public class GroupController {
         template.set("group", group);
         template.set("stickers", WidgetDao.getGroupWidgets(group.getId(), true));
         template.set("tags", TagDao.getGroupTags(group.getId()));
-        template.set("guestbookSetting", WidgetDao.getGroupWidgets(group.getId()).stream().filter(w -> w.getProduct().getData().equalsIgnoreCase("guestbookwidget")).findFirst().get().getGuestbookState());
+
+        // quick n dirty last min fix
+        try {
+            template.set("guestbookSetting", WidgetDao.getGroupWidgets(group.getId()).stream().filter(w -> w.getProduct().getData().equalsIgnoreCase("guestbookwidget")).findFirst().get().getGuestbookState());
+        }
+        catch (Exception ex) {
+            template.set("guestbookSetting", "public");
+        }
+
         template.set("stickerLimit", HomeUtil.getStickerLimit(true));
 
         if (sessionTime != -1) {

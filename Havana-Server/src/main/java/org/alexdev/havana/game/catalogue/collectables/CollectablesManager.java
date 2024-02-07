@@ -1,5 +1,6 @@
 package org.alexdev.havana.game.catalogue.collectables;
 
+import org.alexdev.havana.dao.mysql.CatalogueDao;
 import org.alexdev.havana.dao.mysql.CollectablesDao;
 import org.alexdev.havana.game.catalogue.CatalogueItem;
 
@@ -10,6 +11,20 @@ public class CollectablesManager {
     private List<CollectableData> collectableDataList;
 
     public CollectablesManager() {
+        var rares = CatalogueDao.getItemsSalecodesInPage(147); //Limited offers admin page
+
+        var saleCodes = "";
+
+        for(var i = 0; i < rares.size(); i++) {
+            saleCodes += rares.get(i);
+            if(i != rares.size()-1) {
+                saleCodes += ",";
+            }
+        }
+
+        CollectablesDao.updateClassNames(saleCodes, 141); //Limited offers page
+        CatalogueDao.setItems(148, CatalogueDao.getItems(147)); //fkin alex
+
         this.collectableDataList = CollectablesDao.getCollectablesData();
     }
 

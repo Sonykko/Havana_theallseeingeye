@@ -31,7 +31,7 @@ public class USEITEM implements MessageEvent {
 
             GameScheduler.getInstance().getService().schedule(new CameraTask(player), 1, TimeUnit.SECONDS);
         } else {
-            //player.getRoomUser().getRoom().send(new USER_USE_OBJECT(player.getRoomUser().getInstanceId(), player.getRoomUser().getCarryId()));
+            player.getRoomUser().getRoom().send(new USER_USE_OBJECT(player.getRoomUser().getInstanceId(), player.getRoomUser().getCarryId()));
         }
     }
 }

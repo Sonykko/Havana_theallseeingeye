@@ -6,6 +6,7 @@ import org.alexdev.havana.game.player.PlayerDetails;
 import org.alexdev.havana.game.player.PlayerManager;
 import org.alexdev.havana.util.DateUtil;
 
+import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.sql.*;
 import java.util.ArrayList;
@@ -14,6 +15,25 @@ import java.util.concurrent.TimeUnit;
 
 public class PlayerDao {
     private static String figureBlacklist1 = "hd-180-1.hr-100-61.ch-210-66.lg-270-82.sh-290-80";
+
+    public static void updateLegacyStatus(Player player, boolean b) {
+        Connection sqlConnection = null;
+        PreparedStatement preparedStatement = null;
+
+        try {
+            sqlConnection = Storage.getStorage().getConnection();
+            preparedStatement = Storage.getStorage().prepare("UPDATE users SET legacy_account = ? WHERE id = ?", sqlConnection);
+            preparedStatement.setBoolean(1, b);
+            preparedStatement.setInt(2, player.getDetails().getId());
+            preparedStatement.execute();
+
+        } catch (Exception e) {
+            Storage.logError(e);
+        } finally {
+            Storage.closeSilently(preparedStatement);
+            Storage.closeSilently(sqlConnection);
+        }
+    }
 
     public static void resetOnline() {
         try {
@@ -222,6 +242,34 @@ public class PlayerDao {
         return habbos;
     }
 
+    public static String getPassword(String username) {
+        Connection sqlConnection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+
+        String password = null;
+
+        try {
+            sqlConnection = Storage.getStorage().getConnection();
+            preparedStatement = Storage.getStorage().prepare("SELECT * FROM users WHERE username = ? LIMIT 1", sqlConnection);
+            preparedStatement.setString(1, username);
+            resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                password = resultSet.getString("password");
+            }
+
+        } catch (Exception e) {
+            Storage.logError(e);
+        } finally {
+            Storage.closeSilently(resultSet);
+            Storage.closeSilently(preparedStatement);
+            Storage.closeSilently(sqlConnection);
+        }
+
+        return password;
+    }
+
     /**
      * Gets the details by user id
      *
@@ -301,7 +349,7 @@ public class PlayerDao {
      */
     public static boolean loginTicket(Player player, String ssoTicket) {
         boolean success = false;
-        
+
         Connection sqlConnection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
@@ -369,6 +417,35 @@ public class PlayerDao {
         return success;
     }
 
+    public static boolean login(PlayerDetails playerDetails, BigDecimal discordId) {
+        boolean success = false;
+
+        Connection sqlConnection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+
+        try {
+            sqlConnection = Storage.getStorage().getConnection();
+            preparedStatement = Storage.getStorage().prepare("SELECT * FROM users WHERE discord_id = ? LIMIT 1", sqlConnection);
+            preparedStatement.setBigDecimal(1, discordId);
+            resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                fill(playerDetails, resultSet);
+                success = true;
+            }
+
+        } catch (Exception e) {
+            Storage.logError(e);
+        } finally {
+            Storage.closeSilently(resultSet);
+            Storage.closeSilently(preparedStatement);
+            Storage.closeSilently(sqlConnection);
+        }
+
+        return success;
+    }
+
     /**
      * Login with SSO ticket.
      *
@@ -403,6 +480,25 @@ public class PlayerDao {
             sqlConnection = Storage.getStorage().getConnection();
             preparedStatement = Storage.getStorage().prepare("UPDATE users SET email = ? WHERE id = ? LIMIT 1", sqlConnection);
             preparedStatement.setString(1, email);
+            preparedStatement.setInt(2, userId);
+            preparedStatement.execute();
+
+        } catch (Exception e) {
+            Storage.logError(e);
+        } finally {
+            Storage.closeSilently(preparedStatement);
+            Storage.closeSilently(sqlConnection);
+        }
+    }
+
+    public static void setDiscordId(int userId, BigDecimal discordId) {
+        Connection sqlConnection = null;
+        PreparedStatement preparedStatement = null;
+
+        try {
+            sqlConnection = Storage.getStorage().getConnection();
+            preparedStatement = Storage.getStorage().prepare("UPDATE users SET discord_id = ? WHERE id = ? LIMIT 1", sqlConnection);
+            preparedStatement.setBigDecimal(1, discordId);
             preparedStatement.setInt(2, userId);
             preparedStatement.execute();
 
@@ -977,6 +1073,34 @@ public class PlayerDao {
         return id;
     }
 
+    public static int getByDiscordId(BigDecimal discordId) {
+        Connection sqlConnection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+
+        int id = -1;
+
+        try {
+            sqlConnection = Storage.getStorage().getConnection();
+            preparedStatement = Storage.getStorage().prepare("SELECT * FROM users WHERE discord_id = ? LIMIT 1", sqlConnection);
+            preparedStatement.setBigDecimal(1, discordId);
+            resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                id = resultSet.getInt("id");
+            }
+
+        } catch (Exception e) {
+            Storage.logError(e);
+        } finally {
+            Storage.closeSilently(resultSet);
+            Storage.closeSilently(preparedStatement);
+            Storage.closeSilently(sqlConnection);
+        }
+
+        return id;
+    }
+
     /**
      * Fill player data
      *
@@ -991,6 +1115,9 @@ public class PlayerDao {
             return;
         }
 
+        var discordVerified = row.getBigDecimal("discord_id") != null;
+        var legacyAccount = row.getInt("legacy_account") == 1;
+
         details.fill(row.getInt("id"), row.getString("username"), row.getString("figure"),
                 row.getString("pool_figure"), row.getInt("pixels"),  row.getInt("credits"),
                 row.getString("email"), row.getString("motto"), row.getString("sex"),
@@ -1003,60 +1130,34 @@ public class PlayerDao {
                 row.getInt("daily_respect_points"), row.getString("respect_day"),
                 row.getInt("respect_points"), row.getInt("respect_given"), row.getBoolean("is_online"),
                 row.getLong("totem_effect_expiry"), row.getLong("trade_ban_expiration"), row.getInt("favourite_group"),
-                row.getString("created_at"));
+                row.getString("created_at"), row.getString("client_preference"), row.getString("hotel_view"), discordVerified, legacyAccount);
     }
 
-    public static String getLastLoginIPHK(int userId) {
+    public static boolean hasDiscordId(int playerId) {
         Connection sqlConnection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
-        String ip = null;
+
+        var hasDiscordId = false;
 
         try {
             sqlConnection = Storage.getStorage().getConnection();
-            preparedStatement = sqlConnection.prepareStatement("SELECT ip_address FROM housekeeping_login_log WHERE user_id = ? ORDER BY id DESC LIMIT 1, 1");
-            preparedStatement.setInt(1, userId);
+            preparedStatement = Storage.getStorage().prepare("SELECT COUNT(discord_id) AS user_count FROM users WHERE id = ? LIMIT 1", sqlConnection);
+            preparedStatement.setInt(1, playerId);
             resultSet = preparedStatement.executeQuery();
 
             if (resultSet.next()) {
-                ip = resultSet.getString("ip_address");
+                hasDiscordId = resultSet.getInt("user_count") == 1;
             }
 
         } catch (Exception e) {
             Storage.logError(e);
         } finally {
-            Storage.closeSilently(preparedStatement);
             Storage.closeSilently(resultSet);
+            Storage.closeSilently(preparedStatement);
             Storage.closeSilently(sqlConnection);
         }
 
-        return ip;
-    }
-
-    public static String getLastLoginTimeHK(int userId) {
-        Connection sqlConnection = null;
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet = null;
-        String time = null;
-
-        try {
-            sqlConnection = Storage.getStorage().getConnection();
-            preparedStatement = sqlConnection.prepareStatement("SELECT login_time FROM housekeeping_login_log WHERE user_id = ? ORDER BY id DESC LIMIT 1, 1");
-            preparedStatement.setInt(1, userId);
-            resultSet = preparedStatement.executeQuery();
-
-            if (resultSet.next()) {
-                time = resultSet.getString("login_time");
-            }
-
-        } catch (Exception e) {
-            Storage.logError(e);
-        } finally {
-            Storage.closeSilently(preparedStatement);
-            Storage.closeSilently(resultSet);
-            Storage.closeSilently(sqlConnection);
-        }
-
-        return time;
+        return hasDiscordId;
     }
 }

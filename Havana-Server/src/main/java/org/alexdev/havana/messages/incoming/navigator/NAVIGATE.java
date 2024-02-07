@@ -53,7 +53,7 @@ public class NAVIGATE implements MessageEvent {
         int categoryMaxVisitors = category.getMaxVisitors();
 
         if (category.isPublicSpaces()) {
-            for (Room room : RoomManager.getInstance().replaceQueryRooms(RoomDao.getRoomsByUserId(0))) {
+            for (Room room : RoomManager.getInstance().replaceQueryRooms(RoomDao.getRoomsByUserIdNoLegacy(0))) {
                 if (room.getData().isNavigatorHide()) {
                     continue;
                 }

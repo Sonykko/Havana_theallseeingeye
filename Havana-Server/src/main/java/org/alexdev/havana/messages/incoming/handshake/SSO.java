@@ -39,6 +39,7 @@ public class SSO implements MessageEvent {
                 return;
             }
         }
+        14bf970f-7f56-4f90-9fc6-6c0070d5bcb8
          */
 
         if (!PlayerDao.loginTicket(player, ticket)) {

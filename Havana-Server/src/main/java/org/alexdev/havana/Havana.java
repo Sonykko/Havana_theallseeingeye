@@ -12,8 +12,6 @@ import org.alexdev.havana.game.catalogue.collectables.CollectablesManager;
 import org.alexdev.havana.game.commands.CommandManager;
 import org.alexdev.havana.game.ecotron.EcotronManager;
 import org.alexdev.havana.game.effects.EffectsManager;
-import org.alexdev.havana.game.encryption.Cryptography;
-import org.alexdev.havana.game.encryption.HugeInt15;
 import org.alexdev.havana.game.events.EventsManager;
 import org.alexdev.havana.game.fuserights.FuserightsManager;
 import org.alexdev.havana.game.games.GameManager;
@@ -31,11 +29,9 @@ import org.alexdev.havana.game.texts.TextsManager;
 import org.alexdev.havana.game.wordfilter.WordfilterManager;
 import org.alexdev.havana.messages.MessageHandler;
 import org.alexdev.havana.server.mus.MusServer;
-import org.alexdev.havana.server.netty.NettyPlayerNetwork;
 import org.alexdev.havana.server.netty.NettyServer;
 import org.alexdev.havana.server.rcon.RconServer;
 import org.alexdev.havana.util.DateUtil;
-import org.alexdev.havana.util.StringUtil;
 import org.alexdev.havana.util.config.GameConfiguration;
 import org.alexdev.havana.util.config.LoggingConfiguration;
 import org.alexdev.havana.util.config.ServerConfiguration;
@@ -45,12 +41,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 
+import java.io.FileWriter;
 import java.io.IOException;
-import java.math.BigInteger;
 import java.net.UnknownHostException;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Locale;
 
@@ -141,7 +136,6 @@ public class Havana {
             SnowStormMapsManager.getInstance();
             GameManager.getInstance();
             CommandManager.getInstance();
-            MessageHandler.getInstance();
             TextsManager.getInstance();
             WordfilterManager.getInstance();
             CollectablesManager.getInstance();
@@ -154,6 +148,11 @@ public class Havana {
             setupRcon();
             setupMus();
             setupServer();
+            //setupExternalTexts();
+            //setupProductData(true);
+            //setupProductData(false);
+            //setupFurniData(true);
+            //setupFurniData(false);
 
             if (GameConfiguration.getInstance().getInteger("delete.chatlogs.after.x.age") > 0) {
                 LogDao.deleteChatLogs(GameConfiguration.getInstance().getInteger("delete.chatlogs.after.x.age"));
@@ -187,6 +186,90 @@ public class Havana {
         server = new NettyServer(serverIP, serverPort);
         server.createSocket();
         server.bind();
+    }
+
+    private static void setupExternalTexts() {
+        //Write to flash
+        var flashExternalTexts = ExternalTextsDao.getFlashExternalTexts("en");
+        var formattedExternalFlashTexts = FileFormatter.formatForExternalTexts(flashExternalTexts);
+
+        var externalTextsFlashPath = SettingsDao.getSetting("loader.flash.external.texts");
+
+        var removeUrl = externalTextsFlashPath
+                .replace(SettingsDao.getSetting("static.content.path"), "")
+                .replace("?", "");
+
+        var wwwDirectory = SettingsDao.getSetting("www.path");
+
+        try {
+            var writer = new FileWriter(wwwDirectory + removeUrl, false);
+            writer.write(formattedExternalFlashTexts);
+            writer.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        //Write to shockwave
+        var externalTextsShockwavePath = SettingsDao.getSetting("loader.external.texts");
+        var shockwaveExternalTexts = ExternalTextsDao.getShockwaveExternalTexts("en");
+        var formattedExternalShockwaveTexts = FileFormatter.formatForExternalTexts(shockwaveExternalTexts);
+
+        removeUrl = externalTextsShockwavePath
+                .replace(SettingsDao.getSetting("static.content.path"), "")
+                .replace("?", "");
+
+        try {
+            var writer = new FileWriter(wwwDirectory + removeUrl, false);
+            writer.write(formattedExternalShockwaveTexts);
+            writer.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static void setupProductData(boolean flash) {
+        var productData = ProductDataDao.getProductData();
+        var productDataPath = SettingsDao.getSetting(flash ? "loader.flash.external.texts" : "loader.external.texts" );
+
+        var productDataPathFix = productDataPath
+                .replace(SettingsDao.getSetting("static.content.path"), "")
+                .replace("?", "")
+                .replace(flash ? "external_flash_texts" : "external_texts", "productdata");
+
+        var wwwDirectory = SettingsDao.getSetting("www.path");
+
+        var formattedProductData = FileFormatter.formatForProductData(productData);
+
+        try {
+            var writer = new FileWriter(wwwDirectory + productDataPathFix, false);
+            writer.write(formattedProductData);
+            writer.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static void setupFurniData(boolean flash) {
+        var furniData = FurniDataDao.getFurniData();
+
+        var furniDataPath = SettingsDao.getSetting(flash ? "loader.flash.external.texts" : "loader.external.texts" );
+
+        var furniDataPathFix = furniDataPath
+                .replace(SettingsDao.getSetting("static.content.path"), "")
+                .replace("?", "")
+                .replace(flash ? "external_flash_texts" : "external_texts", "furnidata");
+
+        var wwwDirectory = SettingsDao.getSetting("www.path");
+
+        var formattedFurniData = FileFormatter.formatForFurniData(furniData);
+
+        try {
+            var writer = new FileWriter(wwwDirectory + furniDataPathFix, false);
+            writer.write(formattedFurniData);
+            writer.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private static void setupRcon() throws IOException {

@@ -142,7 +142,7 @@ public class Widget {
     }
 
     public List<Room> getOwnerRooms() {
-        var roomList = RoomDao.getRoomsByUserId(this.userId);
+        var roomList = RoomDao.getRoomsByUserIdNoLegacy(this.userId);
         RoomManager.getInstance().sortRooms(roomList);
 
         return roomList;

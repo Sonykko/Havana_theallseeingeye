@@ -2,6 +2,7 @@ package org.alexdev.havana.dao.mysql;
 
 import org.alexdev.havana.dao.Storage;
 import org.alexdev.havana.game.badges.Badge;
+import org.alexdev.havana.game.badges.BadgeDefinition;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -13,6 +14,33 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class BadgeDao {
+
+    public static List<String> getAllUserBadges() {
+        Connection sqlConnection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+
+        List<String> badgecodes = new ArrayList<>();
+
+        try {
+            sqlConnection = Storage.getStorage().getConnection();
+            preparedStatement = Storage.getStorage().prepare("SELECT DISTINCT badge FROM users_badges", sqlConnection);
+            resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                String badgeCode = resultSet.getString("badge");
+                badgecodes.add(badgeCode);
+            }
+        } catch (Exception e) {
+            Storage.logError(e);
+        } finally {
+            Storage.closeSilently(preparedStatement);
+            Storage.closeSilently(sqlConnection);
+        }
+
+        return badgecodes;
+    }
+
     public static Map<Integer, List<String>> getRoomBadges()  {
         Map<Integer, List<String>> badges = new ConcurrentHashMap<>();
 
@@ -82,6 +110,54 @@ public class BadgeDao {
             Storage.closeSilently(preparedStatement);
             Storage.closeSilently(sqlConnection);
         }
+    }
+
+    public static void wipeUserBadges(String badgeId) {
+        Connection sqlConnection = null;
+        PreparedStatement preparedStatement = null;
+
+        try {
+            sqlConnection = Storage.getStorage().getConnection();
+            preparedStatement = Storage.getStorage().prepare("DELETE FROM users_badges WHERE badge = ?", sqlConnection);
+            preparedStatement.setString(1, badgeId);
+            preparedStatement.execute();
+
+        } catch (Exception e) {
+            Storage.logError(e);
+        } finally {
+            Storage.closeSilently(preparedStatement);
+            Storage.closeSilently(sqlConnection);
+        }
+    }
+
+
+    public static int getAmountOfUsersWithBadge(String badgeId) {
+        Connection sqlConnection = null;
+        PreparedStatement preparedStatement = null;
+
+        ResultSet resultSet;
+
+        var amountOfUsersWithBadge = 0;
+
+        try {
+            sqlConnection = Storage.getStorage().getConnection();
+            preparedStatement = Storage.getStorage().prepare("SELECT COUNT(user_id) as amountOfUsersWithBadge FROM users_badges WHERE badge = ?", sqlConnection);
+            preparedStatement.setString(1, badgeId);
+
+            resultSet = preparedStatement.executeQuery();
+
+            if(resultSet.next()) {
+                amountOfUsersWithBadge = resultSet.getInt("amountOfUsersWithBadge");
+            }
+
+        } catch (Exception e) {
+            Storage.logError(e);
+        } finally {
+            Storage.closeSilently(preparedStatement);
+            Storage.closeSilently(sqlConnection);
+        }
+
+        return amountOfUsersWithBadge;
     }
 
     public static void updateBadges(Map<Integer, List<String>> badges) {

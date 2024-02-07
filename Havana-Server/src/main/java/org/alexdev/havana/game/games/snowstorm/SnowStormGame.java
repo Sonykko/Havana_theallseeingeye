@@ -116,8 +116,7 @@ public class SnowStormGame extends Game {
         }
 
         for (GameTeam team : this.getTeams().values()) {
-            team.calculateScore();
-            // team.setScore(team.getPlayers().stream().mapToInt(GamePlayer::getScore).sum());
+            team.setScore(team.getPlayers().stream().mapToInt(GamePlayer::getScore).sum());
         }
 
         super.finishGame();

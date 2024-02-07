@@ -127,6 +127,40 @@ public class CatalogueDao {
         return pages;
     }
 
+    public static List<CatalogueItem> getItems(int page) {
+        List<CatalogueItem> pages = new ArrayList<>();
+
+        Connection sqlConnection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+
+        try {
+            sqlConnection = Storage.getStorage().getConnection();
+            preparedStatement = Storage.getStorage().prepare("SELECT * FROM catalogue_items WHERE page_id = ? ORDER BY order_id ASC", sqlConnection);
+            preparedStatement.setInt(1, page);
+            resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                CatalogueItem item = new CatalogueItem(resultSet.getInt("id"), resultSet.getString("sale_code"), resultSet.getString("page_id"),
+                        resultSet.getInt("order_id"), resultSet.getInt("price_coins"), resultSet.getInt("price_pixels"),
+                        resultSet.getInt("seasonal_coins"), resultSet.getInt("seasonal_pixels"), resultSet.getInt("amount"),
+                        resultSet.getBoolean("hidden"), resultSet.getInt("definition_id"), resultSet.getString("item_specialspriteid"), resultSet.getBoolean("is_package"),
+                        resultSet.getString("active_at"));
+
+                pages.add(item);
+            }
+
+        } catch (Exception e) {
+            Storage.logError(e);
+        } finally {
+            Storage.closeSilently(resultSet);
+            Storage.closeSilently(preparedStatement);
+            Storage.closeSilently(sqlConnection);
+        }
+
+        return pages;
+    }
+
     /**
      * Get the catalogue packages.
      *
@@ -179,6 +213,68 @@ public class CatalogueDao {
         } catch (Exception e) {
             Storage.logError(e);
         } finally {
+            Storage.closeSilently(preparedStatement);
+            Storage.closeSilently(sqlConnection);
+        }
+    }
+
+    public static List<String> getItemsSalecodesInPage(int page) {
+        List<String> items = new ArrayList<String>();
+
+        Connection sqlConnection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+
+        try {
+            sqlConnection = Storage.getStorage().getConnection();
+            preparedStatement = Storage.getStorage().prepare("SELECT sale_code FROM catalogue_items WHERE page_id = ? ORDER BY order_id ASC", sqlConnection);
+            preparedStatement.setInt(1, page);
+            resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                items.add(resultSet.getString("sale_code"));
+            }
+
+        } catch (Exception e) {
+            Storage.logError(e);
+        } finally {
+            Storage.closeSilently(resultSet);
+            Storage.closeSilently(preparedStatement);
+            Storage.closeSilently(sqlConnection);
+        }
+
+        return items;
+    }
+
+    public static void setItems(int page, List<CatalogueItem> cataItems) {
+        Connection sqlConnection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+
+        try {
+            sqlConnection = Storage.getStorage().getConnection();
+            for(var cataItem : cataItems) {
+                preparedStatement = Storage.getStorage().prepare("INSERT INTO catalogue_items (sale_code, page_id, order_id, price_coins, price_pixels, seasonal_coins, seasonal_pixels, hidden, amount, definition_id, item_specialspriteid, is_package, active_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)", sqlConnection);
+                preparedStatement.setString(1, cataItem.getSaleCode());
+                preparedStatement.setInt(2, page);
+                preparedStatement.setInt(3, cataItem.getOrderId());
+                preparedStatement.setInt(4, cataItem.getPriceCoins());
+                preparedStatement.setInt(5, cataItem.getPricePixels());
+                preparedStatement.setInt(6, cataItem.getSeasonalCoins());
+                preparedStatement.setInt(7, cataItem.getSeasonalPixels());
+                preparedStatement.setBoolean(8, cataItem.isHidden());
+                preparedStatement.setInt(9, cataItem.getAmount());
+                preparedStatement.setInt(10, cataItem.getDefinitionId());
+                preparedStatement.setString(11, cataItem.getItemSpecialId());
+                preparedStatement.setBoolean(12, cataItem.isPackage());
+                preparedStatement.setString(13, cataItem.getActiveAt());
+                preparedStatement.execute();
+            }
+
+        } catch (Exception e) {
+            Storage.logError(e);
+        } finally {
+            Storage.closeSilently(resultSet);
             Storage.closeSilently(preparedStatement);
             Storage.closeSilently(sqlConnection);
         }

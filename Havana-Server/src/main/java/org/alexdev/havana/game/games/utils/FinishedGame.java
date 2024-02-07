@@ -81,7 +81,7 @@ public class FinishedGame {
         private List<Pair<String, Integer>> playerScores;
 
         private FinishedGameTeam(GameTeam gameTeam) {
-            this.score = gameTeam.getPoints();
+            this.score = gameTeam.getScore();
             this.playerScores = new ArrayList<>();
 
             for (var gamePlayer : gameTeam.getPlayers()) {

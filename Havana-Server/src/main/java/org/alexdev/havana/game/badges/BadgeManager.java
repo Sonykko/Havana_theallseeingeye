@@ -137,6 +137,9 @@ public class BadgeManager {
         if (this.player != null) {
             this.player.send(new ACHIEVEMENT_NOTIFICATION(badgeCode, badgeRemove, level));
         }
+
+        this.refreshBadges();
+
         return badge;
     }
 

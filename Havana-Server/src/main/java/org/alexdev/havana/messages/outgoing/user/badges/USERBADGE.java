@@ -18,7 +18,7 @@ public class USERBADGE extends PlayerMessageComposer {
     @Override
     public void compose(NettyResponse response) {
         response.writeString(this.userId);
-         response.writeInt(this.equippedBadges.size());
+        response.writeInt(this.equippedBadges.size());
 
         for (Badge badge : this.equippedBadges) {
             response.writeInt(badge.getSlotId());

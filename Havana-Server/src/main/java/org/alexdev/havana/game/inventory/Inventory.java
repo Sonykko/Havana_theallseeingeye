@@ -13,19 +13,22 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Inventory {
-    private static final int MAX_ITEMS_PER_PAGE = 9;
+    protected int MAX_ITEMS_PER_PAGE;
 
-    private int currentPage = 0;
-    private Player player;
+    protected int currentPage = 0;
+    protected Player player;
 
-    private List<Item> items;
-    private List<Item> displayedItems;
-    private Map<Integer, List<Item>> paginatedItems;
+    protected List<Item> items;
+    protected List<Item> displayedItems;
+    protected Map<Integer, List<Item>> paginatedItems;
 
-    private int handStripPageIndex;
+    protected int handStripPageIndex;
 
-    public Inventory(Player player) {
+    private int totalCredits;
+
+    public Inventory(Player player, int maxItems) {
         this.player = player;
+        MAX_ITEMS_PER_PAGE = maxItems;
         this.reload();
     }
 
@@ -45,16 +48,19 @@ public class Inventory {
         for (var item : this.items) {
             item.assignVirtualId();
         }
+
+        this.recalculateTotalInventoryCredits();
     }
 
     /**
      * Refreshes the pagination by making the most recently bought items appear first.
      */
-    private void refreshPagination() {
+    protected void refreshPagination() {
         this.displayedItems = new CopyOnWriteArrayList<>();
         int orderId = 0;
 
         for (Item item : this.items) {
+
             // Don't show items if they are hidden
             if (!item.isVisible()) {
                 continue;
@@ -73,6 +79,7 @@ public class Inventory {
             }
 
             orderId++;
+
             this.displayedItems.add(item);
         }
 
@@ -98,7 +105,7 @@ public class Inventory {
     /**
      * Get the inventory casts for opening hand.
      */
-    private Map<Integer,Item> getCasts() {
+    public Map<Integer,Item> getCasts() {
         LinkedHashMap<Integer, Item> casts = new LinkedHashMap<>();
 
         if (this.paginatedItems.containsKey(this.handStripPageIndex)) {
@@ -277,6 +284,10 @@ public class Inventory {
     public void addItem(Item item) {
         this.items.remove(item);
         this.items.add(0, item);
+        if(item.getDefinition().getSprite().startsWith("CF_")) {
+            var creditAmount = Integer.parseInt(item.getDefinition().getSprite().split("_")[1]);
+            totalCredits += creditAmount;
+        }
     }
 
     /**
@@ -303,5 +314,23 @@ public class Inventory {
 
     public void setCurrentPage(int currentPage) {
         this.currentPage = currentPage;
+    }
+
+    public void recalculateTotalInventoryCredits() {
+        var totalCredits = 0;
+
+        for(var item : items) {
+            var sprite = item.getDefinition().getSprite();
+            if(sprite.startsWith("CF_")) {
+                var creditAmount = Integer.parseInt(sprite.split("_")[1]);
+                totalCredits += creditAmount;
+            }
+        }
+
+        this.totalCredits = totalCredits;
+    }
+
+    public int getTotalCreditsFromInventory() {
+        return this.totalCredits;
     }
 }

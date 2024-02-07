@@ -38,7 +38,9 @@ public class NettyResponse  {
             obj = "";
         }
 
-        this.buffer.writeBytes(obj.toString().getBytes(StringUtil.getCharset()));
+        var bytes = obj.toString().getBytes(StringUtil.getCharset());
+        //System.out.println("Wrote bytes: " + bytes.length + " as string");
+        this.buffer.writeBytes(bytes);
         this.buffer.writeByte(2);
         //  this.writeString(obj, null);
     }
@@ -49,7 +51,9 @@ public class NettyResponse  {
      * @param number the number to encode.
      */
     public void writeInt(Integer number) {
-        this.buffer.writeBytes(VL64Encoding.encode(number));
+        var bytes = VL64Encoding.encode(number);
+        //System.out.println("Wrote bytes: " + bytes.length + " as INT");
+        this.buffer.writeBytes(bytes);
     }
 
     /**

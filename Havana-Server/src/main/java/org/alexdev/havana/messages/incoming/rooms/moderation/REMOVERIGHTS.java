@@ -6,9 +6,11 @@ import org.alexdev.havana.game.fuserights.Fuseright;
 import org.alexdev.havana.game.player.Player;
 import org.alexdev.havana.game.player.PlayerManager;
 import org.alexdev.havana.game.room.Room;
+import org.alexdev.havana.messages.outgoing.rooms.RIGHTS_REMOVED_FLASH;
 import org.alexdev.havana.messages.types.MessageEvent;
 import org.alexdev.havana.server.netty.streams.NettyRequest;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class REMOVERIGHTS implements MessageEvent {
@@ -24,8 +26,18 @@ public class REMOVERIGHTS implements MessageEvent {
             return;
         }
 
+        List<Integer> targets;
 
-        List<Integer> targets = List.of(PlayerDao.getId(reader.contents()));
+        if(player.flash) {
+            targets = new ArrayList<Integer>();
+            var length = reader.readInt();
+            for(int i = 0; i < length; i++) {
+                var targetId = reader.readInt();
+                targets.add(targetId);
+            }
+        } else {
+            targets = List.of(PlayerDao.getId(reader.contents()));
+        }
 
         for (int targetId : targets) {
             if (!room.getRights().contains(targetId)) {
@@ -39,10 +51,15 @@ public class REMOVERIGHTS implements MessageEvent {
                     continue;
                 }
 
+                room.getRights().remove(Integer.valueOf(targetId));
+
+                if(player.flash) {
+                    room.send(new RIGHTS_REMOVED_FLASH(room.getId(), targetId));
+                }
+
                 room.refreshRights(target, true);
             }
 
-            room.getRights().remove(Integer.valueOf(targetId));
             RoomRightsDao.removeRights(targetId, room.getData());
         }
     }

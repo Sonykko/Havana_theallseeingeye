@@ -3,6 +3,7 @@ package org.alexdev.havana.messages.incoming.navigator;
 import org.alexdev.havana.dao.mysql.PlayerDao;
 import org.alexdev.havana.dao.mysql.RoomDao;
 import org.alexdev.havana.game.player.Player;
+import org.alexdev.havana.game.player.PlayerManager;
 import org.alexdev.havana.game.room.Room;
 import org.alexdev.havana.game.room.RoomManager;
 import org.alexdev.havana.messages.outgoing.navigator.NOFLATS;
@@ -19,6 +20,24 @@ public class SRCHF implements MessageEvent {
     @Override
     public void handle(Player player, NettyRequest reader) throws Exception {
         String searchQuery = reader.readString();
+
+        if(searchQuery.startsWith("user:")) {
+            var split = searchQuery.split(":");
+            if(split.length > 1) {
+                var username = split[1].replace(" ", "");
+                var searchPlayer = PlayerManager.getInstance().getPlayerByName(username);
+                if(searchPlayer != null && searchPlayer.getDetails().getId() == player.getDetails().getId()) {
+                    var playerRooms = RoomDao.getRoomsByUserIdNoLegacy(searchPlayer.getDetails().getId());
+
+                    RoomManager.getInstance().sortRooms(playerRooms);
+                    RoomManager.getInstance().ratingSantiyCheck(playerRooms);
+
+                    player.send(new SEARCH_FLAT_RESULTS(playerRooms, player));
+                    return;
+                }
+            }
+        }
+
         int roomOwner = -1;
 
         if (searchQuery.contains("owner:")) {

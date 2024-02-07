@@ -5,10 +5,30 @@ import org.alexdev.havana.util.StringUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Pattern;
 
 public class BotData {
+
+    public static HashMap<String, Integer> drinkNameToId = new HashMap<String, Integer>() {{
+        put("Coffee", 8);
+        put("Cola", 19);
+        put("Water", 7);
+        put("Juice", 2);
+        put("Lemonade", 2);
+        put("Tea", 1);
+        put("Latte", 8);
+        put("Hot Chocolate", 8);
+        put("Reindeer", 19);
+        put("Coke", 19);
+        put("Argh", 8);
+        put("Lemon", 2);
+        put("Pizza", 34);
+        put("Coconut Milk", 32);
+        put("Drink", 32);
+    }};
+
     private String name;
     private String mission;
     private Position startPosition;

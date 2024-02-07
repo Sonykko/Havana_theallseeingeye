@@ -84,6 +84,6 @@ public class USEFURNITURE implements MessageEvent {
             player.send(new ALERT(alert.toString()));
         }
 
-        item.getDefinition().getInteractionType().getTrigger().onInteract(player, room, item, status);
+        item.getDefinition().getInteractionType().getTrigger(). onInteract(player, room, item, status);
     }
 }

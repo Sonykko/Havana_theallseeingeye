@@ -20,7 +20,11 @@ public class FLAT_RESULTS extends MessageComposer {
         for (Room room : this.roomList) {
             response.writeInt(room.getId());
             response.writeString(room.getData().getName());
-            response.writeString(room.getData().getOwnerName());
+            if (room.getData().showOwnerName()) {
+                response.writeString(room.getData().getOwnerName());
+            } else {
+                response.writeString("-");
+            }
             response.writeString(room.getData().getAccessType());
             response.writeInt(room.getData().getVisitorsNow());
             response.writeInt(room.getData().getVisitorsMax());

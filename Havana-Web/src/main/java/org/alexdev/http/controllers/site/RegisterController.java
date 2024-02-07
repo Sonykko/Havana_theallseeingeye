@@ -30,6 +30,7 @@ public class RegisterController {
         int maxConnectionsPerIp = GameConfiguration.getInstance().getInteger("max.connections.per.ip");
         String ipAddress = webConnection.getIpAddress();
 
+        /*
         if (PlayerDao.countIpAddress(ipAddress) >= maxConnectionsPerIp) {
             webConnection.session().set("alertMessage", "You already have enough accounts registered");
             webConnection.redirect("/");
@@ -45,6 +46,7 @@ public class RegisterController {
                 return;
             }
         }
+         */
 
         if (GameConfiguration.getInstance().getBoolean("registration.disabled")) {
             var template = webConnection.template("register_disabled");
@@ -253,6 +255,9 @@ public class RegisterController {
             template.set("referral", webConnection.session().getInt("referral"));
 
             template.render();
+
+            webConnection.session().set("email.invalid", false);
+            webConnection.session().set("captcha.invalid", false);
         }
     }
 

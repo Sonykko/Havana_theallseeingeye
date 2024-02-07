@@ -10,6 +10,7 @@ public enum Fuseright {
     BUY_CREDITS("fuse_buy_credits", PlayerRank.NORMAL),
     BUY_CREDITS_FUSE_LOGIN("fuse_buy_credits_fuse_login", PlayerRank.NORMAL),
     ROOM_QUEUE_DEFAULT("fuse_room_queue_default", PlayerRank.NORMAL),
+    USE_WARDROBE("fuse_use_wardrobe", PlayerRank.NORMAL),
 
     // Hobba fuses
     MUTE("fuse_mute", PlayerRank.HOBBA),

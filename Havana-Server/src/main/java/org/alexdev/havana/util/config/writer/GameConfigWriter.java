@@ -15,6 +15,7 @@ public class GameConfigWriter implements ConfigWriter {
 
         config.put("room.ads", "true");
         config.put("room.intersitial.ads", "true");
+        config.put("rare.cycle.page.id", "141");
 
         /*
         config.put("bot.connection.allow", "false");
@@ -42,7 +43,7 @@ public class GameConfigWriter implements ConfigWriter {
 
         config.put("credits.scheduler.timeunit", "MINUTES");
         config.put("credits.scheduler.interval", "15");
-        config.put("credits.scheduler.amount", "20");
+        config.put("credits.scheduler.amount", "10");
 
         config.put("daily.credits.wait.time", "300");
         config.put("daily.credits.amount", "120");

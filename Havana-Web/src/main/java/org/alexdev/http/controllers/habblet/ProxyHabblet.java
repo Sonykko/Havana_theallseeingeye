@@ -157,6 +157,7 @@ public class ProxyHabblet {
 
     public static void clearhand(WebConnection connection) {
         if (!connection.session().getBoolean("authenticated")) {
+            System.out.println("Unathenticated user attempted to clear hand");
             connection.send("");
             return;
         }

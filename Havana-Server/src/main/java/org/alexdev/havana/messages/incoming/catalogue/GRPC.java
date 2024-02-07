@@ -144,16 +144,17 @@ public class GRPC implements MessageEvent {
             // Giving credits to self on same IP is suspicious behaviour
             if (item.getDefinition() != null) {
                 if (item.getDefinition().hasBehaviour(ItemBehaviour.EFFECT)) {
+                    player.send(new ALERT("Effects cannot be gifted"));
                     return;
                 }
 
                 if (item.getDefinition().hasBehaviour(ItemBehaviour.REDEEMABLE)) {
-                if (!player.hasFuse(Fuseright.MUTE)
-                        && giftedUserDetails.getId() != player.getDetails().getId()
-                        && giftedUserDetails.getIpAddress().equals(player.getDetails().getIpAddress())) {
-                    RoomTradeManager.addTradeBan(player);
-                    return;
-                }
+                    if (!player.hasFuse(Fuseright.MUTE)
+                            && giftedUserDetails.getId() != player.getDetails().getId()
+                            && giftedUserDetails.getIpAddress().equals(player.getDetails().getIpAddress())) {
+                        RoomTradeManager.addTradeBan(player);
+                        return;
+                    }
                 }
             }
 

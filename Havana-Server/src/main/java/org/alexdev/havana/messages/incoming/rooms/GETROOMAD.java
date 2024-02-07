@@ -12,7 +12,9 @@ import org.alexdev.havana.util.config.GameConfiguration;
 public class GETROOMAD implements MessageEvent {
     @Override
     public void handle(Player player, NettyRequest reader) throws Exception {
-        if (player.getRoomUser().getRoom() == null) {
+        player.send(new ROOMAD("", ""));
+
+       /* if (player.getRoomUser().getRoom() == null) {
             return;
         }
 
@@ -21,13 +23,17 @@ public class GETROOMAD implements MessageEvent {
         String image = null;
         String url = null;
 
-        if (room.isPublicRoom()) {
+        */
+
+        //if (room.isPublicRoom()) {
+                        /*image = GameConfiguration.getInstance().getString("advertisement.api");
+            image = image.replace("{roomId}", String.valueOf(room.getId()));
+            image = image.replace("{pictureName}", advertisement.getImage());*/
+            /*
             Advertisement advertisement = AdManager.getInstance().getRandomAd(room.getId());
 
             if (advertisement != null) {
-            /*image = GameConfiguration.getInstance().getString("advertisement.api");
-            image = image.replace("{roomId}", String.valueOf(room.getId()));
-            image = image.replace("{pictureName}", advertisement.getImage());*/
+
 
                 if (advertisement.getImage() != null) {
                     image = GameConfiguration.getInstance().getString("site.path").replace("https", "http") + "/api/advertisement/get_img?ad=" + advertisement.getId();
@@ -37,15 +43,17 @@ public class GETROOMAD implements MessageEvent {
                     url = GameConfiguration.getInstance().getString("site.path").replace("https", "http") + "/api/advertisement/get_url?ad=" + advertisement.getId();
                 }
             }
-        }
+             */
+        //}
 
+        /*
         if (!GameConfiguration.getInstance().getBoolean("room.ads")) {
             image = null;
             url = null;
         }
 
         player.send(new ROOMAD(image, url));
-
+         */
 
         /*player.send(new MessageComposer() {
             @Override

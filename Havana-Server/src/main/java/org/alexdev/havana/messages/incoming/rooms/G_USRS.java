@@ -29,6 +29,11 @@ public class G_USRS implements MessageEvent {
         }
 
         player.getMessenger().sendStatusUpdate();
+    }
+}
+
+
+
 
         /*Bot bot = new Bot();
         bot.getDetails().fill(0, "Test", player.getDetails().getFigure(), "Hello loser!", "M");
@@ -54,5 +59,3 @@ public class G_USRS implements MessageEvent {
 
         player.send(new USER_OBJECTS(room.getEntities()));
         room.send(new USER_OBJECTS(player), List.of(player));*/
-    }
-}

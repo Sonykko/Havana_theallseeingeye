@@ -74,10 +74,12 @@ public class MessageHandler {
     private ConcurrentHashMap<Integer, List<MessageEvent>> messages;
 
     private static final Logger log = LoggerFactory.getLogger(MessageHandler.class);
-    private static MessageHandler instance;
 
-    private MessageHandler() {
+    private boolean flash;
+
+    public MessageHandler(boolean flash) {
         this.messages = new ConcurrentHashMap<>();
+        this.flash = flash;
 
         registerHandshakePackets();
         registerPursePackets();
@@ -162,7 +164,9 @@ public class MessageHandler {
      * Register games packets
      */
     private void registerGamePackets() {
-        registerEvent(159, new GETINSTANCELIST());
+        if(!flash) {
+            registerEvent(159, new GETINSTANCELIST());
+        }
         registerEvent(160, new OBSERVEINSTANCE());
         registerEvent(161, new UNOBSERVEINSTANCE());
         registerEvent(162, new INITIATECREATEGAME());
@@ -194,10 +198,11 @@ public class MessageHandler {
      * Register handshake packets.
      */
     private void registerHandshakePackets() {
-        registerEvent(206, new INIT_CRYPTO());
+        if(!flash) {
+            registerEvent(206, new INIT_CRYPTO());
+        }
         registerEvent(2002, new GENERATEKEY());
         registerEvent(204, new SSO());
-        registerEvent(415, new SSO());
         registerEvent(4, new TRY_LOGIN());
         registerEvent(756, new TRY_LOGIN());
         registerEvent(1817, new GET_SESSION_PARAMETERS());
@@ -254,9 +259,12 @@ public class MessageHandler {
      */
     private void registerRoomPackets() {
         registerEvent(57, new TRYFLAT());
-        registerEvent(59, new GOTOFLAT());
+        if(!(this instanceof MessageHandlerFlash)) {
+            registerEvent(59, new GOTOFLAT());
+        }
         registerEvent(182, new GETINTEREST());
         registerEvent(2, new ROOM_DIRECTORY());
+        //TODO: fuck roomads
         registerEvent(126, new GETROOMAD());
         registerEvent(60, new G_HMAP());
         registerEvent(394, new GET_FLOORMAP());
@@ -300,7 +308,9 @@ public class MessageHandler {
     private void registerRoomBadgesPackets() {
         registerEvent(157, new GETAVAILABLEBADGES());
         registerEvent(158, new SETBADGE());
-        registerEvent(159, new GETSELECTEDBADGES());
+        if(!flash) {
+            registerEvent(159, new GETSELECTEDBADGES(false));
+        }
     }
 
     /**
@@ -418,7 +428,7 @@ public class MessageHandler {
      * Register catalogue packets
      */
     private void registerCataloguePackets() {
-        registerEvent(101, new GET_CATALOG_INDEX());
+        registerEvent(101, new GET_CATALOG_INDEX(true));
         registerEvent(102, new GET_CATALOGUE_PAGE());
         registerEvent(100, new GRPC());
         registerEvent(215, new GET_ALIAS_LIST());
@@ -430,9 +440,6 @@ public class MessageHandler {
     private void registerInventoryPackets() {
         registerEvent(65, new GETSTRIP());
         registerEvent(66, new FLATPROPBYITEM());
-
-        // Flash
-        registerEvent(404, new GETSTRIP());
     }
 
     /**
@@ -541,7 +548,7 @@ public class MessageHandler {
      * @param header the header
      * @param messageEvent the message event
      */
-    private void registerEvent(int header, MessageEvent messageEvent) {
+    protected void registerEvent(int header, MessageEvent messageEvent) {
         if (!this.messages.containsKey(header)) {
             this.messages.put(header, new ArrayList<>());
         }
@@ -647,18 +654,5 @@ public class MessageHandler {
      */
     private ConcurrentHashMap<Integer, List<MessageEvent>> getMessages() {
         return messages;
-    }
-
-    /**
-     * Get the instance of {@link RoomManager}
-     *
-     * @return the instance
-     */
-    public static MessageHandler getInstance() {
-        if (instance == null) {
-            instance = new MessageHandler();
-        }
-
-        return instance;
     }
 }

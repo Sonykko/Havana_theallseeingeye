@@ -1,9 +1,6 @@
 package org.alexdev.havana.game.player;
 
-import org.alexdev.havana.dao.mysql.BanDao;
-import org.alexdev.havana.dao.mysql.GroupDao;
-import org.alexdev.havana.dao.mysql.GroupMemberDao;
-import org.alexdev.havana.dao.mysql.PlayerDao;
+import org.alexdev.havana.dao.mysql.*;
 import org.alexdev.havana.game.ban.BanType;
 import org.alexdev.havana.game.club.ClubSubscription;
 import org.alexdev.havana.game.groups.Group;
@@ -15,7 +12,9 @@ import org.alexdev.havana.util.DateUtil;
 import org.alexdev.havana.util.StringUtil;
 import org.alexdev.havana.util.config.GameConfiguration;
 import org.apache.commons.lang3.tuple.Pair;
+import org.mariadb.jdbc.internal.util.Utils;
 
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 public class PlayerDetails {
@@ -28,6 +27,7 @@ public class PlayerDetails {
     private String motto;
     private String sex;
     private String ssoTicket;
+    private int homeRoomId;
     private String machineId;
 
     // Currencies
@@ -71,6 +71,13 @@ public class PlayerDetails {
     private long tradeBanExpiration;
     private int favouriteGroupId;
     private GroupMember groupMember;
+    private boolean hasMaxCredits;
+
+    public String clientPreference;
+    public String hotelView;
+
+    public boolean discordVerified;
+    private boolean legacyAccount;
 
     public PlayerDetails() {
     }
@@ -97,7 +104,7 @@ public class PlayerDetails {
     public void fill(int id, String username, String figure, String poolFigure, int pixels, int credits, String email, String motto, String sex, String ssoTicket, int tickets, int film, int rank, long lastOnline, long joinDate, String machineId, long firstClubSubscription,
                      long clubExpiration, boolean allowStalking, int selectedRoom, boolean allowFriendRequests, boolean onlineStatusVisible, boolean profileVisible, boolean wordFilterEnabled, boolean tradeEnabled, boolean soundEnabled,
                      boolean isCreditsEligible, int respectCount, String respectDay, int respectPoints, int respectGiven, boolean isOnline, long totemEffectExpiry, long tradeBanExpiration,
-                     int favouriteGroupId, String createdAt) {
+                     int favouriteGroupId, String createdAt, String clientPreference, String hotelView, boolean discordVerified, boolean legacyAccount) {
         this.id = id;
         this.username = StringUtil.filterInput(username, true);
         this.figure = StringUtil.filterInput(figure, true); // Format: hd-180-1.ch-255-70.lg-285-77.sh-295-74.fa-1205-91.hr-125-31.ha-1016-
@@ -137,6 +144,10 @@ public class PlayerDetails {
         this.tradeBanExpiration = tradeBanExpiration;
         this.favouriteGroupId = favouriteGroupId;
         this.createdAt = createdAt;
+        this.hotelView = hotelView;
+        this.clientPreference = clientPreference;
+        this.discordVerified = discordVerified;
+        this.legacyAccount = legacyAccount;
 
         if (this.credits < 0) {
             this.credits = 0;
@@ -149,6 +160,8 @@ public class PlayerDetails {
         if (this.film < 0) {
             this.film = 0;
         }
+
+        this.hasMaxCredits = false;
     }
 
     public void fill(int id, String username, String figure, String motto, String sex) {
@@ -195,9 +208,9 @@ public class PlayerDetails {
 
 
     public void resetNextHandout() {
-        if (GameConfiguration.getInstance().getInteger("daily.credits.amount") > 0) {
-            this.nextHandout = 0;//DateUtil.getCurrentTimeSeconds() + GameConfiguration.getInstance().getInteger("daily.credits.wait.time");
-        } else {
+        if (GameConfiguration.getInstance().getInteger("daily.credits.amount") > 0 && isCreditsEligible) {
+            this.nextHandout = DateUtil.getCurrentTimeSeconds() + GameConfiguration.getInstance().getInteger("daily.credits.wait.time");
+        } else if(!isCreditsEligible) {
             TimeUnit unit = TimeUnit.valueOf(GameConfiguration.getInstance().getString("credits.scheduler.timeunit"));
             this.nextHandout = DateUtil.getCurrentTimeSeconds() + unit.toSeconds(GameConfiguration.getInstance().getInteger("credits.scheduler.interval"));
         }
@@ -539,15 +552,27 @@ public class PlayerDetails {
         return previousRespectDay;
     }
 
+    public void setHomeRoom(int id) {
+        this.homeRoomId = id;
+    }
+
+    public int getHomeRoom() {
+        return this.homeRoomId;
+    }
+
+    public boolean getHasMaxCredits() {
+        return this.hasMaxCredits;
+    }
+
+    public boolean isLegacyAccount() {
+        return this.legacyAccount;
+    }
+
+    public void setLegacyAccount(boolean b) {
+        this.legacyAccount = b;
+    }
+    
     public String getIpAddress() {
-       return PlayerDao.getLatestIp(this.getId());
-    }
-
-    public String getLastLoginIPHK() {
-        return PlayerDao.getLastLoginIPHK(this.getId());
-    }
-
-    public String getLastLoginTimeHK() {
-        return PlayerDao.getLastLoginTimeHK(this.getId());
+        return PlayerDao.getLatestIp(this.getId());
     }
 }

@@ -44,7 +44,6 @@ public abstract class RoomEntity {
     private Position goal;
     private Position nextPosition;
     private Room room;
-
     private RollingData rollingData;
     private RoomTimerManager timerManager;
 
@@ -52,7 +51,7 @@ public abstract class RoomEntity {
     private LinkedList<Position> path;
 
     private BlockingQueue<MessageComposer> packetQueueAfterRoomLeave;
-    private CopyOnWriteArrayList<String> chatMessages;
+    public CopyOnWriteArrayList<String> chatMessages;
 
     private int instanceId;
     private Item lastItemInteraction;
@@ -74,6 +73,7 @@ public abstract class RoomEntity {
 
     private int carryId;
     private String carryValue;
+    private String carryName;
 
     public RoomEntity(Entity entity) {
         this.entity = entity;
@@ -393,6 +393,43 @@ public abstract class RoomEntity {
 
         this.carryId = carryId;
         this.carryValue = carryValue;
+        this.carryName = carryName;
+    }
+
+    public void carryItem(int carryId, String carryName, Player player) {
+        // Don't let them carry a drink if they're carrying a camera
+        if (this.containsStatus(StatusType.CARRY_ITEM)) {
+            return;
+        }
+
+        if (this.isUsingEffect()) {
+            this.useEffect(0);
+        }
+
+        String carryValue = String.valueOf(carryId);
+
+        if (carryName != null && carryName.length() > 0)
+            carryValue = carryName;
+
+        if (this.isDancing()) {
+            this.stopDancing();
+        }
+
+        this.removeStatus(StatusType.CARRY_ITEM);
+        this.removeStatus(StatusType.CARRY_DRINK);
+        this.removeStatus(StatusType.DANCE);
+
+        this.setStatus(StatusType.CARRY_DRINK, carryValue, GameConfiguration.getInstance().getInteger("carry.timer.seconds"), StatusType.USE_ITEM, 12, 1);
+        this.needsUpdate = true;
+
+        this.carryId = carryId;
+        this.carryValue = carryValue;
+        this.carryName = carryName;
+
+        if(player.flash) {
+            this.room.send(new USER_CARRY_OBJECT(player.getRoomUser().getInstanceId(), carryId, carryName));
+            refreshUser();
+        }
     }
 
     /**
@@ -407,7 +444,7 @@ public abstract class RoomEntity {
             return true;
         }
 
-        return false;//this.carryId > 0 || this.carryName.length() > 0;
+        return this.carryId > 0 || this.carryValue.length() > 0;
     }
 
     /**
@@ -432,14 +469,14 @@ public abstract class RoomEntity {
 
         this.carryId = 0;
         this.carryValue = "";
+        this.carryName = "";
 
-        /*if (this.isCarrying()) {
+        if (this.isCarrying()) {
             this.carryId = 0;
-            this.carryName = "";
 
             this.room.send(new USER_CARRY_OBJECT(this.instanceId, this.carryId, this.carryName));
             this.needsUpdate = true;
-        }*/
+        }
     }
 
     /**
@@ -772,7 +809,18 @@ public abstract class RoomEntity {
 
         if (instantUpdate && this.room != null) {
             if (sendUserObject) {
-                this.room.send(new USER_OBJECTS(List.of(this.entity)));
+                if(this.entity instanceof Player) {
+                    var player = (Player)this.getEntity();
+
+                    this.room.send(new USER_OBJECTS(List.of(this.entity), false));
+
+                    if(player.flash) {
+                        player.send(new USER_OBJECTS(List.of(this.entity), true));
+                    }
+
+                } else {
+                    this.room.send(new USER_OBJECTS(List.of(this.entity), false));
+                }
             }
 
             this.room.send(new USER_STATUSES(List.of(this.entity)));
@@ -886,7 +934,18 @@ public abstract class RoomEntity {
     }
 
     public void refreshUser() {
-        this.room.send(new USER_OBJECTS(List.of(this.entity)));
+        if(this.getEntity() instanceof Player) {
+            var player = (Player)this.getEntity();
+            this.room.send(new USER_OBJECTS(List.of(this.entity), false));
+
+            if(player.flash) {
+                player.send(new USER_OBJECTS(List.of(this.entity), true));
+            }
+
+        } else {
+            this.room.send(new USER_OBJECTS(List.of(this.entity), false));
+        }
+
 
         if (!this.isWalking) {
             this.room.send(new USER_STATUSES(List.of(this.entity)));
@@ -900,9 +959,9 @@ public abstract class RoomEntity {
             this.room.send(new USER_SLEEP(this.getInstanceId(), this.isSleeping()));
         }
 
-        /*if (this.isCarrying()) {
-            this.room.send(new USER_CARRY_OBJECT(this.getInstanceId(), this.getCarryId(), this.getCarryName()));
-        }*/
+        if (this.isCarrying()) {
+            this.room.send(new USER_CARRY_OBJECT(this.getInstanceId(), this.carryId, this.carryName));
+        }
     }
 
     public boolean isNeedsUpdate() {
@@ -1043,6 +1102,14 @@ public abstract class RoomEntity {
 
     public String getCarryValue() {
         return carryValue;
+    }
+
+    public void setCarryId(int carryId) {
+        this.carryId = carryId;
+    }
+
+    public void setCarryValue(String carryValue) {
+        this.carryValue = carryValue;
     }
 
     public boolean hasItemDebug() {

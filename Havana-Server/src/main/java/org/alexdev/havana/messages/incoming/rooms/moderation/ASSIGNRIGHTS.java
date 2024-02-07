@@ -24,7 +24,15 @@ public class ASSIGNRIGHTS implements MessageEvent {
             return;
         }
 
-        Player target = PlayerManager.getInstance().getPlayerByName(reader.contents());
+
+        Player target = null;
+
+        if(player.flash) {
+            var targetId = reader.readInt();
+            target = PlayerManager.getInstance().getPlayerById(targetId);
+        } else {
+            target = PlayerManager.getInstance().getPlayerByName(reader.contents());
+        }
 
         if (target == null || target.getRoomUser().getRoom() == null || target.getRoomUser().getRoom().getId() != room.getId()) {
             return;

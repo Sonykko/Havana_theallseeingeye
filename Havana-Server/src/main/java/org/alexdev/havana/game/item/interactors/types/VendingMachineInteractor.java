@@ -8,6 +8,7 @@ import org.alexdev.havana.game.player.Player;
 import org.alexdev.havana.game.room.Room;
 import org.alexdev.havana.game.room.enums.StatusType;
 import org.alexdev.havana.game.triggers.GenericTrigger;
+import org.alexdev.havana.messages.outgoing.rooms.user.USER_CARRY_OBJECT;
 
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
@@ -50,7 +51,7 @@ public class VendingMachineInteractor extends GenericTrigger {
         item.updateStatus();
 
         GameScheduler.getInstance().getService().schedule(() -> {
-            player.getRoomUser().carryItem(randomDrinkId, null);
+            player.getRoomUser().carryItem(randomDrinkId, null, player);
         }, 1, TimeUnit.SECONDS);
 
         GameScheduler.getInstance().getService().schedule(() -> {

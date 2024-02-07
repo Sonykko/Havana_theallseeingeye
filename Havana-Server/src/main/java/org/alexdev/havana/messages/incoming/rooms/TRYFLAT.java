@@ -32,7 +32,6 @@ public class TRYFLAT implements MessageEvent {
 
         if (room == null) {
                 return;
-
         }
 
         /*
@@ -58,6 +57,15 @@ public class TRYFLAT implements MessageEvent {
             }
 
             if (player.getRoomUser().getAuthenticateId() != roomId){
+
+                if(room.getData().getAccessTypeId() != 0
+                        && player.getDetails().isLegacyAccount()
+                        && room.getData().getOwnerId() == player.getDetails().getId()) {
+                    player.getRoomUser().setAuthenticateId(roomId);
+                    player.send(new FLAT_LETIN());
+                    return;
+                }
+
                 if (room.getData().getAccessTypeId() == 1 && !room.hasRights(player.getDetails().getId(), false) && !player.hasFuse(Fuseright.ANY_ROOM_CONTROLLER)) {
                     if (rangDoorbell(room, player)) {
                         player.send(new DOORBELL_WAIT());
@@ -81,11 +89,11 @@ public class TRYFLAT implements MessageEvent {
         player.send(new FLAT_LETIN());
     }
 
-    private boolean rangDoorbell(Room room, Player player) {
+    protected boolean rangDoorbell(Room room, Player player) {
         boolean sentWithRights = false;
 
         for (Player user : room.getEntityManager().getPlayers()) {
-            if (!room.hasRights(user.getDetails().getId()) && !player.hasFuse(Fuseright.MOD)) {
+            if ((!room.hasRights(user.getDetails().getId()) && !player.hasFuse(Fuseright.MOD))) {
                 continue;
             }
 

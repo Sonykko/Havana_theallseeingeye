@@ -1,5 +1,6 @@
 package org.alexdev.havana.messages.incoming.rooms.user;
 
+import org.alexdev.havana.game.commands.CommandFormatBuilder;
 import org.alexdev.havana.game.commands.CommandManager;
 import org.alexdev.havana.game.player.Player;
 import org.alexdev.havana.game.player.PlayerManager;
@@ -41,6 +42,8 @@ public class CHAT implements MessageEvent {
             PlayerManager.getInstance().showMutedAlert(player);
             return;
         }
+
+        player.addChat(player.getDetails().getName() + ": " + message);
 
         player.getRoomUser().setTyping(false);
         room.send(new TYPING_STATUS(player.getRoomUser().getInstanceId(), player.getRoomUser().isTyping()));

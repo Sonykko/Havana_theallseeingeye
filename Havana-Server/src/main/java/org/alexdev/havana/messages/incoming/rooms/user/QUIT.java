@@ -15,6 +15,6 @@ public class QUIT implements MessageEvent {
         player.getRoomUser().setAuthenticateTelporterId(-1);
         player.getRoomUser().setAuthenticateId(-1);
 
-        player.getRoomUser().getRoom().getEntityManager().leaveRoom(player, false);
+        player.getRoomUser().getRoom().getEntityManager().leaveRoom(player, true);
     }
 }

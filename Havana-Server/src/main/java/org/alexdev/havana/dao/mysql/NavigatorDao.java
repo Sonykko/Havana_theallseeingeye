@@ -3,6 +3,7 @@ package org.alexdev.havana.dao.mysql;
 import org.alexdev.havana.dao.Storage;
 import org.alexdev.havana.game.navigator.NavigatorCategory;
 import org.alexdev.havana.game.navigator.NavigatorStyle;
+import org.alexdev.havana.game.player.Player;
 import org.alexdev.havana.game.player.PlayerRank;
 import org.alexdev.havana.game.room.Room;
 
@@ -13,6 +14,38 @@ import java.sql.SQLException;
 import java.util.*;
 
 public class NavigatorDao {
+
+    public static HashMap<Integer, NavigatorStyle> getNavigatorStyles() {
+        HashMap<Integer, NavigatorStyle> navStyles = new HashMap<>();
+
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet row = null;
+
+        try {
+            conn = Storage.getStorage().getConnection();
+            stmt = Storage.getStorage().prepare("SELECT * FROM navigator_styles ORDER BY room_id ASC ", conn);
+            row = stmt.executeQuery();
+
+            while (row.next()) {
+                var style = new NavigatorStyle(
+                        row.getInt("room_id"),
+                        row.getString("description"),
+                        row.getString("thumbnail_url"),
+                        row.getInt("thumbnail_layout"));
+
+                navStyles.put(style.getRoomId(), style);
+            }
+        } catch (Exception e) {
+            Storage.logError(e);
+        } finally {
+            Storage.closeSilently(row);
+            Storage.closeSilently(stmt);
+            Storage.closeSilently(conn);
+        }
+
+        return navStyles;
+    }
 
     /**
      * Get all categories from the database.
@@ -171,7 +204,7 @@ public class NavigatorDao {
      * @param limit the maximum amount of usrs
      * @return the list of recent rooms
      */
-    public static List<Room> getRopularRooms(int limit, boolean includePublicRooms) {
+    public static List<Room> getRopularRooms(int limit, boolean includePublicRooms, Player player) {
         List<Room> rooms = new ArrayList<>();
 
         Connection sqlConnection = null;
@@ -186,7 +219,7 @@ public class NavigatorDao {
 
         try {
             sqlConnection = Storage.getStorage().getConnection();
-            preparedStatement = Storage.getStorage().prepare("SELECT * FROM rooms LEFT JOIN users ON rooms.owner_id = users.id WHERE" + excludePublicRooms + " visitors_now > 0 ORDER BY visitors_now DESC, rooms.rating DESC LIMIT ? ", sqlConnection);
+            preparedStatement = Storage.getStorage().prepare("SELECT * FROM rooms LEFT JOIN users ON rooms.owner_id = users.id WHERE " + excludePublicRooms + " visitors_now > 0 ORDER BY visitors_now DESC, rooms.rating DESC LIMIT ? ", sqlConnection);
 
             preparedStatement.setInt(1, limit);
             resultSet = preparedStatement.executeQuery();
@@ -208,6 +241,91 @@ public class NavigatorDao {
 
         return rooms;
     }
+
+    /**
+     * Get the list of most popular rooms from database set by limit
+     *
+     * @param limit the maximum amount of usrs
+     * @return the list of recent rooms
+     */
+    public static List<Room> getRopularRooms(int limit, boolean includePublicRooms, int category) {
+        List<Room> rooms = new ArrayList<>();
+
+        Connection sqlConnection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+
+        String excludePublicRooms = " owner_id > 0 AND";
+
+        if (includePublicRooms) {
+            excludePublicRooms = "";
+        }
+
+        try {
+            sqlConnection = Storage.getStorage().getConnection();
+            preparedStatement = Storage.getStorage().prepare("SELECT * FROM rooms LEFT JOIN users ON rooms.owner_id = users.id WHERE " + excludePublicRooms + " visitors_now > 0 AND category = ? ORDER BY visitors_now DESC, rooms.rating DESC LIMIT ? ", sqlConnection);
+
+            preparedStatement.setInt(1, category);
+            preparedStatement.setInt(2, limit);
+            resultSet = preparedStatement.executeQuery();
+
+            //public NavigatorCategory(int id, String name, boolean publicSpaces, boolean allowTrading, int minimumRoleAccess, int minimumRoleSetFlat) {
+            while (resultSet.next()) {
+                Room room = new Room();
+                RoomDao.fill(room.getData(), resultSet);
+                rooms.add(room);
+            }
+
+        } catch (Exception e) {
+            Storage.logError(e);
+        } finally {
+            Storage.closeSilently(resultSet);
+            Storage.closeSilently(preparedStatement);
+            Storage.closeSilently(sqlConnection);
+        }
+
+        return rooms;
+    }
+
+    public static List<Room> getRopularRoomsWithEmpty(int limit, boolean includePublicRooms, int category) {
+        List<Room> rooms = new ArrayList<>();
+
+        Connection sqlConnection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+
+        String excludePublicRooms = " owner_id > 0 AND";
+
+        if (includePublicRooms) {
+            excludePublicRooms = "";
+        }
+
+        try {
+            sqlConnection = Storage.getStorage().getConnection();
+            preparedStatement = Storage.getStorage().prepare("SELECT * FROM rooms LEFT JOIN users ON rooms.owner_id = users.id WHERE " + excludePublicRooms + " category = ? ORDER BY visitors_now DESC, rooms.rating DESC LIMIT ? ", sqlConnection);
+
+            preparedStatement.setInt(1, category);
+            preparedStatement.setInt(2, limit);
+            resultSet = preparedStatement.executeQuery();
+
+            //public NavigatorCategory(int id, String name, boolean publicSpaces, boolean allowTrading, int minimumRoleAccess, int minimumRoleSetFlat) {
+            while (resultSet.next()) {
+                Room room = new Room();
+                RoomDao.fill(room.getData(), resultSet);
+                rooms.add(room);
+            }
+
+        } catch (Exception e) {
+            Storage.logError(e);
+        } finally {
+            Storage.closeSilently(resultSet);
+            Storage.closeSilently(preparedStatement);
+            Storage.closeSilently(sqlConnection);
+        }
+
+        return rooms;
+    }
+
 
     public static int createRoom(int ownerId, String roomName, String roomModel, boolean roomShowName, int accessType) throws SQLException {
         Connection sqlConnection = null;

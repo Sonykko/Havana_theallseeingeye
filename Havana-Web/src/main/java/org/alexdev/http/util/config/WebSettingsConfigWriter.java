@@ -1,5 +1,6 @@
 package org.alexdev.http.util.config;
 
+import org.alexdev.havana.util.config.GameConfiguration;
 import org.alexdev.havana.util.config.writer.ConfigWriter;
 import org.alexdev.havana.util.config.writer.GameConfigWriter;
 
@@ -14,8 +15,7 @@ public class WebSettingsConfigWriter implements ConfigWriter {
         config.put("site.name", "Habbo");
         config.put("site.path", "http://localhost");
         config.put("static.content.path", "http://localhost");
-        config.put("site.imaging.endpoint", "http://localhost:5000");
-        config.put("site.imaging.endpoint.timeout", "30000");
+        config.put("site.imaging.path", "http://localhost");
 
         config.put("hotel.check.online", "true");
 
@@ -28,6 +28,17 @@ public class WebSettingsConfigWriter implements ConfigWriter {
         config.put("loader.dcr", "http://localhost/dcr/v31/habbo.dcr?");
         config.put("loader.external.variables", "http://localhost/dcr/v31/gamedata/external_variables.txt?");
         config.put("loader.external.texts", "http://localhost/dcr/v31/gamedata/external_texts.txt?");
+
+        config.put("loader.dcr.http", "http://localhost/dcr/v31/habbo.dcr?");
+        config.put("loader.external.variables.http", "http://localhost/dcr/v31/gamedata/external_variables.txt?");
+        config.put("loader.external.texts.http", "http://localhost/dcr/v31/gamedata/external_texts.txt?");
+
+        config.put("loader.flash.port", "12323");
+        config.put("loader.flash.base", "http://localhost/r38/");
+        config.put("loader.flash.swf", "http://localhost/r38/Habbo.swf?");
+        config.put("loader.flash.external.variables", "http://localhost/r38/external_variables.txt?");
+        config.put("loader.flash.external.variables.exe", "http://localhost/r38/external_variables_exe.txt?");
+        config.put("loader.flash.external.texts", "http://localhost/r38/external_flash_texts.txt?");
 
         config.put("registration.disabled", "false");
         config.put("collectables.page", "51");
@@ -42,7 +53,7 @@ public class WebSettingsConfigWriter implements ConfigWriter {
         config.put("discussions.replies.per.page", "10");
 
         config.put("alerts.gift.message", "A new gift has arrived. This time you received a %item_name%.");
-        config.put("homepage.template.file", "index_v32");
+        config.put("homepage.template.file", "index");
 
         config.put("free.month.hc.registration", "true");
 

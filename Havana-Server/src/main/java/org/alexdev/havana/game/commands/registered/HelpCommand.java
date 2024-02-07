@@ -1,6 +1,7 @@
 package org.alexdev.havana.game.commands.registered;
 
 import org.alexdev.havana.game.commands.Command;
+import org.alexdev.havana.game.commands.CommandFormatBuilder;
 import org.alexdev.havana.game.commands.CommandManager;
 import org.alexdev.havana.game.entity.Entity;
 import org.alexdev.havana.game.entity.EntityType;
@@ -52,8 +53,8 @@ public class HelpCommand extends Command {
 
         var commandList = commands.get(pageId - 1);
 
-        StringBuilder about = new StringBuilder();
-        about.append("Commands ('<' and '>' are optional parameters):<br>").append("<br>");
+        CommandFormatBuilder about = new CommandFormatBuilder(entity);
+        about.append("Commands ('<' and '>' are optional parameters):").newLine().newLine();
 
         for (var commandSet : commandList) {
             String[] commandAlias = commandSet.getKey();
@@ -69,10 +70,10 @@ public class HelpCommand extends Command {
                 }
             }
 
-            about.append(" - ").append(command.getDescription()).append("<br>");
+            about.append(" - ").append(command.getDescription()).newLine();
         }
 
-        about.append("<br>")
+        about.newLine()
                 .append("Page ")
                 .append(pageId)
                 .append(" out of ")

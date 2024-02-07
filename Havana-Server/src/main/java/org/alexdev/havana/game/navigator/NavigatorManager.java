@@ -9,10 +9,20 @@ import java.util.*;
 public class NavigatorManager {
     private static NavigatorManager instance;
     private final HashMap<Integer, NavigatorCategory> categoryMap;
+    private final HashMap<Integer, NavigatorStyle> navigatorStyles;
 
     private NavigatorManager() {
         this.categoryMap = NavigatorDao.getCategories();
+        this.navigatorStyles = NavigatorDao.getNavigatorStyles();
         //NavigatorDao.resetBadPrivateRoomCategories();
+    }
+
+    public NavigatorStyle getNavigatorStyle(int roomId) {
+        return this.navigatorStyles.get(roomId);
+    }
+
+    public int  getNavigatorStylesAmount() {
+        return this.navigatorStyles.size();
     }
 
     /**

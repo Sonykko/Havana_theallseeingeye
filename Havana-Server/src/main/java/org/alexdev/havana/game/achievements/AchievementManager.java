@@ -5,6 +5,7 @@ import org.alexdev.havana.dao.mysql.CurrencyDao;
 import org.alexdev.havana.game.achievements.user.UserAchievement;
 import org.alexdev.havana.game.player.Player;
 import org.alexdev.havana.messages.outgoing.user.currencies.ActivityPointNotification;
+import org.alexdev.havana.messages.outgoing.user.currencies.CREDIT_BALANCE;
 import org.alexdev.havana.util.StringUtil;
 
 import java.util.Map;
@@ -51,6 +52,11 @@ public class AchievementManager {
         if (userAchievement.getAchievementInfo().getPixelReward() > 0) {
             CurrencyDao.increasePixels(player.getDetails(), userAchievement.getAchievementInfo().getPixelReward());
             player.send(new ActivityPointNotification(player.getDetails().getPixels(), ActivityPointNotification.ActivityPointAlertType.PIXELS_SOUND)); // Alert pixel sound
+        }
+
+        if (userAchievement.getAchievementInfo().getCoinsReward() > 0) {
+            CurrencyDao.increaseCredits(player.getDetails(), userAchievement.getAchievementInfo().getCoinsReward());
+            player.send(new CREDIT_BALANCE(player.getDetails().getCredits()));
         }
 
 

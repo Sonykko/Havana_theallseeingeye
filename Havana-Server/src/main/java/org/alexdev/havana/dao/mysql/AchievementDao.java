@@ -29,7 +29,7 @@ public class AchievementDao {
                 var info = new AchievementInfo(
                         resultSet.getInt("id"), resultSet.getString("achievement"),
                         resultSet.getInt("level"), resultSet.getInt("reward_pixels"),
-                        resultSet.getInt("progress_needed"));
+                        resultSet.getInt("reward_coins"), resultSet.getInt("progress_needed"));
 
                 achievementsList.put(info.getId(), info);
             }

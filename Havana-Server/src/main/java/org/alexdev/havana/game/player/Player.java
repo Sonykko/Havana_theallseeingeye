@@ -1,13 +1,15 @@
 package org.alexdev.havana.game.player;
 
+import com.google.gson.JsonObject;
 import io.netty.util.AttributeKey;
+import org.alexdev.havana.Havana;
 import org.alexdev.havana.dao.mysql.*;
 import org.alexdev.havana.game.achievements.user.UserAchievementManager;
 import org.alexdev.havana.game.badges.BadgeManager;
 import org.alexdev.havana.game.club.ClubSubscription;
 import org.alexdev.havana.game.effects.Effect;
-import org.alexdev.havana.game.encryption.Cryptography;
 import org.alexdev.havana.game.encryption.DiffieHellman;
+import org.alexdev.havana.game.encryption.RC4;
 import org.alexdev.havana.game.entity.Entity;
 import org.alexdev.havana.game.entity.EntityType;
 import org.alexdev.havana.game.fuserights.Fuseright;
@@ -15,35 +17,43 @@ import org.alexdev.havana.game.fuserights.FuserightsManager;
 import org.alexdev.havana.game.groups.Group;
 import org.alexdev.havana.game.groups.GroupMemberRank;
 import org.alexdev.havana.game.guides.GuideManager;
+import org.alexdev.havana.game.inventory.FlashInventory;
 import org.alexdev.havana.game.inventory.Inventory;
+import org.alexdev.havana.game.item.ItemManager;
 import org.alexdev.havana.game.messenger.Messenger;
 import org.alexdev.havana.game.player.guides.PlayerGuideManager;
 import org.alexdev.havana.game.player.statistics.PlayerStatistic;
 import org.alexdev.havana.game.player.statistics.PlayerStatisticManager;
+import org.alexdev.havana.game.room.RoomManager;
 import org.alexdev.havana.game.room.entities.RoomPlayer;
+import org.alexdev.havana.messages.incoming.club.SCR_GIFT_APPROVAL;
 import org.alexdev.havana.messages.outgoing.alerts.ALERT;
 import org.alexdev.havana.messages.outgoing.alerts.HOTEL_LOGOUT;
 import org.alexdev.havana.messages.outgoing.alerts.HOTEL_LOGOUT.LogoutReason;
 import org.alexdev.havana.messages.outgoing.club.CLUB_GIFT;
 import org.alexdev.havana.messages.outgoing.effects.AVATAR_EFFECTS;
-import org.alexdev.havana.messages.outgoing.handshake.LOGIN;
-import org.alexdev.havana.messages.outgoing.handshake.RIGHTS;
-import org.alexdev.havana.messages.outgoing.handshake.UniqueIDMessageEvent;
+import org.alexdev.havana.messages.outgoing.handshake.*;
 import org.alexdev.havana.messages.outgoing.openinghours.INFO_HOTEL_CLOSING;
 import org.alexdev.havana.messages.outgoing.user.settings.HELP_ITEMS;
 import org.alexdev.havana.messages.types.MessageComposer;
 import org.alexdev.havana.server.netty.NettyPlayerNetwork;
-import org.alexdev.havana.server.netty.ServerHandlerType;
 import org.alexdev.havana.util.DateUtil;
 import org.alexdev.havana.util.StringUtil;
 import org.alexdev.havana.util.config.GameConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.math.BigInteger;
+import java.net.Inet4Address;
+import java.net.InetSocketAddress;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+
+import static java.util.Map.entry;
 
 public class Player extends Entity {
     public static final AttributeKey<Player> PLAYER_KEY = AttributeKey.valueOf("Player");
@@ -51,6 +61,8 @@ public class Player extends Entity {
     private final NettyPlayerNetwork network;
     private final PlayerDetails details;
     private final RoomPlayer roomEntity;
+
+    private List<String> chatHistory = new ArrayList<String>();
 
     private Logger log;
     private Messenger messenger;
@@ -62,18 +74,26 @@ public class Player extends Entity {
 
     private CopyOnWriteArrayList<Effect> effects;
     private Set<String> ignoredList;
+
     private DiffieHellman diffieHellman;
+    private RC4 rc4;
 
     private boolean loggedIn;
     private boolean disconnected;
     private boolean pingOK;
+    private boolean hasGenerateKey;
     private long timeConnected;
     private boolean processLoginSteps;
     private List<Group> joinedGroups;
     private String lastGift;
-    private boolean hasEncryption;
 
-    public Player(NettyPlayerNetwork nettyPlayerNetwork) {
+    public boolean flash;
+    private boolean hasLoadedCatalogue;
+    private String countryBadgeToGive;
+    private boolean hasBeenCreditsWarned;
+    private boolean hasBeenPixelsWarned;
+
+    public Player(NettyPlayerNetwork nettyPlayerNetwork, boolean flash) {
         this.network = nettyPlayerNetwork;
         this.details = new PlayerDetails();
         this.badgeManager = new BadgeManager();
@@ -88,6 +108,11 @@ public class Player extends Entity {
         this.pingOK = true;
         this.disconnected = false;
         this.processLoginSteps = true;
+        this.flash = flash;
+        this.hasLoadedCatalogue = false;
+        this.countryBadgeToGive = null;
+        hasBeenCreditsWarned = false;
+        hasBeenPixelsWarned = false;
     }
 
     /**
@@ -115,7 +140,11 @@ public class Player extends Entity {
         }
 
         this.messenger = new Messenger(this);
-        this.inventory = new Inventory(this);
+        if(this.flash) {
+            this.inventory = new FlashInventory(this, 100000);
+        } else {
+            this.inventory = new Inventory(this, 9);
+        }
 
         // Bye bye!
         if (this.getDetails().isBanned() != null) {
@@ -185,7 +214,24 @@ public class Player extends Entity {
         this.refreshJoinedGroups();
 
         this.send(new RIGHTS(this.getFuserights()));
+
+        if(this.flash) {
+            this.send(new UNKNOWN_290_FLASH());
+        }
+
         this.send(new LOGIN());
+
+        if(this.flash) {
+            this.send(new RoomInfoFeed_517_FLASH());
+
+            var homeRoom = PlayerDao.getHomeRoom(this.getDetails().getId());
+
+            this.getDetails().setHomeRoom(homeRoom);
+            this.send(new SET_HOME_ROOM_FLASH(homeRoom));
+
+            this.send(new FAVORITE_ROOMS_FLASH(this));
+        }
+
         this.send(new AVATAR_EFFECTS(this.effects));
 
         if (GameConfiguration.getInstance().getBoolean("welcome.message.enabled")) {
@@ -218,7 +264,6 @@ public class Player extends Entity {
 
         // Guide checks
         this.guideManager.setGuide(GuideManager.getInstance().isGuide(this));
-
         if (GameConfiguration.getInstance().getBoolean("tutorial.enabled")) {
             if (this.guideManager.isGuide()) {
                 this.guideManager.setHasTutorial(false);
@@ -263,7 +308,72 @@ public class Player extends Entity {
             }
         }
 
+        //Country flag badge
+        var countryBadges = CountryDao.getAllCountryBadges();
+
+        var hasBadge = false;
+        for(var badge : countryBadges) {
+            if(this.badgeManager.hasBadge(badge)) {
+                hasBadge = true;
+                break;
+            }
+        }
+
+        if(!hasBadge) {
+            giveCountryFlagBadge();
+        }
+
         ClubSubscription.countMemberDays(this);
+
+        if(this.flash) {
+            try {
+                new SCR_GIFT_APPROVAL().handle(this, null);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    private void giveCountryFlagBadge() {
+
+        var errorAlert = "We could not find an appropriate country badge in our database. Please contact staff";
+
+        try {
+            var address = ((InetSocketAddress)network.getChannel().remoteAddress()).getAddress().getHostAddress();
+
+            URL url = new URL("http://ip-api.com/json/" + address);
+
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+            int responseCode = conn.getResponseCode();
+
+            if(responseCode != 200) {
+                this.send(new ALERT(errorAlert));
+                return;
+            }
+
+            // Read response body
+            BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            String inputLine;
+            StringBuffer response = new StringBuffer();
+
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
+            }
+
+            in.close();
+
+            var json = Havana.getGson().fromJson(response.toString(), JsonObject.class);
+            var countryName = json.get("country").getAsString();
+
+            var badge = CountryDao.getCountryBadge(countryName);
+
+            if(badge != null && !this.badgeManager.hasBadge(badge)) {
+                this.countryBadgeToGive = badge;
+            }
+        } catch (Exception e) {
+            this.send(new ALERT(errorAlert));
+        }
     }
 
     /**
@@ -287,6 +397,23 @@ public class Player extends Entity {
         }
 
         ClubSubscription.sendHcDays(this);
+    }
+
+    public void refreshClubGiftHard() {
+        if (ClubSubscription.isGiftDue(this)) {
+
+            this.statisticManager.reload();
+
+            if(this.flash) {
+                try {
+                    new SCR_GIFT_APPROVAL().handle(this, null);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+
+            this.send(new CLUB_GIFT(this.statisticManager.getIntValue(PlayerStatistic.GIFTS_DUE)));
+        }
     }
 
     /**
@@ -494,20 +621,6 @@ public class Player extends Entity {
         return diffieHellman;
     }
 
-    /*
-     * Sets the rc4.
-     *
-     * @param sharedKey the new rc4
-     */
-    public void setDecoder(BigInteger sharedKey) {
-        this.hasEncryption = true;
-        this.network.registerHandler(ServerHandlerType.RC4, sharedKey);
-    }
-
-    public boolean hasEncryption() {
-        return hasEncryption;
-    }
-
     /**
      * Get the list of user activated effects.
      *
@@ -515,6 +628,24 @@ public class Player extends Entity {
      */
     public CopyOnWriteArrayList<Effect> getEffects() {
         return effects;
+    }
+
+    /**
+     * Get if the user has used the generate key
+     *
+     * @return true, if successful
+     */
+    public boolean hasGenerateKey() {
+        return hasGenerateKey;
+    }
+
+    /**
+     * Set whether the user has generated the key
+     *
+     * @param hasGenerateKey the flag
+     */
+    public void setHasGenerateKey(boolean hasGenerateKey) {
+        this.hasGenerateKey = hasGenerateKey;
     }
 
     /**
@@ -614,5 +745,49 @@ public class Player extends Entity {
 
     public String getLastGift() {
         return lastGift;
+    }
+
+    public void setHasLoadedCatalogue(boolean hasLoadedCatalogue) {
+        this.hasLoadedCatalogue = hasLoadedCatalogue;
+    }
+
+    public boolean getHasLoadedCatalogue() {
+        return this.hasLoadedCatalogue;
+    }
+
+    public String getCountryBadgeToGive() {
+        return this.countryBadgeToGive;
+    }
+
+    public void setCountryBadgeToGive(String countryBadgeToGive) {
+        this.countryBadgeToGive = countryBadgeToGive;
+    }
+
+    public boolean getHasBeenCreditsWarned() {
+        return this.hasBeenCreditsWarned;
+    }
+
+    public void setHasBeenCreditsWarned(boolean b) {
+        this.hasBeenCreditsWarned = b;
+    }
+
+    public boolean getHasBeenPixelsWarned() {
+        return hasBeenPixelsWarned;
+    }
+
+    public void setHasBeenPixelsWarned(boolean b) {
+        this.hasBeenPixelsWarned = b;
+    }
+
+    public List<String> getChatHistory() {
+        return this.chatHistory;
+    }
+
+    public void addChat(String message) {
+        this.chatHistory.add(message);
+    }
+
+    public void onEnterRoom() {
+        chatHistory.clear();
     }
 }

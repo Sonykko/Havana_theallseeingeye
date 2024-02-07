@@ -6,6 +6,7 @@ import org.alexdev.havana.game.item.base.ItemBehaviour;
 import org.alexdev.havana.game.fuserights.Fuseright;
 import org.alexdev.havana.game.player.Player;
 import org.alexdev.havana.game.room.Room;
+import org.alexdev.havana.messages.outgoing.user.UPDATE_INVENTORY_FLASH;
 import org.alexdev.havana.messages.types.MessageEvent;
 import org.alexdev.havana.server.netty.streams.NettyRequest;
 
@@ -45,8 +46,8 @@ public class ADDSTRIPITEM implements MessageEvent {
         }
 
         room.getMapping().removeItem(player, item);
-
         player.getInventory().addItem(item);
-        player.getInventory().getView("update");
+        player.send(new UPDATE_INVENTORY_FLASH());
+        //player.getInventory().getView("update");
     }
 }

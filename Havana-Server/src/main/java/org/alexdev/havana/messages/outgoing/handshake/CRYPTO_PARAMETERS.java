@@ -5,16 +5,11 @@ import org.alexdev.havana.messages.types.MessageComposer;
 import org.alexdev.havana.server.netty.streams.NettyResponse;
 
 public class CRYPTO_PARAMETERS extends MessageComposer {
-    private String token;
-
-    public CRYPTO_PARAMETERS(String token) {
-        this.token = token;
-    }
 
     @Override
     public void compose(NettyResponse response) {
-        response.writeString(this.token);
-        response.writeBool(true);
+        response.writeString(DiffieHellman.generateRandomNumString(32));
+        response.writeInt(0);
     }
 
     @Override

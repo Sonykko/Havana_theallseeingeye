@@ -15,7 +15,51 @@ import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class ItemDao {
-    
+
+    public static List<RareFurniture> getRareFurniture() {
+        Connection sqlConnection = null;
+        PreparedStatement preparedStatement = null;
+
+        List<RareFurniture> rareFurniture = new ArrayList<>();
+
+        try {
+            sqlConnection = Storage.getStorage().getConnection();
+            preparedStatement = Storage.getStorage().prepare("SELECT definition_id, sprite, sprite_id FROM items_definitions_rares", sqlConnection);
+            var result = preparedStatement.executeQuery();
+
+            while(result.next()) {
+                var definitionId = result.getInt("definition_id");
+                var sprite = result.getString("sprite");
+                var spriteId = result.getInt("sprite_id");
+                rareFurniture.add(new RareFurniture(definitionId, sprite, spriteId));
+            }
+        } catch (Exception e) {
+            Storage.logError(e);
+        } finally {
+            Storage.closeSilently(preparedStatement);
+            Storage.closeSilently(sqlConnection);
+        }
+
+        return rareFurniture;
+    }
+
+    public static void removeRareFurniture(int roomId) {
+        Connection sqlConnection = null;
+        PreparedStatement preparedStatement = null;
+
+        try {
+            sqlConnection = Storage.getStorage().getConnection();
+            preparedStatement = Storage.getStorage().prepare("DELETE FROM items WHERE items.room_id = ? AND items.id IN (SELECT items.id FROM items INNER JOIN items_definitions_rares ON items_definitions_rares.definition_id = items.definition_id AND (items_definitions_rares.definition_id = 251 AND items_definitions_rares.sprite_id = items.custom_data OR items_definitions_rares.definition_id <> 251) ORDER BY items.definition_id);", sqlConnection);
+            preparedStatement.setInt(1, roomId);
+            preparedStatement.execute();
+        } catch (Exception e) {
+            Storage.logError(e);
+        } finally {
+            Storage.closeSilently(preparedStatement);
+            Storage.closeSilently(sqlConnection);
+        }
+    }
+
     /**
      * Get the item definitions.
      *

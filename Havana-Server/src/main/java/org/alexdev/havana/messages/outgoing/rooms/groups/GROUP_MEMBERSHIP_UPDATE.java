@@ -23,6 +23,6 @@ public class GROUP_MEMBERSHIP_UPDATE extends MessageComposer {
 
     @Override
     public short getHeader() {
-        return 310;
+            return 310;
     }
 }

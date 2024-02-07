@@ -304,7 +304,7 @@ public class EntityTask implements Runnable {
                     }
 
 
-                    Position availableTile = this.room.getMapping().getRandomWalkableBound(pet, false);
+                    Position availableTile = this.room.getMapping().getRandomWalkableBound(pet);
 
                     if (availableTile != null) {
                         pet.getRoomUser().walkTo(availableTile.getX(), availableTile.getY());

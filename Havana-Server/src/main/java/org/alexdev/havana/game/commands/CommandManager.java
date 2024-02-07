@@ -55,7 +55,7 @@ public class CommandManager {
         tempCommands.put(new String[] { "uptime", "status" }, new UptimeCommand());
         tempCommands.put(new String[] { "coords" }, new CoordsCommand());
         tempCommands.put(new String[] { "pickall" }, new PickAllCommand());
-        tempCommands.put(new String[] { "usersonline", "whosonline" }, new UsersOnlineCommand());
+        tempCommands.put(new String[] { "online", "users", "usersonline", "whosonline" }, new UsersOnlineCommand());
         tempCommands.put(new String[] { "rgb", "rainbow" }, new RainbowDimmerCommand());
         tempCommands.put(new String[] { "afk", "idle" }, new AfkCommand());
         tempCommands.put(new String[] { "guidestatus" }, new GuideStatusCommand());
@@ -138,7 +138,7 @@ public class CommandManager {
     /**
      * Checks for command.
      *
-     * @param entity the player
+     * @param entity the playerz<
      * @param message the message
      * @return true, if successful
      */

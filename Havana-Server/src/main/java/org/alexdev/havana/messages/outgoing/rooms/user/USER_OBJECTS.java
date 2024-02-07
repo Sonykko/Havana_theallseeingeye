@@ -1,5 +1,7 @@
 package org.alexdev.havana.messages.outgoing.rooms.user;
 
+import org.alexdev.havana.dao.mysql.BotDao;
+import org.alexdev.havana.game.bot.Bot;
 import org.alexdev.havana.game.entity.Entity;
 import org.alexdev.havana.game.entity.EntityState;
 import org.alexdev.havana.game.entity.EntityType;
@@ -15,17 +17,20 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class USER_OBJECTS extends MessageComposer {
     private List<EntityState> states;
+    private boolean handleAsFlash;
 
     public USER_OBJECTS(ConcurrentLinkedQueue<Entity> entities) {
         createEntityStates(new ArrayList<>(entities));
     }
 
-    public USER_OBJECTS(List<Entity> users) {
+    public USER_OBJECTS(List<Entity> users, boolean handleAsFlash) {
         createEntityStates(users);
+        this.handleAsFlash = handleAsFlash;
     }
 
-    public USER_OBJECTS(Entity entity) {
+    public USER_OBJECTS(Entity entity, boolean handleAsFlash) {
         createEntityStates(List.of(entity));
+        this.handleAsFlash = handleAsFlash;
     }
 
     private void createEntityStates(List<Entity> entities) {
@@ -52,7 +57,14 @@ public class USER_OBJECTS extends MessageComposer {
             response.writeInt(states.getEntityId());
             response.writeString(states.getDetails().getName());
             response.writeString(states.getDetails().getMotto() + " ");
-            response.writeString(states.getDetails().getFigure());
+
+            if(this.handleAsFlash && states.getEntityType() == EntityType.BOT) {
+                var figure = BotDao.getFlashFigure(states.getEntity().getDetails().getName());
+                response.writeString(figure);
+            } else {
+                response.writeString(states.getDetails().getFigure());
+            }
+
             response.writeInt(states.getInstanceId());
             response.writeInt(states.getPosition().getX());
             response.writeInt(states.getPosition().getY());
@@ -83,45 +95,6 @@ public class USER_OBJECTS extends MessageComposer {
                 }
             }
         }
-
-        /*for (EntityState states : states) {
-            response.writeInt(states.getEntityId());
-            response.writeString(states.getDetails().getName());
-            response.writeString(states.getDetails().getFigure());
-            response.writeString(states.getDetails().getName());
-            response.writeString(states.getDetails().getMotto());
-            response.writeString(states.getDetails().getFigure());
-            response.writeInt(states.getInstanceId());
-            response.writeInt(states.getPosition().getX());
-            response.writeInt(states.getPosition().getY());
-            response.writeString(StringUtil.format(states.getPosition().getZ()));
-            response.writeInt(states.getPosition().getRotation());
-            response.writeInt(1); // TODO: Types
-            response.writeString(Character.toString(Character.toUpperCase(states.getDetails().getSex())));
-
-            response.writeInt(0); // Group id
-            response.writeInt(0); // Group status
-
-            response.writeString("");
-
-            /*response.writeKeyValue("l", states.getPosition().getX() + " " + states.getPosition().getY() + " " + Double.toString(StringUtil.format(states.getPosition().getZ())));
-
-            if (states.getDetails().getMotto().length() > 0) {
-                response.writeKeyValue("c", states.getDetails().getMotto());
-            }
-
-            if (states.getDetails().getShowBadge()) {
-                response.writeKeyValue("b", states.getDetails().getCurrentBadge());
-            }
-
-            if (states.getRoom().getModel().getName().startsWith("pool_") ||
-                    states.getRoom().getModel().getName().equals("md_a")) {
-
-                if (states.getDetails().getPoolFigure().length() > 0) {
-                    response.writeKeyValue("p", states.getDetails().getPoolFigure());
-                }
-            }
-        }*/
     }
 
     @Override

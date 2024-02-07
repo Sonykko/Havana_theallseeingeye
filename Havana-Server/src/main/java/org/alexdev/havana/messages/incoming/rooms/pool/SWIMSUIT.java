@@ -25,7 +25,11 @@ public class SWIMSUIT implements MessageEvent {
         String swimsuit = StringUtil.filterInput(reader.contents(), true);
         player.getDetails().setPoolFigure(swimsuit);
 
-        room.send(new USER_OBJECTS(player));
+        room.send(new USER_OBJECTS(player, false));
+
+        if(player.flash) {
+            player.send(new USER_OBJECTS(player, true));
+        }
 
         PlayerDao.saveDetails(
                 player.getDetails().getId(),

@@ -69,20 +69,22 @@ public class SessionDao {
         }
     }
 
-    public static void savePreferences(String motto, boolean profileVisibility, boolean showOnlineStatus, boolean wordFilterEnabled, boolean allowFriendRequests, boolean allowStalking, int userId) {
+    public static void savePreferences(String motto, boolean profileVisibility, boolean showOnlineStatus, boolean wordFilterEnabled, boolean allowFriendRequests, boolean allowStalking, String clientPreference, String hotelView, int userId) {
         Connection sqlConnection = null;
         PreparedStatement preparedStatement = null;
 
         try {
             sqlConnection = Storage.getStorage().getConnection();
-            preparedStatement = Storage.getStorage().prepare("UPDATE users SET motto = ?, profile_visible = ?, online_status_visible = ?, wordfilter_enabled = ?, allow_friend_requests = ?, allow_stalking = ? WHERE id = ?", sqlConnection);
+            preparedStatement = Storage.getStorage().prepare("UPDATE users SET motto = ?, profile_visible = ?, online_status_visible = ?, wordfilter_enabled = ?, allow_friend_requests = ?, allow_stalking = ?, client_preference = ?, hotel_view = ? WHERE id = ?", sqlConnection);
             preparedStatement.setString(1, motto);
             preparedStatement.setInt(2, profileVisibility ? 1 : 0);
             preparedStatement.setInt(3, showOnlineStatus ? 1 : 0);
             preparedStatement.setInt(4, wordFilterEnabled ? 1 : 0);
             preparedStatement.setInt(5, allowFriendRequests ? 1 : 0);
             preparedStatement.setInt(6, allowStalking ? 1 : 0);
-            preparedStatement.setInt(7, userId);
+            preparedStatement.setString(7, clientPreference);
+            preparedStatement.setString(8, hotelView);
+            preparedStatement.setInt(9, userId);
             preparedStatement.execute();
         } catch (SQLException e) {
             Storage.logError(e);

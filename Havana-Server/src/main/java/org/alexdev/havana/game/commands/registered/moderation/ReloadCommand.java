@@ -5,6 +5,7 @@ import org.alexdev.havana.game.ads.AdManager;
 import org.alexdev.havana.game.catalogue.CatalogueManager;
 import org.alexdev.havana.game.catalogue.collectables.CollectablesManager;
 import org.alexdev.havana.game.commands.Command;
+import org.alexdev.havana.game.commands.CommandFormatBuilder;
 import org.alexdev.havana.game.commands.CommandManager;
 import org.alexdev.havana.game.entity.Entity;
 import org.alexdev.havana.game.entity.EntityType;
@@ -56,13 +57,14 @@ public class ReloadCommand extends Command {
                 || component.equalsIgnoreCase("items")) {
             ItemManager.reset();
             CatalogueManager.reset();
+            CollectablesManager.reset();
 
             // Regenerate collision map with proper height differences (if they changed).
             player.getRoomUser().getRoom().getMapping().regenerateCollisionMap();
             player.getRoomUser().getRoom().getMapping().sendMap();
 
             for (Player p : PlayerManager.getInstance().getPlayers()) {
-                new GET_CATALOG_INDEX().handle(p, null);
+                new GET_CATALOG_INDEX(false).handle(p, null);
             }
 
             componentName = "Catalogue and item definitions";
@@ -147,10 +149,17 @@ public class ReloadCommand extends Command {
         if (componentName != null) {
             player.send(new ALERT(componentName + " have been reloaded."));
         } else {
-            player.send(new ALERT("You did not specify which component to reload!" +
-                    "<br>You may reload either the catalogue/shop/items, advertisements, events, commands," +
-                    "<br>navigator, collectables, models, texts, plugins, wordfitler, games, badgebuy," +
-                    "<br>rewards, versions or settings."));
+            var alert = new CommandFormatBuilder(entity);
+
+            alert.append("You did not specify which component to reload!");
+            alert.newLine();
+            alert.append("You may reload either the catalogue/shop/items, advertisements, events, commands,");
+            alert.newLine();
+            alert.append("navigator, collectables, models, texts, plugins, wordfitler, games, badgebuy,");
+            alert.newLine();
+            alert.append("rewards, versions or settings.");
+
+            player.send(new ALERT(alert.toString()));
         }
     }
 

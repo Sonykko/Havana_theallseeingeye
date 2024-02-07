@@ -7,6 +7,7 @@ import org.alexdev.havana.game.player.PlayerDetails;
 import org.alexdev.havana.util.DateUtil;
 import org.alexdev.http.dao.SessionDao;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -32,7 +33,11 @@ public class SessionUtil {
         }
 
         if (hasError) {
-            webConnection.session().set("alertMessage", "Incorrect username or password\n");
+            if(PlayerDao.getId(username) != -1) {
+                webConnection.session().set("alertMessage", "This is a legacy account. Please contact discord support to access. Press <a href='https://discord.gg/NJ4eq8tm5R'>here</a> for discord invite\n");
+            } else {
+                webConnection.session().set("alertMessage", "Incorrect username or password\n");
+            }
 
             // Delete user login session
             if (deleteAuthVariables) {
@@ -56,6 +61,40 @@ public class SessionUtil {
             } else {
                 webConnection.cookies().set(SessionUtil.REMEMEBER_TOKEN_NAME, "", 0, TimeUnit.SECONDS); // Clear cookie
             }
+
+            webConnection.cookies().set("vote_stamp", "", 0, TimeUnit.SECONDS); // Clear cookie
+
+            var pair = details.isBanned();
+
+            if (pair != null) {
+                webConnection.redirect("/account/banned");
+            }
+
+            webConnection.session().delete("alertMessage");
+
+            return true;
+        }
+    }
+
+    public static boolean login(WebConnection webConnection, BigDecimal discordId, boolean deleteAuthVariables) {
+        PlayerDetails details = new PlayerDetails();
+        boolean hasError = !PlayerDao.login(details, discordId);
+
+        if (hasError) {
+            webConnection.session().set("alertMessage", "Discord account not associated with any users\n");
+
+            // Delete user login session
+            if (deleteAuthVariables) {
+                webConnection.session().delete("user.id");
+                webConnection.session().delete("authenticated");
+            }
+            return false;
+        } else {
+            webConnection.session().set("authenticated", true);
+            webConnection.session().set("captcha.invalid", false);
+            webConnection.session().set("user.id", details.getId() + "");
+            webConnection.session().set("clientAuthenticate", false);
+            webConnection.session().set("lastRequest", String.valueOf(DateUtil.getCurrentTimeSeconds() + SessionUtil.REAUTHENTICATE_TIME));            
 
             webConnection.cookies().set("vote_stamp", "", 0, TimeUnit.SECONDS); // Clear cookie
 

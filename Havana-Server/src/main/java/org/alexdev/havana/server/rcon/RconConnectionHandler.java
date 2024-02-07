@@ -26,7 +26,6 @@ import org.alexdev.havana.messages.outgoing.handshake.RIGHTS;
 import org.alexdev.havana.messages.outgoing.moderation.MODERATOR_ALERT;
 import org.alexdev.havana.messages.outgoing.rooms.groups.GROUP_BADGES;
 import org.alexdev.havana.messages.outgoing.rooms.groups.GROUP_MEMBERSHIP_UPDATE;
-import org.alexdev.havana.messages.outgoing.rooms.user.HOTEL_VIEW;
 import org.alexdev.havana.messages.outgoing.user.currencies.CREDIT_BALANCE;
 import org.alexdev.havana.server.rcon.messages.RconMessage;
 import org.alexdev.havana.util.config.GameConfiguration;
@@ -213,6 +212,9 @@ public class RconConnectionHandler extends ChannelInboundHandlerAdapter {
                     online = PlayerManager.getInstance().getPlayerById(Integer.parseInt(message.getValues().get("userId")));
 
                     if (online != null) {
+                        if(PlayerDao.hasDiscordId(online.getDetails().getId())) {
+                            AchievementManager.getInstance().tryProgress(AchievementType.ACHIEVEMENT_EMAIL_VERIFICATION, online);
+                        }
                         boolean oldTradeSetting = online.getDetails().isTradeEnabled();
                         online.getDetails().setTradeEnabled(message.getValues().get("tradeEnabled").equalsIgnoreCase("1"));
 
@@ -302,7 +304,7 @@ public class RconConnectionHandler extends ChannelInboundHandlerAdapter {
                     GameConfiguration.reset(new GameConfigWriter());
 
                     for (Player p : PlayerManager.getInstance().getPlayers()) {
-                        new GET_CATALOG_INDEX().handle(p, null);
+                        new GET_CATALOG_INDEX(false).handle(p, null);
                     }
 
                     break;
@@ -321,7 +323,7 @@ public class RconConnectionHandler extends ChannelInboundHandlerAdapter {
 
                         item.delete();
                         PhotoDao.deleteItem(itemId);
-
+                        
                         TransactionDao.createTransaction(userId, String.valueOf(itemId), "0", 1,
                                 "Hidden photo " + itemId, 0, 0, false);
                     }

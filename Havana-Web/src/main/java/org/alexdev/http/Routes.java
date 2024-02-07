@@ -1,6 +1,10 @@
 package org.alexdev.http;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+
 import org.alexdev.duckhttpd.routes.RouteManager;
+import org.alexdev.havana.util.config.GameConfiguration;
 import org.alexdev.http.controllers.BaseController;
 import org.alexdev.http.controllers.api.*;
 import org.alexdev.http.controllers.groups.*;
@@ -69,12 +73,29 @@ public class Routes {
         // Client
         RouteManager.addRoute("/components/updateHabboCount", ClientController::updateHabboCount);
         RouteManager.addRoute("/client", ClientController::client);
+        RouteManager.addRoute("/flash_client", ClientController::flashClient);
         RouteManager.addRoute("/clientlog/update", ClientController::blank);
         RouteManager.addRoute("/cacheCheck", ClientController::blank);
         //RouteManager.addRoute("/beta_client", ClientController::betaClient); // R34 client: deprecated
         RouteManager.addRoute("/client_popup/install_shockwave", ClientController::clientInstallShockwave);
         RouteManager.addRoute("/client_error", ClientController::client_error);
         RouteManager.addRoute("/client_connection_failed", ClientController::client_connection_failed);
+
+        String variablesRoute = "";
+        String variablesRouteHttp = "";
+
+        try {
+            var variablesUri = new URI(GameConfiguration.getInstance().getString("loader.external.variables"));
+            var variablesHttpUri = new URI(GameConfiguration.getInstance().getString("loader.external.variables.http"));
+            variablesRoute = variablesUri.getPath();
+            variablesRouteHttp = variablesHttpUri.getPath();
+        } catch (URISyntaxException e) {
+            variablesRoute = "/client/v31/gamedata/external_variables.txt";
+            variablesRoute = "/client/v31/gamedata/external_variables_http.txt";
+        }
+
+        RouteManager.addRoute(variablesRoute, ClientController::externalVariables);
+        RouteManager.addRoute(variablesRouteHttp, ClientController::externalVariablesHttp);
 
         // Account
         RouteManager.addRoute("/account/banned", AccountController::banned);
@@ -87,6 +108,7 @@ public class Routes {
         RouteManager.addRoute("/account/submit", AccountController::submit);
         RouteManager.addRoute("/security_check", AccountController::securityCheck);
         RouteManager.addRoute("/account/reauthenticate", AccountController::reauthenticate);
+        RouteManager.addRoute("/fetch_sso", AccountController::fetchSso);
 
         // Profile
         RouteManager.addRoute("/profile", ProfileController::profile);
@@ -282,7 +304,8 @@ public class Routes {
         RouteManager.addRoute("/api/advertisement/get_url", AdvertisementController::getUrl);
         RouteManager.addRoute("/api/verify/get/*", VerifyController::get);
         RouteManager.addRoute("/api/verify/clear/*", VerifyController::clear);
-        RouteManager.addRoute("/habbo-imaging/*", ImagerController::imager_redirect);
+        RouteManager.addRoute("/api/ticket", TicketController::get);
+        RouteManager.addRoute("/api/discord", DiscordController::verify);
 
         // Housekeeping
         RouteManager.addRoute("/" + HOUSEKEEPING_DEFAULT_PATH, HousekeepingController::dashboard);
@@ -341,5 +364,8 @@ public class Routes {
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/campaign_management/room_badges/delete", HousekeepingRoomBadgesController::delete);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/campaign_management/room_badges/create", HousekeepingRoomBadgesController::create);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/campaign_management/catalogue/edit_frontpage", HousekeepingCatalogueFrontpageController::edit);
+        RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/badges", HousekeepingBadgesController::badges);
+        RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/badges/create", HousekeepingBadgesController::create);
+        RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/badges/wipe", HousekeepingBadgesController::wipe);
     }
 }

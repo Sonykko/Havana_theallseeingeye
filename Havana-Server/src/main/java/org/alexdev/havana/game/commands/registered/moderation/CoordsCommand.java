@@ -1,6 +1,7 @@
 package org.alexdev.havana.game.commands.registered.moderation;
 
 import org.alexdev.havana.game.commands.Command;
+import org.alexdev.havana.game.commands.CommandFormatBuilder;
 import org.alexdev.havana.game.entity.Entity;
 import org.alexdev.havana.game.entity.EntityType;
 import org.alexdev.havana.game.player.Player;
@@ -26,13 +27,17 @@ public class CoordsCommand extends Command {
             return;
         }
 
-        player.send(new ALERT("Your coordinates:<br>" +
-                "Room ID: " + player.getRoomUser().getRoom().getId() + "<br><br>" +
-                "X: " + player.getRoomUser().getPosition().getX() + "<br>" +
-                "Y: " + player.getRoomUser().getPosition().getY() + "<br>" +
-                "Z: " + StringUtil.format(player.getRoomUser().getPosition().getZ()) + "<br><br>" +
-                "Head rotation: " + player.getRoomUser().getPosition().getHeadRotation() + "<br>" +
-                "Body rotation: " + player.getRoomUser().getPosition().getBodyRotation() + "<br>"));
+        var coords = new CommandFormatBuilder(entity);
+
+        coords.append("Your coordinates:").newLine();
+        coords.append("Room ID: " + player.getRoomUser().getRoom().getId()).newLine();
+        coords.append("X: " + player.getRoomUser().getPosition().getX()).newLine();
+        coords.append("Y: " + player.getRoomUser().getPosition().getY()).newLine();
+        coords.append("Z: " + StringUtil.format(player.getRoomUser().getPosition().getZ())).newLine();
+        coords.append("Head rotation: " + player.getRoomUser().getPosition().getHeadRotation()).newLine();
+        coords.append("Body rotation: " + player.getRoomUser().getPosition().getBodyRotation()).newLine();
+
+        player.send(new ALERT(coords.toString()));
     }
 
     @Override

@@ -63,7 +63,7 @@ public class QuickmenuController {
         }
 
         var tpl = webConnection.template("quickmenu/rooms");
-        tpl.set("rooms", RoomDao.getRoomsByUserId(webConnection.session().getInt("user.id")));
+        tpl.set("rooms", RoomDao.getRoomsByUserIdNoLegacy(webConnection.session().getInt("user.id")));
         tpl.render();
     }
 }

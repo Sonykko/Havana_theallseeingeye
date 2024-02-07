@@ -2,6 +2,7 @@ package org.alexdev.havana.game.commands.registered;
 
 import org.alexdev.havana.Havana;
 import org.alexdev.havana.game.commands.Command;
+import org.alexdev.havana.game.commands.CommandFormatBuilder;
 import org.alexdev.havana.game.entity.Entity;
 import org.alexdev.havana.game.entity.EntityType;
 import org.alexdev.havana.game.games.GameManager;
@@ -55,24 +56,24 @@ public class UptimeCommand extends Command {
         }
 
 
-        StringBuilder msg = new StringBuilder();
-msg.append("Server uptime is " + DateUtil.getReadableSeconds(DateUtil.getCurrentTimeSeconds() - Havana.getStartupTime()) + "<br>");
+        CommandFormatBuilder msg = new CommandFormatBuilder(entity);
+msg.append("Server uptime is " + DateUtil.getReadableSeconds(DateUtil.getCurrentTimeSeconds() - Havana.getStartupTime()) + "").newLine();
 
         if (!GameConfiguration.getInstance().getBoolean("show.inactive.players")) {
-            msg.append("There are " + AUTHENTICATED_PLAYERS + " online players<br>");
+            msg.append("There are " + AUTHENTICATED_PLAYERS + " online players").newLine();
         } else {
-            msg.append("There are " + ACTIVE_PLAYERS + " active players out of " + AUTHENTICATED_PLAYERS + " online players<br>");
+            msg.append("There are " + ACTIVE_PLAYERS + " active players out of " + AUTHENTICATED_PLAYERS + " online players").newLine();
         }
 
-        msg.append("Daily player peak: " + PlayerManager.getInstance().getDailyPlayerPeak() + "<br>");
-        msg.append("All time player peak: " + PlayerManager.getInstance().getAllTimePlayerPeak() + "<br>");
-        msg.append("Active games: " + GameManager.getInstance().getGames().stream().filter(game -> game.getGameState() == GameState.STARTED).count() + " (" + GameManager.getInstance().getFinishedGameCounter().get() + " games played since server boot)<br>");
-        msg.append("<br>");
-        msg.append("SYSTEM<br>");
-        msg.append("CPU architecture: " + CPU_ARCHITECTURE + "<br>");
-        msg.append("CPU cores: " + CPU_NUM_THREADS + "<br>");
-        msg.append("memory usage: " + MEMORY_USAGE + " MB<br>");
-        msg.append("JVM: " + JVM_NAME + "<br>");
+        msg.append("Daily player peak: " + PlayerManager.getInstance().getDailyPlayerPeak()).newLine();
+        msg.append("All time player peak: " + PlayerManager.getInstance().getAllTimePlayerPeak()).newLine();
+        msg.append("Active games: " + GameManager.getInstance().getGames().stream().filter(game -> game.getGameState() == GameState.STARTED).count() + " (" + GameManager.getInstance().getFinishedGameCounter().get() + " games played since server boot)").newLine();
+        msg.newLine();
+        msg.append("SYSTEM").newLine();
+        msg.append("CPU architecture: " + CPU_ARCHITECTURE).newLine();
+        msg.append("CPU cores: " + CPU_NUM_THREADS).newLine();
+        msg.append("memory usage: " + MEMORY_USAGE + " MB").newLine();
+        msg.append("JVM: " + JVM_NAME).newLine();
         msg.append("OS: " + OPERATING_SYSTEM_NAME);
 
         player.send(new ALERT(msg.toString()));

@@ -23,6 +23,6 @@ public class GET_FLOORMAP implements MessageEvent {
             player.send(new HEIGHTMAP_UPDATE(player.getRoomUser().getRoom(), player.getRoomUser().getRoom().getModel()));
         }
 
-        player.send(new USER_OBJECTS(List.of()));
+        player.send(new USER_OBJECTS(List.of(), player.flash));
     }
 }

@@ -9,8 +9,8 @@ import org.alexdev.havana.server.netty.streams.NettyResponse;
 import java.util.List;
 
 public class RECOMMENDED_ROOM_LIST extends MessageComposer {
-    private final Player player;
-    private final List<Room> roomList;
+    protected final Player player;
+    protected final List<Room> roomList;
 
     public RECOMMENDED_ROOM_LIST(Player player, List<Room> roomList) {
         this.player = player;
@@ -23,6 +23,7 @@ public class RECOMMENDED_ROOM_LIST extends MessageComposer {
 
         for (Room room : this.roomList) {
             response.writeInt(room.getId());
+
             response.writeString(room.getData().getName());
 
             if (room.isOwner(this.player.getDetails().getId()) || room.getData().showOwnerName() || this.player.hasFuse(Fuseright.SEE_ALL_ROOMOWNERS)) {

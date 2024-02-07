@@ -40,6 +40,10 @@ public class RoomData {
     private boolean isHidden;
     private boolean isRoomMuted;
     private boolean isCustomRoom;
+    private boolean legacyRoom;
+    private boolean legacyLock;
+    private int costPixels;
+    private int costCoins;
 
     public RoomData(Room room) {
         this.room = room;
@@ -56,7 +60,7 @@ public class RoomData {
     }
 
     public void fill(int id, int ownerId, String ownerName, int category, String name, String description, String model, String ccts, int wallpaper, int floor, String decoration, boolean showName, boolean superUsers, int accessType, String password, int visitorsNow, int visitorsMax, int rating,
-                     String iconData, int groupId, boolean isHidden) {
+                     String iconData, int groupId, boolean isHidden, boolean legacyRoom, boolean legacyLock, int coinCost, int pixelCost) {
         this.id = id;
         this.ownerId = ownerId;
         this.ownerName = StringUtil.filterInput(ownerName, true);;
@@ -78,6 +82,10 @@ public class RoomData {
         this.iconData = iconData;
         this.groupId = groupId;
         this.isHidden = isHidden;
+        this.legacyRoom = legacyRoom;
+        this.legacyLock = legacyLock;
+        this.costCoins = coinCost;
+        this.costPixels = pixelCost;
 
         if (WalkwaysManager.getInstance().getWalkways().stream().anyMatch(walkway -> walkway.getRoomTargetId() == this.room.getId())) {
             WalkwaysManager.getInstance().getWalkways().stream().filter(walkway -> walkway.getRoomTargetId() == this.room.getId()).findFirst().ifPresent(roomData -> this.room.setFollowRedirect(roomData.getRoomId()));
@@ -225,7 +233,7 @@ public class RoomData {
     }
 
     public boolean showOwnerName() {
-        return showOwnerName;
+        return showOwnerName && !this.legacyRoom;
     }
 
     public void setShowOwnerName(boolean showName) {
@@ -356,6 +364,10 @@ public class RoomData {
         this.iconData = iconData;
     }
 
+    public void addTag(int userId, String tag) {
+        TagDao.addTag(0, this.id, groupId, tag);
+    }
+
     public List<String> getTags() {
         return TagDao.getRoomTags(this.id);
     }
@@ -390,5 +402,29 @@ public class RoomData {
 
     public void setCustomRoom(boolean customRoom) {
         isCustomRoom = customRoom;
+    }
+
+    public boolean isLegacyRoom() {
+        return this.legacyRoom;
+    }
+
+    public boolean isLegacyLocked() {
+        return this.legacyLock;
+    }
+
+    public int getCoinCost() {
+        return this.costCoins;
+    }
+
+    public int getPixelCost() {
+        return this.costPixels;
+    }
+
+    public void setLegacyRoom(boolean b) {
+        this.legacyRoom = b;
+    }
+
+    public void setLegacyLock(boolean b) {
+        this.legacyLock = b;
     }
 }

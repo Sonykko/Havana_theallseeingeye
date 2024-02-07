@@ -2,6 +2,7 @@ package org.alexdev.havana.game.commands.registered;
 
 import org.alexdev.havana.dao.mysql.GuideDao;
 import org.alexdev.havana.game.commands.Command;
+import org.alexdev.havana.game.commands.CommandFormatBuilder;
 import org.alexdev.havana.game.entity.Entity;
 import org.alexdev.havana.game.entity.EntityType;
 import org.alexdev.havana.game.player.Player;
@@ -39,19 +40,20 @@ public class GuideStatusCommand extends Command {
         var guiding = GuideDao.getGuidedBy(player.getDetails().getId());
         guiding.sort(Comparator.comparingLong(GuidingData::getLastOnline).reversed());
 
-        StringBuilder alert = new StringBuilder();
-        alert.append("You are guiding " + guiding.size() + " users. Remember a user needs an online time for at least " + TimeUnit.MINUTES.toDays(GameConfiguration.getInstance().getInteger("guide.completion.minutes")) + " days to be guided.<br><br>");
+        CommandFormatBuilder alert = new CommandFormatBuilder(entity);
+        alert.append("You are guiding " + guiding.size() + " users. Remember a user needs an online time for at least " + TimeUnit.MINUTES.toDays(GameConfiguration.getInstance().getInteger("guide.completion.minutes")) + " days to be guided.");
+        alert.newLine().newLine();
 
         alert.append(StringUtils.rightPad("Username", 20, " "));
         alert.append(StringUtils.rightPad("Time Online", 58, " "));
         alert.append(StringUtils.rightPad("Last Online", 15, " "));
-        alert.append("<br>");
+        alert.newLine();
 
         for (var guideData : guiding) {
             alert.append(StringUtils.rightPad(guideData.getUsername(), 20, " "));
             alert.append(StringUtils.rightPad(DateUtil.getReadableSeconds(guideData.getTimeOnline()), 58, " "));
             alert.append(StringUtils.rightPad(DateUtil.getDate(guideData.getLastOnline(), DateUtil.SHORT_DATE), 15, " "));
-            alert.append("<br>");
+            alert.newLine();
         }
 
         player.send(new ALERT(alert.toString()));

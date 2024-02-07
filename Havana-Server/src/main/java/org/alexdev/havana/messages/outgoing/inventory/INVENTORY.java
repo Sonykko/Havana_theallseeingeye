@@ -5,6 +5,7 @@ import org.alexdev.havana.game.item.Item;
 import org.alexdev.havana.messages.types.MessageComposer;
 import org.alexdev.havana.server.netty.streams.NettyResponse;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class INVENTORY extends MessageComposer {

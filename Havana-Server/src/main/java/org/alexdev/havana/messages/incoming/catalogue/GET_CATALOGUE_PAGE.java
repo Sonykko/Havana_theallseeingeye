@@ -34,13 +34,14 @@ public class GET_CATALOGUE_PAGE implements MessageEvent {
         }
 
         if (player.getDetails().getRank().getRankId() >= cataloguePage.getMinRole().getRankId()) {
-            if (GameConfiguration.getInstance().getInteger("rare.cycle.page.id") == cataloguePage.getId()) {
+
+            /*if (GameConfiguration.getInstance().getInteger("rare.cycle.page.id") == cataloguePage.getId()) {
                 if (GameConfiguration.getInstance().getBoolean("rare.cycle.pixels.only")) {
                     cataloguePage.setLayout("pixelrent");
                 } else {
                     cataloguePage.setLayout("cars");
                 }
-            }
+            }*/
 
             if (CollectablesManager.getInstance().getCollectableDataByPage(cataloguePage.getId()) != null) {
                 var item = CollectablesManager.getInstance().getCollectableDataByPage(cataloguePage.getId()).getActiveItem();
@@ -48,13 +49,13 @@ public class GET_CATALOGUE_PAGE implements MessageEvent {
                 if (item != null) {
                     cataloguePage = cataloguePage.copy();
 
-                    if (item.getPricePixels() > 0 && item.getPriceCoins() > 0) {
+                    /*if (item.getPricePixels() > 0 && item.getPriceCoins() > 0) {
                         cataloguePage.setLayout("cars");
                     } else if (item.getPriceCoins() > 0 && item.getPricePixels() <= 0) {
                         cataloguePage.setLayout("default_3x3");
                     } else if (item.getPricePixels() > 0 && item.getPriceCoins() <= 0) {
                         cataloguePage.setLayout("pixelrent");
-                    }
+                    }*/
                 }
             }
 

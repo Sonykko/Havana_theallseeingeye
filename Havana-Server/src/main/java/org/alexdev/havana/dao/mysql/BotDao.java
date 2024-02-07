@@ -1,10 +1,7 @@
 package org.alexdev.havana.dao.mysql;
 
 import org.alexdev.havana.dao.Storage;
-import org.alexdev.havana.game.ban.BanType;
 import org.alexdev.havana.game.bot.BotData;
-import org.alexdev.havana.util.DateUtil;
-import org.apache.commons.lang3.tuple.Pair;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -13,6 +10,35 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BotDao {
+
+    public static String getFlashFigure(String botName) {
+        String result = null;
+
+        Connection sqlConnection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+
+        try {
+            sqlConnection = Storage.getStorage().getConnection();
+            preparedStatement = Storage.getStorage().prepare("SELECT figure_flash FROM rooms_bots WHERE name = ?", sqlConnection);
+            preparedStatement.setString(1, botName);
+            resultSet =  preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                result = resultSet.getString("figure_flash");
+            }
+
+        } catch (Exception e) {
+            Storage.logError(e);
+        } finally {
+            Storage.closeSilently(preparedStatement);
+            Storage.closeSilently(sqlConnection);
+            Storage.closeSilently(resultSet);
+        }
+
+        return result;
+    }
+
     public static List<BotData> getBotData(int roomId) {
         List<BotData> botData = new ArrayList<>();
 

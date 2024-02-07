@@ -155,6 +155,7 @@ public class GameChess extends GamehallGame {
                     move = new Move(fromSquare, toSquare, Piece.make(this.board.getSideToMove(), PieceType.QUEEN));
                     isLegalMove = moveList.contains(move);
                 }
+
             } catch (MoveGeneratorException e) { }
 
             if (isLegalMove) {

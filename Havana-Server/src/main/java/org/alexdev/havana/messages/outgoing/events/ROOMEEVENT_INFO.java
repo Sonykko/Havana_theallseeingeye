@@ -7,7 +7,7 @@ import org.alexdev.havana.server.netty.streams.NettyResponse;
 public class ROOMEEVENT_INFO extends PlayerMessageComposer {
     private final Event event;
 
-    public ROOMEEVENT_INFO(Event event) {
+    public  ROOMEEVENT_INFO(Event event) {
         this.event = event;
     }
 

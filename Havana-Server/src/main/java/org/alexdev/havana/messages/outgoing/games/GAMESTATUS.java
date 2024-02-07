@@ -83,7 +83,7 @@ public class GAMESTATUS extends MessageComposer {
         response.writeInt(this.gameTeams.size());
 
         for (GameTeam team : this.gameTeams) {
-            response.writeInt(team.getPoints());
+            response.writeInt(team.getScore());
         }
 
         response.writeInt(1);

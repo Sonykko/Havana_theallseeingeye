@@ -94,7 +94,7 @@ public class BotManager {
 
         for (String drink : bot.getBotData().getDrinks()) {
             if (message.toLowerCase().contains(drink.toLowerCase())) {
-                player.getRoomUser().carryItem(-1, drink);
+                player.getRoomUser().carryItem(BotData.drinkNameToId.get(drink), drink, player);
                 return drink;
             }
         }
@@ -102,8 +102,9 @@ public class BotManager {
         if (message.toLowerCase().contains("drink please") ||
                 message.toLowerCase().contains("can i have") ||
                 message.toLowerCase().contains("i'll have")) {
+
             String drink = bot.getBotData().getDrinks().get(ThreadLocalRandom.current().nextInt(bot.getBotData().getDrinks().size()));
-            player.getRoomUser().carryItem(-1, drink);
+            player.getRoomUser().carryItem(BotData.drinkNameToId.get(drink), drink, player);
             return drink;
         }
 

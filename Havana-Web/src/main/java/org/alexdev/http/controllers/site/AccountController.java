@@ -199,7 +199,15 @@ public class AccountController {
         template.set("newPostsAmount", newGroupPosts.getKey());
         template.set("newPosts", newGroupPosts.getValue());
         template.set("unreadGuestbookMessages", statistics.getIntValue(PlayerStatistic.GUESTBOOK_UNREAD_MESSAGES));
+
+        if (webConnection.session().contains("discord.saved.alert")) {
+            template.set("settingsSavedAlert", "true");
+        }
+
         template.render();
+
+        webConnection.session().delete("alertMessage");
+        webConnection.session().delete("discord.saved.alert");
 
         ClubSubscription.countMemberDays(playerDetails, statistics);
         //CacheManager.savePage(webConnection, "me", ((TwigTemplate)template).renderHTML(), (int) TimeUnit.SECONDS.toSeconds(15));
@@ -245,6 +253,13 @@ public class AccountController {
         // Set current page
         webConnection.session().set("page", "welcome");
         template.render();
+    }
+
+    public static void fetchSso(WebConnection webConnection) {
+        XSSUtil.clear(webConnection);
+
+        var ssoTicket = UUID.randomUUID().toString();
+        PlayerDao.setTicket(webConnection.session().getInt("user.id"), ssoTicket);
     }
 
     public static void reauthenticate(WebConnection webConnection) {

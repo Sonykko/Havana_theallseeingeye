@@ -29,6 +29,7 @@ public class NettyServer  {
 
     private DefaultChannelGroup channels;
     private ServerBootstrap bootstrap;
+    private ServerBootstrap flashBootstrap;
     private AtomicInteger connectionIds;
 
     private EventLoopGroup bossGroup;
@@ -39,6 +40,7 @@ public class NettyServer  {
         this.port = port;
         this.channels = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
         this.bootstrap = new ServerBootstrap();
+        this.flashBootstrap = new ServerBootstrap();
         this.connectionIds = new AtomicInteger(0);
     }
 
@@ -59,6 +61,16 @@ public class NettyServer  {
                 .childOption(ChannelOption.SO_RCVBUF, BUFFER_SIZE)
                 .childOption(ChannelOption.RCVBUF_ALLOCATOR, new FixedRecvByteBufAllocator(BUFFER_SIZE))
                 .childOption(ChannelOption.ALLOCATOR, new PooledByteBufAllocator(true));
+
+        this.flashBootstrap.group(bossGroup, workerGroup)
+                .channel((Epoll.isAvailable()) ? EpollServerSocketChannel.class : NioServerSocketChannel.class)
+                .childHandler(new NettyChannelInitializerFlash(this))
+                .option(ChannelOption.SO_BACKLOG, BACK_LOG)
+                .childOption(ChannelOption.TCP_NODELAY, true)
+                .childOption(ChannelOption.SO_KEEPALIVE, true)
+                .childOption(ChannelOption.SO_RCVBUF, BUFFER_SIZE)
+                .childOption(ChannelOption.RCVBUF_ALLOCATOR, new FixedRecvByteBufAllocator(BUFFER_SIZE))
+                .childOption(ChannelOption.ALLOCATOR, new PooledByteBufAllocator(true));
     }
 
     /**
@@ -71,6 +83,14 @@ public class NettyServer  {
                 Log.getErrorLogger().error("Please double check there's no programs using the same game port, and you have set the correct IP address to listen on.");
             } else {
                 log.info("Shockwave game server is listening on {}:{}", this.getIp(), this.getPort());
+            }
+        });
+        this.flashBootstrap.bind(new InetSocketAddress(this.getIp(), this.getFlashPort())).addListener(objectFuture -> {
+            if (!objectFuture.isSuccess()) {
+                Log.getErrorLogger().error("Failed to start server on address: {}:{}", this.getIp(), this.port);
+                Log.getErrorLogger().error("Please double check there's no programs using the same game port, and you have set the correct IP address to listen on.");
+            } else {
+                log.info("Flash game server is listening on {}:{}", this.getIp(), this.getFlashPort());
             }
         });
     }

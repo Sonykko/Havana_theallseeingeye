@@ -5,13 +5,15 @@ public class AchievementInfo {
     private String name;
     private int level;
     private int pixelReward;
+    private int coinsReward;
     private int progressRequired;
 
-    public AchievementInfo(int id, String name, int level, int pixelReward, int progressRequired) {
+    public AchievementInfo(int id, String name, int level, int pixelReward, int coinsReward, int progressRequired) {
         this.id = id;
         this.name = name;
         this.level = level;
         this.pixelReward = pixelReward;
+        this.coinsReward = coinsReward;
         this.progressRequired = progressRequired;
     }
 
@@ -49,6 +51,15 @@ public class AchievementInfo {
      */
     public int getPixelReward() {
         return pixelReward;
+    }
+
+    /**
+     * Get the coin reward
+     *
+     * @return coin reward
+     */
+    public int getCoinsReward() {
+        return coinsReward;
     }
 
     /**

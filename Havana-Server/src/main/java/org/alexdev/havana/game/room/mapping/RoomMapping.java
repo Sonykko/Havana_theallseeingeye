@@ -175,6 +175,7 @@ public class RoomMapping {
 
         resetExtraData(item, false);
         this.room.getItems().add(item);
+        this.room.recalculateTotalCreditsInRoom();
 
         if (item.hasBehaviour(ItemBehaviour.TELEPORTER)) {
             item.setCustomData(TeleportInteractor.TELEPORTER_CLOSE);
@@ -298,6 +299,7 @@ public class RoomMapping {
     public void removeItem(Player player, Item item) {
         item.getDefinition().getInteractionType().getTrigger().onItemPickup(player, this.room, item);
         this.room.getItems().remove(item);
+        this.room.recalculateTotalCreditsInRoom();
 
         if (item.hasBehaviour(ItemBehaviour.WALL_ITEM)) {
             this.room.send(new REMOVE_WALLITEM(item));
@@ -593,7 +595,10 @@ public class RoomMapping {
         return this.roomMap[x][y];
     }
 
-    public Position getRandomWalkableBound(Entity entity, boolean allowDoorBound) {
+    public Position getRandomWalkableBound(Entity entity) {
+        Position position = null;
+
+        boolean isWalkable = false;
         int attempts = 0;
         int maxAttempts = 10;
 
@@ -602,13 +607,7 @@ public class RoomMapping {
 
             int randomX = this.room.getModel().getRandomBound(0);
             int randomY = this.room.getModel().getRandomBound(1);
-
-            var position = new Position(randomX, randomY);
-
-            if (!allowDoorBound) {
-                if (position.equals(this.room.getModel().getDoorLocation()))
-                    continue;
-            }
+            position = new Position(randomX, randomY);
 
             if (RoomTile.isValidTile(this.room, entity, position)) {
                 return position;

@@ -95,6 +95,16 @@ public class GameScheduler implements Runnable {
                         if (this.creditsHandoutQueue.stream().noneMatch(entry -> entry.getKey() == player)) {
                             this.queuePlayerCredits(player, credits);
                             player.getDetails().setCreditsEligible(false);
+                            player.getDetails().resetNextHandout();
+                        }
+                    }
+                } else if(DateUtil.getCurrentTimeSeconds() > player.getDetails().getNextHandout() && player.getDetails().getNextHandout() > 0) {
+                    int credits = GameConfiguration.getInstance().getInteger("credits.scheduler.amount");
+
+                    if (credits > 0) {
+                        if (this.creditsHandoutQueue.stream().noneMatch(entry -> entry.getKey() == player)) {
+                            this.queuePlayerCredits(player, credits);
+                            player.getDetails().resetNextHandout();
                         }
                     }
                 }
@@ -140,7 +150,7 @@ public class GameScheduler implements Runnable {
             // Resend the catalogue index every 15 minutes to clear page cache
             if (this.tickRate.get() % TimeUnit.MINUTES.toSeconds(15) == 0) {
                 for (Player player : PlayerManager.getInstance().getPlayers()) {
-                    new GET_CATALOG_INDEX().handle(player, null);
+                    new GET_CATALOG_INDEX(false).handle(player, null);
                 }
             }
 

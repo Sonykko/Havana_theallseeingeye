@@ -4,6 +4,7 @@ import org.alexdev.havana.dao.mysql.RoomFavouritesDao;
 import org.alexdev.havana.game.player.Player;
 import org.alexdev.havana.game.room.Room;
 import org.alexdev.havana.game.room.RoomManager;
+import org.alexdev.havana.messages.outgoing.rooms.FAVOURITE_ROOM_EVENT_FLASH;
 import org.alexdev.havana.messages.types.MessageEvent;
 import org.alexdev.havana.server.netty.streams.NettyRequest;
 
@@ -44,8 +45,13 @@ public class ADD_FAVORITE_ROOM implements MessageEvent {
 
         var privateFavouriteRooms = RoomManager.getInstance().getFavouriteRooms(player.getDetails().getId(), false);
         if (privateFavouriteRooms.size() >= MAX_FAVOURITES || privateFavouriteRooms.stream().anyMatch(r -> r.getId() == finalRoomId)) {
+            System.out.println("Has too many favourite rooms");
             //player.send(new FLASH_ADD_FAVOURITE_FAILED());
             return;
+        }
+
+        if(player.flash) {
+            player.send(new FAVOURITE_ROOM_EVENT_FLASH(room.getId(), true));
         }
 
         RoomFavouritesDao.addFavouriteRoom(player.getDetails().getId(), roomId);

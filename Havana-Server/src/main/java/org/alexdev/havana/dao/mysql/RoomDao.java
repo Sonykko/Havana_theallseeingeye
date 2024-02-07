@@ -2,6 +2,7 @@ package org.alexdev.havana.dao.mysql;
 
 import org.alexdev.havana.dao.Storage;
 import org.alexdev.havana.game.moderation.ChatMessage;
+import org.alexdev.havana.game.player.Player;
 import org.alexdev.havana.game.room.Room;
 import org.alexdev.havana.game.room.RoomData;
 import org.alexdev.havana.messages.outgoing.rooms.user.CHAT_MESSAGE;
@@ -26,13 +27,17 @@ public class RoomDao {
         }
     }
 
+    public static List<Room> getPublicRooms() {
+        return getRoomsByUserIdNoLegacy(0);
+    }
+
     /**
      * Get a list of rooms by the owner id, use "0" for public rooms.
      *
      * @param userId the user id to get the rooms by
      * @return the list of rooms
      */
-    public static List<Room> getRoomsByUserId(int userId) {
+    public static List<Room> getRoomsByUserIdNoLegacy(int userId) {
         List<Room> rooms = new ArrayList<>();
 
         Connection sqlConnection = null;
@@ -41,7 +46,11 @@ public class RoomDao {
 
         try {
             sqlConnection = Storage.getStorage().getConnection();
-            preparedStatement = Storage.getStorage().prepare("SELECT * FROM rooms LEFT JOIN users ON rooms.owner_id = users.id WHERE rooms.owner_id = ?", sqlConnection);
+            if(userId == 0) {
+                preparedStatement = Storage.getStorage().prepare("SELECT * FROM rooms LEFT JOIN users ON rooms.owner_id = users.id WHERE rooms.owner_id = ?", sqlConnection);
+            } else {
+                preparedStatement = Storage.getStorage().prepare("SELECT * FROM rooms LEFT JOIN users ON rooms.owner_id = users.id WHERE rooms.owner_id = ? AND legacy_room = 0", sqlConnection);
+            }
             preparedStatement.setInt(1, userId);
             resultSet = preparedStatement.executeQuery();
 
@@ -61,6 +70,75 @@ public class RoomDao {
 
         return rooms;
     }
+
+    public static List<Room> getRoomsByUserId(int userId) {
+        List<Room> rooms = new ArrayList<>();
+
+        Connection sqlConnection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+
+        try {
+            sqlConnection = Storage.getStorage().getConnection();
+            if(userId == 0) {
+                preparedStatement = Storage.getStorage().prepare("SELECT * FROM rooms LEFT JOIN users ON rooms.owner_id = users.id WHERE rooms.owner_id = ?", sqlConnection);
+            } else {
+                preparedStatement = Storage.getStorage().prepare("SELECT * FROM rooms LEFT JOIN users ON rooms.owner_id = users.id WHERE rooms.owner_id = ?", sqlConnection);
+            }
+            preparedStatement.setInt(1, userId);
+            resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                Room room = new Room();
+                fill(room.getData(), resultSet);
+                rooms.add(room);
+            }
+
+        } catch (Exception e) {
+            Storage.logError(e);
+        } finally {
+            Storage.closeSilently(resultSet);
+            Storage.closeSilently(preparedStatement);
+            Storage.closeSilently(sqlConnection);
+        }
+
+        return rooms;
+    }
+
+    public static List<Room> getLegacyRoomsByUserId(int userId) {
+        List<Room> rooms = new ArrayList<>();
+
+        Connection sqlConnection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+
+        try {
+            sqlConnection = Storage.getStorage().getConnection();
+            if(userId == 0) {
+                preparedStatement = Storage.getStorage().prepare("SELECT * FROM rooms LEFT JOIN users ON rooms.owner_id = users.id WHERE rooms.owner_id = ?", sqlConnection);
+            } else {
+                preparedStatement = Storage.getStorage().prepare("SELECT * FROM rooms LEFT JOIN users ON rooms.owner_id = users.id WHERE rooms.owner_id = ? AND legacy_room = 1", sqlConnection);
+            }
+            preparedStatement.setInt(1, userId);
+            resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                Room room = new Room();
+                fill(room.getData(), resultSet);
+                rooms.add(room);
+            }
+
+        } catch (Exception e) {
+            Storage.logError(e);
+        } finally {
+            Storage.closeSilently(resultSet);
+            Storage.closeSilently(preparedStatement);
+            Storage.closeSilently(sqlConnection);
+        }
+
+        return rooms;
+    }
+
 
     /**
      * Get a list of recommended rooms.
@@ -112,7 +190,7 @@ public class RoomDao {
 
         try {
             sqlConnection = Storage.getStorage().getConnection();
-            preparedStatement = Storage.getStorage().prepare("SELECT * FROM rooms LEFT JOIN users ON rooms.owner_id = users.id WHERE owner_id > 0 ORDER BY rating DESC LIMIT " + limit + " OFFSET " + offset, sqlConnection);
+                preparedStatement = Storage.getStorage().prepare("SELECT * FROM rooms LEFT JOIN users ON rooms.owner_id = users.id WHERE owner_id > 0 ORDER BY rating DESC LIMIT " + limit + " OFFSET " + offset, sqlConnection);
             resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
@@ -173,6 +251,50 @@ public class RoomDao {
      * @param searchQuery the query to use
      * @return the list of possible room matches
      */
+    public static List<Room> searchRooms(String searchQuery, int limit, Player player) {
+        int roomOwner = -1;
+        List<Room> rooms = new ArrayList<>();
+
+        if (searchQuery.isBlank() && roomOwner == -1) {
+            return rooms;
+        }
+
+        Connection sqlConnection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+
+        try {
+            sqlConnection = Storage.getStorage().getConnection();
+
+            preparedStatement = Storage.getStorage().prepare("SELECT * FROM rooms INNER JOIN users ON rooms.owner_id = users.id WHERE " + (roomOwner > 0 ? (" owner_id = " + roomOwner + " AND") : " LOWER(users.username) LIKE ? OR") + " LOWER(rooms.name) LIKE ? ORDER BY visitors_now DESC, rating DESC LIMIT ? ", sqlConnection);
+
+            if (roomOwner > 0) {
+                preparedStatement.setString(1, "%" + searchQuery + "%");
+                preparedStatement.setInt(2, limit);
+            } else {
+                preparedStatement.setString(1, "%" + searchQuery + "%");
+                preparedStatement.setString(2, "%" + searchQuery + "%");
+                preparedStatement.setInt(3, limit);
+            }
+
+            resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                Room room = new Room();
+                fill(room.getData(), resultSet);
+                rooms.add(room);
+            }
+
+        } catch (Exception e) {
+            Storage.logError(e);
+        } finally {
+            Storage.closeSilently(resultSet);
+            Storage.closeSilently(preparedStatement);
+            Storage.closeSilently(sqlConnection);
+        }
+
+        return rooms;
+    }
     public static List<Room> searchRooms(String searchQuery, int roomOwner, int limit) {
         List<Room> rooms = new ArrayList<>();
 
@@ -186,7 +308,7 @@ public class RoomDao {
 
         try {
             sqlConnection = Storage.getStorage().getConnection();
-            preparedStatement = Storage.getStorage().prepare("SELECT * FROM rooms INNER JOIN users ON rooms.owner_id = users.id WHERE" + (roomOwner > 0 ? (" owner_id = " + roomOwner + " AND") : " LOWER(users.username) LIKE ? OR") + " LOWER(rooms.name) LIKE ? ORDER BY visitors_now DESC, rating DESC LIMIT ? ", sqlConnection);
+            preparedStatement = Storage.getStorage().prepare("SELECT * FROM rooms INNER JOIN users ON rooms.owner_id = users.id WHERE " + (roomOwner > 0 ? (" owner_id = " + roomOwner + " AND") : " LOWER(users.username) LIKE ? OR") + " LOWER(rooms.name) LIKE ? ORDER BY visitors_now DESC, rating DESC LIMIT ? ", sqlConnection);
 
             if (roomOwner > 0) {
                 preparedStatement.setString(1, "%" + searchQuery + "%");
@@ -395,6 +517,40 @@ public class RoomDao {
         }
     }
 
+    public static void removeLegacyStatus(int roomId) {
+        Connection sqlConnection = null;
+        PreparedStatement preparedStatement = null;
+
+        try {
+            sqlConnection = Storage.getStorage().getConnection();
+            preparedStatement = Storage.getStorage().prepare("UPDATE rooms SET legacy_room = 0, legacy_lock = 0 WHERE id = ?", sqlConnection);
+            preparedStatement.setInt(1, roomId);
+            preparedStatement.execute();
+        } catch (Exception e) {
+            Storage.logError(e);
+        } finally {
+            Storage.closeSilently(preparedStatement);
+            Storage.closeSilently(sqlConnection);
+        }
+    }
+
+    public static void removeLegacyLock(int roomId) {
+        Connection sqlConnection = null;
+        PreparedStatement preparedStatement = null;
+
+        try {
+            sqlConnection = Storage.getStorage().getConnection();
+            preparedStatement = Storage.getStorage().prepare("UPDATE rooms SET legacy_lock = 0 WHERE id = ?", sqlConnection);
+            preparedStatement.setInt(1, roomId);
+            preparedStatement.execute();
+        } catch (Exception e) {
+            Storage.logError(e);
+        } finally {
+            Storage.closeSilently(preparedStatement);
+            Storage.closeSilently(sqlConnection);
+        }
+    }
+
     /**
      * Save visitor count of rooms
      *
@@ -526,7 +682,7 @@ public class RoomDao {
                 row.getString("ccts"), row.getInt("wallpaper"), row.getInt("floor"), row.getString("landscape"),
                 row.getBoolean("showname"), row.getBoolean("superusers"), row.getInt("accesstype"),
                 row.getString("password"), row.getInt("visitors_now"), row.getInt("visitors_max"), row.getInt("rating"),
-                row.getString("icon_data"), row.getInt("group_id"), row.getBoolean("is_hidden"));
+                row.getString("icon_data"), row.getInt("group_id"), row.getBoolean("is_hidden"), row.getBoolean("legacy_room"), row.getBoolean("legacy_lock"), row.getInt("room_cost_coins"), row.getInt("room_cost_pixels"));
 
     }
 }

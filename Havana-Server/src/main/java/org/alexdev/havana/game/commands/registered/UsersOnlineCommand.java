@@ -1,6 +1,7 @@
 package org.alexdev.havana.game.commands.registered;
 
 import org.alexdev.havana.game.commands.Command;
+import org.alexdev.havana.game.commands.CommandFormatBuilder;
 import org.alexdev.havana.game.entity.Entity;
 import org.alexdev.havana.game.entity.EntityType;
 import org.alexdev.havana.game.player.Player;
@@ -31,10 +32,10 @@ public class UsersOnlineCommand extends Command {
 
         Player session = (Player) entity;
 
-        StringBuilder sb = new StringBuilder()
-                .append("Users online: ").append(players.size()).append("<br>")
-                .append("Daily player peak count: ").append(PlayerManager.getInstance().getDailyPlayerPeak()).append("<br>")
-                .append("List of users online: ").append("<br><br>");
+        CommandFormatBuilder sb = new CommandFormatBuilder(entity)
+                .append("Users online: ").append(players.size()).newLine()
+                .append("Daily player peak count: ").append(PlayerManager.getInstance().getDailyPlayerPeak()).newLine()
+                .append("List of users online: ").newLine().newLine();
 
         for (List<Player> playerList : paginatedPlayers.values()) {
             int i = 0;
@@ -53,7 +54,7 @@ public class UsersOnlineCommand extends Command {
                 }
             }
 
-            sb.append("<br>");
+            sb.newLine();
         }
 
         session.send(new ALERT(sb.toString()));

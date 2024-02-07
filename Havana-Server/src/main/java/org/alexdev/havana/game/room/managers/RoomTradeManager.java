@@ -150,8 +150,8 @@ public class RoomTradeManager {
      * @param tradeBanned the person that is trade banned.
      */
     public static void addTradeBan(Player tradeBanned) {
-        tradeBanned.send(new ALERT("You have been trade banned for 5 days for suspicious activity. Do not give credits to other users."));
-        tradeBanned.getDetails().setTradeBanExpiration(DateUtil.getCurrentTimeSeconds() + TimeUnit.DAYS.toSeconds(5));
+        tradeBanned.send(new ALERT("You have been trade banned for 1 day(s) for suspicious activity. Do not give credits to other users.<br>Read for more info: https://habbolegacy.com/articles/22-trade-banned"));
+        tradeBanned.getDetails().setTradeBanExpiration(DateUtil.getCurrentTimeSeconds() + TimeUnit.DAYS.toSeconds(1));
         ItemDao.saveTradeBanExpire(tradeBanned.getDetails().getId(), tradeBanned.getDetails().getTradeBanExpiration());
     }
 

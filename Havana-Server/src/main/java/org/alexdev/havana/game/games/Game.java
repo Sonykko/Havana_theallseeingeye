@@ -260,11 +260,9 @@ public abstract class Game {
         var gameHistoryData = new GameHistoryData();
         var gameHistory = new GameHistory(gameHistoryData);
 
-        this.teams.values().forEach(GameTeam::calculateScore);
-
         if (this.teams.size() > 0) {
-            List<GameTeam> sortedTeamList = new ArrayList<>(this.teams.values());
-            sortedTeamList.sort(Comparator.comparingInt(GameTeam::getPoints).reversed());
+            var sortedTeamList = new ArrayList<>(this.teams.values());
+            sortedTeamList.sort(Comparator.comparingInt(GameTeam::getScore).reversed());
 
             var winningTeam = sortedTeamList.get(0);
 
@@ -272,14 +270,13 @@ public abstract class Game {
 
             for (GameTeam team : sortedTeamList) {
                 for (GamePlayer gamePlayer : team.getPlayers()) {
-                    gamePlayer.calculateScore();
                     gameHistoryData.addPlayer(gamePlayer.getUserId(), gamePlayer.getScore(), gamePlayer.getTeamId());
                 }
             }
 
             gameHistory.setName(this.getName());
             gameHistory.setWinningTeam(winningTeam.getId());
-            gameHistory.setWinningTeamScore(winningTeam.getPoints());
+            gameHistory.setWinningTeamScore(winningTeam.getScore());
             gameHistory.setGameType(this.gameType);
             gameHistory.setMapId(this.getMapId());
 
@@ -772,9 +769,9 @@ public abstract class Game {
      * Method called when the game initially began
      */
     public void gamePrepare() {
-//        for (GameTeam gameTeam : this.getTeams().values()) {
-//            gameTeam.setScore(0);
-//        }
+        for (GameTeam gameTeam : this.getTeams().values()) {
+            gameTeam.setScore(0);
+        }
 
         for (GamePlayer gamePlayer : this.getActivePlayers()) {
             gamePlayer.setXp(0);

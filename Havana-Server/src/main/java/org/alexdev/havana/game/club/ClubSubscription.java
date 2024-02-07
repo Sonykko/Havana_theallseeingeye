@@ -100,7 +100,7 @@ public class ClubSubscription {
         long secondsToAdd = (daysInSeconds * days);
 
         if (playerDetails.getFirstClubSubscription() == 0) {
-            PlayerStatisticsDao.updateStatistic(playerDetails.getId(), PlayerStatistic.GIFTS_DUE, 1);
+            //PlayerStatisticsDao.updateStatistic(playerDetails.getId(), PlayerStatistic.GIFTS_DUE, 1);
             PlayerStatisticsDao.updateStatistic(playerDetails.getId(), PlayerStatistic.CLUB_GIFT_DUE, now);
         }
 
@@ -143,9 +143,9 @@ public class ClubSubscription {
             return false;
         }
 
-        if (player.getDetails().getFirstClubSubscription() == 0) {
+        /*if (player.getDetails().getFirstClubSubscription() == 0) {
             return true;
-        }
+        }*/
 
         if (player.getStatisticManager().getIntValue(PlayerStatistic.GIFTS_DUE) > 0) {
             return true;
@@ -235,19 +235,19 @@ public class ClubSubscription {
         switch (choice) {
             case 1:
             {
-                credits = 25;
+                credits = 25 * 2;
                 days = 31;
                 break;
             }
             case 2:
             {
-                credits = 60;
+                credits = 60 * 2;
                 days = 93;
                 break;
             }
             case 3:
             {
-                credits = 105;
+                credits = 105 * 2;
                 days = 186;
                 break;
             }

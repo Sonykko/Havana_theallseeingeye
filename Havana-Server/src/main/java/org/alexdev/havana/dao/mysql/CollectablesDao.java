@@ -57,4 +57,23 @@ public class CollectablesDao {
             Storage.closeSilently(sqlConnection);
         }
     }
+
+    public static void updateClassNames(String classNames, int storePage) {
+        Connection sqlConnection = null;
+        PreparedStatement preparedStatement = null;
+
+        try {
+            sqlConnection = Storage.getStorage().getConnection();
+            preparedStatement = Storage.getStorage().prepare("UPDATE catalogue_collectables SET class_names = ? WHERE store_page = ?", sqlConnection);
+            preparedStatement.setString(1, classNames);
+            preparedStatement.setInt(2, storePage);
+            preparedStatement.execute();
+
+        } catch (Exception e) {
+            Storage.logError(e);
+        } finally {
+            Storage.closeSilently(preparedStatement);
+            Storage.closeSilently(sqlConnection);
+        }
+    }
 }

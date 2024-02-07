@@ -14,6 +14,7 @@ import org.alexdev.havana.game.navigator.NavigatorCategory;
 import org.alexdev.havana.game.navigator.NavigatorManager;
 import org.alexdev.havana.game.pets.Pet;
 import org.alexdev.havana.game.player.Player;
+import org.alexdev.havana.game.player.PlayerManager;
 import org.alexdev.havana.game.room.enums.StatusType;
 import org.alexdev.havana.game.room.managers.*;
 import org.alexdev.havana.game.room.mapping.RoomMapping;
@@ -30,6 +31,7 @@ import org.alexdev.havana.util.StringUtil;
 import org.alexdev.havana.util.config.GameConfiguration;
 import org.alexdev.havana.util.schedule.FutureRunnable;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
@@ -52,6 +54,7 @@ public class Room {
     private List<Item> items;
     private List<Integer> rights;
     private List<VoteData> votes;
+    private int totalCreditsInRoom;
 
     public Room() {
         this.roomData = new RoomData(this);
@@ -64,6 +67,7 @@ public class Room {
         this.items = new CopyOnWriteArrayList<>();
         this.rights = new CopyOnWriteArrayList<>();
         this.votes = new CopyOnWriteArrayList<>();
+        this.totalCreditsInRoom = 0;
     }
 
     /**
@@ -97,7 +101,7 @@ public class Room {
      * @return true, if successful
      */
     public boolean isOwner(int ownerId) {
-        return this.roomData.getOwnerId() == ownerId;
+        return this.roomData.getOwnerId() == ownerId && !this.roomData.isLegacyRoom();
     }
 
     /**
@@ -259,7 +263,7 @@ public class Room {
             }
         }
 
-        if (isPublic) {
+        if (isPublic && !player.flash) {
             roomId = roomId + RoomManager.PUBLIC_ROOM_OFFSET;
         }
 
@@ -330,6 +334,28 @@ public class Room {
         // Schedule new dispose runnable
         this.disposeRunnable.setFuture(GameScheduler.getInstance().getService().schedule(this.disposeRunnable, defaultSeconds, TimeUnit.SECONDS));
         return true;
+    }
+
+    public void recalculateTotalCreditsInRoom() {
+        if(this.isPublicRoom()) {
+            return;
+        }
+
+        var totalCredits = 0;
+
+        for(var item : items) {
+            var sprite = item.getDefinition().getSprite();
+            if(sprite.startsWith("CF_")) {
+                var creditAmount = Integer.parseInt(sprite.split("_")[1]);
+                totalCredits += creditAmount;
+            }
+        }
+
+        this.totalCreditsInRoom = totalCredits;
+    }
+
+    public int getTotalCreditsInRoom() {
+        return this.totalCreditsInRoom;
     }
 
     /**
@@ -530,4 +556,7 @@ public class Room {
     public RoomIdolManager getIdolManager() {
         return roomIdolManager;
     }
+
+
+
 }

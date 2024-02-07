@@ -27,7 +27,7 @@ dependencies {
     implementation group: 'com.zaxxer', name: 'HikariCP', version: '3.4.1'
 
     // https://mvnrepository.com/artifact/org.mariadb.jdbc/mariadb-java-client
-    implementation group: 'org.mariadb.jdbc', name: 'mariadb-java-client', version: '2.2.5'
+    implementation group: 'org.mariadb.jdbc', name: 'mariadb-java-client', version: '2.3.0'
 
     // https://mvnrepository.com/artifact/org.apache.commons/commons-configuration2
     implementation group: 'org.apache.commons', name: 'commons-configuration2', version: '2.2'
@@ -42,7 +42,7 @@ dependencies {
     implementation group: 'commons-validator', name: 'commons-validator', version: '1.6'
 
     // https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient
-    implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5'
+    implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.13'
 
     // https://github.com/Quackster/duckHTTPD/
     implementation name: 'duckHTTPD-all'
@@ -67,6 +67,9 @@ dependencies {
 
     implementation 'com.goterl:lazysodium-java:5.0.1'
     implementation "net.java.dev.jna:jna:5.8.0"
+
+    // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.15.0'
 }
 
 task fatJar(type: Jar) {

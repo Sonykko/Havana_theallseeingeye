@@ -1,6 +1,7 @@
 package org.alexdev.havana.game.commands.registered.groups;
 
 import org.alexdev.havana.game.commands.Command;
+import org.alexdev.havana.game.commands.CommandFormatBuilder;
 import org.alexdev.havana.game.entity.Entity;
 import org.alexdev.havana.game.entity.EntityType;
 import org.alexdev.havana.game.player.PlayerManager;
@@ -22,10 +23,13 @@ public class HotelAlertCommand extends Command {
 
         // Concatenate all arguments
         String alert = StringUtil.filterInput(String.join(" ", args), true);
-        alert += "<br><br>- " + entity.getDetails().getName();
+
+        var formatBuilder = new CommandFormatBuilder(entity);
+        formatBuilder.append(alert).newLine().newLine();
+        formatBuilder.append(entity.getDetails().getName());
 
         // Send all players an alert
-        PlayerManager.getInstance().sendAll(new ALERT(alert));
+        PlayerManager.getInstance().sendAll(new ALERT(formatBuilder.toString()));
     }
 
     @Override

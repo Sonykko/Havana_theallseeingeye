@@ -9,6 +9,9 @@ import org.alexdev.havana.game.room.Room;
 import org.alexdev.havana.game.room.RoomManager;
 import org.alexdev.havana.messages.outgoing.effects.USER_AVATAR_EFFECT;
 import org.alexdev.havana.messages.outgoing.games.GAMESTART;
+import org.alexdev.havana.messages.outgoing.rooms.GXI_FLASH;
+import org.alexdev.havana.messages.outgoing.rooms.GXI_PRIVATE_FLASH;
+import org.alexdev.havana.messages.outgoing.rooms.SET_ROOM_INFO_FLASH;
 import org.alexdev.havana.messages.outgoing.rooms.groups.GROUP_BADGES;
 import org.alexdev.havana.messages.outgoing.rooms.groups.GROUP_MEMBERSHIP_UPDATE;
 import org.alexdev.havana.messages.outgoing.rooms.items.DICE_VALUE;
@@ -65,8 +68,25 @@ public class G_STAT implements MessageEvent {
             }
         }*/
 
-        player.send(new USER_OBJECTS(room.getEntities()));
-        room.send(new USER_OBJECTS(player), List.of(player));
+        if (player.getDetails().getFavouriteGroupId() > 0) {
+            var groupMember = player.getDetails().getGroupMember();
+
+            room.send(new GROUP_BADGES(new HashMap<>() {{
+                put(groupMember.getGroupId(), player.getJoinedGroup(player.getDetails().getFavouriteGroupId()).getBadge());
+            }}));
+
+            room.send(new GROUP_MEMBERSHIP_UPDATE(player.getRoomUser().getInstanceId(), groupMember.getGroupId(), groupMember.getMemberRank().getClientRank()));
+        }
+
+        room.send(new USER_OBJECTS(player, false), List.of(player));
+        player.send(new USER_OBJECTS(room.getEntities(), player.flash));
+
+        if(player.flash) {
+            player.send(new GXI_FLASH());
+            player.send(new GXI_PRIVATE_FLASH(player.getDetails().getId(), room));
+            player.send(new SET_ROOM_INFO_FLASH(room, true, false));
+        }
+
         player.send(new USER_STATUSES(room.getEntities()));
 
         if (player.getRoomUser().isUsingEffect()) {
@@ -113,16 +133,6 @@ public class G_STAT implements MessageEvent {
                     player.send(new DICE_VALUE(item.getVirtualId(), true, 0));
                 }
             }
-        }
-
-        if (player.getDetails().getFavouriteGroupId() > 0) {
-            var groupMember = player.getDetails().getGroupMember();
-
-            room.send(new GROUP_BADGES(new HashMap<>() {{
-                put(groupMember.getGroupId(), player.getJoinedGroup(player.getDetails().getFavouriteGroupId()).getBadge());
-            }}));
-
-            room.send(new GROUP_MEMBERSHIP_UPDATE(player.getRoomUser().getInstanceId(), groupMember.getGroupId(), groupMember.getMemberRank().getClientRank()));
         }
 
         if (RoomManager.getInstance().getRoomEntryBadges().containsKey(room.getId())) {

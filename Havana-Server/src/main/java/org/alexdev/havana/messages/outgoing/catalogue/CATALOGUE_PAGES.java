@@ -2,36 +2,50 @@ package org.alexdev.havana.messages.outgoing.catalogue;
 
 import org.alexdev.havana.game.catalogue.CatalogueManager;
 import org.alexdev.havana.game.catalogue.CataloguePage;
+import org.alexdev.havana.game.player.Player;
 import org.alexdev.havana.messages.types.MessageComposer;
 import org.alexdev.havana.server.netty.streams.NettyResponse;
 
 import java.util.List;
 
 public class CATALOGUE_PAGES extends MessageComposer {
+    private final Player player;
     private final int rank;
     private final boolean hasClub;
     private final List<CataloguePage> parentTabs;
+    private static List<CataloguePage> cache;
 
-    public CATALOGUE_PAGES(int rank, boolean hasClub, List<CataloguePage> parentTabs) {
+    private boolean cacheCatalogue;
+
+    public CATALOGUE_PAGES(Player player, int rank, boolean hasClub, boolean cacheCatalogue, List<CataloguePage> parentTabs) {
+        this.player = player;
         this.rank = rank;
         this.hasClub = hasClub;
         this.parentTabs = parentTabs;
+        this.cacheCatalogue = cacheCatalogue;
     }
 
     @Override
     public void compose(NettyResponse response) {
-        response.writeInt(0); // Navigatable
-        response.writeInt(0); // Colour
-        response.writeInt(0); // Icon
-        response.writeInt(-1); // Page id
-        response.writeString("");
-        response.writeInt(0);
+        if(!this.player.getHasLoadedCatalogue()) {
+            response.writeInt(0); // Navigatable
+            response.writeInt(0); // Colour
+            response.writeInt(0); // Icon
+            response.writeInt(-1); // Page id
+            response.writeString("");
+            response.writeInt(0);
+        }
 
         response.writeInt(this.parentTabs.size());
 
         for (CataloguePage childTab : this.parentTabs) {
             appendIndexNode(childTab, response);
             recursiveIndexNode(childTab, response);
+        }
+
+        if(this.cacheCatalogue && this.player.flash) {
+            this.player.setHasLoadedCatalogue(true);
+            this.player.getLogger().info("Player " + this.player.getDetails().getName() + " just loaded the catalogue");
         }
     }
 

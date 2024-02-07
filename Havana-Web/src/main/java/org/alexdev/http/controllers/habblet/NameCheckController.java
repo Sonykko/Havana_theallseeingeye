@@ -3,6 +3,7 @@ package org.alexdev.http.controllers.habblet;
 import io.netty.handler.codec.http.FullHttpResponse;
 import org.alexdev.duckhttpd.response.ResponseBuilder;
 import org.alexdev.duckhttpd.server.connection.WebConnection;
+import org.alexdev.havana.dao.mysql.PlayerDao;
 import org.alexdev.http.util.RegisterUtil;
 
 public class NameCheckController {
@@ -24,6 +25,12 @@ public class NameCheckController {
             errorMessage = "Please enter a username.";
         } else if (errorCode == 1) {
             errorMessage = "A user with this name already exists.";
+            var password = PlayerDao.getPassword(username);
+            if(password != null) {
+                if(password.equalsIgnoreCase("removed")) {
+                    errorMessage = "This is a legacy account. Please contact discord support to access. Press <a href='https://discord.gg/NJ4eq8tm5R'>here</a> for discord invite";
+                }
+            }
         }
 
         FullHttpResponse httpResponse = ResponseBuilder.create("");

@@ -1,10 +1,9 @@
 package org.alexdev.havana.game.room.managers;
 
-import org.alexdev.havana.dao.mysql.ItemDao;
-import org.alexdev.havana.dao.mysql.RoomDao;
-import org.alexdev.havana.dao.mysql.RoomRightsDao;
-import org.alexdev.havana.dao.mysql.RoomVoteDao;
+import org.alexdev.havana.dao.mysql.*;
 import org.alexdev.havana.game.GameScheduler;
+import org.alexdev.havana.game.achievements.AchievementManager;
+import org.alexdev.havana.game.achievements.user.UserAchievement;
 import org.alexdev.havana.game.bot.Bot;
 import org.alexdev.havana.game.bot.BotData;
 import org.alexdev.havana.game.bot.BotManager;
@@ -139,8 +138,9 @@ public class RoomEntityManager {
 
         Player player = (Player) entity;
 
+        player.onEnterRoom();
+
         player.send(new ROOM_READY(this.room.getId(), this.room.getModel().getName()));
-        player.send(new FLATPROPERTY("landscape", this.room.getData().getLandscape()));
 
         if (this.room.getData().getWallpaper() > 0) {
             player.send(new FLATPROPERTY("wallpaper", this.room.getData().getWallpaper()));
@@ -149,6 +149,8 @@ public class RoomEntityManager {
         if (this.room.getData().getFloor() > 0) {
             player.send(new FLATPROPERTY("floor", this.room.getData().getFloor()));
         }
+
+        player.send(new FLATPROPERTY("landscape", this.room.getData().getLandscape()));
 
         // Only refresh rights when in private room
         if (!this.room.isPublicRoom()) {
@@ -168,6 +170,11 @@ public class RoomEntityManager {
 
         player.send(new ROOMEEVENT_INFO(EventsManager.getInstance().getEventByRoomId(this.room.getId())));
 
+        //Country badge
+        if(player.getCountryBadgeToGive() != null) {
+            player.getBadgeManager().tryAddBadge(player.getCountryBadgeToGive(), null);
+            player.setCountryBadgeToGive(null);
+        }
     }
 
     public void silentlyEnterRoom(Entity entity, Position destination) {
@@ -204,7 +211,9 @@ public class RoomEntityManager {
 
         if (entity.getType() != EntityType.PLAYER) {
             if (this.getPlayers().size() > 0) {
-                this.room.send(new USER_OBJECTS(entity));
+                for(var player : this.getPlayers()) {
+                    player.send(new USER_OBJECTS(entity, player.flash));
+                }
             }
         }
 
@@ -289,6 +298,7 @@ public class RoomEntityManager {
                 }
 
                 this.room.getItems().addAll(ItemDao.getRoomItems(this.room.getData()));
+                this.room.recalculateTotalCreditsInRoom();
                 this.room.getItemManager().resetItemStates();
             }
 

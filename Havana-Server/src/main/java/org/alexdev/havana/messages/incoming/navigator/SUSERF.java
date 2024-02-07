@@ -14,7 +14,7 @@ import java.util.List;
 public class SUSERF implements MessageEvent {
     @Override
     public void handle(Player player, NettyRequest reader) throws Exception {
-        List<Room> roomList = RoomManager.getInstance().replaceQueryRooms(RoomDao.getRoomsByUserId(player.getDetails().getId()));
+        List<Room> roomList = RoomManager.getInstance().replaceQueryRooms(RoomDao.getRoomsByUserIdNoLegacy(player.getDetails().getId()));
 
         if (roomList.size() > 0) {
             RoomManager.getInstance().sortRooms(roomList);

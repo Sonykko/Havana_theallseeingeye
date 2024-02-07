@@ -7,7 +7,6 @@ import org.alexdev.havana.game.player.PlayerManager;
 import org.alexdev.havana.game.room.handlers.walkways.WalkwaysEntrance;
 import org.alexdev.havana.game.room.handlers.walkways.WalkwaysManager;
 import org.alexdev.havana.game.room.managers.VoteData;
-import org.alexdev.havana.util.config.GameConfiguration;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -266,19 +265,24 @@ public class RoomManager {
         return roomEntryBadges;
     }
 
-    /**
-     * Get rooms by flash R34 mode
-     * @param mode
-     * @param player
-     * @return
-     */
+    public List<Room> getRoomsByCategory(int categoryId) {
+        var roomList = RoomManager.getInstance().replaceQueryRooms(NavigatorDao.getRopularRoomsWithEmpty(30, false, categoryId));
+        return roomList;
+    }
+
+        /**
+         * Get rooms by flash R34 mode
+         * @param mode
+         * @param player
+         * @return
+         */
     public List<Room> getRoomsByMode(int mode, Player player) {
         List<Room> roomList = new ArrayList<>();
 
         switch (mode) {
             case 1: // Popular rooms
             {
-                roomList = RoomManager.getInstance().replaceQueryRooms(NavigatorDao.getRopularRooms(30, false));
+                roomList = RoomManager.getInstance().replaceQueryRooms(NavigatorDao.getRopularRooms(30, false, player));
                 break;
             }
             case 2: // Highest score
@@ -288,7 +292,7 @@ public class RoomManager {
             }
             case 5: // My rooms
             {
-                roomList = RoomManager.getInstance().replaceQueryRooms(RoomDao.getRoomsByUserId(player.getDetails().getId()));
+                roomList = RoomManager.getInstance().replaceQueryRooms(RoomDao.getRoomsByUserIdNoLegacy(player.getDetails().getId()));
                 break;
             }
             case 6: // My favourites
@@ -328,5 +332,19 @@ public class RoomManager {
         }
 
         return roomList;
+    }
+
+    public int getTotalCreditsInRoomsByPlayer(Player player) {
+        var totalCredits = 0;
+
+        var playerRooms = getRooms().stream()
+                .filter(room -> room.isOwner(player.getDetails().getId()))
+                .collect(Collectors.toList());
+
+        for(var room : playerRooms) {
+            totalCredits += room.getTotalCreditsInRoom();
+        }
+
+        return totalCredits;
     }
 }

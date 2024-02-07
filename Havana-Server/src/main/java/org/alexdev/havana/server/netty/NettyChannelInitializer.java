@@ -1,10 +1,12 @@
 package org.alexdev.havana.server.netty;
 
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.timeout.IdleStateHandler;
 import io.netty.handler.traffic.ChannelTrafficShapingHandler;
+import org.alexdev.havana.messages.MessageHandler;
 import org.alexdev.havana.server.netty.codec.NetworkDecoder;
 import org.alexdev.havana.server.netty.codec.NetworkEncoder;
 import org.alexdev.havana.server.netty.connections.ConnectionHandler;
@@ -12,7 +14,7 @@ import org.alexdev.havana.server.netty.connections.IdleConnectionHandler;
 import org.alexdev.havana.util.config.GameConfiguration;
 
 public class NettyChannelInitializer extends ChannelInitializer<SocketChannel> {
-    private final NettyServer nettyServer;
+    protected final NettyServer nettyServer;
     //private final long readLimit = 40*1024;
     //private final long writeLimit = 25*1024;
 
@@ -29,10 +31,18 @@ public class NettyChannelInitializer extends ChannelInitializer<SocketChannel> {
             pipeline.addLast("trafficShapingHandler", new ChannelTrafficShapingHandler(bandwidthLimit, bandwidthLimit));
         }
 
-        pipeline.addLast("networkEncoder", new NetworkEncoder());
-        pipeline.addLast("networkDecoder", new NetworkDecoder());
-        pipeline.addLast("handler", new ConnectionHandler(this.nettyServer));
+        pipeline.addLast("gameEncoder", new NetworkEncoder());
+        pipeline.addLast("gameDecoder", getNetworkDecoder());
+        pipeline.addLast("handler", getConnectionHandler());
         pipeline.addLast("idleStateHandler", new IdleStateHandler(60, 0, 0));
         pipeline.addLast("idleHandler", new IdleConnectionHandler());
+    }
+
+    protected NetworkDecoder getNetworkDecoder() {
+        return new NetworkDecoder();
+    }
+
+    protected ConnectionHandler getConnectionHandler() {
+        return new ConnectionHandler(this.nettyServer, new MessageHandler(false));
     }
 }

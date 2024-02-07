@@ -118,7 +118,7 @@ public class GroupHabbletController {
         template.set("selected" + group.getForumType().getId() + "ForumType", " checked=\"checked\"");
         template.set("selected" + group.getForumPermission().getId() + "ForumPermissionType", " checked=\"checked\"");
         template.set("charactersLeft", String.valueOf(255 - group.getDescription().length()));
-        template.set("rooms", RoomDao.getRoomsByUserId(userId).stream().filter(room -> room.getData().getGroupId() == 0 || room.getData().getGroupId() == group.getId()).collect(Collectors.toList()));
+        template.set("rooms", RoomDao.getRoomsByUserIdNoLegacy(userId).stream().filter(room -> room.getData().getGroupId() == 0 || room.getData().getGroupId() == group.getId()).collect(Collectors.toList()));
         template.render();
     }
 

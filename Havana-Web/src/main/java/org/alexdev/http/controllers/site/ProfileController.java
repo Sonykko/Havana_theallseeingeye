@@ -441,6 +441,8 @@ public class ProfileController {
         int userId = webConnection.session().getInt("user.id");
 
         String motto = webConnection.post().getString("motto");
+        String hotelView = webConnection.post().getString("hotelView");
+        String clientPreference = webConnection.post().getString("clientpreference");
         boolean profileVisibility = webConnection.post().getString("visibility").equals("EVERYONE");
         boolean onlineStatusVisibility = webConnection.post().getString("showOnlineStatus").equals("true");
         boolean wordFilterEnabled = !webConnection.post().getString("wordFilterSetting").equals("false");
@@ -451,7 +453,7 @@ public class ProfileController {
             motto = motto.substring(0, 32);
         }
 
-        SessionDao.savePreferences(motto, profileVisibility, onlineStatusVisibility, wordFilterEnabled, allowFriendRequests, allowFriendStalking, userId);
+        SessionDao.savePreferences(motto, profileVisibility, onlineStatusVisibility, wordFilterEnabled, allowFriendRequests, allowFriendStalking, clientPreference, hotelView, userId);
         
         webConnection.session().set("settings.saved.successfully", "true");
         webConnection.redirect("/profile?tab=2");
@@ -498,6 +500,9 @@ public class ProfileController {
             webConnection.session().set("alertColour", "red");
         } else if (EmailUtil.isAlreadyTradePass(playerDetails.getId(), playerDetails.getEmail())) {
             webConnection.session().set("alertMessage", "This email is already used for a trade pass.");
+            webConnection.session().set("alertColour", "red");
+        } else if (!playerDetails.discordVerified) {
+            webConnection.session().set("alertMessage", "Please <a href=\"https://discordapp.com/api/oauth2/authorize?client_id=1082753885657124975&redirect_uri=" + GameConfiguration.getInstance().getString("site.path") + "/api/discord&response_type=code&scope=identify\">link your account with Discord</a> in order to turn trading on");
             webConnection.session().set("alertColour", "red");
         } else {
             webConnection.session().set("alertMessage", "Security settings updated successfully");

@@ -7,6 +7,7 @@ import org.alexdev.havana.Havana;
 import org.alexdev.havana.game.player.Player;
 import org.alexdev.havana.log.Log;
 import org.alexdev.havana.messages.MessageHandler;
+import org.alexdev.havana.messages.MessageHandlerFlash;
 import org.alexdev.havana.messages.outgoing.handshake.HELLO;
 import org.alexdev.havana.server.netty.NettyPlayerNetwork;
 import org.alexdev.havana.server.netty.NettyServer;
@@ -22,9 +23,11 @@ public class ConnectionHandler extends SimpleChannelInboundHandler<NettyRequest>
     final private static Logger log = LoggerFactory.getLogger(ConnectionHandler.class);
     private static final int MAX_CONNECTIONS = 1000;
     final private NettyServer server;
+    final private MessageHandler messageHandler;
 
-    public ConnectionHandler(NettyServer server) {
+    public ConnectionHandler(NettyServer server, MessageHandler messageHandler) {
         this.server = server;
+        this.messageHandler = messageHandler;
     }
 
     @Override
@@ -52,7 +55,14 @@ public class ConnectionHandler extends SimpleChannelInboundHandler<NettyRequest>
             }
         }
 
-        Player player = new Player(new NettyPlayerNetwork(ctx.channel(), this.server.getConnectionIds().getAndIncrement()));
+        Player player = null;
+
+        if(messageHandler instanceof MessageHandlerFlash) {
+            player = new Player(new NettyPlayerNetwork(ctx.channel(), this.server.getConnectionIds().getAndIncrement()), true);
+        } else {
+            player = new Player(new NettyPlayerNetwork(ctx.channel(), this.server.getConnectionIds().getAndIncrement()), false);
+        }
+
         ctx.channel().attr(Player.PLAYER_KEY).set(player);
 
         if (!this.server.getChannels().add(ctx.channel()) || Havana.isShuttingdown()) {
@@ -60,7 +70,11 @@ public class ConnectionHandler extends SimpleChannelInboundHandler<NettyRequest>
             return;
         }
 
-        player.send(new HELLO());
+        if(messageHandler instanceof MessageHandlerFlash) {
+            //Do nothing
+        } else {
+            player.send(new HELLO());
+        }
 
         if (ServerConfiguration.getBoolean("log.connections")) {
             log.info("[{}] Connection from {} ", player.getNetwork().getConnectionId(), NettyPlayerNetwork.getIpAddress(ctx.channel()));
@@ -101,7 +115,7 @@ public class ConnectionHandler extends SimpleChannelInboundHandler<NettyRequest>
             return;
         }
 
-        MessageHandler.getInstance().handleRequest(player, message);
+        messageHandler.handleRequest(player, message);
 
         try {
             message.dispose();

@@ -9,7 +9,7 @@ public class DefaultConfigWriter implements ConfigWriter {
     public Map<String, String>  setConfigurationDefaults() {
         Map<String, String> config = new HashMap<>();
         // DEFAULT settings
-        config.put("server.bind", "127.0.0.1");
+        config.put("server.bind", "localhost");
         config.put("server.port", "12321");
 
         config.put("server.limit.bandwidth", "false");//String.valueOf(40*1024));

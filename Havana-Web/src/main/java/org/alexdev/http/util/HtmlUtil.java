@@ -9,8 +9,6 @@ import java.io.*;
 import java.net.URL;
 import java.nio.charset.Charset;
 
-import org.alexdev.havana.util.config.GameConfiguration;
-
 public class HtmlUtil {
     /**
      * Strip HTML tags.
@@ -76,7 +74,7 @@ public class HtmlUtil {
     }
 
     public static String createFigureLink(String figure, String sex) {
-        return GameConfiguration.getInstance().getString("site.path") + "/habbo-imaging/avatarimage?figure=" + figure + "&size=s&direction=4&head_direction=4&crr=0&gesture=sml&frame=1";
+        return "http://localhost/habbo-imaging/avatarimage?figure=" + figure + "&size=s&direction=4&head_direction=4&crr=0&gesture=sml&frame=1";
     }
 
     public static String encodeToString(BufferedImage image, String type) {
