@@ -92,8 +92,8 @@
 				  <td>{{ staffPick.groupOwner }}{{ staffPick.roomOwner }}</td>                 			 
 				  <td>{% if staffPick.isPicked == 1 %}Yes{% else %}No{% endif %}</td>
 				  <td>
-					<a href="https://theallseeingeye.habbo.pro/{{ site.housekeepingPath }}/campaign_management/staff_picks?edit={{ staffPick.ID }}&type={{ staffPick.type }}" style="color:black;"><button type="button">Edit</button></a>
-					<a href="https://theallseeingeye.habbo.pro/{{ site.housekeepingPath }}/campaign_management/staff_picks?delete={{ staffPick.ID }}&type={{ staffPick.type }}" style="color:black;"><button type="button">Delete</button></a>
+					<a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/campaign_management/staff_picks?edit={{ staffPick.ID }}&type={{ staffPick.type }}" style="color:black;"><button type="button">Edit</button></a>
+					<a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/campaign_management/staff_picks?delete={{ staffPick.ID }}&type={{ staffPick.type }}" style="color:black;"><button type="button">Delete</button></a>
 				</td>
                 </tr>
 			   {% set num = num + 1 %}

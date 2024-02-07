@@ -57,18 +57,18 @@
 		  <p>The Wordfilter list is seen below.</p>
 		  {% if nextWords|length > 0 %}
 				{% set ourNextPage = page + 1 %}
-				<a href="https://theallseeingeye.habbo.pro/{{ site.housekeepingPath }}/admin_tools/wordfilter?page={{ ourNextPage }}&sort={{ sortBy }}"><button type="button">Next Page</button></a>
+				<a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/wordfilter?page={{ ourNextPage }}&sort={{ sortBy }}"><button type="button">Next Page</button></a>
 			{% endif %}
 			{% if previousWords|length > 0 %}
 				{% set ourNextPage = page - 1 %}
-				<a href="https://theallseeingeye.habbo.pro/{{ site.housekeepingPath }}/admin_tools/wordfilter?page={{ ourNextPage }}&sort={{ sortBy }}"><button type="button">Go back</button></a>
+				<a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/wordfilter?page={{ ourNextPage }}&sort={{ sortBy }}"><button type="button">Go back</button></a>
 			{% endif %}
           <div class="table-responsive" style="padding-left: 15px;">
             <table class="table table-striped">
               <thead>
                 <tr>
-                  <th><a href="https://theallseeingeye.habbo.pro/{{ site.housekeepingPath }}/admin_tools/wordfilter?page={{ page }}&sort=id">ID</a></th>
-                  <th><a href="https://theallseeingeye.habbo.pro/{{ site.housekeepingPath }}/admin_tools/wordfilter?page={{ page }}&sort=word">Word</a></th>
+                  <th><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/wordfilter?page={{ page }}&sort=id">ID</a></th>
+                  <th><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/wordfilter?page={{ page }}&sort=word">Word</a></th>
                   <th>Is Bannable?</th>
                   <th>Is Filterable?</th>
                   <th>Action</th>
@@ -84,8 +84,8 @@
 				  <td>{% if word.isFilterable == 1 %}Yes{% else %}No{% endif %}</td>                 			                  			 
 				  <!--<td>{% if recommended.isPicked == 1 %}Yes{% else %}No{% endif %}</td>-->
 				  <td>
-					<a href="https://theallseeingeye.habbo.pro/{{ site.housekeepingPath }}/admin_tools/wordfilter?edit={{ word.id }}" style="color:black;"><button type="button">Edit</button></a>
-					<a href="https://theallseeingeye.habbo.pro/{{ site.housekeepingPath }}/admin_tools/wordfilter?delete={{ word.id }}" style="color:black;"><button type="button">Delete</button></a>
+					<a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/wordfilter?edit={{ word.id }}" style="color:black;"><button type="button">Edit</button></a>
+					<a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/wordfilter?delete={{ word.id }}" style="color:black;"><button type="button">Delete</button></a>
 				</td>
                 </tr>
 			   {% set num = num + 1 %}

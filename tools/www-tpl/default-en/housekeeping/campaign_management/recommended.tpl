@@ -89,8 +89,8 @@
 				  <td>{{ recommended.groupOwner }}</td>                 			 
 				  <td>{% if recommended.isPicked == 1 %}Yes{% else %}No{% endif %}</td>
 				  <td>
-					<a href="https://theallseeingeye.habbo.pro/{{ site.housekeepingPath }}/campaign_management/recommended?edit={{ recommended.ID }}" style="color:black;"><button type="button">Edit</button></a>
-					<a href="https://theallseeingeye.habbo.pro/{{ site.housekeepingPath }}/campaign_management/recommended?delete={{ recommended.ID }}" style="color:black;"><button type="post">Delete</button></a>
+					<a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/campaign_management/recommended?edit={{ recommended.ID }}" style="color:black;"><button type="button">Edit</button></a>
+					<a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/campaign_management/recommended?delete={{ recommended.ID }}" style="color:black;"><button type="post">Delete</button></a>
 				</td>
                 </tr>
 			   {% set num = num + 1 %}
