@@ -13,7 +13,17 @@
 			<text><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/statistics/newest_players" class="subnav-link">Newest players</a></text>
 			<text><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/statistics/newest_players?zerocoins" class="subnav-link">Newest players with zero coins</a></text>
       </div>
-    </div>	
+    </div>
+	{% if housekeepingManager.hasPermission(playerDetails.getRank(), 'configuration') %}
+    <div class="subnav-box">
+ <div class="subnav-header">Staff logs tools</div>
+      <div class="list-group list-group-flush" style="padding-left: 2px;">
+			{% if housekeepingManager.hasPermission(playerDetails.getRank(), 'configuration') %}
+			<text><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/statistics/hklogs.login" class="subnav-link">Housekeeping login logs</a></text>
+			{% endif %}
+      </div>
+    </div>
+{% endif %}	
 	{% include "housekeeping/base/navigation_time.tpl" %}
 </div>
 
