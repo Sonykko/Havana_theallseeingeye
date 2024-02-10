@@ -1,35 +1,35 @@
-![](https://devbest.com/attachments/havana-theallseeingeye-logo-png.15329/)
+![](https://i.imgur.com/Et9Elti.png)
 # Information
 
 This is a project to recreate the supossed "Hobbanet" or theallseeingeye Habbo Housekeeping. Developed by Sonykko.
 
 # Features
 
--Login/Session
- -Save and show last login IP from HK
- -Save and show last login time from HK
--Statistics
- -Housekeeping login logs
--Configurations
- -Re-organized all config settings
--Admin tools
- -Remote alerting
- -Remote baning and kicking
- -Remote superban (original feature)
- -User action log
- -Remote mass alert
- -User search & information tool
- -Current furniture
- -Room admin (private rooms)
- -Room action log
- -CFH action log
- -User edit (original feature)
- -User create (original feature)
- -Wordfilter tool
- -Voucher codes tool
--Campaign management
- -Staff picks tool (missing rooms)
- -Recommended groups tool
+- Login/Session
+ - Save and show last login IP from HK
+ - Save and show last login time from HK
+- Statistics
+ - Housekeeping login logs
+- Configurations
+ - Re-organized all config settings
+- Admin tools
+ - Remote alerting
+ - Remote baning and kicking
+ - Remote superban (original feature)
+ - User action log
+ - Remote mass alert
+ - User search & information tool
+ - Current furniture
+ - Room admin (private rooms)
+ - Room action log
+ - CFH action log
+ - User edit (original feature)
+ - User create (original feature)
+ - Wordfilter tool
+ - Voucher codes tool
+- Campaign management
+ - Staff picks tool (missing rooms)
+ - Recommended groups tool
 - theallseeingeye - Hobbanet design
 
 # Download
