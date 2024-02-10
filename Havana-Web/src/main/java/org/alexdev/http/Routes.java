@@ -294,6 +294,7 @@ public class Routes {
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/system_status/configurations", HousekeepingConfigController::configurations);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/statistics", HousekeepingFeaturedController::statistics);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/statistics/newest_players", HousekeepingController::newestplayers);
+        RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/statistics/hklogs.login", HousekeepingStaffLogsController::loginlogs);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools", HousekeepingFeaturedController::admintools);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/campaign_management", HousekeepingFeaturedController::campaignmanagement);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/api/superban", HousekeepingCommandsController::superban);
