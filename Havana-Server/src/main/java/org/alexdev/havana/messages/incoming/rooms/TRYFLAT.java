@@ -31,7 +31,7 @@ public class TRYFLAT implements MessageEvent {
         }
 
         if (room == null) {
-                return;
+            return;
 
         }
 
@@ -75,6 +75,12 @@ public class TRYFLAT implements MessageEvent {
                     }
                 }
             }
+        }
+
+        // User switched rooms, cancel teleportation
+        if (player.getRoomUser().getAuthenticateTelporterRoomId() != roomId) {
+            player.getRoomUser().setAuthenticateTelporterId(-1);
+            player.getRoomUser().setAuthenticateTelporterRoomId(-1);
         }
 
         player.getRoomUser().setAuthenticateId(roomId);

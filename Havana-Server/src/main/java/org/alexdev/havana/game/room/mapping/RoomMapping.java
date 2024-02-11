@@ -274,8 +274,9 @@ public class RoomMapping {
                         Player p = (Player) entity;
 
                         if (p.getRoomUser().getPosition().equals(oldPosition) ||
-                            p.getRoomUser().getAuthenticateTelporterId() == item.getVirtualId()) {
+                                p.getRoomUser().getAuthenticateTelporterId() == item.getVirtualId()) {
                             p.getRoomUser().setAuthenticateTelporterId(-1);
+                            p.getRoomUser().setAuthenticateTelporterRoomId(-1);
                             p.getRoomUser().setWalkingAllowed(true);
                         }
                     }
