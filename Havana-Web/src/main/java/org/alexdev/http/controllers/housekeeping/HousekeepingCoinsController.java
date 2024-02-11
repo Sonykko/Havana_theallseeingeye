@@ -28,11 +28,17 @@ public class HousekeepingCoinsController {
             return;
         }
 
+        String credits = "";
         String expiryDate = "";
 
         if (client.post().contains("voucherCode")) {
             String voucherCode = client.post().getString("voucherCode");
-            String credits = client.post().getString("credits");
+            String item = client.post().getString("item");
+            if (StringUtils.isNumeric(client.post().getString("credits")) && client.post().getInt("credits") > 0) {
+                credits = client.post().getString("credits");
+            } else {
+                credits = "0";
+            }
             if (!client.post().getString("expiryDate").isEmpty()) {
                 expiryDate = client.post().getString("expiryDate");
             } else {
@@ -41,8 +47,10 @@ public class HousekeepingCoinsController {
             int isSingleUse = client.post().getInt("isSingleUse");
             int allowNewUsers = client.post().getInt("allowNewUsers");
 
-            if (StringUtils.isNumeric(client.post().getString("credits")) && client.post().getInt("credits") > 0 && !client.post().getString("voucherCode").isEmpty()) {
-                HousekeepingCoinsDao.createVoucher(voucherCode, credits, expiryDate, isSingleUse, allowNewUsers);
+            if (!client.post().getString("voucherCode").isEmpty()) {
+                String type = StringUtils.isEmpty(item) ? "" : "voucherItem";
+
+                HousekeepingCoinsDao.createVoucher(voucherCode, credits, expiryDate, isSingleUse, allowNewUsers, item, type);
 
                 client.session().set("alertColour", "success");
                 client.session().set("alertMessage", "The Voucher code has been successfully created");
@@ -50,6 +58,7 @@ public class HousekeepingCoinsController {
 
                 return;
             }
+
             client.session().set("alertColour", "danger");
             client.session().set("alertMessage", "Please enter a valid Voucher code or amount of credits");
         }
@@ -57,6 +66,7 @@ public class HousekeepingCoinsController {
         tpl.set("pageName", "Vouchers codes");
         tpl.set("Vouchers", HousekeepingCoinsDao.getAllVouchers());
         tpl.set("voucherRandom", generateRandomCode());
+        tpl.set("credits", credits);
         tpl.set("expiryDate", expiryDate);
         tpl.render();
 

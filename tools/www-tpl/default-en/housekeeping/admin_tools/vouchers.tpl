@@ -12,6 +12,10 @@
 				<input type="text" name="voucherCode" class="form-control" id="voucherCode" placeholder="Enter here the Voucher code..." value="{{ voucherRandom }}" />
 			</div>
 			<div class="form-group">
+				<label>Catalogue sale code</label>
+				<input type="text" name="item" class="form-control" id="item" placeholder="Enter here the catalogue sale code..." />
+			</div>
+			<div class="form-group">
 				<label>Credits amount</label>
 				<input type="text" name="credits" class="form-control" id="credits" placeholder="Enter here the amount of credits..." />
 			</div>
@@ -42,6 +46,7 @@
               <thead>
                 <tr>
                   <th>Voucher code</th>
+                  <th>Sale code</th>
                   <th>Credits amount</th>
                   <th>Expiry date</th>
                   <th>Single use</th>
@@ -53,6 +58,7 @@
 				{% for voucher in Vouchers %}
                 <tr>
 				  <td>{{ voucher.voucherCode }}</td>                               
+				  <td>{{ voucher.saleCode }}</td>                               
 				  <td>{{ voucher.credits }}</td>                 
 				  <td>{% if voucher.expiryDate != null %}{{ voucher.expiryDate }}{% else %}No limit{% endif %}</td>                                			 
 				  <td>{% if voucher.isSingleUse == 1 %}Yes{% else %}No{% endif %}</td>                 			 
