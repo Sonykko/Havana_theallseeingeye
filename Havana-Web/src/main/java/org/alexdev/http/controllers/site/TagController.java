@@ -115,7 +115,7 @@ public class TagController {
             boolean isValidTag = temporaryTag != null;
 
             if (isValidTag) {
-                 tpl.set("tagSearchAdd", tag);
+                tpl.set("tagSearchAdd", tag);
             }
         }
 
