@@ -150,6 +150,7 @@ public class HousekeepingRoomsController {
         }
 
         tpl.set("pageName", "Room Admin");
+        tpl.set("roomCats", HousekeepingRoomDao.getAllPrivateRoomsCat());
         tpl.render();
 
         // Delete alert after it's been rendered
