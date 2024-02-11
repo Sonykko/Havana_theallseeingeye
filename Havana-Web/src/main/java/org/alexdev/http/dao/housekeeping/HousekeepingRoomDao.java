@@ -164,6 +164,41 @@ public class HousekeepingRoomDao {
         }
     }
 
+    public static List<Map<String, Object>> getAllPrivateRoomsCat() {
+        List<Map<String, Object>> roomCats = new ArrayList<>();
+
+        Connection sqlConnection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+
+        try {
+            sqlConnection = Storage.getStorage().getConnection();
+
+            String query = "SELECT * FROM rooms_categories WHERE public_spaces = 0 AND isnode = 0";
+
+            preparedStatement = Storage.getStorage().prepare(query, sqlConnection);
+
+            resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                Map<String, Object> roomCat = new HashMap<>();
+                roomCat.put("id", resultSet.getInt("id"));
+                roomCat.put("categoryName", resultSet.getString("name"));
+
+                roomCats.add(roomCat);
+            }
+
+        } catch (Exception e) {
+            Storage.logError(e);
+        } finally {
+            Storage.closeSilently(resultSet);
+            Storage.closeSilently(preparedStatement);
+            Storage.closeSilently(sqlConnection);
+        }
+
+        return roomCats;
+    }
+
     public static List<Map<String, Object>> getModChatlog(int page, String sortBy) {
         List<Map<String, Object>> chatHistoryList = new ArrayList<>();
 

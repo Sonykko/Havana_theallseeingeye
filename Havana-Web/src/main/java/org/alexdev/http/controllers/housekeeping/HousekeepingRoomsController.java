@@ -6,6 +6,7 @@ import org.alexdev.havana.game.player.PlayerDetails;
 import org.alexdev.havana.game.room.Room;
 import org.alexdev.havana.server.rcon.messages.RconHeader;
 import org.alexdev.http.Routes;
+import org.alexdev.http.dao.housekeeping.HousekeepingLogsDao;
 import org.alexdev.http.dao.housekeeping.HousekeepingRoomDao;
 import org.alexdev.http.game.housekeeping.HousekeepingManager;
 import org.alexdev.http.util.RconUtil;
@@ -150,6 +151,7 @@ public class HousekeepingRoomsController {
         }
 
         tpl.set("pageName", "Room Admin");
+        tpl.set("roomCats", HousekeepingRoomDao.getAllPrivateRoomsCat());
         tpl.render();
 
         // Delete alert after it's been rendered

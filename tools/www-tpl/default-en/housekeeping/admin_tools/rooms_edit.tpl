@@ -15,17 +15,9 @@
 			<div class="form-group">
 				<label>Category:</label>
 				<select name="category" id="category" class="form-control">
-					<option value="2" {% if room.getData().getCategoryId() == 2 %}selected{% endif %}>Sin categoría</option>
-					<option value="101" {% if room.getData().getCategoryId() == 101 %}selected{% endif %}>Selección Staff HQ</option>
-					<option value="112" {% if room.getData().getCategoryId() == 112 %}selected{% endif %}>5 Planta: Fiestas</option>
-					<option value="113" {% if room.getData().getCategoryId() == 113 %}selected{% endif %}>3 Planta: Cambios</option>
-					<option value="114" {% if room.getData().getCategoryId() == 114 %}selected{% endif %}>1 Planta: Charla</option>
-					<option value="115" {% if room.getData().getCategoryId() == 115 %}selected{% endif %}>7 Planta: Salones de Belleza & Modelaje</option>
-					<option value="116" {% if room.getData().getCategoryId() == 116 %}selected{% endif %}>6 Planta: Laberintos & Parques Temáticos</option>
-					<option value="117" {% if room.getData().getCategoryId() == 117 %}selected{% endif %}>2 Planta: Juegos</option>
-					<option value="118" {% if room.getData().getCategoryId() == 118 %}selected{% endif %}>4 Planta: Ayuda</option>
-					<option value="120" {% if room.getData().getCategoryId() == 120 %}selected{% endif %}>Varios</option>
-					<option value="121" {% if room.getData().getCategoryId() == 121 %}selected{% endif %}>Puzzle del Poder de las Flores</option>
+					{% for roomCat in roomCats %}
+					<option value="{{ roomCat.id }}" {% if room.getData().getCategoryId() == roomCat.id %}selected{% endif %}>{{ roomCat.categoryName }}</option>
+					{% endfor %}
 				</select>
 			</div>
 			<div class="form-group">
