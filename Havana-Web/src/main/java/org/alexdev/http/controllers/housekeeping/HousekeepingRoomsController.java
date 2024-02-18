@@ -136,8 +136,10 @@ public class HousekeepingRoomsController {
                 if (accesstype == 2) {
                     password = client.post().getString("password");
                 }
+                boolean showOwnerName = client.post().getBoolean("showOwnerName");
+                int showOwner = showOwnerName ? 0 : 1;
 
-                HousekeepingRoomDao.updateRoom(roomId, category, name, description, accesstype, password);
+                HousekeepingRoomDao.updateRoom(roomId, category, name, description, accesstype, password, showOwner);
 
                 client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/rooms/search");
 
