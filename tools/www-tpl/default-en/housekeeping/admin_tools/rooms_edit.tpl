@@ -44,6 +44,11 @@
 				<label for="pwd">Owner:</label>
 				<input type="text" class="form-control" name="ownerId" value="{{ room.getData().getOwnerName() }} (id: {{ room.getData().getOwnerId() }})" readonly>
 			</div>
+			<div class="form-group">
+				<label style="display: flex;align-items: center;user-select: none;">
+					<input type="checkbox" class="form-control" name="showOwnerName" {% if room.getData().showOwnerName() %}checked{% endif %} style="width: fit-content;box-shadow: none;margin-right: 5px;">Show owner.</input>
+				</label>
+			</div>
 			<button type="submit">Save Details</button>
 		</form>
 		{% endfor %}
