@@ -13,10 +13,6 @@
 				<label>The badguy</label>
 				<input type="text" class="form-control" id="text" name="username"  value="{{ userBan }}" placeholder="Enter here the username..." readonly>
 			</div>
-			<!--<div class="form-group">
-				<label for="pwd">Ban description/alert message:</label>
-				<textarea class="form-control" name="alertMessage" placeholder="Enter here the ban description/alert message..."></textarea>
-			</div>-->
 			<div class="form-group">
 				<label>Choose a common message</label>
 				<select name="alertMessage" id="alertMessage" class="form-control">
@@ -51,13 +47,19 @@
 				<textarea class="form-control" name="alertMessage" placeholder="Enter here additional notes..." placeholder="Remote ban tool ban" style="height: 100px"></textarea>
 			</div>
 			<div class="form-group" style="margin-bottom: 0;">
-				<input type="checkbox" id="doBanMachine" name="doBanMachine" value="true" /><text style="padding-left: 10px;">Also ban computer for more than one hour</text>
+				<label style="display: flex;align-items: center;user-select: none;margin-bottom: 0;">
+					<input type="checkbox" id="doBanMachine" name="doBanMachine" value="true" style="margin-right: 10px;">Also ban computer for more than one hour
+				</label>
 			</div>
 			<div class="form-group">
-				<input type="checkbox" id="doBanIP" name="doBanIP" value="true" /><text style="padding-left: 10px;">Also ban IP address for more than one hour</text>
+				<label style="display: flex;align-items: center;user-select: none;margin-bottom: 0;">
+					<input type="checkbox" id="doBanIP" name="doBanIP" value="true" style="margin-right: 10px;">Also ban IP address for more than one hour
+				</label>
 			</div>
-			<div style="margin-bottom: 5px;"><button type="submit" name="action" value="ban">Ban</button></div>
-			<div style="margin-bottom: 5px;"><button type="submit" name="action" value="kick">Kick</button></div>
+			<div style="margin-bottom: 5px;">
+				<button type="submit" name="action" value="ban">Ban</button>
+				<button type="submit" name="action" value="kick">Kick</button>
+			</div>
 		</form>
 		{% endif %}
       </div>

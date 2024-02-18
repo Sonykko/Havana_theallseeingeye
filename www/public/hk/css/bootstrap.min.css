@@ -11047,7 +11047,7 @@ a.list-group-item-danger.active:hover, a.list-group-item-danger.active:focus {
     float: right;
     text-decoration: underline;
     color: #404eb2;
-	padding-inline-endfv: inherit;
+	padding-inline-end: inherit;
 }
 
 .nav-fix {
@@ -11061,7 +11061,7 @@ a.list-group-item-danger.active:hover, a.list-group-item-danger.active:focus {
 
 .nav-links {
     margin: 22px 9px 0px 9px;
-    background-color: #000197;
+    background-color: #000099;
     padding: 0px 20px 1px 20px;
     color: #b8b5d1 !important;
     align-items: center;
@@ -11074,7 +11074,7 @@ a.list-group-item-danger.active:hover, a.list-group-item-danger.active:focus {
 .nav-links.active,
 .show > .nav-links {
 	margin: 22px 9px 0px 9px;
-    background-color: #0066ca;
+    background-color: #0066cc;
     padding: 0px 20px 1px 20px;
     color: #FFF !important;
     align-items: center;
@@ -11085,8 +11085,8 @@ a.list-group-item-danger.active:hover, a.list-group-item-danger.active:focus {
 }
 
 .nav-bar {
-    color: #0066ca;
-    background-color: #0066ca;
+    color: #0066cc;
+    background-color: #0066cc;
     border: solid;
     height: 11px;
     width: auto;
@@ -11112,7 +11112,7 @@ a.list-group-item-danger.active:hover, a.list-group-item-danger.active:focus {
 	border-bottom: solid;
     border-width: 2px;
     border-color: black;
-    background-color: #0265cf;
+    background-color: #0066cc;
     color: #FFF;
     font-weight: bold;
     padding-left: 5px;
@@ -11121,7 +11121,7 @@ a.list-group-item-danger.active:hover, a.list-group-item-danger.active:focus {
 .subnav-link {
     /*text-decoration: underline;
     color: #404eb2;*/
-	padding-left: 5px;
+	padding-left: 2px;
 }
 
 .subnav-time {
@@ -11131,7 +11131,7 @@ a.list-group-item-danger.active:hover, a.list-group-item-danger.active:focus {
     margin-left: 10px;
     border-width: 2px;
     height: fit-content;
-    margin-bottom: -10px;
+    margin-bottom: 20px;
 	display: table-caption;	
 	color: gray;
     border-color: black;

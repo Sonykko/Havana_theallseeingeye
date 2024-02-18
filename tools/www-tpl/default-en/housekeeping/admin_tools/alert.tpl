@@ -4,19 +4,19 @@
     {% include "housekeeping/base/navigation.tpl" %}
     {% include "housekeeping/base/navigation_admin_tools.tpl" %}
 		<h2 class="mt-4">Remote alerting</h2>
-		  <p>Send a remote alert to a given user.</p>
+		  <p>This tool allows you to send an alert to a Habbo if you are not in the same room (you don't even need to be in the hotel). You can use this to answer Calls for help that aren't urgent (eg 'How do I dance?' or 'How do I become a Hobba?'), so that you don't have to go to the room.</p>
 		  {% include "housekeeping/base/alert.tpl" %}
-		  <form class="table-responsive col-md-4" method="post">	
-		    <label for="user">User</label>
+		  <form class="table-responsive col-md-4" method="post" style="padding-left: 0;">	
+		    <label for="user"><b>The recipient</b></label>
 				<input type="text" name="user" class="form-control" id="user" placeholder="Enter here the Username..." value="" />
-			<label for="message">Message</label>
+			<label for="message"><b>Message</b></label>
 				<textarea name="message" class="form-control" id="message" placeholder="Enter here the User Alert..." style="height:150px;"></textarea>										
 				<br>			
-			<button type="submit">Send User Alert</button>
+			<button type="submit">Alert</button>
 		  </form>
 		  
 		  
-		<h2 class="mt-4">View alerts</h2>
+		<h3 class="mt-4">View alerts</h3>
 		  <p>Here can see the most recent logs of User Alerts created via RCON.</p>
 			{% if nextremoteAlertLogs|length > 0 %}
 				{% set ourNextPage = page + 1 %}
