@@ -18,6 +18,8 @@ This is a project to recreate the supossed "Hobbanet" or theallseeingeye Habbo H
   - Remote superban (original feature)
   - User action log
   - Remote mass alert
+  - Remote mass ban
+  - Remote mass unban
   - User search & information tool
   - Current furniture
   - Room admin (private rooms)
