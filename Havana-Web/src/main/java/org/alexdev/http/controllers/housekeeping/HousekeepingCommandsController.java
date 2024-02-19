@@ -7,11 +7,16 @@ import org.alexdev.havana.game.player.PlayerDetails;
 import org.alexdev.havana.server.rcon.messages.RconHeader;
 import org.alexdev.http.Routes;
 import org.alexdev.http.dao.housekeeping.HousekeepingCommandsDao;
+import org.alexdev.http.dao.housekeeping.HousekeepingPlayerDao;
 import org.alexdev.http.game.housekeeping.HousekeepingManager;
 import org.alexdev.http.util.RconUtil;
 import org.alexdev.http.util.SessionUtil;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class HousekeepingCommandsController {
 
@@ -75,6 +80,122 @@ public class HousekeepingCommandsController {
         }
 
         client.send("User doesn't exist");
+    }
+
+    public static void massBanuser(WebConnection client) {
+        // If they are logged in, send them to the /me page
+        if (!client.session().getBoolean(SessionUtil.LOGGED_IN_HOUSKEEPING)) {
+            client.send("");
+        }
+
+        Map<String, String> params = client.get().getValues();
+        String users = params.get("usernames");
+        List<String> usernames = splitUsernames(users);
+
+        for (String username : usernames) {
+            var playerDetails = PlayerDao.getDetails(username);
+
+            if (playerDetails != null) {
+                RconUtil.sendCommand(RconHeader.DISCONNECT_USER, new HashMap<>() {{
+                    put("username", playerDetails.getId());
+                }});
+
+                int banningId = client.session().getInt("user.id");
+                var banningPlayerDetails = PlayerDao.getDetails(banningId);
+                String alertMessage = client.get().getString("alertMessage");
+                String notes = client.get().getString("notes");
+                int banSeconds = client.get().getInt("banSeconds");
+                boolean doBanMachine = client.get().getBoolean("doBanMachine");
+                boolean doBanIP = client.get().getBoolean("doBanIP");
+
+                //ModerationDao.addLog(ModerationActionType.ALERT_USER, banningPlayerDetails.getId(), playerDetails.getId(), "Banned for breaking the HabboWay", "");
+                client.send(ModeratorBanUserAction.ban(banningPlayerDetails, alertMessage, notes, playerDetails.getName(), banSeconds, doBanMachine, doBanIP));
+
+                client.session().set("alertColour", "success");
+                client.session().set("alertMessage", "The user " + username + " has been banned.");
+            } else {
+                client.session().set("alertColour", "danger");
+                client.session().set("alertMessage", "The user " + username + " does not exist.");
+            }
+        }
+
+        // Redirect to the bans and kicks page
+        client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/bans_kicks");
+    }
+
+    public static void massUnbanuser(WebConnection client) {
+        // If they are logged in, send them to the /me page
+        if (!client.session().getBoolean(SessionUtil.LOGGED_IN_HOUSKEEPING)) {
+            client.send("");
+        }
+
+        Map<String, String> params = client.get().getValues();
+        String users = params.get("usernames");
+        List<String> usernames = splitUsernames(users);
+
+        for (String username : usernames) {
+            var playerDetails = PlayerDao.getDetails(username);
+
+            if (playerDetails != null) {
+                HousekeepingPlayerDao.unbanUser(playerDetails.getId());
+
+                client.session().set("alertColour", "success");
+                client.session().set("alertMessage", "The user " + username + " has been unbanned.");
+            } else {
+                client.session().set("alertColour", "danger");
+                client.session().set("alertMessage", "The user " + username + " does not exist.");
+            }
+        }
+
+        // Redirect to the bans and kicks page
+        client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/mass_unban");
+    }
+
+    public static void massKickuser(WebConnection client) {
+        if (!client.session().getBoolean(SessionUtil.LOGGED_IN_HOUSKEEPING)) {
+            client.send("");
+        }
+
+        int userId = client.session().getInt("user.id");
+        PlayerDetails playerDetails = PlayerDao.getDetails(userId);
+
+        if (!HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "user/create")) {
+            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/permissions");
+            return;
+        }
+
+        Map<String, String> params = client.get().getValues();
+        String users = params.get("users");
+
+        List<String> usernames = splitUsernames(users);
+
+        for (String username : usernames) {
+            try {
+                RconUtil.sendCommand(RconHeader.MOD_KICK_USER, new HashMap<>() {{
+                    put("receiver", username);
+                    //put("message", client.get().getString("a"));
+
+                }});
+
+                //String user = client.get().getString("user");
+                String moderator = playerDetails.getName();
+
+                boolean dbInsertSuccess = HousekeepingCommandsDao.insertRconLog("REMOTE_KICK", username, moderator, "Has sido expulsado por un Moderador.");
+
+                if (dbInsertSuccess) {
+                    client.session().set("alertColour", "success");
+                    client.session().set("alertMessage", "The Kick has been sent and logged in the database");
+                } else {
+                    client.session().set("alertColour", "danger");
+                    client.session().set("alertMessage", "Error inserting the kick into the database");
+                }
+            } catch (Exception e) {
+                client.session().set("alertColour", "danger");
+                client.session().set("alertMessage", "Error sending the Kick: " + e.getMessage());
+            }
+        }
+
+        client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/mass_kick");
     }
 
     public static void massalert(WebConnection client) {
@@ -199,4 +320,12 @@ public class HousekeepingCommandsController {
         client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/alert");
     }
 
+    public static List<String> splitUsernames(String users) {
+        String usersList = users.substring(1, users.length() - 1);
+
+        return Arrays.stream(usersList.split(",,"))
+                .filter(s -> !s.isEmpty())
+                .map(String::trim)
+                .collect(Collectors.toList());
+    }
 }

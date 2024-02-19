@@ -31,7 +31,10 @@
 {% if housekeepingManager.hasPermission(playerDetails.getRank(), 'bans') %}
 	<div class="subnav-box">
  <div class="subnav-header">Supervisor Hobba tools</div>
-      <div class="list-group list-group-flush" style="padding-left: 2px;">        
+      <div class="list-group list-group-flush" style="padding-left: 2px;">   
+			{% if housekeepingManager.hasPermission(playerDetails.getRank(), 'bans') %}
+			<text><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/mass_ban" class="subnav-link">Mass ban</a></text>
+			{% endif %}	  
 			{% if housekeepingManager.hasPermission(playerDetails.getRank(), 'bans') %}
 			<text><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/mass_alert" class="subnav-link">Mass alert</a></text>
 			{% endif %}
@@ -75,7 +78,7 @@
  <div class="subnav-header">Staff moderation tools</div>
       <div class="list-group list-group-flush" style="padding-left: 2px;">        
 			{% if housekeepingManager.hasPermission(playerDetails.getRank(), 'user/edit') %}
-			<text>Mass unban</text>
+			<text><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/mass_unban" class="subnav-link">Mass unban</a></text>
 			{% endif %}
 			{% if housekeepingManager.hasPermission(playerDetails.getRank(), 'user/edit') %}
 			<text><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/cfh_logs" class="subnav-link">CFH action log</a></text>

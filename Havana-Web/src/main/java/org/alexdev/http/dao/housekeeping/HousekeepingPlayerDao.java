@@ -129,4 +129,29 @@ public class HousekeepingPlayerDao {
             Storage.closeSilently(sqlConnection);
         }
     }
+
+    public static void unbanUser(int userId) {
+        Connection sqlConnection = null;
+        PreparedStatement preparedStatement = null;
+
+        try {
+            sqlConnection = Storage.getStorage().getConnection();
+            preparedStatement = sqlConnection.prepareStatement("UPDATE users_bans SET is_active = 0 WHERE banned_value = CONVERT(?, CHAR)");
+            preparedStatement.setInt(1, userId);
+
+            int rowsUpdated = preparedStatement.executeUpdate();
+
+            if (rowsUpdated > 0) {
+                // Éxito: El registro se marcó como "Picked Up"
+            } else {
+                // Error: El registro no se actualizó, maneja el error apropiadamente
+            }
+        } catch (Exception e) {
+            // Maneja los errores adecuadamente
+            Storage.logError(e);
+        } finally {
+            Storage.closeSilently(preparedStatement);
+            Storage.closeSilently(sqlConnection);
+        }
+    }
 }

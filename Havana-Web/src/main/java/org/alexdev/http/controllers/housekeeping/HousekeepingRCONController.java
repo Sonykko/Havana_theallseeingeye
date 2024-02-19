@@ -13,6 +13,8 @@ import org.alexdev.http.util.RconUtil;
 import org.alexdev.http.util.SessionUtil;
 
 import java.util.HashMap;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class HousekeepingRCONController {
     public static void massalertRCON(WebConnection client) { // Añadir BOLEAN para mostrar todos los chats chatlogs de manera predifinida o buscar por nombre, id o dueño o etc...
@@ -190,5 +192,110 @@ public class HousekeepingRCONController {
 
         // Delete alert after it's been rendered
         client.session().delete("alertMessage");
+    }
+
+    public static void massBanKickUserRCON(WebConnection client) {
+        if (!client.session().getBoolean(SessionUtil.LOGGED_IN_HOUSKEEPING)) {
+            client.redirect("/" + Routes.HOUSEKEEPING_DEFAULT_PATH);
+            return;
+        }
+
+        Template tpl = client.template("housekeeping/admin_tools/mass_ban");
+        tpl.set("housekeepingManager", HousekeepingManager.getInstance());
+
+        PlayerDetails playerDetails = (PlayerDetails) tpl.get("playerDetails");
+
+        if (!HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "user/create")) {
+            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/permissions");
+            return;
+        }
+
+        String action = client.post().getString("action");
+
+        if ("massKick".equals(action)) {
+            List<String> usernames = client.post().getArray("userNames");
+            usernames = usernames.stream().map(s -> replaceLineBreaks(s)).collect(Collectors.toList());
+            if (usernames != null && !usernames.isEmpty()) {
+                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/api/mass_kick?users=" + usernames);
+                return;
+            } else {
+                client.session().set("alertColour", "danger");
+                client.session().set("alertMessage", "Please enter a valid usernames");
+            }
+        } else if ("massBan".equals(action)) {
+            if (client.post().contains("userNames") && client.post().contains("alertMessage")) {
+                List<String> usernames = client.post().getArray("userNames");
+                usernames = usernames.stream().map(s -> replaceLineBreaks(s)).collect(Collectors.toList());
+                String alertMessage = client.post().getString("alertMessage");
+                String notes = client.post().getString("notes");
+                int banSeconds = client.post().getInt("banSeconds");
+                boolean doBanMachine = client.post().getBoolean("doBanMachine");
+                boolean doBanIP = client.post().getBoolean("doBanIP");
+
+                if (usernames != null && !usernames.isEmpty()) {
+                    client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/api/mass_ban?usernames=" + usernames + "&alertMessage=" + alertMessage + "&notes=" + notes + "&banSeconds=" + banSeconds + "&doBanMachine=" + doBanMachine + "&doBanIP=" + doBanIP);
+                    return;
+                } else {
+                    client.session().set("alertColour", "danger");
+                    client.session().set("alertMessage", "Please enter a valid usernames");
+                }
+            }
+        }
+
+        tpl.set("housekeepingManager", HousekeepingManager.getInstance());
+
+        tpl.set("pageName", "Mass Ban & Kick Tool");
+        tpl.set("CFHTopics", HousekeepingCommandsDao.getCFHTopics());
+        tpl.render();
+
+        // Delete alert after it's been rendered
+        client.session().delete("alertMessage");
+    }
+
+    public static void massUnbanUserRCON(WebConnection client) {
+        if (!client.session().getBoolean(SessionUtil.LOGGED_IN_HOUSKEEPING)) {
+            client.redirect("/" + Routes.HOUSEKEEPING_DEFAULT_PATH);
+            return;
+        }
+
+        Template tpl = client.template("housekeeping/admin_tools/mass_unban");
+        tpl.set("housekeepingManager", HousekeepingManager.getInstance());
+
+        PlayerDetails playerDetails = (PlayerDetails) tpl.get("playerDetails");
+
+        if (!HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "user/create")) {
+            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/permissions");
+            return;
+        }
+
+        String action = client.post().getString("action");
+
+        if ("massUnban".equals(action)) {
+            if (client.post().contains("userNames")) {
+                List<String> usernames = client.post().getArray("userNames");
+                usernames = usernames.stream().map(s -> replaceLineBreaks(s)).collect(Collectors.toList());
+
+                if (usernames != null && !usernames.isEmpty()) {
+                    client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/api/mass_unban?usernames=" + usernames);
+                    return;
+                } else {
+                    client.session().set("alertColour", "danger");
+                    client.session().set("alertMessage", "Please enter a valid usernames");
+                }
+            }
+        }
+
+        tpl.set("housekeepingManager", HousekeepingManager.getInstance());
+
+        tpl.set("pageName", "Mass Unban Tool");
+        tpl.set("CFHTopics", HousekeepingCommandsDao.getCFHTopics());
+        tpl.render();
+
+        // Delete alert after it's been rendered
+        client.session().delete("alertMessage");
+    }
+
+    public static String replaceLineBreaks(String str) {
+        return str.replace("\n", ",").replace("\r", ",");
     }
 }
