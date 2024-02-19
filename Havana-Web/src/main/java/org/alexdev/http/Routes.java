@@ -302,6 +302,9 @@ public class Routes {
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/api/kick", HousekeepingCommandsController::kickuser);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/api/alert", HousekeepingCommandsController::alertuser);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/api/massalert", HousekeepingCommandsController::massalert);
+        RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/api/mass_kick", HousekeepingCommandsController::massKickuser);
+        RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/api/mass_ban", HousekeepingCommandsController::massBanuser);
+        RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/api/mass_unban", HousekeepingCommandsController::massUnbanuser);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/transaction/lookup", HousekeepingTransactionsController::search);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/transaction/track_item", HousekeepingTransactionsController::item_lookup);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/bans_kicks", HousekeepingBansController::bans);
@@ -316,6 +319,8 @@ public class Routes {
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/mass_alert", HousekeepingRCONController::massalertRCON);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/alert", HousekeepingRCONController::alertuserRCON);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/users/mod_tool", HousekeepingRCONController::banKickUserRCON);
+        RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/mass_ban", HousekeepingRCONController::massBanKickUserRCON);
+        RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/mass_unban", HousekeepingRCONController::massUnbanUserRCON);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/vouchers", HousekeepingCoinsController::vouchers);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/wordfilter", HousekeepingWordfilterController::wordfilter);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/chatlog.action", HousekeepingChatLogsController::userchatlogs);
