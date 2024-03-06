@@ -103,12 +103,14 @@ public class RconConnectionHandler extends ChannelInboundHandlerAdapter {
                     break;
                 case MOD_KICK_USER:
                     Player target = PlayerManager.getInstance().getPlayerByName(message.getValues().get("receiver"));
-                    String alertMessage = "Has sido expulsado por un Moderador";
+                    String alertMessage = message.getValues().get("message");
 
                     if (target != null) {
-                        target.getRoomUser().kick(true, true);
-                        //target.send(new HOTEL_VIEW());
-                        target.send(new MODERATOR_ALERT(alertMessage));
+                        if (target.getRoomUser().getRoom() != null) {
+                            target.getRoomUser().kick(true, true);
+                            //target.send(new HOTEL_VIEW());
+                            target.send(new MODERATOR_ALERT(alertMessage));
+                        }
                     }
                     break;
                 case HOTEL_ALERT:

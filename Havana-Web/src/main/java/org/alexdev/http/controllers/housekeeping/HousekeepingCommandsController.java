@@ -5,6 +5,7 @@ import org.alexdev.havana.dao.mysql.PlayerDao;
 import org.alexdev.havana.game.moderation.actions.ModeratorBanUserAction;
 import org.alexdev.havana.game.player.PlayerDetails;
 import org.alexdev.havana.server.rcon.messages.RconHeader;
+import org.alexdev.havana.util.config.GameConfiguration;
 import org.alexdev.http.Routes;
 import org.alexdev.http.dao.housekeeping.HousekeepingCommandsDao;
 import org.alexdev.http.dao.housekeeping.HousekeepingPlayerDao;
@@ -40,9 +41,10 @@ public class HousekeepingCommandsController {
 
             int banningId = client.session().getInt("user.id");
             var banningPlayerDetails = PlayerDao.getDetails(banningId);
+            String message = GameConfiguration.getInstance().getString("rcon.superban.message");
 
             //ModerationDao.addLog(ModerationActionType.ALERT_USER, player.getDetails().getId(), playerDetails.getId(), "Banned for breaking the HabboWay", "");
-            client.send(ModeratorBanUserAction.ban(banningPlayerDetails, "Has sido baneado por no respetar la Manera Habbo", "", playerDetails.getName(), 999999999, true, true));
+            client.send(ModeratorBanUserAction.ban(banningPlayerDetails, message, "", playerDetails.getName(), 999999999, true, true));
             return;
         }
 
@@ -164,6 +166,8 @@ public class HousekeepingCommandsController {
             return;
         }
 
+        String message = GameConfiguration.getInstance().getString("rcon.kick.message");
+
         Map<String, String> params = client.get().getValues();
         String users = params.get("users");
 
@@ -173,14 +177,14 @@ public class HousekeepingCommandsController {
             try {
                 RconUtil.sendCommand(RconHeader.MOD_KICK_USER, new HashMap<>() {{
                     put("receiver", username);
-                    //put("message", client.get().getString("a"));
+                    put("message", message);
 
                 }});
 
                 //String user = client.get().getString("user");
                 String moderator = playerDetails.getName();
 
-                boolean dbInsertSuccess = HousekeepingCommandsDao.insertRconLog("REMOTE_KICK", username, moderator, "Has sido expulsado por un Moderador.");
+                boolean dbInsertSuccess = HousekeepingCommandsDao.insertRconLog("REMOTE_KICK", username, moderator, message);
 
                 if (dbInsertSuccess) {
                     client.session().set("alertColour", "success");
@@ -195,7 +199,7 @@ public class HousekeepingCommandsController {
             }
         }
 
-        client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/mass_kick");
+        client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/mass_ban");
     }
 
     public static void massalert(WebConnection client) {
@@ -252,17 +256,18 @@ public class HousekeepingCommandsController {
             return;
         }
 
+        String user = client.get().getString("user");
+        String moderator = playerDetails.getName();
+        String message = GameConfiguration.getInstance().getString("rcon.kick.message");
+
         try {
             RconUtil.sendCommand(RconHeader.MOD_KICK_USER, new HashMap<>() {{
-                put("receiver", client.get().getString("user"));
-                //put("message", client.get().getString("a"));
+                put("receiver", user);
+                put("message", message);
 
             }});
 
-            String user = client.get().getString("user");
-            String moderator = playerDetails.getName();
-
-            boolean dbInsertSuccess = HousekeepingCommandsDao.insertRconLog("REMOTE_KICK", user, moderator,"Has sido expulsado por un Moderador.");
+            boolean dbInsertSuccess = HousekeepingCommandsDao.insertRconLog("REMOTE_KICK", user, moderator,message);
 
             if (dbInsertSuccess) {
                 client.session().set("alertColour", "success");

@@ -95,6 +95,9 @@ public class WebSettingsConfigWriter implements ConfigWriter {
 
         config.put("maintenance", "false");
 
+        config.put("rcon.kick.message", "Has sido expulsado por un Moderador.");
+        config.put("rcon.superban.message", "Has sido baneado por no respetar la Manera Habbo");
+
         config.putAll(new GameConfigWriter().setConfigurationDefaults());
         return config;
     }
