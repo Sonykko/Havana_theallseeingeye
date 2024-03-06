@@ -23,7 +23,7 @@ public class HousekeepingConfigController {
      */
     public static void configurations(WebConnection client) {
         if (!client.session().getBoolean(SessionUtil.LOGGED_IN_HOUSKEEPING)) {
-            client.redirect("/" + Routes.HOUSEKEEPING_PATH);
+            client.redirect("/" + Routes.HOUSEKEEPING_DEFAULT_PATH);
             return;
         }
 
@@ -33,13 +33,12 @@ public class HousekeepingConfigController {
         PlayerDetails playerDetails = (PlayerDetails) tpl.get("playerDetails");
 
         if (!HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "configuration")) {
-            client.redirect("/" + Routes.HOUSEKEEPING_PATH);
+            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/permissions");
             return;
         }
 
         if (client.post().queries().size() > 0) {
             SettingsDao.updateSettings(client.post().getValues().entrySet());
-
             // Reload config
             // GameConfiguration.getInstance(new WebSettingsConfigWriter());
 

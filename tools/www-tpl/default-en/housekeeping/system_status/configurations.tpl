@@ -3,8 +3,6 @@
     {% set configurationsActive = " active" %}
 	{% include "housekeeping/base/navigation.tpl" %}
 	{% include "housekeeping/base/navigation_system_status.tpl" %}
-     <!--<h2 class="mt-4">{% if categoryName == "loader" %}Loader{% endif %}{% if categoryName == "maintenance" %}Maintenance{% endif %} settings</h2>		
-		<p>These are the all configurations of the {% if categoryName == "loader" %}loader{% endif %}{% if categoryName == "maintenance" %}maintenance{% endif %}.</p>-->
 	<h2 class="mt-4">{% if CategoryExists %}<text style="text-transform: capitalize;">{{ categoryName }}</text>{% else %}Configuration{% endif %} settings</h2>		
 		<p>{% if CategoryExists %}These are the all configurations of the {{ categoryName }}.{% else %}<text style="color:red;">Please select a setting in order to edit them.</text>{% endif %}</p>
 		 {% if CategoryExists %}
@@ -21,10 +19,21 @@
               <tbody>
 				{% for settings in configs %}
                 <tr>
-				  <td>{{ settings.description }}</td>
+				  <td>
+					<div><b>{{ settings.setting }}</b></div>
+					<div>{{ settings.description }}</div>
+				  </td>
+				  {% if settings.value == 'true' or settings.value == 'false' %}
+				  <td>
+					<select name="{{ settings.setting }}" id="searchFor" class="form-control">
+						<option value="true" {% if settings.value == 'true' %}selected{% endif %}>True (enabled)</option>
+						<option value="false" {% if settings.value == 'false' %}selected{% endif %}>False (disabled)</option>
+					</select>
+				  {% else %}
 				  <td>
 						<input type="text" name="{{ settings.setting }}" class="form-control" id="searchFor" value="{{ settings.value }}">
 				  </td>
+				  {% endif %}
                   </tr>
 			   {% endfor %}
               </tbody>
