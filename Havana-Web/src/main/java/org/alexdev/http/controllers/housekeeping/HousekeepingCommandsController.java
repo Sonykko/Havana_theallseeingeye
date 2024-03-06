@@ -267,7 +267,7 @@ public class HousekeepingCommandsController {
 
             }});
 
-            boolean dbInsertSuccess = HousekeepingCommandsDao.insertRconLog("REMOTE_KICK", user, moderator,message);
+            boolean dbInsertSuccess = HousekeepingCommandsDao.insertRconLog("REMOTE_KICK", user, moderator, message);
 
             if (dbInsertSuccess) {
                 client.session().set("alertColour", "success");
