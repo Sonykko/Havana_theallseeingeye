@@ -43,8 +43,16 @@
 {% if housekeepingManager.hasPermission(playerDetails.getRank(), 'catalogue/edit_frontpage') %}	
 	<div class="subnav-box">
 <div class="subnav-header">Catalogue tools</div>
-      <div class="list-group list-group-flush" style="padding-left: 2px;">        
-			<text><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/campaign_management/catalogue/edit_frontpage" class="subnav-link">Edit catalogue front data</a></text>					
+      <div class="list-group list-group-flush" style="padding-left: 2px;">
+			{% if housekeepingManager.hasPermission(playerDetails.getRank(), 'catalogue/edit_frontpage') %}	  
+			<text><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/campaign_management/catalogue/edit_frontpage" class="subnav-link">Edit catalogue front data</a></text>
+			{% endif %}
+			{% if housekeepingManager.hasPermission(playerDetails.getRank(), 'catalogue/edit_frontpage') %}  
+			<text><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/campaign_management/catalogue/pages/create" class="subnav-link">Create catalogue page</a></text>
+			{% endif %}
+			{% if housekeepingManager.hasPermission(playerDetails.getRank(), 'catalogue/edit_frontpage') %}  
+			<text><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/campaign_management/catalogue/pages" class="subnav-link">Manage catalogue pages</a></text>
+			{% endif %}				
       </div>
     </div>
 {% endif %}
