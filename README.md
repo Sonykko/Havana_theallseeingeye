@@ -32,6 +32,8 @@ This is a project to recreate the supossed "Hobbanet" or theallseeingeye Habbo H
 - Campaign management
   - Staff picks tool (missing rooms)
   - Recommended groups tool
+  - Create catalogue pages
+  - Manage catalogue pages
 - theallseeingeye - Hobbanet design
 
 # Download
