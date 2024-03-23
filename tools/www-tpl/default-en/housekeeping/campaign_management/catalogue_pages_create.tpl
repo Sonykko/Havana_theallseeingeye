@@ -1,0 +1,73 @@
+{% include "housekeeping/base/header.tpl" %}
+  <body>
+    {% set articlesCreateActive = " active " %}
+	{% include "housekeeping/base/navigation.tpl" %}
+	{% include "housekeeping/base/navigation_campaign_management.tpl" %}
+	     <h2 class="mt-4">Create catalogue pages</h2>
+		{% include "housekeeping/base/alert.tpl" %}
+		<p>Here you can create a catalogue page.</p>
+		<form class="table-responsive col-md-4" method="post">
+			<div class="form-group">
+				<label>Parent ID</label>
+				<input type="text" name="createParentId" class="form-control" id="createParentId" placeholder="Enter here a parent ID for the catalogue page..." />
+			</div>
+			<div class="form-group">
+				<label>Order ID</label>
+				<input type="text" name="createOrderId" class="form-control" id="createOrderId" placeholder="Enter here a order ID for the catalogue page..." />
+			</div>
+			<div class="form-group">
+				<label>Order ID</label>
+				<input type="text" name="createMinRank" class="form-control" id="createMinRank" placeholder="Enter here a min. rank ID for the catalogue page..." />
+			</div>
+			<div class="form-group">
+				<label>Is navigatable?</label>
+				<select name="createIsNavigatable" id="createIsNavigatable" class="form-control">
+					<option value="1" selected>Yes</option>
+					<option value="0">No</option>
+				</select>
+			</div>
+			<div class="form-group">
+				<label>Is HC only?</label>
+				<select name="createIsHCOnly" id="createIsHCOnly" class="form-control">
+					<option value="1">Yes</option>
+					<option value="0" selected>No</option>
+				</select>
+			</div>
+			<div class="form-group">
+				<label>Page name</label>
+				<input type="text" name="createName" class="form-control" id="createName" placeholder="Enter here a name for the catalogue page..." />
+			</div>
+			<div class="form-group">
+				<label>Icon</label>
+				<input type="text" name="createIcon" class="form-control" id="createIcon" placeholder="Enter here a icon for the catalogue page..." />
+			</div>
+			<div class="form-group">
+				<label>Colour</label>
+				<input type="text" name="createColour" class="form-control" id="createColour" placeholder="Enter here a colour for the catalogue page..." />
+			</div>
+			<div class="form-group">
+				<label>Layout</label>
+				<input type="text" name="createLayout" class="form-control" id="createLayout" placeholder="Enter here a layout for the catalogue page..." />
+			</div>
+			<div class="form-group">
+				<label>Images</label>
+				<textarea name="createImages" class="form-control" id="createImages" placeholder="Enter here the images for the catalogue page..."></textarea>
+			</div>
+			<div class="form-group">
+				<label>Texts</label>
+				<textarea name="createTexts" class="form-control" id="createTexts" placeholder="Enter here the texts for the catalogue page..."></textarea>
+			</div>
+			<button type="submit" style="margin-bottom: 20px;">Save Page</button>
+		</form>
+    </div>
+  </div>
+  <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"></script>
+  <script src="https://blackrockdigital.github.io/startbootstrap-simple-sidebar/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script>
+    $("#menu-toggle").click(function(e) {
+      e.preventDefault();
+      $("#wrapper").toggleClass("toggled");
+    });
+  </script>
+</body>
+</html>

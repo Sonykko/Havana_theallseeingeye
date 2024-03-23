@@ -7,6 +7,7 @@ import org.alexdev.havana.dao.mysql.*;
 import org.alexdev.havana.game.achievements.AchievementManager;
 import org.alexdev.havana.game.achievements.AchievementType;
 import org.alexdev.havana.game.ads.AdManager;
+import org.alexdev.havana.game.catalogue.CatalogueManager;
 import org.alexdev.havana.game.groups.GroupMember;
 import org.alexdev.havana.game.infobus.InfobusManager;
 import org.alexdev.havana.game.item.Item;
@@ -90,6 +91,9 @@ public class RconConnectionHandler extends ChannelInboundHandlerAdapter {
                     }
 
                     break;
+                case REFRESH_CATALOGUE_PAGES:
+                    CatalogueManager.reset();
+                    break;    
                 case REFRESH_NAVIGATOR:
                     NavigatorManager.getInstance().reset();
                     NavigatorManager.reset();
