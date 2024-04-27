@@ -15,16 +15,29 @@
 			</div>
 			<div class="form-group">
 				<label>Parent ID</label>
-				<input type="text" name="editParentId" class="form-control" id="editParentId" placeholder="Enter here a parent ID for the catalogue page..." value="{{ cataloguePages.parent_id }}" />
+				<select name="editParentId" id="editParentId" class="form-control">
+					<option value="-1">Inicio (-1)</option>
+					{% set num = 1 %}
+					{% for parentNames in ParentNames %}
+					<option value="{{ parentNames.id }}" {% if cataloguePages.parent_id == parentNames.id %}selected{% endif %}>{{ parentNames.name }} ({{ parentNames.id }})</option>
+					{% set num = num + 1 %}
+					{% endfor %}
+				</select>				
 			</div>
 			<div class="form-group">
 				<label>Order ID</label>
 				<input type="text" name="editOrderId" class="form-control" id="editOrderId" placeholder="Enter here a order ID for the catalogue page..." value="{{ cataloguePages.order_id }}" />
 			</div>
 			<div class="form-group">
-				<label>Order ID</label>
-				<input type="text" name="editMinRank" class="form-control" id="editMinRank" placeholder="Enter here a min. rank ID for the catalogue page..." value="{{ cataloguePages.order_id }}" />
-			</div>
+				<label>Min. rank</label>
+				<select name="createMinRank" id="createMinRank" class="form-control">
+					{% set num = 1 %}
+					{% for ranks in allRanks %}
+					<option value="{{ ranks.id }}" {% if cataloguePages.min_role_ID == ranks.id %}selected{% endif %}>{{ ranks.name }}</option>
+					{% set num = num + 1 %}
+					{% endfor %}
+				</select>				
+			</div>			
 			<div class="form-group">
 				<label>Is navigatable?</label>
 				<select name="editIsNavigatable" id="editIsNavigatable" class="form-control">
@@ -75,8 +88,10 @@
 					<option value="id">Page ID</option>
 					<option value="parent_id">Parent ID</option>
 					<option value="min_role">Min. Rank</option>
-					<option value="name">Page Name</option>										
-					<option value="texts">Page Texts (like description)</option>										
+					<option value="name">Name</option>										
+					<option value="layout">Layout</option>										
+					<option value="images">Images</option>										
+					<option value="texts">Texts (like description)</option>										
 				</select>
 			</div>
 			<div class="form-group">
@@ -135,6 +150,7 @@
 				  <td>
 					<a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/campaign_management/catalogue/pages?edit={{ CataloguePagesSearch.id }}" style="color:black;"><button type="button">Edit</button></a>
 					<a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/campaign_management/catalogue/pages?delete={{ CataloguePagesSearch.id }}" style="color:black;"><button type="button">Delete</button></a>
+					<a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/campaign_management/catalogue/pages?copy={{ CataloguePagesSearch.id }}" style="color:black;"><button type="button">Copy</button></a>
 				  </td>
                 </tr>
 			   {% set num = num + 1 %}
@@ -190,11 +206,10 @@
 				  <td>{{ cataloguePages.layout }}</td>                 			 
 				  <td>{{ cataloguePages.images }}</td>                 			 
 				  <td>{{ cataloguePages.texts }}</td>                 			 
-				  <!--<td>{% if hotCampaign.status == 1 %}Active{% else %}Hidden{% endif %}</td>-->              			             			                			 
-				  <!--<td>{% if recommended.isPicked == 1 %}Yes{% else %}No{% endif %}</td>-->
 				  <td>
 					<a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/campaign_management/catalogue/pages?edit={{ cataloguePages.id }}" style="color:black;"><button type="button">Edit</button></a>
 					<a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/campaign_management/catalogue/pages?delete={{ cataloguePages.id }}" style="color:black;"><button type="button">Delete</button></a>
+					<a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/campaign_management/catalogue/pages?copy={{ cataloguePages.id }}" style="color:black;"><button type="button">Copy</button></a>
 				  </td>
                 </tr>
 				{% set num = num + 1 %}

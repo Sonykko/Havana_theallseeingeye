@@ -6,18 +6,31 @@
 	     <h2 class="mt-4">Create catalogue pages</h2>
 		{% include "housekeeping/base/alert.tpl" %}
 		<p>Here you can create a catalogue page.</p>
-		<form class="table-responsive col-md-4" method="post">
+		<form class="table-responsive col-md-4" style="padding-left:0;" method="post">
 			<div class="form-group">
 				<label>Parent ID</label>
-				<input type="text" name="createParentId" class="form-control" id="createParentId" placeholder="Enter here a parent ID for the catalogue page..." />
+				<select name="createParentId" id="createParentId" class="form-control">
+					<option value="-1" selected>Inicio (-1)</option>
+					{% set num = 1 %}
+					{% for parentNames in ParentNames %}
+					<option value="{{ parentNames.id }}">{{ parentNames.name }} ({{ parentNames.id }})</option>
+					{% set num = num + 1 %}
+					{% endfor %}
+				</select>				
 			</div>
 			<div class="form-group">
 				<label>Order ID</label>
 				<input type="text" name="createOrderId" class="form-control" id="createOrderId" placeholder="Enter here a order ID for the catalogue page..." />
 			</div>
 			<div class="form-group">
-				<label>Order ID</label>
-				<input type="text" name="createMinRank" class="form-control" id="createMinRank" placeholder="Enter here a min. rank ID for the catalogue page..." />
+				<label>Min. rank</label>
+				<select name="createMinRank" id="createMinRank" class="form-control">
+					{% set num = 1 %}
+					{% for ranks in allRanks %}
+					<option value="{{ ranks.id }}">{{ ranks.name }}</option>
+					{% set num = num + 1 %}
+					{% endfor %}
+				</select>
 			</div>
 			<div class="form-group">
 				<label>Is navigatable?</label>
