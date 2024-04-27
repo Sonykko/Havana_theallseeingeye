@@ -1735,7 +1735,7 @@ pre code {
 
 .table td,
 .table th {
-  border: 4px solid lightgray;
+  /*border: 4px solid lightgray;*/
   outline: 1px solid #FFF;
   padding: 5px!important;
   }
