@@ -6,6 +6,7 @@ import org.alexdev.havana.game.player.PlayerDetails;
 import org.alexdev.havana.server.rcon.messages.RconHeader;
 import org.alexdev.http.Routes;
 import org.alexdev.http.dao.housekeeping.HousekeepingCatalogueDao;
+import org.alexdev.http.dao.housekeeping.HousekeepingPlayerDao;
 import org.alexdev.http.game.housekeeping.HousekeepingManager;
 import org.alexdev.http.util.RconUtil;
 import org.alexdev.http.util.SessionUtil;
@@ -33,7 +34,7 @@ public class HousekeepingCataloguePagesController {
             return;
         }
 
-        if (client.post().queries().size() > 0) {
+        if (client.post().queries().size() > 0 && client.post().contains("searchField")) {
             String[] fieldCheck = new String[]{"searchField", "searchQuery", "searchType" };
 
             for (String field : fieldCheck) {
@@ -59,6 +60,8 @@ public class HousekeepingCataloguePagesController {
             whitelistColumns.add("parent_id");
             whitelistColumns.add("min_role");
             whitelistColumns.add("name");
+            whitelistColumns.add("layout");
+            whitelistColumns.add("images");
             whitelistColumns.add("texts");
 
             List<Map<String, Object>> searchPages = null;
@@ -113,12 +116,41 @@ public class HousekeepingCataloguePagesController {
 
             int originalPageId = client.get().getInt("edit");
 
-            if (StringUtils.isNumeric(client.post().getString("editId")) && client.post().getInt("editId") > 0) {
+            if (StringUtils.isNumeric(client.post().getString("editId")) && editId > 0 &&
+                    StringUtils.isNumeric(client.post().getString("editOrderId")) &&
+                    StringUtils.isNumeric(client.post().getString("editMinRank")) &&
+                    StringUtils.isNumeric(client.post().getString("editIsNavigatable")) &&
+                    StringUtils.isNumeric(client.post().getString("editIsHCOnly")) &&
+                    StringUtils.isNumeric(client.post().getString("editIcon")) &&
+                    StringUtils.isNumeric(client.post().getString("editColour")) &&
+                    editTexts.startsWith("[") && editTexts.endsWith("]") &&
+                    editImages.startsWith("[") && editImages.endsWith("]")) {
+
                 HousekeepingCatalogueDao.updatePage(editId, editParentId, editOrderId, editMinRank, editIsNavigatable, editIsHCOnly, editName, editIcon, editColour, editLayout, editImages, editTexts, originalPageId);
 
                 client.session().set("alertColour", "success");
                 client.session().set("alertMessage", "The catalogue page has been successfully saved and updated");
                 client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/campaign_management/catalogue/pages?edit=" + editId );
+
+                RconUtil.sendCommand(RconHeader.REFRESH_CATALOGUE_PAGES, new HashMap<>());
+
+                return;
+            }
+
+            client.session().set("alertColour", "danger");
+            client.session().set("alertMessage", "Please enter a valid catalogue values");
+        }
+
+        if (client.get().contains("copy")) {
+
+            int pageId = client.get().getInt("copy");
+
+            if (StringUtils.isNumeric(client.get().getString("copy")) && client.get().getInt("copy") > 0) {
+                HousekeepingCatalogueDao.copyPage(pageId);
+
+                client.session().set("alertColour", "success");
+                client.session().set("alertMessage", "The catalogue page has been successfully copied, saved and updated");
+                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/campaign_management/catalogue/pages");
 
                 RconUtil.sendCommand(RconHeader.REFRESH_CATALOGUE_PAGES, new HashMap<>());
 
@@ -136,6 +168,8 @@ public class HousekeepingCataloguePagesController {
         }
 
         tpl.set("pageName", "Manage catalogue pages");
+        tpl.set("allRanks", HousekeepingPlayerDao.getAllRanks());
+        tpl.set("ParentNames", HousekeepingCatalogueDao.getAllParentNames());
         tpl.set("pages", HousekeepingCatalogueDao.getCataloguePages("all", 0, currentPage));
         tpl.set("nextCatalogPages", HousekeepingCatalogueDao.getCataloguePages("all", 0, currentPage + 1));
         tpl.set("previousCatalogPages", HousekeepingCatalogueDao.getCataloguePages("all", 0, currentPage - 1));
@@ -162,19 +196,27 @@ public class HousekeepingCataloguePagesController {
         }
 
         if (client.post().contains("createParentId")) {
-            int createParentId = client.post().getInt("createParentId");
-            int createOrderId = client.post().getInt("createOrderId");
-            int createMinRank = client.post().getInt("createMinRank");
-            int createIsNavigatable = client.post().getInt("createIsNavigatable");
-            int createIsHCOnly = client.post().getInt("createIsHCOnly");
+            String createParentId = client.post().getString("createParentId");
+            String createOrderId = client.post().getString("createOrderId");
+            String createMinRank = client.post().getString("createMinRank");
+            String createIsNavigatable = client.post().getString("createIsNavigatable");
+            String createIsHCOnly = client.post().getString("createIsHCOnly");
             String createName = client.post().getString("createName");
-            int createIcon = client.post().getInt("createIcon");
-            int createColour = client.post().getInt("createColour");
+            String createIcon = client.post().getString("createIcon");
+            String createColour = client.post().getString("createColour");
             String createLayout = client.post().getString("createLayout");
             String createImages = client.post().getString("createImages");
             String createTexts = client.post().getString("createTexts");
 
-            if (StringUtils.isNumeric(client.post().getString("createParentId")) && client.post().getInt("createParentId") > 0) {
+            if (StringUtils.isNumeric(client.post().getString("createOrderId")) &&
+                    StringUtils.isNumeric(client.post().getString("createMinRank")) &&
+                    StringUtils.isNumeric(client.post().getString("createIsNavigatable")) &&
+                    StringUtils.isNumeric(client.post().getString("createIsHCOnly")) &&
+                    StringUtils.isNumeric(client.post().getString("createIcon")) &&
+                    StringUtils.isNumeric(client.post().getString("createColour")) &&
+                    createTexts.startsWith("[") && createTexts.endsWith("]") &&
+                    createImages.startsWith("[") && createImages.endsWith("]")) {
+
                 HousekeepingCatalogueDao.createCataloguePage(createParentId, createOrderId, createMinRank, createIsNavigatable, createIsHCOnly, createName, createIcon, createColour, createLayout, createImages, createTexts);
 
                 client.session().set("alertColour", "success");
@@ -191,6 +233,8 @@ public class HousekeepingCataloguePagesController {
         }
 
         tpl.set("pageName", "Create catalogue pages");
+        tpl.set("allRanks", HousekeepingPlayerDao.getAllRanks());
+        tpl.set("ParentNames", HousekeepingCatalogueDao.getAllParentNames());
         tpl.render();
 
         client.session().delete("alertMessage");

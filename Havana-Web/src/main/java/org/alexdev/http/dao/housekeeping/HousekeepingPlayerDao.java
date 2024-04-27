@@ -10,7 +10,9 @@ import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class HousekeepingPlayerDao {
 
@@ -153,5 +155,40 @@ public class HousekeepingPlayerDao {
             Storage.closeSilently(preparedStatement);
             Storage.closeSilently(sqlConnection);
         }
+    }
+
+    public static List<Map<String, Object>> getAllRanks() {
+        List<Map<String, Object>> allRanksList = new ArrayList<>();
+
+        Connection sqlConnection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+
+        try {
+            sqlConnection = Storage.getStorage().getConnection();
+            preparedStatement = Storage.getStorage().prepare(
+                    "SELECT * FROM ranks ORDER BY id ASC", sqlConnection);
+
+            resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                Map<String, Object> ranks = new HashMap<>();
+                ranks.put("id", resultSet.getInt("id"));
+                ranks.put("name", resultSet.getString("name"));
+                ranks.put("badge", resultSet.getString("badge"));
+                ranks.put("description", resultSet.getString("description"));
+
+                allRanksList.add(ranks);
+            }
+
+        } catch (Exception e) {
+            Storage.logError(e);
+        } finally {
+            Storage.closeSilently(resultSet);
+            Storage.closeSilently(preparedStatement);
+            Storage.closeSilently(sqlConnection);
+        }
+
+        return allRanksList;
     }
 }
