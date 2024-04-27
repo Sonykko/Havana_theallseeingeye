@@ -87,6 +87,19 @@ CREATE TABLE `housekeeping_login_log` (
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `ranks`
+--
+
+CREATE TABLE `ranks` (
+  `id` int(11) NOT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `badge` varchar(255) DEFAULT NULL,
+  `description` text DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `settings_desc`
 --
 
@@ -102,6 +115,22 @@ CREATE TABLE `settings_desc` (
 
 INSERT INTO `bans_reasons` (`id`, `sanctionReasonId`, `sanctionReasonValue`, `sanctionReasonDesc`) VALUES
 (1, 'AUTO_TRIGGER', 'mal comportamiento', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Volcado de datos para la tabla `ranks`
+--
+
+INSERT INTO `ranks` (`id`, `name`, `badge`, `description`) VALUES
+(1, 'Usuario', 'FAN', NULL),
+(2, 'Habbo Guías', 'FAN', NULL),
+(3, 'Hobba de Plata', 'NWB', NULL),
+(4, 'Hobba de Oro', 'HBA', NULL),
+(5, 'Moderadores', 'ADM', NULL),
+(6, 'Community Managers', 'ADM', NULL),
+(7, 'Hotel Managers', 'ADM', NULL),
+(8, 'Administrador', 'ADM', NULL);
 
 -- --------------------------------------------------------
 
@@ -308,6 +337,12 @@ ALTER TABLE `housekeeping_rcon_logs`
 --
 ALTER TABLE `housekeeping_login_log`
   ADD PRIMARY KEY (`id`);
+  
+--
+-- Indices de la tabla `ranks`
+--
+ALTER TABLE `ranks`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indices de la tabla `settings_desc`
@@ -344,6 +379,13 @@ COMMIT;
 --
 ALTER TABLE `housekeeping_login_log`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+COMMIT;
+
+--
+-- AUTO_INCREMENT de la tabla `ranks`
+--
+ALTER TABLE `ranks`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
