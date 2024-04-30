@@ -36,6 +36,12 @@ This is a project to recreate the supossed "Hobbanet" or theallseeingeye Habbo H
   - Manage catalogue pages
 - theallseeingeye - Hobbanet design
 
+# Screenshots
+
+![image](https://i.imgur.com/xHQeucy.png)
+![image](https://i.imgur.com/Ro6161v.png)
+![image](https://i.imgur.com/SroKyu1.gif)
+
 # Download
 
 Download the latest development build from the [releases page](https://github.com/Sonykko/Havana_theallseeingeye/releases).
