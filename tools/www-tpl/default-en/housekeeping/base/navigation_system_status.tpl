@@ -5,18 +5,11 @@
  <div class="subnav-header">Configurations tools</div>
       <div class="list-group list-group-flush" style="padding-left: 2px;">
 			{% if housekeepingManager.hasPermission(playerDetails.getRank(), 'configuration') %}
-			<text><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/system_status/configurations" class="subnav-link">General hotel settings</a></text>
-			{% endif %}
-      </div>
-    </div>
-{% endif %}
-{% if housekeepingManager.hasPermission(playerDetails.getRank(), 'configuration') %}
-    <div class="subnav-box">
- <div class="subnav-header">Configurations tools</div>
-      <div class="list-group list-group-flush" style="padding-left: 2px;">
-			{% if housekeepingManager.hasPermission(playerDetails.getRank(), 'configuration') %}
 			<text><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/system_status/configurations?settings=miscellaneous" class="subnav-link">Miscellaneous settings</a></text>
 			{% endif %}
+			{% if housekeepingManager.hasPermission(playerDetails.getRank(), 'configuration') %}
+			<text><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/system_status/configurations?settings=housekeeping" class="subnav-link">Housekeeping settings</a></text>
+			{% endif %}					
       </div>
     </div>
 {% endif %}
@@ -29,10 +22,7 @@
 			{% endif %}
 			{% if housekeepingManager.hasPermission(playerDetails.getRank(), 'configuration') %}
 			<text><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/system_status/configurations?settings=hotel" class="subnav-link">Hotel settings</a></text>
-			{% endif %}
-			{% if housekeepingManager.hasPermission(playerDetails.getRank(), 'configuration') %}
-			<text><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/system_status/configurations?settings=housekeeping" class="subnav-link">Housekeeping settings</a></text>
-			{% endif %}			
+			{% endif %}	
 			{% if housekeepingManager.hasPermission(playerDetails.getRank(), 'configuration') %}
 			<text><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/system_status/configurations?settings=maintenance" class="subnav-link">Maintenance settings</a></text>
 			{% endif %}
