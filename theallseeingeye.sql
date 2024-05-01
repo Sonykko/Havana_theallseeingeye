@@ -266,8 +266,8 @@ INSERT INTO `settings_desc` (`setting`, `description`, `category`) VALUES
 ('players.online', '1', NULL),
 ('profile.editing', 'Profile editing', 'miscellaneous'),
 ('rare.cycle.page.id', 'Set the ID of the catalogue Rare cycle page', 'catalogue'),
-('rcon.kick.message', 'Set the default alert message for Remote Kick', 'server'),
-('rcon.superban.message', 'Set the default reason for Remote Superban', 'server'),
+('rcon.kick.message', 'Set the default alert message for Remote Kick', 'housekeeping'),
+('rcon.superban.message', 'Set the default reason for Remote Superban', 'housekeeping'),
 ('regenerate.map.enabled', 'true', NULL),
 ('regenerate.map.interval', '1', NULL),
 ('registration.disabled', 'Set registration status as true or false', 'site'),
@@ -527,8 +527,8 @@ UPDATE `settings` SET
       WHEN `setting` = 'players.online' THEN NULL
       WHEN `setting` = 'profile.editing' THEN 'miscellaneous'
       WHEN `setting` = 'rare.cycle.page.id' THEN 'catalogue'
-      WHEN `setting` = 'rcon.kick.message' THEN 'server'
-      WHEN `setting` = 'rcon.superban.message' THEN 'server'
+      WHEN `setting` = 'rcon.kick.message' THEN 'housekeeping'
+      WHEN `setting` = 'rcon.superban.message' THEN 'housekeeping'
       WHEN `setting` = 'regenerate.map.enabled' THEN NULL
       WHEN `setting` = 'regenerate.map.interval' THEN NULL
       WHEN `setting` = 'registration.disabled' THEN 'site'
