@@ -49,21 +49,23 @@ Download the latest development build from the [releases page](https://github.co
 
 # Installation
 
-1. Run the theallseeingeye.sql from root folder of Git repro in your DB in order to do work properly this project
+1. Run first the Havana-Server.jar and Havana-Web.jar files. When they go ready, close it
 
-2. Insert this SQL if you want a custom path for Housekeeping:
+2. Run the theallseeingeye.sql from root folder of Git repro in your DB in order to do work properly this project
+
+3. Insert this SQL if you want a custom path for Housekeeping:
 ```sql
 INSERT INTO `settings` (`setting`, `value`, `category`)
 VALUES ('site.housekeeping', 'http://localhost/', 'hotel');
 ```
 
-3. Go to your tpl folder and go to /base/header.tpl and edit the URL of the Housekeeping with this:
+4. Go to your tpl folder and go to /base/header.tpl and edit the URL of the Housekeeping with this:
 ```html
 {{ site.sitePath }}/ase/housekeeping/es <!-- use this for no custom HK folder -->
 {{ site.housekeeping }}/ase/housekeeping/es <!-- use this for custom HK folder -->
 ```
 
-4. Move the www and www_tpl folder from Git repro to your Havana tool path
+5. Move the www and www_tpl folder from Git repro to your Havana tool path
 
 #
 
