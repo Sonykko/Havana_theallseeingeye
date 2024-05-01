@@ -10,6 +10,9 @@
 		<link href="{{ site.staticContentPath }}/public/hk/css/bootstrap.login.css" rel="stylesheet">
 		<link href="{{ site.staticContentPath }}/public/hk/css/bootstrap.login.override.css" rel="stylesheet">
 		<link href="{{ site.staticContentPath }}/public/hk/css/sticky-footer.css" rel="stylesheet">
+		{% if site.hkNewStyle %}
+		<link href="{{ site.staticContentPath }}/public/hk/css/hk_scale.css" rel="stylesheet">
+		{% endif %}					
 	</head>
 	<body>	
 		<div class="page-container">
