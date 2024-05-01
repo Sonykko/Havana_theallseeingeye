@@ -31,6 +31,9 @@
 			<text><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/system_status/configurations?settings=hotel" class="subnav-link">Hotel settings</a></text>
 			{% endif %}
 			{% if housekeepingManager.hasPermission(playerDetails.getRank(), 'configuration') %}
+			<text><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/system_status/configurations?settings=housekeeping" class="subnav-link">Housekeeping settings</a></text>
+			{% endif %}			
+			{% if housekeepingManager.hasPermission(playerDetails.getRank(), 'configuration') %}
 			<text><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/system_status/configurations?settings=maintenance" class="subnav-link">Maintenance settings</a></text>
 			{% endif %}
       </div>

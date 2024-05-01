@@ -8,6 +8,9 @@
     <title>{{ site.siteName }}: {{ pageName }}</title>
     <link href="{{ site.staticContentPath }}/public/hk/css/bootstrap.min.css" rel="stylesheet">
 	<link href="{{ site.staticContentPath }}/public/hk/css/simple-sidebar.css" rel="stylesheet">
+	{% if site.hkNewStyle %}
+	<link href="{{ site.staticContentPath }}/public/hk/css/hk_scale.css" rel="stylesheet">
+	{% endif %}
   </head>
   
 
