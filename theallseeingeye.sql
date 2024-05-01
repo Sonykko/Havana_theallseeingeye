@@ -222,6 +222,7 @@ INSERT INTO `settings_desc` (`setting`, `description`, `category`) VALUES
 ('happy.hour.weekday.start', '17:00:00', NULL),
 ('happy.hour.weekend.end', '13:00:00', NULL),
 ('happy.hour.weekend.start', '12:00:00', NULL),
+('hk.new.style.enabled', 'Set if new style (scaled UI) of HK is enabled or not as true or false', 'housekeeping'),
 ('homepage.template.file', 'Set the homepage template file', 'site'),
 ('hot.groups.community.limit', 'Set the hot groups community limit number', 'site'),
 ('hot.groups.limit', 'Set the hot groups limit number', 'site'),
@@ -482,6 +483,7 @@ UPDATE `settings` SET
       WHEN `setting` = 'happy.hour.weekday.start' THEN NULL
       WHEN `setting` = 'happy.hour.weekend.end' THEN NULL
       WHEN `setting` = 'happy.hour.weekend.start' THEN NULL
+      WHEN `setting` = 'hk.new.style.enabled' THEN 'housekeeping'
       WHEN `setting` = 'homepage.template.file' THEN 'site'
       WHEN `setting` = 'hot.groups.community.limit' THEN 'site'
       WHEN `setting` = 'hot.groups.limit' THEN 'site'
