@@ -49,5 +49,3 @@
   </script>
 </body>
 </html>
-
-{% include "housekeeping/base/footer.tpl" %}
