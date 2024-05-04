@@ -18,3 +18,5 @@
           
     </script>
 	</div>
+	
+	{% include "housekeeping/base/footer.tpl" %}	

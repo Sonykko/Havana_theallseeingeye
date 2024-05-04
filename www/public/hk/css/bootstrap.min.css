@@ -11131,9 +11131,9 @@ a.list-group-item-danger.active:hover, a.list-group-item-danger.active:focus {
     margin-left: 10px;
     border-width: 2px;
     height: fit-content;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
 	display: table-caption;	
-	color: gray;
+	color: #000;
     border-color: black;
     padding-left: 2px;
 }
@@ -11147,4 +11147,46 @@ a.list-group-item-danger.active:hover, a.list-group-item-danger.active:focus {
     text-align: left;
     margin-top: 0;
 	padding: 0;
+}
+
+.footer {
+	margin-left: 15px;
+	display: flex;
+	flex-direction: column;
+	width: 240px;
+}
+
+.footer a {
+	text-decoration: none;
+}
+
+.copyright {
+	color: #000!important;
+}
+
+.copyright:hover {
+	font-weight: bold;
+	text-decoration: underline;
+}
+
+.build {
+	color: #999!important;
+}
+
+.build:hover {
+	text-decoration: none!important;
+}
+
+.footer a:active {
+	color: #000!important;
+	text-decoration: none;
+}
+
+.footer a:focus {
+	color: #000!important;
+	text-decoration: none;
+}
+
+.footer a:hover {
+	color: #000!important;
 }
