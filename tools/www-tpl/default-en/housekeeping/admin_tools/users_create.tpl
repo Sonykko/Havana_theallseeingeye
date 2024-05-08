@@ -6,6 +6,7 @@
      <h2 class="mt-4">Create User</h2>		
 		<p>Enter the details to create a new user.</p>
 		{% include "housekeeping/base/alert.tpl" %}
+		{% autoescape 'html' %}
 		<form class="table-responsive col-md-4" method="post">
 			<div class="form-group">
 				<label>Username:</label>
@@ -35,6 +36,7 @@
 					<button type="submit">Submit</button>
 			</div>
 		</form>
+		{% endautoescape %}
       </div>
     </div>
   </div>

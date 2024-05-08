@@ -56,7 +56,9 @@
                   <td>{{ player.name }}</td>
 				  <td>{{ player.email }}</td>
 				  <td><img src="{{ site.habboImagingPath }}/habbo-imaging/avatarimage?figure={{ player.figure }}&size=s"></td>
+				  {% autoescape 'html' %}
                   <td>{{ player.mission }}</td>
+				  {% endautoescape %}
                   <td>{{ player.credits }}</td>
                   <td>{{ player.pixels }}</td>
 				  <td>{{ player.formatJoinDate("dd-MM-yyyy HH:mm:ss") }}</td>

@@ -49,7 +49,9 @@
                   <td>{{ player.id }}</td>
                   <td>{{ player.name }}</td>
 				  <td><img src="{{ site.habboImagingPath }}/habbo-imaging/avatarimage?figure={{ player.figure }}&size=s"></td>
+				  {% autoescape 'html' %}
                   <td>{{ player.mission }}</td>
+				  {% endautoescape %}
 				  <td>{{ player.formatJoinDate("dd-MM-yyyy HH:mm:ss") }}</td>
 				  <td>{{ player.formatLastOnline("dd-MM-yyyy HH:mm:ss") }}</td>				  
 				  <td>
