@@ -274,7 +274,7 @@ public class RoomMapping {
                         Player p = (Player) entity;
 
                         if (p.getRoomUser().getPosition().equals(oldPosition) ||
-                                p.getRoomUser().getAuthenticateTelporterId() == item.getVirtualId()) {
+                            p.getRoomUser().getAuthenticateTelporterId() == item.getVirtualId()) {
                             p.getRoomUser().setAuthenticateTelporterId(-1);
                             p.getRoomUser().setAuthenticateTelporterRoomId(-1);
                             p.getRoomUser().setWalkingAllowed(true);
@@ -291,13 +291,17 @@ public class RoomMapping {
         refreshRoomItems();
     }
 
+    public void pickupItem(Player player, Item item) {
+        item.getDefinition().getInteractionType().getTrigger().onItemPickup(player, this.room, item);
+        this.removeItem(item);
+    }
+
     /**
      * Remove an item from the room.
      *
      * @param item the item that is being removed
      */
-    public void removeItem(Player player, Item item) {
-        item.getDefinition().getInteractionType().getTrigger().onItemPickup(player, this.room, item);
+    public void removeItem(Item item) {
         this.room.getItems().remove(item);
 
         if (item.hasBehaviour(ItemBehaviour.WALL_ITEM)) {
