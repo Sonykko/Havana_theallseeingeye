@@ -328,10 +328,16 @@ public class Routes {
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/api/mass_kick", HousekeepingCommandsController::massKickuser);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/api/mass_ban", HousekeepingCommandsController::massBanuser);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/api/mass_unban", HousekeepingCommandsController::massUnbanuser);
+        RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/api/cfh.pick", HousekeepingCommandsController::cfhPickUp);
+        RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/api/cfh.reply", HousekeepingCommandsController::cfhReply);
+        RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/api/cfh.block", HousekeepingCommandsController::cfhBlock);
+        RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/api/cfh.follow", HousekeepingCommandsController::cfhFollow);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/transaction/lookup", HousekeepingTransactionsController::search);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/transaction/track_item", HousekeepingTransactionsController::item_lookup);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/bans_kicks", HousekeepingBansController::bans);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/cfh_logs", HousekeepingCFHController::cfh_logs);
+        RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/cfh_actions", HousekeepingCFHController::cfh_actions);
+        RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/cfh_mods", HousekeepingCFHController::cfh_mods);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/users", HousekeepingUsersController::users);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/users/search", HousekeepingUsersController::search);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/users/create", HousekeepingUsersController::create);

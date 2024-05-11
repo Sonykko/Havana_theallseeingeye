@@ -8,11 +8,14 @@ import org.alexdev.havana.game.achievements.AchievementManager;
 import org.alexdev.havana.game.achievements.AchievementType;
 import org.alexdev.havana.game.ads.AdManager;
 import org.alexdev.havana.game.catalogue.CatalogueManager;
+import org.alexdev.havana.game.fuserights.Fuseright;
 import org.alexdev.havana.game.groups.GroupMember;
 import org.alexdev.havana.game.infobus.InfobusManager;
 import org.alexdev.havana.game.item.Item;
 import org.alexdev.havana.game.item.ItemManager;
 import org.alexdev.havana.game.messenger.MessengerUser;
+import org.alexdev.havana.game.moderation.cfh.CallForHelp;
+import org.alexdev.havana.game.moderation.cfh.CallForHelpManager;
 import org.alexdev.havana.game.navigator.NavigatorManager;
 import org.alexdev.havana.game.pathfinder.Position;
 import org.alexdev.havana.game.player.Player;
@@ -24,7 +27,9 @@ import org.alexdev.havana.log.Log;
 import org.alexdev.havana.messages.incoming.catalogue.GET_CATALOG_INDEX;
 import org.alexdev.havana.messages.outgoing.alerts.ALERT;
 import org.alexdev.havana.messages.outgoing.handshake.RIGHTS;
+import org.alexdev.havana.messages.outgoing.moderation.CRY_REPLY;
 import org.alexdev.havana.messages.outgoing.moderation.MODERATOR_ALERT;
+import org.alexdev.havana.messages.outgoing.moderation.PICKED_CRY;
 import org.alexdev.havana.messages.outgoing.rooms.groups.GROUP_BADGES;
 import org.alexdev.havana.messages.outgoing.rooms.groups.GROUP_MEMBERSHIP_UPDATE;
 import org.alexdev.havana.messages.outgoing.user.currencies.CREDIT_BALANCE;
@@ -89,6 +94,113 @@ public class RconConnectionHandler extends ChannelInboundHandlerAdapter {
                         online.getRoomUser().refreshAppearance();
                     }
 
+                    break;
+                case CFH_PICK:
+                    int callId = Integer.parseInt(message.getValues().get("cryId"));
+                    Player moderator = PlayerManager.getInstance().getPlayerByName(message.getValues().get("moderator"));
+                    CallForHelp call = CallForHelpManager.getInstance().getCall(callId);
+
+                    if (call ==  null) {
+                        return;
+                    }
+
+                    if (moderator ==  null) {
+                        return;
+                    }
+
+                    CallForHelpManager.getInstance().pickUp(call, moderator);
+
+                    for (Player player : PlayerManager.getInstance().getPlayers()) {
+                        if (player.hasFuse(Fuseright.RECEIVE_CALLS_FOR_HELP)) {
+
+                            player.send(new PICKED_CRY(call));
+                            //player.send(new DELETE_CRY(cfh));
+                            //player.send(new DELETE_CRY(callId));
+                        }
+                    }
+                    break;
+                case CFH_REPLY:
+                    Player moderatorReply = PlayerManager.getInstance().getPlayerByName(message.getValues().get("moderatorReply"));
+
+                    if (moderatorReply ==  null) {
+                        return;
+                    }
+
+                    if (!moderatorReply.hasFuse(Fuseright.RECEIVE_CALLS_FOR_HELP)) {
+                        return;
+                    }
+
+                    int callIdReply = Integer.parseInt(message.getValues().get("cryIdReply"));
+
+                    CallForHelp cfh = CallForHelpManager.getInstance().getCall(callIdReply);
+
+                    String messageReply = message.getValues().get("messageReply");
+
+                    if (cfh == null) {
+                        return;
+                    }
+
+                    Player caller = PlayerManager.getInstance().getPlayerById(cfh.getCaller());
+
+                    if (caller == null) {
+                        return;
+                    }
+
+                    CFHDao.updateReplyType(cfh, "REPLY", messageReply);
+
+                    caller.send(new CRY_REPLY(messageReply));
+                    CallForHelpManager.getInstance().deleteCall(cfh);
+                    break;
+                case CFH_BLOCK:
+                    Player moderatorBlock = PlayerManager.getInstance().getPlayerByName(message.getValues().get("moderatorBlock"));
+
+                    if (moderatorBlock ==  null) {
+                        return;
+                    }
+
+                    if (!moderatorBlock.hasFuse(Fuseright.RECEIVE_CALLS_FOR_HELP)) {
+                        return;
+                    }
+
+                    int callIdDelete = Integer.parseInt(message.getValues().get("cryIdBlock"));
+
+                    CallForHelp cfhDelete = CallForHelpManager.getInstance().getCall(callIdDelete);
+
+                    if (cfhDelete == null) {
+                        return;
+                    }
+
+                    CFHDao.updateReplyType(cfhDelete, "BLOCK", "");
+
+                    CallForHelpManager.getInstance().deleteCall(cfhDelete);
+                    break;
+                case CFH_FOLLOW:
+                    Player moderatorFollow = PlayerManager.getInstance().getPlayerByName(message.getValues().get("moderatorFollow"));
+
+                    if (moderatorFollow ==  null) {
+                        return;
+                    }
+
+                    if (!moderatorFollow.hasFuse(Fuseright.RECEIVE_CALLS_FOR_HELP)) {
+                        return;
+                    }
+
+                    int callIdFollow = Integer.parseInt(message.getValues().get("cryIdFollow"));
+
+                    CallForHelp cfhFollow = CallForHelpManager.getInstance().getCall(callIdFollow);
+
+                    if (cfhFollow == null) {
+                        return;
+                    }
+
+                    if (cfhFollow.getRoom() == null) {
+                        return;
+                    }
+
+                    CFHDao.updateReplyType(cfhFollow, "FOLLOW", "");
+
+                    cfhFollow.getRoom().forward(moderatorFollow, false);
+                    CallForHelpManager.getInstance().deleteCall(cfhFollow);
                     break;
                 case REFRESH_CATALOGUE_PAGES:
                     CatalogueManager.reset();

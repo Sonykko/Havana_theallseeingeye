@@ -1,5 +1,6 @@
 package org.alexdev.havana.game.moderation.cfh;
 
+import org.alexdev.havana.dao.mysql.CFHDao;
 import org.alexdev.havana.game.fuserights.Fuseright;
 import org.alexdev.havana.game.player.Player;
 import org.alexdev.havana.game.player.PlayerManager;
@@ -13,7 +14,6 @@ import org.alexdev.havana.util.DateUtil;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -35,12 +35,14 @@ public class CallForHelpManager {
      * @param message The message attached to the CFH
      */
     public void submitCall(Player caller, String message) {
-        int callId = this.latestCallId.getAndIncrement();
+        int callId = Integer.parseInt(CFHDao.generateRandomCallId());
         int callerId = caller.getDetails().getId();
         Room room = caller.getRoomUser().getRoom();
 
         CallForHelp cfh = new CallForHelp(callId, callerId, room, message);
         this.callsForHelp.put(callId, cfh);
+
+        CFHDao.getInstance().insertCall(cfh);
 
         sendToModerators(new CALL_FOR_HELP(cfh));
         caller.send(new CRY_RECEIVED());
@@ -104,6 +106,9 @@ public class CallForHelpManager {
     public void pickUp(CallForHelp cfh, Player moderator) {
         cfh.setPickedUpBy(moderator);
 
+        //CFHDao.updateIsDeletedInDatabase(cfh);
+        CFHDao.updateReplyType(cfh, "PICK UP", "");
+
         // Send the updated CallForHelp to all moderators
         sendToModerators(new PICKED_CRY(cfh));
     }
@@ -159,5 +164,4 @@ public class CallForHelpManager {
 
         return instance;
     }
-
 }

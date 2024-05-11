@@ -1,5 +1,6 @@
 package org.alexdev.havana.messages.incoming.moderation;
 
+import org.alexdev.havana.dao.mysql.CFHDao;
 import org.alexdev.havana.game.fuserights.Fuseright;
 import org.alexdev.havana.game.moderation.cfh.CallForHelp;
 import org.alexdev.havana.game.moderation.cfh.CallForHelpManager;
@@ -24,6 +25,8 @@ public class FOLLOW_CRYFORHELP implements MessageEvent {
         if (cfh.getRoom() == null) {
             return;
         }
+
+        CFHDao.updateReplyType(cfh, "FOLLOW", "");
 
         cfh.getRoom().forward(player, false);
         CallForHelpManager.getInstance().deleteCall(cfh);

@@ -2,6 +2,10 @@ package org.alexdev.havana.server.rcon.messages;
 
 public enum RconHeader {
     REFRESH_LOOKS("refresh_looks"),
+    CFH_PICK("cfh_pick"),
+    CFH_REPLY("cfh_reply"),
+    CFH_BLOCK("cfh_block"),
+    CFH_FOLLOW("cfh_follow"),
     REFRESH_CATALOGUE_PAGES("refresh_catalogue_pages"),
     REFRESH_NAVIGATOR("refresh_navigator"),
     MOD_ALERT_USER("mod_alert_user"),

@@ -325,6 +325,129 @@ public class HousekeepingCommandsController {
         client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/alert");
     }
 
+    public static void cfhPickUp(WebConnection client) {
+        if (!client.session().getBoolean(SessionUtil.LOGGED_IN_HOUSKEEPING)) {
+            client.send("");
+        }
+
+        int userId = client.session().getInt("user.id");
+        PlayerDetails playerDetails = PlayerDao.getDetails(userId);
+
+        if (!HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "user/create")) {
+            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/permissions");
+            return;
+        }
+
+        try {
+            RconUtil.sendCommand(RconHeader.CFH_PICK, new HashMap<>() {{
+                put("cryId", client.get().getString("cryId"));
+                put("moderator", playerDetails.getName());
+
+            }});
+        } catch (Exception e) {
+            client.session().set("alertColour", "danger");
+            client.session().set("alertMessage", "Error Picking Up the CFH: " + e.getMessage());
+        }
+
+        String cryId = client.get().getString("cryId");
+
+        client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/cfh_actions?cryId=" + cryId);
+    }
+
+    public static void cfhReply(WebConnection client) {
+        if (!client.session().getBoolean(SessionUtil.LOGGED_IN_HOUSKEEPING)) {
+            client.send("");
+        }
+
+        int userId = client.session().getInt("user.id");
+        PlayerDetails playerDetails = PlayerDao.getDetails(userId);
+
+        if (!HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "user/create")) {
+            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/permissions");
+            return;
+        }
+
+        try {
+            RconUtil.sendCommand(RconHeader.CFH_REPLY, new HashMap<>() {{
+                put("cryIdReply", client.get().getString("cryIdReply"));
+                put("messageReply", client.get().getString("messageReply"));
+                put("moderatorReply", playerDetails.getName());
+
+            }});
+
+            client.session().set("alertColour", "success");
+            client.session().set("alertMessage", "The Reply has been sent and logged in the database");
+
+        } catch (Exception e) {
+            client.session().set("alertColour", "danger");
+            client.session().set("alertMessage", "Error sending CFH reply: " + e.getMessage());
+        }
+
+        client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/cfh_logs");
+    }
+
+    public static void cfhBlock(WebConnection client) {
+        if (!client.session().getBoolean(SessionUtil.LOGGED_IN_HOUSKEEPING)) {
+            client.send("");
+        }
+
+        int userId = client.session().getInt("user.id");
+        PlayerDetails playerDetails = PlayerDao.getDetails(userId);
+
+        if (!HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "user/create")) {
+            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/permissions");
+            return;
+        }
+
+        try {
+            RconUtil.sendCommand(RconHeader.CFH_BLOCK, new HashMap<>() {{
+                put("cryIdBlock", client.get().getString("cryIdBlock"));
+                put("moderatorBlock", playerDetails.getName());
+
+            }});
+
+            client.session().set("alertColour", "success");
+            client.session().set("alertMessage", "The Block has been sent and logged in the database");
+
+        } catch (Exception e) {
+            client.session().set("alertColour", "danger");
+            client.session().set("alertMessage", "Error sending CFH block: " + e.getMessage());
+        }
+
+        client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/cfh_logs");
+    }
+
+    public static void cfhFollow(WebConnection client) {
+        if (!client.session().getBoolean(SessionUtil.LOGGED_IN_HOUSKEEPING)) {
+            client.send("");
+        }
+
+        int userId = client.session().getInt("user.id");
+        PlayerDetails playerDetails = PlayerDao.getDetails(userId);
+
+        if (!HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "user/create")) {
+            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/permissions");
+            return;
+        }
+
+        try {
+            RconUtil.sendCommand(RconHeader.CFH_FOLLOW, new HashMap<>() {{
+                put("cryIdFollow", client.get().getString("cryIdFollow"));
+                put("moderatorFollow", playerDetails.getName());
+
+            }});
+
+            client.session().set("alertColour", "success");
+            client.session().set("alertMessage", "The Follow has been sent and logged in the database");
+
+        } catch (Exception e) {
+            client.session().set("alertColour", "danger");
+            client.session().set("alertMessage", "Error sending CFH follow: " + e.getMessage());
+        }
+
+        client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/cfh_logs");
+    }
+
     public static List<String> splitUsernames(String users) {
         String usersList = users.substring(1, users.length() - 1);
 
