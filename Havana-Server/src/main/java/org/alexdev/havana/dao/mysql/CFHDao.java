@@ -95,5 +95,37 @@ public class CFHDao {
 
         return sb.toString();
     }
-    // Agregar métodos para actualizar, eliminar y consultar llamadas CFH
+
+    public static void updateReplyType(CallForHelp cfh, String type, String message) {
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm d/MM/yyyy");
+        String formattedTimestamp = sdf.format(new Date());
+
+        Connection sqlConnection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+
+        String moderator = "";
+
+        //if (PlayerDao.getName(cfh.getPickedUpBy() ) != NULL)
+
+        try {
+            sqlConnection = Storage.getStorage().getConnection();
+            preparedStatement = Storage.getStorage().prepare("UPDATE cfh_logs SET is_deleted = 1, moderator = ?, picked_time = ?, action = ?, message_to_user = ? WHERE cry_id = ?", sqlConnection);
+
+            preparedStatement.setString(1, PlayerDao.getName(cfh.getPickedUpBy()));
+            preparedStatement.setString(2, formattedTimestamp);
+            preparedStatement.setString(3, type);
+            preparedStatement.setString(4, message);
+            preparedStatement.setInt(5, cfh.getCryId());
+
+            resultSet = preparedStatement.executeQuery();
+
+        } catch (Exception e) {
+            Storage.logError(e);
+        } finally {
+            Storage.closeSilently(resultSet);
+            Storage.closeSilently(preparedStatement);
+            Storage.closeSilently(sqlConnection);
+        }
+    }
 }

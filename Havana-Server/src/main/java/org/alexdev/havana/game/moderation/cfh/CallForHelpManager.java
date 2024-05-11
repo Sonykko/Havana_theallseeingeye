@@ -106,7 +106,8 @@ public class CallForHelpManager {
     public void pickUp(CallForHelp cfh, Player moderator) {
         cfh.setPickedUpBy(moderator);
 
-        CFHDao.updateIsDeletedInDatabase(cfh);
+        //CFHDao.updateIsDeletedInDatabase(cfh);
+        CFHDao.updateReplyType(cfh, "PICK UP", "");
 
         // Send the updated CallForHelp to all moderators
         sendToModerators(new PICKED_CRY(cfh));
@@ -163,5 +164,4 @@ public class CallForHelpManager {
 
         return instance;
     }
-
 }

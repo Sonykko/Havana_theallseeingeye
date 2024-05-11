@@ -20,10 +20,13 @@
 			{% endif %}
 			{% if housekeepingManager.hasPermission(playerDetails.getRank(), 'bans') %}
 			<text><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/bans_kicks" class="subnav-link">Remote banning and kicking</a></text>
-			{% endif %}
+			{% endif %}			
 			{% if housekeepingManager.hasPermission(playerDetails.getRank(), 'bans') %}
 			<text><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/chatlog.action" class="subnav-link">User action log</a></text>
-			{% endif %}
+			{% endif %}		
+			{% if housekeepingManager.hasPermission(playerDetails.getRank(), 'bans') %}
+			<text><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/cfh_mods" class="subnav-link">Calls for help</a></text>
+			{% endif %}				
       </div>
     </div>
 {% endif %}
@@ -31,10 +34,10 @@
 {% if housekeepingManager.hasPermission(playerDetails.getRank(), 'bans') %}
 	<div class="subnav-box">
  <div class="subnav-header">Supervisor Hobba tools</div>
-      <div class="list-group list-group-flush" style="padding-left: 2px;">   
+      <div class="list-group list-group-flush" style="padding-left: 2px;">        
 			{% if housekeepingManager.hasPermission(playerDetails.getRank(), 'bans') %}
 			<text><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/mass_ban" class="subnav-link">Mass ban</a></text>
-			{% endif %}	  
+			{% endif %}
 			{% if housekeepingManager.hasPermission(playerDetails.getRank(), 'bans') %}
 			<text><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/mass_alert" class="subnav-link">Mass alert</a></text>
 			{% endif %}
@@ -50,7 +53,7 @@
  <div class="subnav-header">Scam detection</div>
       <div class="list-group list-group-flush" style="padding-left: 2px;">
 			{% if housekeepingManager.hasPermission(playerDetails.getRank(), 'user/search') %}
-			<text><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/users/search" class="subnav-link">User search & information tool</a></text>
+			<text><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/users/search" class="subnav-link">{{ site.siteName }} search & information tool</a></text>
 			{% endif %}
 			{% if housekeepingManager.hasPermission(playerDetails.getRank(), 'transaction/lookup') %}
 			<text><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/transaction/lookup" class="subnav-link">Current furniture</a></text>
@@ -75,7 +78,7 @@
 	
 {% if housekeepingManager.hasPermission(playerDetails.getRank(), 'user/edit') %}
 	<div class="subnav-box">
- <div class="subnav-header">Staff moderation tools</div>
+ <div class="subnav-header">Staff moderator tools</div>
       <div class="list-group list-group-flush" style="padding-left: 2px;">        
 			{% if housekeepingManager.hasPermission(playerDetails.getRank(), 'user/edit') %}
 			<text><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/mass_unban" class="subnav-link">Mass unban</a></text>

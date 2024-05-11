@@ -1,5 +1,6 @@
 package org.alexdev.havana.messages.incoming.moderation;
 
+import org.alexdev.havana.dao.mysql.CFHDao;
 import org.alexdev.havana.game.moderation.cfh.CallForHelp;
 import org.alexdev.havana.game.moderation.cfh.CallForHelpManager;
 import org.alexdev.havana.game.fuserights.Fuseright;
@@ -30,6 +31,8 @@ public class MESSAGETOCALLER implements MessageEvent {
         if (caller == null) {
             return;
         }
+
+        CFHDao.updateReplyType(cfh, "REPLY", message);
 
         caller.send(new CRY_REPLY(message));
         CallForHelpManager.getInstance().deleteCall(cfh);

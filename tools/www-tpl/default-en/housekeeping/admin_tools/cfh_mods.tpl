@@ -3,43 +3,35 @@
     {% set bansActive = " active " %}
     {% include "housekeeping/base/navigation.tpl" %}
     {% include "housekeeping/base/navigation_admin_tools.tpl" %}
-          <h2 class="mt-4">CFH action log</h2>
-		  <p>The recently CFH logs list is seen below.</p>
+          <h2 class="mt-4">Calls for help</h2>
+		  <p>Here can moderate all Calls for help. You don't even need to be in the hotel.</p>
 			<div style="margin: 10px;">
 			{% if nextCFHlogs|length > 0 %}
 				{% set ourNextPage = page + 1 %}
-				<a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/cfh_logs?page={{ ourNextPage }}&sort={{ sortBy }}"><button type="button">Next Page</button></a>
+				<a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/cfh_mods?page={{ ourNextPage }}&sort={{ sortBy }}"><button type="button">Next Page</button></a>
 			{% endif %}
 			{% if previousCFHlogs|length > 0 %}
 				{% set ourNextPage = page - 1 %}
-				<a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/cfh_logs?page={{ ourNextPage }}&sort={{ sortBy }}"><button type="button">Go back</button></a>
+				<a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/cfh_mods?page={{ ourNextPage }}&sort={{ sortBy }}"><button type="button">Go back</button></a>
 			{% endif %}
 			</div>
           <div class="table-responsive" style="padding-left: 15px;">
             <table class="table table-striped">
               <thead>
                 <tr>
-                  <th>Moderator</th>
                   <th>Habbo</th>
 				  <th>Created Date</th>
-				  <th>Action</th>
-				  <th>Pick Up Date</th>
-				  <th>Message to user</th>
-				  <th>Reason for action</th>
+				  <th>Reason for help</th>
 				  <th>Room</th>
-				  <th>Status</th>
+				  <th>Status</th>			
                 </tr>
               </thead>
               <tbody>
 			    {% set num = 1 %}
 				{% for cfhlog in cfhlogs %}
                 <tr>
-                  <td>{% if cfhlog.status != "1" %}-{% else %}{{ cfhlog.moderator }}{% endif %}</td>
 				  <td><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/chatlog.action?chatId={{ cfhlog.userId }}" style="color: black;"><b><u>{{ cfhlog.username }}</u></b> (id: {{ cfhlog.userId }})</a></td>
-				  <td>{{ cfhlog.createdTime }}</td>
-				  <td>{{ cfhlog.action }}</td>
-				  <td>{% if cfhlog.status != "1" %}-{% else %}{{ cfhlog.pickedTime }}{% endif %}</td>
-				  <td>{{ cfhlog.messageToUser }}</td>
+				  <td>{{ cfhlog.createdTime }}</td>				  
 				  <td>{{ cfhlog.reason }}</td>
 				  <td>{{ cfhlog.roomName }} (id: {{ cfhlog.roomId }})</td>
 				  {% if cfhlog.status != "1" %}
