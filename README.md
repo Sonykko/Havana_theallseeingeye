@@ -17,6 +17,7 @@ This is a project to recreate the supossed "Hobbanet" or theallseeingeye Habbo H
   - Remote baning and kicking
   - Remote superban (original feature)
   - User action log
+  - Remote Calls for help admin
   - Remote mass alert
   - Remote mass ban
   - Remote mass unban
@@ -41,8 +42,6 @@ This is a project to recreate the supossed "Hobbanet" or theallseeingeye Habbo H
 ![image](https://i.imgur.com/xHQeucy.png)
 ![image](https://i.imgur.com/88JJJ4v.png)
 ![image](https://i.imgur.com/Ro6161v.png)
-
-Coming soon:
 ![image](https://i.imgur.com/SroKyu1.gif)
 
 # Download
@@ -67,7 +66,16 @@ VALUES ('site.housekeeping', 'http://localhost/', 'hotel');
 {{ site.housekeeping }}/ase/housekeeping/es <!-- use this for custom HK folder -->
 ```
 
-5. Move the www and www_tpl folder from Git repro to your Havana tool path
+5. Go to all your external_texts.txt files from v31 and search for this var:
+```html
+chatlog.url
+```
+And remplace with this:
+```html
+chatlog.url=https://example.com/ase/habbo/es/housekeeping/extra/hobba/chatlog.action?chatId=
+```
+
+6. Move the www and www_tpl folder from Git repro to your Havana tool path
 
 #
 
