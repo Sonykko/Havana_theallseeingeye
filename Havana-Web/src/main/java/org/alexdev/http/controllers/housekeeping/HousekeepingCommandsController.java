@@ -384,7 +384,11 @@ public class HousekeepingCommandsController {
             client.session().set("alertMessage", "Error sending CFH reply: " + e.getMessage());
         }
 
-        client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/cfh_logs");
+        if (HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "user/create")) {
+            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/cfh_logs");
+        } else {
+            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/cfh_mods");
+        }
     }
 
     public static void cfhBlock(WebConnection client) {
@@ -415,7 +419,11 @@ public class HousekeepingCommandsController {
             client.session().set("alertMessage", "Error sending CFH block: " + e.getMessage());
         }
 
-        client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/cfh_logs");
+        if (HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "user/create")) {
+            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/cfh_logs");
+        } else {
+            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/cfh_mods");
+        }
     }
 
     public static void cfhFollow(WebConnection client) {
@@ -446,7 +454,11 @@ public class HousekeepingCommandsController {
             client.session().set("alertMessage", "Error sending CFH follow: " + e.getMessage());
         }
 
-        client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/cfh_logs");
+        if (HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "user/create")) {
+            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/cfh_logs");
+        } else {
+            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/cfh_mods");
+        }
     }
 
     public static List<String> splitUsernames(String users) {
