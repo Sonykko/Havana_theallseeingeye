@@ -35,10 +35,10 @@
 	<div class="subnav-box">
  <div class="subnav-header">Supervisor Hobba tools</div>
       <div class="list-group list-group-flush" style="padding-left: 2px;">        
-			{% if housekeepingManager.hasPermission(playerDetails.getRank(), 'bans') %}
+			{% if housekeepingManager.hasPermission(playerDetails.getRank(), 'user/create') %}
 			<text><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/mass_ban" class="subnav-link">Mass ban</a></text>
 			{% endif %}
-			{% if housekeepingManager.hasPermission(playerDetails.getRank(), 'bans') %}
+			{% if housekeepingManager.hasPermission(playerDetails.getRank(), 'user/create') %}
 			<text><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/mass_alert" class="subnav-link">Mass alert</a></text>
 			{% endif %}
 			{% if housekeepingManager.hasPermission(playerDetails.getRank(), 'bans') %}

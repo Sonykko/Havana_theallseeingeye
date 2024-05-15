@@ -252,7 +252,7 @@ public class HousekeepingCommandsController {
         int userId = client.session().getInt("user.id");
         PlayerDetails playerDetails = PlayerDao.getDetails(userId);
 
-        if (!HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "user/create")) {
+        if (!HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "bans")) {
             client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/permissions");
             return;
         }
@@ -293,7 +293,7 @@ public class HousekeepingCommandsController {
         int userId = client.session().getInt("user.id");
         PlayerDetails playerDetails = PlayerDao.getDetails(userId);
 
-        if (!HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "user/create")) {
+        if (!HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "bans")) {
             client.redirect("/" + Routes.HOUSEKEEPING_DEFAULT_PATH);
             return;
         }
@@ -334,7 +334,7 @@ public class HousekeepingCommandsController {
         int userId = client.session().getInt("user.id");
         PlayerDetails playerDetails = PlayerDao.getDetails(userId);
 
-        if (!HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "user/create")) {
+        if (!HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "bans")) {
             client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/permissions");
             return;
         }
@@ -363,7 +363,7 @@ public class HousekeepingCommandsController {
         int userId = client.session().getInt("user.id");
         PlayerDetails playerDetails = PlayerDao.getDetails(userId);
 
-        if (!HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "user/create")) {
+        if (!HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "bans")) {
             client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/permissions");
             return;
         }
@@ -384,7 +384,7 @@ public class HousekeepingCommandsController {
             client.session().set("alertMessage", "Error sending CFH reply: " + e.getMessage());
         }
 
-        if (HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "user/create")) {
+        if (HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "bans")) {
             client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/cfh_logs");
         } else {
             client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/cfh_mods");
@@ -419,7 +419,7 @@ public class HousekeepingCommandsController {
             client.session().set("alertMessage", "Error sending CFH block: " + e.getMessage());
         }
 
-        if (HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "user/create")) {
+        if (HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "bans")) {
             client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/cfh_logs");
         } else {
             client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/cfh_mods");
@@ -434,7 +434,7 @@ public class HousekeepingCommandsController {
         int userId = client.session().getInt("user.id");
         PlayerDetails playerDetails = PlayerDao.getDetails(userId);
 
-        if (!HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "user/create")) {
+        if (!HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "bans")) {
             client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/permissions");
             return;
         }
