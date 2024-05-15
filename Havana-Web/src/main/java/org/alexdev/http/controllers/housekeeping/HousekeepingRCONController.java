@@ -81,7 +81,7 @@ public class HousekeepingRCONController {
 
         PlayerDetails playerDetails = (PlayerDetails) tpl.get("playerDetails");
 
-        if (!HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "user/create")) {
+        if (!HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "bans")) {
             client.redirect("/" + Routes.HOUSEKEEPING_PATH);
             return;
         }
@@ -135,7 +135,7 @@ public class HousekeepingRCONController {
 
         PlayerDetails playerDetails = (PlayerDetails) tpl.get("playerDetails");
 
-        if (!HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "user/create")) {
+        if (!HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "bans")) {
             client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/permissions");
             return;
         }
