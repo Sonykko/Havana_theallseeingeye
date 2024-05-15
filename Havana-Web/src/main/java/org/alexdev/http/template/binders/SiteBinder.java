@@ -54,6 +54,7 @@ public class SiteBinder implements TemplateBinder {
     private Captcha captcha;
 
     private boolean hkNewStyle;
+    private String hkBuild;
 
     @Override
     public void onRegister(Template template, WebConnection webConnection) {
@@ -98,6 +99,7 @@ public class SiteBinder implements TemplateBinder {
         this.housekeepingPath = Routes.HOUSEKEEPING_PATH;
 
         this.hkNewStyle = GameConfiguration.getInstance().getBoolean("hk.new.style.enabled");
+        this.hkBuild = "2.0.1 build 14";
 
         template.set("site", this);
         template.set("gameConfig", GameConfiguration.getInstance());
@@ -225,5 +227,9 @@ public class SiteBinder implements TemplateBinder {
 
     public boolean getHKNewStyle() {
         return this.hkNewStyle;
+    }
+
+    public String getHKBuild() {
+        return this.hkBuild;
     }
 }
