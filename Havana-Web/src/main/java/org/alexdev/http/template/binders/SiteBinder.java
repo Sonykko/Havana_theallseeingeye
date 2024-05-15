@@ -53,6 +53,7 @@ public class SiteBinder implements TemplateBinder {
 
 
     private boolean hkNewStyle;
+    private String hkBuild;
 
     @Override
     public void onRegister(Template template, WebConnection webConnection) {
@@ -213,5 +214,9 @@ public class SiteBinder implements TemplateBinder {
 
     public boolean getHKNewStyle() {
         return this.hkNewStyle;
+    }
+
+    public String getHKBuild() {
+        return this.hkBuild;
     }
 }
