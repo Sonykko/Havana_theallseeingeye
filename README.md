@@ -31,6 +31,7 @@ This is a project to recreate the supossed "Hobbanet" or theallseeingeye Habbo H
   - Wordfilter tool
   - Voucher codes tool
 - Campaign management
+  - Ads banners tool
   - Staff picks tool (missing rooms)
   - Recommended groups tool
   - Create catalogue pages
