@@ -58,6 +58,22 @@ CREATE TABLE `cfh_logs` (
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `cms_banners`
+--
+
+CREATE TABLE `cms_banners` (
+  `id` int(10) NOT NULL,
+  `text` varchar(30) NOT NULL,
+  `banner` text NOT NULL,
+  `url` varchar(300) NOT NULL,
+  `status` enum('0','1') NOT NULL DEFAULT '0',
+  `advanced` enum('0','1') DEFAULT NULL,
+  `order_id` int(11) DEFAULT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `housekeeping_rcon_logs`
 --
 
@@ -327,6 +343,12 @@ ALTER TABLE `bans_reasons`
 --
 ALTER TABLE `cfh_logs`
   ADD PRIMARY KEY (`cfh_id`);
+ 
+--
+-- Indices de la tabla `cms_banners`
+--
+ALTER TABLE `cms_banners`
+  ADD PRIMARY KEY (`id`);  
 
 --
 -- Indices de la tabla `housekeeping_rcon_logs`
@@ -368,6 +390,13 @@ COMMIT;
 --
 ALTER TABLE `cfh_logs`
   MODIFY `cfh_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `cms_banners`
+--
+ALTER TABLE `cms_banners`
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+COMMIT;
 
 --
 -- AUTO_INCREMENT de la tabla `housekeeping_rcon_logs`
