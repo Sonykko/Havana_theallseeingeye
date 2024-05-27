@@ -4,6 +4,7 @@ import org.alexdev.duckhttpd.server.connection.WebConnection;
 import org.alexdev.duckhttpd.template.Template;
 import org.alexdev.duckhttpd.template.TemplateBinder;
 import org.alexdev.http.Routes;
+import org.alexdev.http.dao.PromotionDao;
 import org.alexdev.http.server.Watchdog;
 import org.alexdev.havana.util.config.GameConfiguration;
 import org.alexdev.http.util.Captcha;
@@ -15,6 +16,7 @@ import java.util.Locale;
 public class SiteBinder implements TemplateBinder {
     private String siteName;
     private String sitePath;
+    private String siteBanners;
 
     private String loaderGameIp;
     private String loaderGamePort;
@@ -64,6 +66,8 @@ public class SiteBinder implements TemplateBinder {
         this.staticContentPath = GameConfiguration.getInstance().getString("static.content.path");
         this.furniImagerPath = "https://classichabbo.com/imager/furni";
 
+        this.siteBanners = PromotionDao.getAdsBanners();
+
         this.emailStaticPath = GameConfiguration.getInstance().getString("email.static.content.path");
         this.emailHotelName = StringUtils.capitalise(GameConfiguration.getInstance().getString("site.path").replace("https://", "").replace("http://", "").replace("/", ""));
 
@@ -95,7 +99,7 @@ public class SiteBinder implements TemplateBinder {
         this.housekeepingPath = Routes.HOUSEKEEPING_PATH;
 
         this.hkNewStyle = GameConfiguration.getInstance().getBoolean("hk.new.style.enabled");
-        this.hkBuild = "2.0.2 build 15";
+        this.hkBuild = "2.0.3 build 16";
 
         template.set("site", this);
         template.set("gameConfig", GameConfiguration.getInstance());
@@ -211,6 +215,10 @@ public class SiteBinder implements TemplateBinder {
 
     public Captcha getCaptcha() {
         return captcha;
+    }
+
+    public String getAdsBanners() {
+        return this.siteBanners;
     }
 
     public boolean getHKNewStyle() {
