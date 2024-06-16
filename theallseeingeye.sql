@@ -103,6 +103,23 @@ CREATE TABLE `housekeeping_login_log` (
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `cms_hot_campaigns`
+--
+
+CREATE TABLE `cms_hot_campaigns` (
+  `id` int(11) NOT NULL,
+  `title` text DEFAULT NULL,
+  `description` text DEFAULT NULL,
+  `image` varchar(255) DEFAULT NULL,
+  `url` varchar(255) DEFAULT NULL,
+  `url_text` varchar(255) DEFAULT NULL,
+  `status` int(11) DEFAULT NULL,
+  `order_id` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `ranks`
 --
 
@@ -131,6 +148,16 @@ CREATE TABLE `settings_desc` (
 
 INSERT INTO `bans_reasons` (`id`, `sanctionReasonId`, `sanctionReasonValue`, `sanctionReasonDesc`) VALUES
 (1, 'AUTO_TRIGGER', 'mal comportamiento', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Volcado de datos para la tabla `cms_hot_campaigns`
+--
+
+INSERT INTO `cms_hot_campaigns` (`id`, `title`, `description`, `image`, `url`, `url_text`, `status`, `order_id`) VALUES
+(1, 'Under Construction', 'Put interesting text in here, because this text is just useless sitting here otherwise!', 'beta.gif', 'https://google.es', 'Go there', 1, 1),
+(2, 'Under Construction', 'Put interesting text in here, because this text is just useless sitting here otherwise!', 'habbobetahot.png', 'https://google.es', 'Go there', 1, 2);
 
 -- --------------------------------------------------------
 
@@ -363,6 +390,12 @@ ALTER TABLE `housekeeping_login_log`
   ADD PRIMARY KEY (`id`);
   
 --
+-- Indices de la tabla `cms_hot_campaigns`
+--
+ALTER TABLE `cms_hot_campaigns`
+  ADD PRIMARY KEY (`id`);
+  
+--
 -- Indices de la tabla `ranks`
 --
 ALTER TABLE `ranks`
@@ -410,6 +443,13 @@ COMMIT;
 --
 ALTER TABLE `housekeeping_login_log`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+COMMIT;
+
+--
+-- AUTO_INCREMENT de la tabla `cms_hot_campaigns`
+--
+ALTER TABLE `cms_hot_campaigns`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 COMMIT;
 
 --
