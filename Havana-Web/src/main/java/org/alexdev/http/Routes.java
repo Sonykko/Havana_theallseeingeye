@@ -347,6 +347,7 @@ public class Routes {
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/campaign_management/banners", HousekeepingBannersController::banners);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/campaign_management/staff_picks", HousekeepingStaffPicksController::staff_picks);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/campaign_management/recommended", HousekeepingRecommendedController::recommended);
+        RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/campaign_management/hot_campaigns", HousekeepingHotCampaignsController::hot_campaigns);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/campaign_management/room_ads", HousekeepingAdsController::roomads);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/campaign_management/room_ads/delete", HousekeepingAdsController::delete);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/campaign_management/room_ads/create", HousekeepingAdsController::create);
