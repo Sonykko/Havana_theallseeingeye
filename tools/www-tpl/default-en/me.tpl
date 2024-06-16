@@ -371,24 +371,23 @@ body { behavior: url({{ site.staticContentPath }}/web-gallery/js/csshover.htc); 
 							<h2 class="title">Hot Campaigns							</h2>
 						<div id="hotcampaigns-habblet-list-container">
     <ul id="hotcampaigns-habblet-list">
-
-        <li class="even">
+	
+		{% set num = 0 %}
+		{% for HotCampaign in hotCampaigns %}
+		{% if num % 2 == 0 %}
+		<li class="even">
+		{% else %}
+		<li class="odd">
+		{% endif %}
             <div class="hotcampaign-container">
-                <a href="{{ site.sitePath }}/articles"><img src="{{ site.staticContentPath }}/c_images/hot_campaign_images_gb/beta.gif" align="left" alt="" /></a>
-                <h3>Under Construction</h3>
-                <p>Put interesting text in here, because this text is just useless sitting here otherwise!</p>
-                <p class="link"><a href="{{ site.sitePath }}">Go there &raquo;</a></p>
+                <a href="{{ HotCampaign.url }}"><img src="{{ site.staticContentPath }}/c_images/hot_campaign_images_all/{{ HotCampaign.image }}" align="left" alt="{{ HotCampaign.title }}" /></a>
+                <h3>{{ HotCampaign.title }}</h3>
+                <p>{{ HotCampaign.description }}</p>
+                <p class="link"><a href="{{ HotCampaign.url }}">{{ HotCampaign.urlText }} &raquo;</a></p>
             </div>
         </li>
-        
-        <li class="odd">
-            <div class="hotcampaign-container">
-                <a href="{{ site.sitePath }}/articles"><img src="{{ site.staticContentPath }}/c_images/hot_campaign_images_gb/habbobetahot.gif" align="left" alt="" /></a>
-                <h3>Under Construction</h3>
-                <p>Put interesting text in here, because this text is just useless sitting here otherwise!</p>
-                <p class="link"><a href="{{ site.sitePath }}">Go there &raquo;</a></p>
-            </div>
-        </li>
+		{% set num = num + 1 %}
+		{% endfor %}
         
         <!-- 
         <li class="odd">
