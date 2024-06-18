@@ -52,11 +52,13 @@ Download the latest development build from the [releases page](https://github.co
 
 # Installation
 
-1. Run first the Havana-Server.jar and Havana-Web.jar files. When they go ready, close it
+1. Download and install first [HavanaR39 from Jeppe](https://github.com/jeppe9821/HavanaR39)
 
-2. Run the theallseeingeye.sql from root folder of Git repro in your DB in order to do work properly this project
+2. Compile the Havana-Server and Havana-Web theallseeingeye sources and after, run it up. When they go ready, close it
 
-3. Insert this SQL if you want a custom path for Housekeeping:
+3. Run the theallseeingeye.sql from root folder of Git repro in your DB in order to do work properly this project
+
+4. Insert this SQL if you want a custom path for Housekeeping:
 ```sql
 INSERT INTO `settings` (`setting`, `value`, `category`)
 VALUES ('site.housekeeping', 'http://localhost/', 'hotel');
