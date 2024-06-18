@@ -64,13 +64,13 @@ INSERT INTO `settings` (`setting`, `value`, `category`)
 VALUES ('site.housekeeping', 'http://localhost/', 'hotel');
 ```
 
-4. Go to your tpl folder and go to /base/header.tpl and edit the URL of the Housekeeping with this:
+5. Go to your tpl folder and go to /base/header.tpl and edit the URL of the Housekeeping with this:
 ```html
 {{ site.sitePath }}/ase/housekeeping/es <!-- use this for no custom HK folder -->
 {{ site.housekeeping }}/ase/housekeeping/es <!-- use this for custom HK folder -->
 ```
 
-5. Go to all your external_texts.txt files from v31 and search for this var:
+6. Go to all your external_texts.txt files from v31 and search for this var:
 ```html
 chatlog.url
 ```
@@ -79,7 +79,7 @@ And remplace with this:
 chatlog.url=https://example.com/ase/habbo/es/housekeeping/extra/hobba/chatlog.action?chatId=
 ```
 
-6. Move the www and www_tpl folder from Git repro to your Havana tool path
+7. Move the www and www_tpl folder from Git repro to your Havana tool path
 
 #
 
