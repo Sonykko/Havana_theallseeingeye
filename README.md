@@ -52,7 +52,9 @@ Download the latest development build from the [releases page](https://github.co
 
 # Installation
 
-1. Run first the Havana-Server.jar and Havana-Web.jar files. When they go ready, close it
+1. Download and install first [Havana from Quackster](https://github.com/Quackster/Havana)
+
+2. Replace the Havana-Server.jar and Havana-Web.jar with the downloaded ones in the Releases page files and after, run it up. When they go ready, close it
 
 2. Run the theallseeingeye.sql from root folder of Git repro in your DB in order to do work properly this project
 
