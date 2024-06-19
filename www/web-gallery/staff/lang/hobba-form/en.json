@@ -1,0 +1,16 @@
+{
+	"HEAD_TITLE":"Habbo Hotel - Help &amp; Safety - Contact us - Apply to be a Hobba ",
+	"BE_A_HOBBA":"<b>Hobba Application</b>",
+	"WANNA_BE_A_HOBBA":"Have you got what it takes to become a Hobba? Before you fill out the application form, make sure you can say 'yes' to all these things:",
+	"QUESTIONS_REQUIREMENTS_HOBBA":"1. I'm over 18 (sorry under 18s - we've raised the minimum age) <br>2. I've been coming to the hotel for at least 12 weeks<br>3. I've been to the hotel at least 200 times<br>4. I'm very well behaved and know the Habbo Way inside out",
+	"ANSWER_YES_DO_FORM":"If you got full marks, fill out the form!",
+	"IMPORTANT_INFO":"Important information: by filling out this application, you agree to us keeping your personal details, verifying your identity and checking you meet our selection criteria. You are also confirming that the information you have given is, to the best of your knowledge, true. We will only use your details in connection with your Hobba application and will keep them securely. Your details will be deleted after 12 weeks if you do not pass the selection process.",
+	"HABBO_NAME":"Habbo name:",
+	"HABBO_EMAIL":"Email address:",
+	"REAL_FIRSTNAME":"Real first name:",
+	"REAL_LASTNAME":"Real last name:",
+	"SUBMIT_BUTTON":"Continue",
+	"REMINDER_FILL_ALL":"Fill in all the fields in the form.",
+	"ALERT_SUCCESS": "Application submitted successfully! A member of the Staff Team will contact you shortly.",
+    "ALERT_DANGER": "Please enter all valid data."
+}

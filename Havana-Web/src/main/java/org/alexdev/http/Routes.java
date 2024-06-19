@@ -70,6 +70,9 @@ public class Routes {
         //RouteManager.addRoute("/help/shockwave_app", SiteController::shockwave_app);
         RouteManager.addRoute("/help/*", FaqController::faq);
 
+        // Hobbas
+        RouteManager.addRoute("/habbo/es/help/contact/hobba/", HobbasController::hobbas);
+
         // Client
         RouteManager.addRoute("/components/updateHabboCount", ClientController::updateHabboCount);
         RouteManager.addRoute("/client", ClientController::client);
@@ -352,6 +355,7 @@ public class Routes {
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/mass_unban", HousekeepingRCONController::massUnbanUserRCON);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/vouchers", HousekeepingCoinsController::vouchers);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/wordfilter", HousekeepingWordfilterController::wordfilter);
+        RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/hobbas", HousekeepingHobbasController::hobbas);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/chatlog.action", HousekeepingChatLogsController::userchatlogs);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/users/imitate/*", HousekeepingUsersController::imitate);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/campaign_management/infobus_polls", HousekeepingInfobusController::polls);

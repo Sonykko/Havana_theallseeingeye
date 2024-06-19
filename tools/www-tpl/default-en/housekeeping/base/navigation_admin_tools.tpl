@@ -107,6 +107,17 @@
       </div>
     </div>
 {% endif %}
+
+{% if housekeepingManager.hasPermission(playerDetails.getRank(), 'bans') %}	
+	<div class="subnav-box">
+ <div class="subnav-header">Hobba management tools</div>
+      <div class="list-group list-group-flush" style="padding-left: 2px;">        
+			{% if housekeepingManager.hasPermission(playerDetails.getRank(), 'bans') %}
+			<text><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/hobbas" class="subnav-link">Check Hobba applicant</a></text>
+			{% endif %}
+      </div>
+    </div>
+{% endif %}
 	{% include "housekeeping/base/navigation_time.tpl" %}
 </div>
 
