@@ -30,14 +30,17 @@ This is a project to recreate the supossed "Hobbanet" or theallseeingeye Habbo H
   - User create (original feature)
   - Wordfilter tool
   - Voucher codes tool
+  - Check Hobba applicant tool
 - Campaign management
   - Ads banners tool
   - Staff picks tool (missing rooms)
   - Recommended groups tool
-  - Hot campaigns tool  
+  - Hot campaigns tool
   - Create catalogue pages
   - Manage catalogue pages
 - theallseeingeye - Hobbanet design
+- Website
+  - Habbo Hobba application form
 
 # Screenshots
 
