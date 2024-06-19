@@ -120,6 +120,22 @@ CREATE TABLE `cms_hot_campaigns` (
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `hobbas_forms`
+--
+
+CREATE TABLE `hobbas_forms` (
+  `id` int(11) NOT NULL,
+  `habboname` varchar(255) DEFAULT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `firstname` varchar(255) DEFAULT NULL,
+  `lastname` varchar(255) DEFAULT NULL,
+  `picked_up` varchar(255) DEFAULT NULL,
+  `timestamp` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `ranks`
 --
 
@@ -266,6 +282,7 @@ INSERT INTO `settings_desc` (`setting`, `description`, `category`) VALUES
 ('happy.hour.weekend.end', '13:00:00', NULL),
 ('happy.hour.weekend.start', '12:00:00', NULL),
 ('hk.new.style.enabled', 'Set if new style (scaled UI) of HK is enabled or not as true or false', 'housekeeping'),
+('hobba.form.lang', 'Set the lenguage of the Hobba application form, like "ES", "EN" or "BR", for exmaple', 'site'),
 ('homepage.template.file', 'Set the homepage template file', 'site'),
 ('hot.groups.community.limit', 'Set the hot groups community limit number', 'site'),
 ('hot.groups.limit', 'Set the hot groups limit number', 'site'),
@@ -376,6 +393,12 @@ ALTER TABLE `cfh_logs`
 --
 ALTER TABLE `cms_banners`
   ADD PRIMARY KEY (`id`);  
+  
+--
+-- Indices de la tabla `hobbas_forms`
+--
+ALTER TABLE `hobbas_forms`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indices de la tabla `housekeeping_rcon_logs`
@@ -432,6 +455,13 @@ ALTER TABLE `cms_banners`
 COMMIT;
 
 --
+-- AUTO_INCREMENT de la tabla `hobbas_forms`
+--
+ALTER TABLE `hobbas_forms`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+COMMIT;
+
+--
 -- AUTO_INCREMENT de la tabla `housekeeping_rcon_logs`
 --
 ALTER TABLE `housekeeping_rcon_logs`
@@ -449,7 +479,7 @@ COMMIT;
 -- AUTO_INCREMENT de la tabla `cms_hot_campaigns`
 --
 ALTER TABLE `cms_hot_campaigns`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 COMMIT;
 
 --
@@ -554,6 +584,7 @@ UPDATE `settings` SET
       WHEN `setting` = 'happy.hour.weekend.end' THEN NULL
       WHEN `setting` = 'happy.hour.weekend.start' THEN NULL
       WHEN `setting` = 'hk.new.style.enabled' THEN 'housekeeping'
+	  WHEN `setting` = 'hobba.form.lang' THEN 'site'
       WHEN `setting` = 'homepage.template.file' THEN 'site'
       WHEN `setting` = 'hot.groups.community.limit' THEN 'site'
       WHEN `setting` = 'hot.groups.limit' THEN 'site'
