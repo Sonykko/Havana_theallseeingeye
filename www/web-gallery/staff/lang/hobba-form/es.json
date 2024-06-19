@@ -1,0 +1,16 @@
+{
+	"HEAD_TITLE":"Habbo Hotel - Ayuda &amp; Seguridad - Contactos - Ser un Hobba ",
+	"BE_A_HOBBA":"<b>Ser un Hobba</b>",
+	"WANNA_BE_A_HOBBA":"¿Quieres ser un Hobba? Vale, pero antes de rellenar este formulario hace falta que contestes Sì a todas las preguntas:",
+	"QUESTIONS_REQUIREMENTS_HOBBA":"1. Tengo al menos 18 años<br>2. Soy un aficionado desde 12 semanas como mínino<br>3. He estado en el hotel 200 veces como mínimo<br>4. Suelo portarme adecuadamente dentro del hotel y respeto a todas sus reglas",
+	"ANSWER_YES_DO_FORM":"Si has contestado Si a todas las preguntas ¡rellena el formulario!",
+	"IMPORTANT_INFO":"<b>Información Importante</b>: Completando este formulario, aceptas que Habbo Hotel S.L. guardará tus datos personales, y podrá verificar tu identidad y si cumples los criterios especificados. También confirmas que la información que nos has dado, es bajo tu conocimiento, verdadera. Nosotros solo usaremos tus datos para  tu candidatura a Hobba y la mantendremos en un lugar seguro. Los datos serán borrados pasadas 12 semanas, en el caso no pases el proceso de selección.",
+	"HABBO_NAME":"Habbo nombre:",
+	"HABBO_EMAIL":"Correo electrónico:",
+	"REAL_FIRSTNAME":"Su nombre:",
+	"REAL_LASTNAME":"Su apellido:",
+	"SUBMIT_BUTTON":"Siguiente",
+	"REMINDER_FILL_ALL":"Rellena todo por favor.",
+	"ALERT_SUCCESS":"¡Solicitud enviada con éxito! En breves se pondrá en contacto contigo un miembro del Equipo Staff",
+	"ALERT_DANGER":"Porfavor introduce todos los datos válidos"
+}
