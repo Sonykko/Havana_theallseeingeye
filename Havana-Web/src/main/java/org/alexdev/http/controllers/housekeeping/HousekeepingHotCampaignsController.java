@@ -4,14 +4,13 @@ import org.alexdev.duckhttpd.server.connection.WebConnection;
 import org.alexdev.duckhttpd.template.Template;
 import org.alexdev.havana.game.player.PlayerDetails;
 import org.alexdev.http.Routes;
-import org.alexdev.http.dao.housekeeping.HousekeepingLogsDao;
 import org.alexdev.http.dao.housekeeping.HousekeepingPromotionDao;
 import org.alexdev.http.game.housekeeping.HousekeepingManager;
 import org.alexdev.http.util.SessionUtil;
 import org.apache.commons.lang3.StringUtils;
 
 public class HousekeepingHotCampaignsController {
-    public static void hot_campaigns (WebConnection client) {
+    public static void hot_campaigns(WebConnection client) {
         if (!client.session().getBoolean(SessionUtil.LOGGED_IN_HOUSKEEPING)) {
             client.redirect("/" + Routes.HOUSEKEEPING_DEFAULT_PATH);
             return;
@@ -33,10 +32,14 @@ public class HousekeepingHotCampaignsController {
             String createHotCampaign = client.post().getString("createHotCampaign");
             String url = client.post().getString("url");
             String urlText = client.post().getString("urlText");
-            int status = client.post().getInt("status");
-            int orderId = client.post().getInt("orderId");
 
-            if (StringUtils.isNumeric(client.post().getString("orderId")) && client.post().getInt("orderId") > 0) {
+            String statusString = client.post().getString("status");
+            String orderIdString = client.post().getString("orderId");
+
+            if (StringUtils.isNumeric(orderIdString) && Integer.parseInt(orderIdString) > 0) {
+                int status = Integer.parseInt(statusString);
+                int orderId = Integer.parseInt(orderIdString);
+
                 HousekeepingPromotionDao.createHotCampaign(title, description, createHotCampaign, url, urlText, status, orderId);
 
                 client.session().set("alertColour", "success");
@@ -51,9 +54,10 @@ public class HousekeepingHotCampaignsController {
         }
 
         if (client.get().contains("delete")) {
-            int hotCampaignId = client.get().getInt("delete");
+            String hotCampaignIdString = client.get().getString("delete");
 
-            if (StringUtils.isNumeric(client.get().getString("delete")) && client.get().getInt("delete") > 0) {
+            if (StringUtils.isNumeric(hotCampaignIdString) && Integer.parseInt(hotCampaignIdString) > 0) {
+                int hotCampaignId = Integer.parseInt(hotCampaignIdString);
                 HousekeepingPromotionDao.deleteHotCampaign(hotCampaignId);
 
                 client.session().set("alertColour", "success");
@@ -68,8 +72,15 @@ public class HousekeepingHotCampaignsController {
         }
 
         if (client.get().contains("edit")) {
-            tpl.set("HotCampaignEdit", HousekeepingPromotionDao.EditHotCampaign(client.get().getInt("edit")));
-            tpl.set("isHotCampaignEdit", true);
+            String editIdString = client.get().getString("edit");
+
+            if (StringUtils.isNumeric(editIdString)) {
+                int editId = Integer.parseInt(editIdString);
+                tpl.set("HotCampaignEdit", HousekeepingPromotionDao.EditHotCampaign(editId));
+                tpl.set("isHotCampaignEdit", true);
+            } else {
+                tpl.set("isHotCampaignEdit", false);
+            }
         } else {
             tpl.set("isHotCampaignEdit", false);
         }
@@ -80,12 +91,16 @@ public class HousekeepingHotCampaignsController {
             String saveHotCampaign = client.post().getString("saveHotCampaign");
             String url = client.post().getString("url");
             String urlText = client.post().getString("urlText");
-            int status = client.post().getInt("status");
-            int orderId = client.post().getInt("orderId");
 
-            int hotCampaignId = client.get().getInt("edit");
+            String statusString = client.post().getString("status");
+            String orderIdString = client.post().getString("orderId");
+            String editIdString = client.get().getString("edit");
 
-            if (StringUtils.isNumeric(client.post().getString("orderId")) && client.post().getInt("orderId") > 0) {
+            if (StringUtils.isNumeric(orderIdString) && Integer.parseInt(orderIdString) > 0) {
+                int status = Integer.parseInt(statusString);
+                int orderId = Integer.parseInt(orderIdString);
+                int hotCampaignId = Integer.parseInt(editIdString);
+
                 HousekeepingPromotionDao.saveHotCampaign(title, description, saveHotCampaign, url, urlText, status, orderId, hotCampaignId);
 
                 client.session().set("alertColour", "success");
