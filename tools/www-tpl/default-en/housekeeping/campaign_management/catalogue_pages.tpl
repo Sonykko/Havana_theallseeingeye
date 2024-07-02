@@ -30,7 +30,7 @@
 			</div>
 			<div class="form-group">
 				<label>Min. rank</label>
-				<select name="createMinRank" id="createMinRank" class="form-control">
+				<select name="editMinRank" id="editMinRank" class="form-control">
 					{% set num = 1 %}
 					{% for ranks in allRanks %}
 					<option value="{{ ranks.id }}" {% if cataloguePages.min_role_ID == ranks.id %}selected{% endif %}>{{ ranks.name }}</option>
