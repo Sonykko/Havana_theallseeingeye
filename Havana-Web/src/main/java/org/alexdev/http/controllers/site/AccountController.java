@@ -10,6 +10,7 @@ import org.alexdev.havana.game.player.statistics.PlayerStatisticManager;
 import org.alexdev.havana.util.DateUtil;
 import org.alexdev.havana.util.config.GameConfiguration;
 import org.alexdev.http.dao.GroupDiscussionDao;
+import org.alexdev.http.dao.PromotionDao;
 import org.alexdev.http.game.account.BeginnerGiftManager;
 import org.alexdev.http.game.friends.FriendsFeed;
 import org.alexdev.http.game.news.NewsArticle;
@@ -217,6 +218,9 @@ public class AccountController {
                 webConnection.cookies().set(SessionUtil.MACHINE_ID, playerDetails.getMachineId().replace("#", ""), 2, TimeUnit.DAYS);
             }
         }
+
+        template.set("hotCampaigns", PromotionDao.getAllHotCampaigns());
+        template.render();
     }
 
     public static void welcome(WebConnection webConnection) {
