@@ -46,7 +46,7 @@
                   <td>{{ player.id }}</td>
                   <td>{{ player.name }}</td>
 				  <td>{{ player.email }}</td>
-				  <td><img src="https://images.habbo.pro/habbo-imaging/avatarimage?figure={{ player.figure }}&size=s"></td>
+				  <td><img src="{{ site.habboImagingPath }}/habbo-imaging/avatarimage?figure={{ player.figure }}&size=s"></td>
 				  {% autoescape 'html' %}
                   <td>{{ player.motto }}</td>
 				  {% endautoescape %}
