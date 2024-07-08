@@ -71,7 +71,7 @@ public class HousekeepingRCONController {
         client.session().delete("alertMessage");
     }
 
-    public static void alertuserRCON(WebConnection client) { // Añadir BOLEAN para mostrar todos los chats chatlogs de manera predifinida o buscar por nombre, id o dueño o etc...
+    public static void alertUserRCON(WebConnection client) {
         if (!client.session().getBoolean(SessionUtil.LOGGED_IN_HOUSKEEPING)) {
             client.redirect("/" + Routes.HOUSEKEEPING_DEFAULT_PATH);
             return;
@@ -83,7 +83,7 @@ public class HousekeepingRCONController {
         PlayerDetails playerDetails = (PlayerDetails) tpl.get("playerDetails");
 
         if (!HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "bans")) {
-            client.redirect("/" + Routes.HOUSEKEEPING_PATH);
+            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/permissions");
             return;
         }
 
@@ -106,8 +106,13 @@ public class HousekeepingRCONController {
             String user = client.post().getString("user");
             String message = client.post().getString("message");
 
-            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/api/alert?user=" + user + "&message=" + message);
-            return;
+            if (user != null && !user.isEmpty() && message != null && !message.isEmpty()) {
+                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/api/alert?user=" + user + "&message=" + message);
+                return;
+            } else {
+                client.session().set("alertColour", "danger");
+                client.session().set("alertMessage", "Please enter a valid values");
+            }
         }
 
         //Template tpl = client.template("housekeeping/dashboard");
