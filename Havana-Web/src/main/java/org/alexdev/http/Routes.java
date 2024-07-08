@@ -349,7 +349,7 @@ public class Routes {
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/rooms/search", HousekeepingRoomsController::search);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/rooms/edit", HousekeepingRoomsController::editRoom);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/mass_alert", HousekeepingRCONController::massalertRCON);
-        RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/alert", HousekeepingRCONController::alertuserRCON);
+        RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/alert", HousekeepingRCONController::alertUserRCON);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/users/mod_tool", HousekeepingRCONController::banKickUserRCON);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/mass_ban", HousekeepingRCONController::massBanKickUserRCON);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/mass_unban", HousekeepingRCONController::massUnbanUserRCON);
