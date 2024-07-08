@@ -7,13 +7,13 @@
 		<p>Here you can edit room details.</p>
 		{% include "housekeeping/base/alert.tpl" %}
 		{% for room in RoomAdminData %}
-		<form class="table-responsive col-md-4" method="post">
+		<form class="table-responsive col-md-4" style="padding-left:0;" method="post">
 			<div class="form-group">
-				<label>ID:</label>
+				<label><b>ID:</b></label>
 				<input type="text" class="form-control" id="text" name="roomId"  value="{{ room.getData().getId() }}" readonly>
 			</div>
 			<div class="form-group">
-				<label>Category:</label>
+				<label><b>Category:</b></label>
 				<select name="category" id="category" class="form-control">
 					{% for roomCat in roomCats %}
 					<option value="{{ roomCat.id }}" {% if room.getData().getCategoryId() == roomCat.id %}selected{% endif %}>{{ roomCat.categoryName }}</option>
@@ -21,15 +21,15 @@
 				</select>
 			</div>
 			<div class="form-group">
-				<label for="pwd">Name:</label>
+				<label for="pwd"><b>Name:</b></label>
 				<input type="text" class="form-control" name="name" value="{{ room.getData().getName() }}">
 			</div>
 			<div class="form-group">
-				<label for="pwd">Description:</label>
+				<label for="pwd"><b>Description:</b></label>
 				<textarea class="form-control" name="description" placeholder="Enter here the room description...">{{ room.getData().getDescription() }}</textarea>
 			</div>
 			<div class="form-group">
-				<label for="pwd">Access type:</label>
+				<label for="pwd"><b>Access type:</b></label>
 				<select name="accesstype" id="accesstype" class="form-control">
 					<option value="0" {% if room.getData().getAccessTypeId() == 0 %}selected{% endif %}>Open - anyone can enter</option>
 					<option value="1" {% if room.getData().getAccessTypeId() == 1 %}selected{% endif %}>Visitors have to ring the doorbell</option>
@@ -37,11 +37,11 @@
 				</select>
 			</div>
 			<div class="form-group">
-				<label for="pwd">Password (only if the access type is Password):</label>
+				<label for="pwd"><b>Password (only if the access type is Password):</b></label>
 				<input type="password" class="form-control" name="password" value="{{ room.getData().getPassword() }}">
 			</div>
 			<div class="form-group">
-				<label for="pwd">Owner:</label>
+				<label for="pwd"><b>Owner:</b></label>
 				<input type="text" class="form-control" name="ownerId" value="{{ room.getData().getOwnerName() }} (id: {{ room.getData().getOwnerId() }})" readonly>
 			</div>
 			<div class="form-group">
