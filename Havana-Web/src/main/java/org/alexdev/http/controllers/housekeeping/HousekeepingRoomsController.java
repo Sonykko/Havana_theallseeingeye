@@ -6,11 +6,11 @@ import org.alexdev.havana.game.player.PlayerDetails;
 import org.alexdev.havana.game.room.Room;
 import org.alexdev.havana.server.rcon.messages.RconHeader;
 import org.alexdev.http.Routes;
-import org.alexdev.http.dao.housekeeping.HousekeepingLogsDao;
 import org.alexdev.http.dao.housekeeping.HousekeepingRoomDao;
 import org.alexdev.http.game.housekeeping.HousekeepingManager;
 import org.alexdev.http.util.RconUtil;
 import org.alexdev.http.util.SessionUtil;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -100,25 +100,27 @@ public class HousekeepingRoomsController {
             return;
         }
 
-        if (!client.get().contains("id")) {
+        if (!client.get().contains("id") || !(StringUtils.length(client.get().getString("id")) > 0)) {
             client.session().set("alertColour", "danger");
             client.session().set("alertMessage", "You did not select a room to admin");
+            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/rooms/search");
+            return;
         }
 
-        if (client.post().queries().size() > 0) {
-            String[] fieldCheck = new String[]{"category", "name", "description", "showname", "accesstype", "pixels"};
-
-            for (String field : fieldCheck) {
-                if (client.post().contains(field) && client.post().getString(field).length() > 0) {
-                    continue;
-                }
-
-                client.session().set("alertColour", "danger");
-                client.session().set("alertMessage", "You need to enter all fields. The " + field + " field is missing.");
+        int roomId = -1;
+        try {
+            roomId = client.get().getInt("id");
+            if (roomId < 1000) {
+                throw new NumberFormatException("Room ID must be 1000 or greater");
             }
+        } catch (NumberFormatException e) {
+            client.session().set("alertColour", "danger");
+            client.session().set("alertMessage", "Invalid room ID. It must be a number and 1000 or greater.");
+            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/rooms/search");
+            return;
         }
 
-        List<Room> RoomAdmin = HousekeepingRoomDao.getRoom1(client.get().getInt("id"));
+        List<Room> RoomAdmin = HousekeepingRoomDao.getRoom1(roomId);
 
         tpl.set("RoomAdminData", RoomAdmin);
 
@@ -127,28 +129,32 @@ public class HousekeepingRoomsController {
             client.session().set("alertMessage", "The room does not exist");
         } else {
             if (client.post().queries().size() > 0 && !client.session().contains("alertMessages")) {
-                int roomId = client.post().getInt("roomId");
-                int category = client.post().getInt("category");
-                String name = client.post().getString("name");
-                String description = client.post().getString("description");
-                int accesstype = client.post().getInt("accesstype");
-                String password = "";
-                if (accesstype == 2) {
-                    password = client.post().getString("password");
+                try {
+                    int category = client.post().getInt("category");
+                    String name = client.post().getString("name");
+                    String description = client.post().getString("description");
+                    int accesstype = client.post().getInt("accesstype");
+                    String password = "";
+                    if (accesstype == 2) {
+                        password = client.post().getString("password");
+                    }
+                    boolean showOwnerName = client.post().getBoolean("showOwnerName");
+                    int showOwner = showOwnerName ? 0 : 1;
+
+                    HousekeepingRoomDao.updateRoom(roomId, category, name, description, accesstype, password, showOwner);
+
+                    client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/rooms/search");
+
+                    client.session().set("alertColour", "success");
+                    client.session().set("alertMessage", "The room has been successfully saved");
+
+                    RconUtil.sendCommand(RconHeader.REFRESH_NAVIGATOR, new HashMap<>());
+
+                    return;
+                } catch (NumberFormatException e) {
+                    client.session().set("alertColour", "danger");
+                    client.session().set("alertMessage", "Invalid format in one of the fields");
                 }
-                boolean showOwnerName = client.post().getBoolean("showOwnerName");
-                int showOwner = showOwnerName ? 0 : 1;
-
-                HousekeepingRoomDao.updateRoom(roomId, category, name, description, accesstype, password, showOwner);
-
-                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/rooms/search");
-
-                client.session().set("alertColour", "success");
-                client.session().set("alertMessage", "The room has been successfully saved");
-
-                RconUtil.sendCommand(RconHeader.REFRESH_NAVIGATOR, new HashMap<>());
-
-                return;
             }
         }
 
