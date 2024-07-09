@@ -19,6 +19,7 @@
 		  
 		<h2 class="mt-4">Hotel Alert log</h2>
 		  <p>Here can see the most recent logs of Hotel Alerts created via RCON.</p>
+		    <div class="pagination-buttons-box">
 			{% if nexthotelAlertLogs|length > 0 %}
 				{% set ourNextPage = page + 1 %}
 				<a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/mass_alert?page={{ ourNextPage }}&sort={{ sortBy }}"><button type="button">Next Page</button></a>
@@ -27,9 +28,8 @@
 				{% set ourNextPage = page - 1 %}
 				<a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/mass_alert?page={{ ourNextPage }}&sort={{ sortBy }}"><button type="button">Go back</button></a>
 			{% endif %}
-			<br><br>
 			</div>
-          <div class="table-responsive" style="padding-left: 15px;">
+          <div class="table-responsive">
             <table class="table table-striped">
               <thead>
                 <tr>

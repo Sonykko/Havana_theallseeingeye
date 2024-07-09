@@ -65,7 +65,7 @@
 		</form>
           <h2 class="mt-4">Edit Recommended groups</h2>
 		  <p>The Recommended list is seen below.</p>
-          <div class="table-responsive" style="padding-left: 15px;">
+          <div class="table-responsive">
             <table class="table table-striped">
               <thead>
                 <tr>

@@ -81,7 +81,7 @@
 		{% endfor %}
 		{% else %}
 		<p>Here you can search a catalogue page.</p>
-		<form class="table-responsive col-md-4" style="padding-left: 0;" method="post">
+		<form class="table-responsive col-md-4" method="post">
 			<div class="form-group">
 				<label for="field">Field</label>
 				<select name="searchField" class="form-control" id="field">
@@ -161,7 +161,7 @@
 		{% endif %}
           <h3 class="mt-4">Edit catalogue pages</h3>
 		  <p>The catalogue pages list is seen below.</p>
-		  		<div style="margin:10px; margin-left: 0;">
+		  	<div class="pagination-buttons-box">
 			{% if nextCatalogPages|length > 0 %}
 				{% set ourNextPage = page + 1 %}
 				<a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/campaign_management/catalogue/pages?page={{ ourNextPage }}"><button type="button">Next Page</button></a>

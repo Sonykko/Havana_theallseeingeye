@@ -67,7 +67,7 @@
 		{% endif %}			
 			<h3 class="mt-4">View bans</h3>
 		<p>Manage all currently active bans on the hotel</p>
-		<div style="margin:10px">
+			<div class="pagination-buttons-box">
 			{% if nextBans|length > 0 %}
 				{% set ourNextPageBan = pageBan + 1 %}
 				<a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/bans_kicks?pageBan={{ ourNextPageBan }}&sortBan={{ sortByBan }}"><button type="button">Next Page</button></a>
@@ -136,7 +136,8 @@
       </div>
 	  <h3 class="mt-4">View kicks</h3>
 		  <p>Here can see the most recent logs of Kicks created via RCON.</p>
-		  <div style="margin:10px">
+			<div class="pagination-buttons-box">
+			<div class="pagination-buttons-box">
 			{% if nextremoteKickLogs|length > 0 %}
 				{% set ourNextPageKick = pageKick + 1 %}
 				<a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/bans_kicks?pageKick={{ ourNextPageKick }}&sort={{ kickSortBy }}"><button type="button">Next Page</button></a>

@@ -289,6 +289,10 @@ label {
   margin-bottom: 0.5rem;
 }
 
+label:not(:has(input)) {
+    font-weight: bold;
+}
+
 button {
   border-radius: 0;
 }
@@ -657,7 +661,7 @@ pre code {
   -ms-flex-wrap: wrap;
       flex-wrap: wrap;
   margin-right: -15px;
-  margin-left: -15px;
+  /*margin-left: -15px;*/
 }
 
 .no-gutters {
@@ -680,7 +684,7 @@ pre code {
   position: relative;
   width: 100%;
   padding-right: 15px;
-  padding-left: 15px;
+  /*padding-left: 15px;*/
 }
 
 .col {
@@ -11189,4 +11193,8 @@ a.list-group-item-danger.active:hover, a.list-group-item-danger.active:focus {
 
 .footer a:hover {
 	color: #000!important;
+}
+
+.pagination-buttons-box {
+	margin-bottom: 1rem;
 }

@@ -5,7 +5,7 @@
     {% include "housekeeping/base/navigation_admin_tools.tpl" %}
           <h2 class="mt-4">Calls for help actions</h2>
 		  <p>Here can admin the Call for help what you picked up.</p>
-          <div class="table-responsive" style="padding-left: 15px;">
+          <div class="table-responsive">
             <table class="table table-striped">
               <thead>
                 <tr>

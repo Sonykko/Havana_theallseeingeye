@@ -75,7 +75,7 @@
 			{% endif %}
 			<br><br>
 			</div>
-          <div class="table-responsive" style="padding-left: 15px;">
+          <div class="table-responsive">
             <table class="table table-striped">
               <thead>
                 <tr>

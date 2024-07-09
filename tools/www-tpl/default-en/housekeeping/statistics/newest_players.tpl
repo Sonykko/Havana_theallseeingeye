@@ -9,7 +9,7 @@
 		  {% else %}
 		  <p>The recently joined player list is seen below.</p>
 		  {% endif %}
-		  <div style="margin:10px">
+		   <div class="pagination-buttons-box">
 			{% set zeroCoinsValue = '' %}
 			{% if zeroCoinsFlag %}
 				{% set zeroCoinsValue = '&zerocoins' %}

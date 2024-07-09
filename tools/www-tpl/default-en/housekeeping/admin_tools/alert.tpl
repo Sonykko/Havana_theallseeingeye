@@ -6,7 +6,7 @@
 		<h2 class="mt-4">Remote alerting</h2>
 		  <p>This tool allows you to send an alert to a Habbo if you are not in the same room (you don't even need to be in the hotel). You can use this to answer Calls for help that aren't urgent (eg 'How do I dance?' or 'How do I become a Hobba?'), so that you don't have to go to the room.</p>
 		  {% include "housekeeping/base/alert.tpl" %}
-		  <form class="table-responsive col-md-4" method="post" style="padding-left: 0;">	
+		  <form class="table-responsive col-md-4" method="post">	
 		    <label for="user"><b>The recipient</b></label>
 				<input type="text" name="user" class="form-control" id="user" placeholder="Enter here the Username..." value="" />
 			<label for="message"><b>Message</b></label>
@@ -18,6 +18,7 @@
 		  
 		<h3 class="mt-4">View alerts</h3>
 		  <p>Here can see the most recent logs of User Alerts created via RCON.</p>
+			<div class="pagination-buttons-box">
 			{% if nextremoteAlertLogs|length > 0 %}
 				{% set ourNextPage = page + 1 %}
 				<a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/alert?page={{ ourNextPage }}&sort={{ sortBy }}"><button type="button">Next Page</button></a>
@@ -27,7 +28,7 @@
 				<a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/alert?page={{ ourNextPage }}&sort={{ sortBy }}"><button type="button">Go back</button></a>
 			{% endif %}
 			</div>
-          <div class="table-responsive" style="padding-left: 15px;">
+          <div class="table-responsive">
             <table class="table table-striped">
               <thead>
                 <tr>
