@@ -6,7 +6,7 @@
 	     <h2 class="mt-4">Create catalogue pages</h2>
 		{% include "housekeeping/base/alert.tpl" %}
 		<p>Here you can create a catalogue page.</p>
-		<form class="table-responsive col-md-4" style="padding-left:0;" method="post">
+		<form class="table-responsive col-md-4" method="post">
 			<div class="form-group">
 				<label>Parent ID</label>
 				<select name="createParentId" id="createParentId" class="form-control">

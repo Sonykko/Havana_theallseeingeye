@@ -7,14 +7,14 @@
     <p>With this tool you can check if a user is qualified to become a Hobba and if not, why.</p>
     <form class="table-responsive col-md-4" method="post" style="padding-left: 0;">
         <div class="form-group">
-            <label for="userName"><b>{{ site.siteName }} name</b></label>
+            <label for="userName">{{ site.siteName }} name</label>
             <input type="text" name="userName" class="form-control" id="userName" placeholder="Enter here the {{ site.siteName }} name..." value="" />
         </div>
         <div class="form-group">
             <text>OR</text>
         </div>
         <div class="form-group">
-            <label for="userID"><b>User ID</b></label>
+            <label for="userID">User ID/label>
             <input type="text" name="userID" class="form-control" id="userID" placeholder="Enter here the user ID..." value="" />
         </div>
         <button type="submit">Search</button>
@@ -35,6 +35,7 @@
 
     <h3 class="mt-4">View Hobba applications form logs</h3>
     <p>Here you can see the most recent logs of users Hobba applications.</p>
+	<div class="pagination-buttons-box">
     {% if nexthobbasFormLogs|length > 0 %}
         {% set ourNextPage = page + 1 %}
         <a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/hobbas?page={{ ourNextPage }}"><button type="button">Next Page</button></a>
@@ -43,7 +44,8 @@
         {% set ourNextPage = page - 1 %}
         <a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/hobbas?page={{ ourNextPage }}"><button type="button">Go back</button></a>
     {% endif %}
-    <div class="table-responsive" style="padding-left: 0px;">
+	</div>
+    <div class="table-responsive">
         <table class="table table-striped">
             <thead>
                 <tr>

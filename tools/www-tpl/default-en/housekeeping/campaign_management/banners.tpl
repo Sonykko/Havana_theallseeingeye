@@ -79,7 +79,7 @@
 		</form>
           <h2 class="mt-4">Edit ads banners</h2>
 		  <p>The Ads banners list is seen below.</p>
-          <div class="table-responsive" style="padding-left: 15px;">
+          <div class="table-responsive">
             <table class="table table-striped">
               <thead>
                 <tr>

@@ -6,9 +6,9 @@
      <h2 class="mt-4">Room admin</h2>
 		{% include "housekeeping/base/alert.tpl" %}
 		<p>Here you can search rooms by the field of your choice, and the requested input by you</p>
-		<form class="table-responsive col-md-4" style="padding-left:0;" method="post">
+		<form class="table-responsive col-md-4" method="post">
 			<div class="form-group">
-				<label for="field"><b>Field</b></label>
+				<label for="field">Field</label>
 				<select name="searchField" class="form-control" id="field">
 					<option value="id">Room ID</option>
 					<option value="name">Room Name</option>
@@ -18,7 +18,7 @@
 				</select>
 			</div>
 			<div class="form-group">
-				<label for="field"><b>Search type</b></label>
+				<label for="field">Search type</label>
 				<select name="searchType" class="form-control" id="field">
 					<option value="contains">Contains</option>
 					<option value="starts_with">Starts with</option>

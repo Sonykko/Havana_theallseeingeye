@@ -5,7 +5,7 @@
     {% include "housekeeping/base/navigation_admin_tools.tpl" %}
           <h2 class="mt-4">Calls for help</h2>
 		  <p>Here can moderate all Calls for help. You don't even need to be in the hotel.</p>
-			<div style="margin: 10px;">
+			<div class="pagination-buttons-box">
 			{% if nextCFHlogs|length > 0 %}
 				{% set ourNextPage = page + 1 %}
 				<a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/cfh_mods?page={{ ourNextPage }}&sort={{ sortBy }}"><button type="button">Next Page</button></a>
@@ -15,7 +15,7 @@
 				<a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/cfh_mods?page={{ ourNextPage }}&sort={{ sortBy }}"><button type="button">Go back</button></a>
 			{% endif %}
 			</div>
-          <div class="table-responsive" style="padding-left: 15px;">
+          <div class="table-responsive">
             <table class="table table-striped">
               <thead>
                 <tr>

@@ -6,7 +6,7 @@
 		<h2 class="mt-4">Housekeeping login logs</h2>
 		  <p>The recently login Staff logs list from Housekeeping is seen below.</p>
 		  {% include "housekeeping/base/alert.tpl" %}
-
+			<div class="pagination-buttons-box">
 			{% if nextLoginLogs|length > 0 %}
 				{% set ourNextPage = page + 1 %}
 				<a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/statistics/hklogs.login?page={{ ourNextPage }}"><button type="button">Next Page</button></a>
@@ -15,9 +15,8 @@
 				{% set ourNextPage = page - 1 %}
 				<a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/statistics/hklogs.login?page={{ ourNextPage }}"><button type="button">Go back</button></a>
 			{% endif %}
-			<br><br>
 			</div>
-          <div class="table-responsive" style="padding-left: 15px;">
+          <div class="table-responsive">
             <table class="table table-striped">
               <thead>
                 <tr>

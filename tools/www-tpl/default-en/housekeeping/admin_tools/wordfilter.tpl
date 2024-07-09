@@ -55,6 +55,7 @@
 		</form>
           <h2 class="mt-4">Edit words</h2>
 		  <p>The Wordfilter list is seen below.</p>
+		  <div class="pagination-buttons-box">
 		  {% if nextWords|length > 0 %}
 				{% set ourNextPage = page + 1 %}
 				<a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/wordfilter?page={{ ourNextPage }}&sort={{ sortBy }}"><button type="button">Next Page</button></a>
@@ -63,7 +64,8 @@
 				{% set ourNextPage = page - 1 %}
 				<a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/wordfilter?page={{ ourNextPage }}&sort={{ sortBy }}"><button type="button">Go back</button></a>
 			{% endif %}
-          <div class="table-responsive" style="padding-left: 15px;">
+			</div>
+          <div class="table-responsive">
             <table class="table table-striped">
               <thead>
                 <tr>

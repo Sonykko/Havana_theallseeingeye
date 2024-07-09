@@ -64,7 +64,7 @@
 		
           <h2 class="mt-4">Room Chatlogs</h2>
 		  <p>The recently chatlogs in rooms list is seen below.</p>
-
+			<div class="pagination-buttons-box">
 			{% if nextChatlogs|length > 0 %}
 				{% set ourNextPage = page + 1 %}
 				<a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/room_chatlogs?page={{ ourNextPage }}&sort={{ sortBy }}"><button type="button">Next Page</button></a>
@@ -73,9 +73,8 @@
 				{% set ourNextPage = page - 1 %}
 				<a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/room_chatlogs?page={{ ourNextPage }}&sort={{ sortBy }}"><button type="button">Go back</button></a>
 			{% endif %}
-			<br><br>
 			</div>
-          <div class="table-responsive" style="padding-left: 15px;">
+          <div class="table-responsive">
             <table class="table table-striped">
               <thead>
                 <tr>
