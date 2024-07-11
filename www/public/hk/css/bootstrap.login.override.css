@@ -22,12 +22,13 @@
 }
 .form-signin .form-control {
 	position: relative;
-    box-sizing: border-box;
-    font-size: 16px;
-    height: 25px;
-    border-radius: 0px;
-    padding: 5px;
-    width: 120px;
+	box-sizing: border-box;
+	font-size: 0.875rem;
+	height: 25px;
+	border-radius: 0px;
+	padding: 5px;
+	width: 100px;
+	margin-bottom: 15px;
 }
 }
 .form-signin .form-control:focus {
@@ -42,15 +43,17 @@
   margin-bottom: 1px;
   border-top-left-radius: 0;
   border-top-right-radius: 0;
+  margin-bottom: 15px;
 }
 .page-container {
 	margin-top: 5%;
 }
 .hkw-title {
 	font-weight: bold;
+	margin-bottom: 1rem;
 }
 .hkw-text {
-	width: 420px;
+	width: 370px;
 	/* padding: 5px; */
 	margin: 10px;
 }
@@ -75,7 +78,7 @@
     padding: 0px 0px 0px 5px;
     /* margin: 0px 0px 0px -7px; */
     border: solid;
-    background-color: #0000db;
+    background-color: #0066cc;
     color: white;
     border-color: black;
     border-width: 0;
@@ -90,6 +93,11 @@
     /* border-width: 2px; */
     height: auto;
     /* width: 140px; */
-    padding: 0px 5px 0px 0px;
+    padding: 0px 15px 0px 0px;
     /* padding: 0px; */
+}
+.login-data-box {
+	border: solid;
+	border-width: 2px;
+	margin: 10px;
 }
