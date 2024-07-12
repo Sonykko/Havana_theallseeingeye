@@ -53,8 +53,7 @@
 	margin-bottom: 1rem;
 }
 .hkw-text {
-	width: 370px;
-	/* padding: 5px; */
+	width: 350px;
 	margin: 10px;
 }
 .hkw-end{
@@ -82,7 +81,6 @@
     color: white;
     border-color: black;
     border-width: 0;
-    font-size: 15px;
     font-weight: bold;
     display: block;
     border-bottom-width: 2px;
