@@ -18,7 +18,7 @@
 		<div class="page-container">
 			<div class="login-container">
 				<div class="hkw-text">
-					<h2 class="hkw-title">Welcome Hobbas</h2>
+					<h4 class="hkw-title">Welcome Hobbas</h4>
 					<p>This service is meant for registered Hobbas. The service is monitored closely and we will pursue and charge any unauthorised users.</p>
 					<p class="hkw-end">Your username and password to the tool are personal. <b>Never</b> give them to anyone under <b>any</b> situation.</p>
 				</div>

@@ -115,7 +115,7 @@ article, aside, figcaption, figure, footer, header, hgroup, main, nav, section {
 
 body {
   margin: 0;
-  font-family: "Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-family: Verdana;
   font-size: 0.875rem;
   font-weight: 400;
   line-height: 1.5;
@@ -439,7 +439,8 @@ h1, .h1 {
 }
 
 h2, .h2 {
-  font-size: 1.75rem;
+  /*font-size: 1.75rem;*/
+  font-size: 1.3125rem;
 }
 
 h3, .h3 {
@@ -8610,7 +8611,7 @@ button.bg-dark:focus {
   margin-top: 1.5rem !important;
   margin-top: 1.5rem !important;
   font-weight: bold;
-  margin-bottom: 0; 
+  /*margin-bottom: 0;*/ 
 }
 
 .mr-4,
