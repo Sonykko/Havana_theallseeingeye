@@ -17,9 +17,9 @@
               <tbody>
 			    {% set num = 1 %}
 				{% for cfhlog in cfhlogsAction %}
-				{% if cfhlog.status == "1" %}
+				{% if cfhlog.action != "PICK UP" %}
 				<div class="alert alert-danger">
-					<text>The CFH is already picked up</text>
+					<text>The CFH is already picked up or it's not picked up by any Moderator yet</text>
 				</div>
 				{% else %}
                 <tr>
