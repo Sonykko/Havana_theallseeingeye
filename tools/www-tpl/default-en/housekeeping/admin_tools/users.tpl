@@ -57,7 +57,7 @@
 				  <td>{{ player.email }}</td>
 				  <td><img src="{{ site.habboImagingPath }}/habbo-imaging/avatarimage?figure={{ player.figure }}&size=s"></td>
 				  {% autoescape 'html' %}
-                  <td>{{ player.mission }}</td>
+                  <td>{{ player.motto }}</td>
 				  {% endautoescape %}
                   <td>{{ player.credits }}</td>
                   <td>{{ player.pixels }}</td>
