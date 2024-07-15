@@ -3,7 +3,7 @@
 	{% set bansActive = " active " %}
 	{% include "housekeeping/base/navigation.tpl" %}
 	{% include "housekeeping/base/navigation_admin_tools.tpl" %}
-     <h2 class="mt-4">Ban tool</h2>		
+     <h2 class="mt-4">Remote banning and kicking tool</h2>		
 		<p>This tool allows you to kick or ban Habbos if you are not in the same room (you don't even need to be in the hotel). being removed from the hotel.
 		<br><i>Use <b>Extra info</b> field for additional details like chat log urls etc. The contents will be included into this events chat record.</i></p>
 		{% include "housekeeping/base/alert.tpl" %}
