@@ -103,6 +103,22 @@ CREATE TABLE `housekeeping_login_log` (
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `housekeeping_staff_logs`
+--
+
+CREATE TABLE `housekeeping_staff_logs` (
+  `id` int(11) NOT NULL,
+  `type` varchar(255) DEFAULT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `username` varchar(255) DEFAULT NULL,
+  `description` text DEFAULT NULL,
+  `user_ip` varchar(255) DEFAULT NULL,
+  `timestamp` text DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `cms_hot_campaigns`
 --
 
@@ -413,6 +429,12 @@ ALTER TABLE `housekeeping_login_log`
   ADD PRIMARY KEY (`id`);
   
 --
+-- Indices de la tabla `housekeeping_staff_logs`
+--
+ALTER TABLE `housekeeping_staff_logs`
+  ADD PRIMARY KEY (`id`);
+  
+--
 -- Indices de la tabla `cms_hot_campaigns`
 --
 ALTER TABLE `cms_hot_campaigns`
@@ -473,6 +495,13 @@ COMMIT;
 --
 ALTER TABLE `housekeeping_login_log`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+COMMIT;
+
+--
+-- AUTO_INCREMENT de la tabla `housekeeping_staff_logs`
+--
+ALTER TABLE `housekeeping_staff_logs`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 COMMIT;
 
 --
