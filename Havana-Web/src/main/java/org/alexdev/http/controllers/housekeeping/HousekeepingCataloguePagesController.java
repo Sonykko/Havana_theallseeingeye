@@ -6,6 +6,7 @@ import org.alexdev.havana.game.player.PlayerDetails;
 import org.alexdev.havana.server.rcon.messages.RconHeader;
 import org.alexdev.http.Routes;
 import org.alexdev.http.dao.housekeeping.HousekeepingCatalogueDao;
+import org.alexdev.http.dao.housekeeping.HousekeepingLogsDao;
 import org.alexdev.http.dao.housekeeping.HousekeepingPlayerDao;
 import org.alexdev.http.game.housekeeping.HousekeepingManager;
 import org.alexdev.http.util.RconUtil;
@@ -31,6 +32,7 @@ public class HousekeepingCataloguePagesController {
 
         if (!HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "catalogue/edit_frontpage")) {
             client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/permissions");
+            HousekeepingLogsDao.logHousekeepingAction("BAD_PERMISSIONS", playerDetails.getId(), playerDetails.getName(), "URL: " + client.request().uri(), client.getIpAddress());
             return;
         }
 
@@ -81,6 +83,7 @@ public class HousekeepingCataloguePagesController {
 
             if (StringUtils.isNumeric(client.get().getString("delete")) && client.get().getInt("delete") > 1) {
                 HousekeepingCatalogueDao.deletePage(pageId);
+                HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Deleted Catalogue page with the ID " + pageId + ". URL: " + client.request().uri(), client.getIpAddress());
 
                 client.session().set("alertColour", "success");
                 client.session().set("alertMessage", "The catalogue page has been successfully deleted");
@@ -127,6 +130,7 @@ public class HousekeepingCataloguePagesController {
                     editImages.startsWith("[") && editImages.endsWith("]")) {
 
                 HousekeepingCatalogueDao.updatePage(editId, editParentId, editOrderId, editMinRank, editIsNavigatable, editIsHCOnly, editName, editIcon, editColour, editLayout, editImages, editTexts, originalPageId);
+                HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Edited Catalogue page with the ID " + editId + "(id original: " + originalPageId + "). URL: " + client.request().uri(), client.getIpAddress());
 
                 client.session().set("alertColour", "success");
                 client.session().set("alertMessage", "The catalogue page has been successfully saved and updated");
@@ -147,6 +151,7 @@ public class HousekeepingCataloguePagesController {
 
             if (StringUtils.isNumeric(client.get().getString("copy")) && client.get().getInt("copy") > 0) {
                 HousekeepingCatalogueDao.copyPage(pageId);
+                HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Copied Catalogue page with the ID " + pageId + ". URL: " + client.request().uri(), client.getIpAddress());
 
                 client.session().set("alertColour", "success");
                 client.session().set("alertMessage", "The catalogue page has been successfully copied, saved and updated");
@@ -192,6 +197,7 @@ public class HousekeepingCataloguePagesController {
 
         if (!HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "catalogue/edit_frontpage")) {
             client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/permissions");
+            HousekeepingLogsDao.logHousekeepingAction("BAD_PERMISSIONS", playerDetails.getId(), playerDetails.getName(), "URL: " + client.request().uri(), client.getIpAddress());
             return;
         }
 
@@ -218,6 +224,8 @@ public class HousekeepingCataloguePagesController {
                     createImages.startsWith("[") && createImages.endsWith("]")) {
 
                 HousekeepingCatalogueDao.createCataloguePage(createParentId, createOrderId, createMinRank, createIsNavigatable, createIsHCOnly, createName, createIcon, createColour, createLayout, createImages, createTexts);
+                HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Created Catalogue page with the name " + createName + ". URL: " + client.request().uri(), client.getIpAddress());
+
                 client.session().set("alertColour", "success");
                 client.session().set("alertMessage", "The catalogue page has been successfully created and updated");
                 client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/campaign_management/catalogue/pages/create");

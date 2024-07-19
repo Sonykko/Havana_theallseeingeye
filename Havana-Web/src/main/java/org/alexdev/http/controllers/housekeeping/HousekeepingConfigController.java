@@ -5,6 +5,7 @@ import org.alexdev.duckhttpd.template.Template;
 import org.alexdev.havana.dao.mysql.SettingsDao;
 import org.alexdev.havana.game.player.PlayerDetails;
 import org.alexdev.http.Routes;
+import org.alexdev.http.dao.housekeeping.HousekeepingLogsDao;
 import org.alexdev.http.dao.housekeeping.HousekeepingSettingsDao;
 import org.alexdev.http.game.housekeeping.HousekeepingManager;
 import org.alexdev.http.util.SessionUtil;
@@ -34,11 +35,14 @@ public class HousekeepingConfigController {
 
         if (!HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "configuration")) {
             client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/permissions");
+            HousekeepingLogsDao.logHousekeepingAction("BAD_PERMISSIONS", playerDetails.getId(), playerDetails.getName(), "URL: " + client.request().uri(), client.getIpAddress());
             return;
         }
 
         if (client.post().queries().size() > 0) {
             SettingsDao.updateSettings(client.post().getValues().entrySet());
+            HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Updated settings of System status. URL: " + client.request().uri(), client.getIpAddress());
+
             // Reload config
             // GameConfiguration.getInstance(new WebSettingsConfigWriter());
 

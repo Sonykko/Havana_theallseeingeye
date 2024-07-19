@@ -292,11 +292,13 @@ public class Routes {
         RouteManager.addRoute("/" + HOUSEKEEPING_DEFAULT_PATH + "/", HousekeepingController::dashboard);
         RouteManager.addRoute("/" + HOUSEKEEPING_DEFAULT_PATH + "/login", HousekeepingController::login);
         RouteManager.addRoute("/" + HOUSEKEEPING_DEFAULT_PATH + "/logout", HousekeepingController::logout);
-        RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/permissions", HousekeepingFeaturedController::permissions);
+        RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/permissions", HousekeepingStaffLogsController::permissions);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/system_status", HousekeepingFeaturedController::systemstatus);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/system_status/configurations", HousekeepingConfigController::configurations);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/statistics", HousekeepingFeaturedController::statistics);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/statistics/newest_players", HousekeepingController::newestplayers);
+        RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/statistics/permissions", HousekeepingStaffLogsController::permissionslogs);
+        RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/statistics/hklogs.action", HousekeepingStaffLogsController::staffactionlogs);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/statistics/hklogs.login", HousekeepingStaffLogsController::loginlogs);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools", HousekeepingFeaturedController::admintools);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/campaign_management", HousekeepingFeaturedController::campaignmanagement);
@@ -325,7 +327,7 @@ public class Routes {
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/room_chatlogs", HousekeepingChatLogsController::roomchatlogs);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/rooms/search", HousekeepingRoomsController::search);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/rooms/edit", HousekeepingRoomsController::editRoom);
-        RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/mass_alert", HousekeepingRCONController::massalertRCON);
+        RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/mass_alert", HousekeepingRCONController::massAlertRCON);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/alert", HousekeepingRCONController::alertUserRCON);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/users/mod_tool", HousekeepingRCONController::banKickUserRCON);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/mass_ban", HousekeepingRCONController::massBanKickUserRCON);

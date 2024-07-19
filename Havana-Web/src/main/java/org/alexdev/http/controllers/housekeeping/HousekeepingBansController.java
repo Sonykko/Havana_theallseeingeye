@@ -6,6 +6,7 @@ import org.alexdev.havana.dao.mysql.BanDao;
 import org.alexdev.havana.game.player.PlayerDetails;
 import org.alexdev.http.Routes;
 import org.alexdev.http.dao.housekeeping.HousekeepingCommandsDao;
+import org.alexdev.http.dao.housekeeping.HousekeepingLogsDao;
 import org.alexdev.http.dao.housekeeping.HousekeepingPlayerDao;
 import org.alexdev.http.game.housekeeping.HousekeepingManager;
 import org.alexdev.http.util.SessionUtil;
@@ -27,6 +28,7 @@ public class HousekeepingBansController {
 
         if (!HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "bans")) {
             client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/permissions");
+            HousekeepingLogsDao.logHousekeepingAction("BAD_PERMISSIONS", playerDetails.getId(), playerDetails.getName(), "URL: " + client.request().uri(), client.getIpAddress());
             return;
         }
 
@@ -37,6 +39,7 @@ public class HousekeepingBansController {
         client.session().delete("alertMessage");
         if (!HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "bans")) {
             client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/permissions");
+            HousekeepingLogsDao.logHousekeepingAction("BAD_PERMISSIONS", playerDetails.getId(), playerDetails.getName(), "URL: " + client.request().uri(), client.getIpAddress());
             return;
         }
 

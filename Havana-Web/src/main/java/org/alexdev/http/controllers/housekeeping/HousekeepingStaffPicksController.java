@@ -7,6 +7,7 @@ import org.alexdev.havana.dao.mysql.PlayerDao;
 import org.alexdev.havana.game.groups.Group;
 import org.alexdev.havana.game.player.PlayerDetails;
 import org.alexdev.http.Routes;
+import org.alexdev.http.dao.housekeeping.HousekeepingLogsDao;
 import org.alexdev.http.dao.housekeeping.HousekeepingPromotionDao;
 import org.alexdev.http.game.housekeeping.HousekeepingManager;
 import org.alexdev.http.util.SessionUtil;
@@ -29,6 +30,7 @@ public class HousekeepingStaffPicksController {
 
         if (!HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "articles/create")) {
             client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/permissions");
+            HousekeepingLogsDao.logHousekeepingAction("BAD_PERMISSIONS", playerDetails.getId(), playerDetails.getName(), "URL: " + client.request().uri(), client.getIpAddress());
             return;
         }
 
@@ -41,6 +43,7 @@ public class HousekeepingStaffPicksController {
 
             if (StringUtils.isNumeric(client.post().getString("create")) && client.post().getInt("create") > 0) {
                 HousekeepingPromotionDao.createPickReco(pickId, type, 1);
+                HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Created Staff Pick with the ID " + pickId + " of type " + type + ". URL: " + client.request().uri(), client.getIpAddress());
 
                 client.session().set("alertColour", "success");
                 client.session().set("alertMessage", "The Staff Pick has been successfully created");
@@ -58,6 +61,7 @@ public class HousekeepingStaffPicksController {
 
             if (StringUtils.isNumeric(client.get().getString("delete")) && client.get().getInt("delete") > 0) {
                 HousekeepingPromotionDao.deletePickReco(pickId, type, 1);
+                HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Deleted Staff Pick with the ID " + pickId + " of type " + type + ". URL: " + client.request().uri(), client.getIpAddress());
 
                 client.session().set("alertColour", "success");
                 client.session().set("alertMessage", "The Staff Pick has been successfully deleted");
@@ -112,6 +116,7 @@ public class HousekeepingStaffPicksController {
 
             if (StringUtils.isNumeric(client.post().getString("IdSave")) && client.post().getInt("IdSave") > 0) {
                 HousekeepingPromotionDao.SavePickReco(pickIdSave, typeSave, isPickedSave, pickId, type, 1);
+                HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Edited Staff Pick with the ID " + pickId + " (before), " + pickIdSave + "(after). URL: " + client.request().uri(), client.getIpAddress());
 
                 client.session().set("alertColour", "success");
                 client.session().set("alertMessage", "The Staff Pick has been successfully saved");

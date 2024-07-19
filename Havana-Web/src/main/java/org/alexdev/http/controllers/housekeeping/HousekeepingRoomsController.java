@@ -6,6 +6,7 @@ import org.alexdev.havana.game.player.PlayerDetails;
 import org.alexdev.havana.game.room.Room;
 import org.alexdev.havana.server.rcon.messages.RconHeader;
 import org.alexdev.http.Routes;
+import org.alexdev.http.dao.housekeeping.HousekeepingLogsDao;
 import org.alexdev.http.dao.housekeeping.HousekeepingRoomDao;
 import org.alexdev.http.game.housekeeping.HousekeepingManager;
 import org.alexdev.http.util.RconUtil;
@@ -31,6 +32,7 @@ public class HousekeepingRoomsController {
 
         if (!HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "bans")) {
             client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/permissions");
+            HousekeepingLogsDao.logHousekeepingAction("BAD_PERMISSIONS", playerDetails.getId(), playerDetails.getName(), "URL: " + client.request().uri(), client.getIpAddress());
             return;
         }
 
@@ -97,6 +99,7 @@ public class HousekeepingRoomsController {
 
         if (!HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "user/edit")) {
             client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/permissions");
+            HousekeepingLogsDao.logHousekeepingAction("BAD_PERMISSIONS", playerDetails.getId(), playerDetails.getName(), "URL: " + client.request().uri(), client.getIpAddress());
             return;
         }
 
@@ -142,6 +145,7 @@ public class HousekeepingRoomsController {
                     int showOwner = showOwnerName ? 0 : 1;
 
                     HousekeepingRoomDao.updateRoom(roomId, category, name, description, accesstype, password, showOwner);
+                    HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Edited Private Room with the ID " + roomId + ". URL: " + client.request().uri(), client.getIpAddress());
 
                     client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/rooms/search");
 
