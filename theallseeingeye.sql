@@ -119,6 +119,21 @@ CREATE TABLE `housekeeping_staff_logs` (
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `housekeeping_trusted_person`
+--
+
+CREATE TABLE `housekeeping_trusted_person` (
+  `id` int(11) NOT NULL,
+  `username` varchar(255) DEFAULT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `staff` varchar(255) DEFAULT NULL,
+  `type` varchar(255) DEFAULT NULL,
+  `timestamp` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `cms_hot_campaigns`
 --
 
@@ -298,6 +313,7 @@ INSERT INTO `settings_desc` (`setting`, `description`, `category`) VALUES
 ('happy.hour.weekend.end', '13:00:00', NULL),
 ('happy.hour.weekend.start', '12:00:00', NULL),
 ('hk.new.style.enabled', 'Set if new style (scaled UI) of HK is enabled or not as true or false', 'housekeeping'),
+('hk.trusted.person.enabled', 'Set if the Trusted Person system is enbladed or not as true or false', 'housekeeping'),
 ('hobba.form.lang', 'Set the lenguage of the Hobba application form, like "ES", "EN" or "BR", for exmaple', 'site'),
 ('homepage.template.file', 'Set the homepage template file', 'site'),
 ('hot.groups.community.limit', 'Set the hot groups community limit number', 'site'),
@@ -435,6 +451,12 @@ ALTER TABLE `housekeeping_staff_logs`
   ADD PRIMARY KEY (`id`);
   
 --
+-- Indices de la tabla `housekeeping_trusted_person`
+--
+ALTER TABLE `housekeeping_trusted_person`
+  ADD PRIMARY KEY (`id`);
+  
+--
 -- Indices de la tabla `cms_hot_campaigns`
 --
 ALTER TABLE `cms_hot_campaigns`
@@ -502,6 +524,13 @@ COMMIT;
 --
 ALTER TABLE `housekeeping_staff_logs`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+COMMIT;
+
+--
+-- AUTO_INCREMENT de la tabla `housekeeping_trusted_person`
+--
+ALTER TABLE `housekeeping_trusted_person`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 COMMIT;
 
 --
@@ -613,6 +642,7 @@ UPDATE `settings` SET
       WHEN `setting` = 'happy.hour.weekend.end' THEN NULL
       WHEN `setting` = 'happy.hour.weekend.start' THEN NULL
       WHEN `setting` = 'hk.new.style.enabled' THEN 'housekeeping'
+      WHEN `setting` = 'hk.trusted.person.enabled' THEN 'housekeeping'	  
 	  WHEN `setting` = 'hobba.form.lang' THEN 'site'
       WHEN `setting` = 'homepage.template.file' THEN 'site'
       WHEN `setting` = 'hot.groups.community.limit' THEN 'site'
@@ -703,5 +733,8 @@ UPDATE `settings` SET
       WHEN `setting` = 'xp.monthly.expiry' THEN 'games'
       ELSE NULL
     END;
+	
+ALTER TABLE users 
+ADD COLUMN trusted_person VARCHAR(255) DEFAULT '0';	
 
 /*ALTER TABLE `settings` MODIFY COLUMN `category` varchar(55) NOT NULL;*/
