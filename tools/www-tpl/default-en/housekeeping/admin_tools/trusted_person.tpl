@@ -4,10 +4,10 @@
     {% include "housekeeping/base/navigation.tpl" %}
     {% include "housekeeping/base/navigation_admin_tools.tpl" %}
     <h2 class="mt-4">Trusted person tool</h2>
-    <p>With this tool you can check if a user is qualified to become a Hobba and if not, why.</p>
+    <p>With this tool you can set or revoke a trusted person for a given user.</p>
 	{% include "housekeeping/base/alert.tpl" %}
     <form class="table-responsive col-md-4" method="post">
-        <div class="form-group">
+        <div class="pepe"><div class="form-group">
             <label for="userName">{{ site.siteName }} name</label>
             <input type="text" name="userName" class="form-control" id="userName" placeholder="Enter here the {{ site.siteName }} name..." value="" />
         </div>
@@ -17,7 +17,7 @@
         <div class="form-group">
             <label for="userID">User ID</label>
             <input type="text" name="userID" class="form-control" id="userID" placeholder="Enter here the user ID..." value="" />
-        </div>
+        </div></div>
 			<div class="form-group">
 				<label>Choose action</label>
 				<select name="type" id="type" class="form-control">
@@ -28,8 +28,8 @@
         <button type="submit">Submit</button>
     </form>
 	
-    <h3 class="mt-4">Manage current Trusted Person</h3>
-    <p>Here you can see the most recent logs of users Hobba applications.</p>
+    <h2 class="mt-4">Manage current Trusted Person</h2>
+    <p>Here you can see all the current active trusted persons.</p>
 	<div class="pagination-buttons-box">
     {% if nextTrustedPersons|length > 0 %}
         {% set ourNextPage = page + 1 %}
@@ -63,8 +63,8 @@
         </table>
     </div>	
 
-    <h3 class="mt-4">View Trusted Person logs</h3>
-    <p>Here you can see the most recent logs of users Hobba applications.</p>
+    <h2 class="mt-4">View Trusted Person logs</h2>
+    <p>Here you can see the most recent logs of Trusted Persons tool log.</p>
 	<div class="pagination-buttons-box">
     {% if nextTrustedPersons|length > 0 %}
         {% set ourNextPage = page + 1 %}
