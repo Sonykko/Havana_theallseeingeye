@@ -191,4 +191,52 @@ public class HousekeepingPlayerDao {
 
         return allRanksList;
     }
+
+    public static String CheckDBName(String username) {
+        String UsernameIsValid = "";
+
+        Connection sqlConnection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+
+        try {
+            sqlConnection = Storage.getStorage().getConnection();
+            preparedStatement = Storage.getStorage().prepare("SELECT * FROM users WHERE username = ? LIMIT 1", sqlConnection);
+            preparedStatement.setString(1, username);
+            resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                UsernameIsValid = (resultSet.getString("username"));
+            }
+
+        } catch (Exception e) {
+            Storage.logError(e);
+        } finally {
+            Storage.closeSilently(resultSet);
+            Storage.closeSilently(preparedStatement);
+            Storage.closeSilently(sqlConnection);
+        }
+
+        return UsernameIsValid;
+    }
+
+    public static void setRank(String username, int rankId) {
+        Connection sqlConnection = null;
+        PreparedStatement preparedStatement = null;
+
+        try {
+
+            sqlConnection = Storage.getStorage().getConnection();
+            preparedStatement = Storage.getStorage().prepare("UPDATE users SET rank = ? WHERE username = ?", sqlConnection);
+            preparedStatement.setInt(1, rankId);
+            preparedStatement.setString(2, username);
+            preparedStatement.execute();
+
+        } catch (Exception e) {
+            Storage.logError(e);
+        } finally {
+            Storage.closeSilently(preparedStatement);
+            Storage.closeSilently(sqlConnection);
+        }
+    }
 }

@@ -39,6 +39,7 @@ public class HousekeepingManager {
         this.permissions.put("user/imitate", PlayerRank.ADMINISTRATOR);
         this.permissions.put("user/matches", PlayerRank.ADMINISTRATOR);
         this.permissions.put("badges", PlayerRank.COMMUNITY_MANAGER);
+        this.permissions.put("user/ranks", PlayerRank.ADMINISTRATOR);
     }
 
     /**
