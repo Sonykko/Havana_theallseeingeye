@@ -79,6 +79,8 @@ public class PlayerDetails {
     public boolean discordVerified;
     private boolean legacyAccount;
 
+    private boolean trustedPerson;
+
     public PlayerDetails() {
     }
 
@@ -104,7 +106,7 @@ public class PlayerDetails {
     public void fill(int id, String username, String figure, String poolFigure, int pixels, int credits, String email, String motto, String sex, String ssoTicket, int tickets, int film, int rank, long lastOnline, long joinDate, String machineId, long firstClubSubscription,
                      long clubExpiration, boolean allowStalking, int selectedRoom, boolean allowFriendRequests, boolean onlineStatusVisible, boolean profileVisible, boolean wordFilterEnabled, boolean tradeEnabled, boolean soundEnabled,
                      boolean isCreditsEligible, int respectCount, String respectDay, int respectPoints, int respectGiven, boolean isOnline, long totemEffectExpiry, long tradeBanExpiration,
-                     int favouriteGroupId, String createdAt, String clientPreference, String hotelView, boolean discordVerified, boolean legacyAccount) {
+                     int favouriteGroupId, String createdAt, String clientPreference, String hotelView, boolean discordVerified, boolean legacyAccount, boolean trustedPerson) {
         this.id = id;
         this.username = StringUtil.filterInput(username, true);
         this.figure = StringUtil.filterInput(figure, true); // Format: hd-180-1.ch-255-70.lg-285-77.sh-295-74.fa-1205-91.hr-125-31.ha-1016-
@@ -148,6 +150,7 @@ public class PlayerDetails {
         this.clientPreference = clientPreference;
         this.discordVerified = discordVerified;
         this.legacyAccount = legacyAccount;
+        this.trustedPerson = trustedPerson;
 
         if (this.credits < 0) {
             this.credits = 0;
@@ -574,5 +577,17 @@ public class PlayerDetails {
     
     public String getIpAddress() {
         return PlayerDao.getLatestIp(this.getId());
+    }
+
+    public String getLastLoginIPHK() {
+        return PlayerDao.getLastLoginIPHK(this.getId());
+    }
+
+    public String getLastLoginTimeHK() {
+        return PlayerDao.getLastLoginTimeHK(this.getId());
+    }
+
+    public boolean isTrustedPerson() {
+        return this.trustedPerson;
     }
 }

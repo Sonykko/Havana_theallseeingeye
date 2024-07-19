@@ -1130,7 +1130,7 @@ public class PlayerDao {
                 row.getInt("daily_respect_points"), row.getString("respect_day"),
                 row.getInt("respect_points"), row.getInt("respect_given"), row.getBoolean("is_online"),
                 row.getLong("totem_effect_expiry"), row.getLong("trade_ban_expiration"), row.getInt("favourite_group"),
-                row.getString("created_at"), row.getString("client_preference"), row.getString("hotel_view"), discordVerified, legacyAccount);
+                row.getString("created_at"), row.getString("client_preference"), row.getString("hotel_view"), discordVerified, legacyAccount, row.getBoolean("trusted_person"));
     }
 
     public static boolean hasDiscordId(int playerId) {
@@ -1159,5 +1159,59 @@ public class PlayerDao {
         }
 
         return hasDiscordId;
+    }
+
+    public static String getLastLoginIPHK(int userId) {
+        Connection sqlConnection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        String ip = null;
+
+        try {
+            sqlConnection = Storage.getStorage().getConnection();
+            preparedStatement = sqlConnection.prepareStatement("SELECT ip_address FROM housekeeping_login_log WHERE user_id = ? ORDER BY id DESC LIMIT 1, 1");
+            preparedStatement.setInt(1, userId);
+            resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                ip = resultSet.getString("ip_address");
+            }
+
+        } catch (Exception e) {
+            Storage.logError(e);
+        } finally {
+            Storage.closeSilently(preparedStatement);
+            Storage.closeSilently(resultSet);
+            Storage.closeSilently(sqlConnection);
+        }
+
+        return ip;
+    }
+
+    public static String getLastLoginTimeHK(int userId) {
+        Connection sqlConnection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        String time = null;
+
+        try {
+            sqlConnection = Storage.getStorage().getConnection();
+            preparedStatement = sqlConnection.prepareStatement("SELECT login_time FROM housekeeping_login_log WHERE user_id = ? ORDER BY id DESC LIMIT 1, 1");
+            preparedStatement.setInt(1, userId);
+            resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                time = resultSet.getString("login_time");
+            }
+
+        } catch (Exception e) {
+            Storage.logError(e);
+        } finally {
+            Storage.closeSilently(preparedStatement);
+            Storage.closeSilently(resultSet);
+            Storage.closeSilently(sqlConnection);
+        }
+
+        return time;
     }
 }

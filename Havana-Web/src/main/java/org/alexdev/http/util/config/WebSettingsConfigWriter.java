@@ -102,6 +102,7 @@ public class WebSettingsConfigWriter implements ConfigWriter {
         config.put("hobba.form.lang", "ES");
 
         config.put("hk.new.style.enabled", "true");
+        config.put("hk.trusted.person.enabled", "false");
 
         config.putAll(new GameConfigWriter().setConfigurationDefaults());
         return config;

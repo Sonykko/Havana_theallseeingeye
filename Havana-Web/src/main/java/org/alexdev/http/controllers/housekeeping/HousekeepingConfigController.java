@@ -4,16 +4,20 @@ import org.alexdev.duckhttpd.server.connection.WebConnection;
 import org.alexdev.duckhttpd.template.Template;
 import org.alexdev.havana.dao.mysql.SettingsDao;
 import org.alexdev.havana.game.player.PlayerDetails;
+import org.alexdev.havana.util.config.Configuration;
+import org.alexdev.havana.util.config.GameConfiguration;
 import org.alexdev.http.Routes;
 import org.alexdev.http.dao.housekeeping.HousekeepingLogsDao;
 import org.alexdev.http.dao.housekeeping.HousekeepingSettingsDao;
 import org.alexdev.http.game.housekeeping.HousekeepingManager;
+import org.alexdev.http.util.ConfigEntry;
 import org.alexdev.http.util.SessionUtil;
 
 
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 public class HousekeepingConfigController {
@@ -33,15 +37,26 @@ public class HousekeepingConfigController {
 
         PlayerDetails playerDetails = (PlayerDetails) tpl.get("playerDetails");
 
+        boolean hasManagePermission = HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "trusted_person/manage");
+
         if (!HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "configuration")) {
-            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/permissions");
-            HousekeepingLogsDao.logHousekeepingAction("BAD_PERMISSIONS", playerDetails.getId(), playerDetails.getName(), "URL: " + client.request().uri(), client.getIpAddress());
-            return;
+            if (GameConfiguration.getInstance().getBoolean("hk.trusted.person.enabled") && !playerDetails.isTrustedPerson() || !GameConfiguration.getInstance().getBoolean("hk.trusted.person.enabled")) {
+                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/permissions");
+                HousekeepingLogsDao.logHousekeepingAction("BAD_PERMISSIONS", playerDetails.getId(), playerDetails.getName(), "URL: " + client.request().uri(), client.getIpAddress());
+                return;
+            }
         }
 
         if (client.post().queries().size() > 0) {
-            SettingsDao.updateSettings(client.post().getValues().entrySet());
-            HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Updated settings of System status. URL: " + client.request().uri(), client.getIpAddress());
+            Map<String, String> postValues = client.post().getValues();
+            if (!hasManagePermission) {
+                postValues = postValues.entrySet().stream()
+                        .filter(entry -> !entry.getKey().equals("hk.trusted.person.enabled"))
+                        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+            }
+
+            SettingsDao.updateSettings(postValues.entrySet());
+            HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Ha actualizado las configuraciones de System status. URL: " + client.request().uri(), client.getIpAddress());
 
             // Reload config
             // GameConfiguration.getInstance(new WebSettingsConfigWriter());
@@ -73,6 +88,10 @@ public class HousekeepingConfigController {
                     setting.put("description", description.get("description"));
                     break;
                 }
+            }
+
+            if (!hasManagePermission && settingName.equals("hk.trusted.person.enabled")) {
+                continue;
             }
 
             settingsWithDescriptions.add(setting);

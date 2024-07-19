@@ -24,7 +24,7 @@
       </nav>
 	  <div>
 	 <div class="nav-fix">
-			{% if housekeepingManager.hasPermission(playerDetails.getRank(), 'configuration') %}
+			{% if (housekeepingManager.hasPermission(playerDetails.getRank(), 'configuration')) or (playerDetails.isTrustedPerson()) and (gameConfig.getBoolean('hk.trusted.person.enabled')) %}
 		<a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/system_status" class="nav-links {{ configurationsActive }}">System status</a>
 				{% endif %}
 			
