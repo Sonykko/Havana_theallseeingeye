@@ -1003,7 +1003,7 @@ public class PlayerDao {
                 row.getInt("daily_respect_points"), row.getString("respect_day"),
                 row.getInt("respect_points"), row.getInt("respect_given"), row.getBoolean("is_online"),
                 row.getLong("totem_effect_expiry"), row.getLong("trade_ban_expiration"), row.getInt("favourite_group"),
-                row.getString("created_at"));
+                row.getString("created_at"), row.getBoolean("trusted_person"));
     }
 
     public static String getLastLoginIPHK(int userId) {

@@ -89,6 +89,9 @@
 			{% if housekeepingManager.hasPermission(playerDetails.getRank(), 'user/create') %}
 			<text><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/vouchers" class="subnav-link">Voucher codes tool</a></text>
 			{% endif %}
+			{% if (housekeepingManager.hasPermission(playerDetails.getRank(), 'trusted_person/manage')) and (playerDetails.getId() == 1) %}
+			<text><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/trusted_person" class="subnav-link">Trusted person admin</a></text>
+			{% endif %}					
       </div>
     </div>
 {% endif %}
