@@ -9,6 +9,7 @@ This is a project to recreate the supossed "Hobbanet" or theallseeingeye Habbo H
   - Save and show last login IP from HK
   - Save and show last login time from HK
   - Housekeeping all Staff activity log system
+  - Trusted Person system
 - Statistics
   - Suspicious Staff logs
   - Housekeeping logs
@@ -35,6 +36,7 @@ This is a project to recreate the supossed "Hobbanet" or theallseeingeye Habbo H
   - Voucher codes tool
   - Check Hobba applicant tool
   - Rank manager
+  - Trusted person admin
 - Campaign management
   - Ads banners tool
   - Staff picks tool (missing rooms)
