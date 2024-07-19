@@ -33,6 +33,7 @@ public class HousekeepingCFHController {
 
         if (!HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "user/edit")) {
             client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/permissions");
+            HousekeepingLogsDao.logHousekeepingAction("BAD_PERMISSIONS", playerDetails.getId(), playerDetails.getName(), "URL: " + client.request().uri(), client.getIpAddress());
             return;
         }
 
@@ -102,6 +103,7 @@ public class HousekeepingCFHController {
 
         if (!HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "bans")) {
             client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/permissions");
+            HousekeepingLogsDao.logHousekeepingAction("BAD_PERMISSIONS", playerDetails.getId(), playerDetails.getName(), "URL: " + client.request().uri(), client.getIpAddress());
             return;
         }
 
@@ -129,7 +131,6 @@ public class HousekeepingCFHController {
         tpl.set("pageName", "CFH Action");
         tpl.set("cfhlogsAction", HousekeepingCFHDao.getCFHlogAction(client.get().getString("cryId")));
         tpl.set("defaultReply", GameConfiguration.getInstance().getString("rcon.cfh.reply.message"));
-        //tpl.set("cryIdSaved", cryIdSaved);
         tpl.render();
 
         // Delete alert after it's been rendered
@@ -149,6 +150,7 @@ public class HousekeepingCFHController {
 
         if (!HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "bans")) {
             client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/permissions");
+            HousekeepingLogsDao.logHousekeepingAction("BAD_PERMISSIONS", playerDetails.getId(), playerDetails.getName(), "URL: " + client.request().uri(), client.getIpAddress());
             return;
         }
 

@@ -7,6 +7,7 @@ import org.alexdev.havana.game.player.PlayerDetails;
 import org.alexdev.havana.game.room.RoomManager;
 import org.alexdev.havana.server.rcon.messages.RconHeader;
 import org.alexdev.http.Routes;
+import org.alexdev.http.dao.housekeeping.HousekeepingLogsDao;
 import org.alexdev.http.game.housekeeping.HousekeepingManager;
 import org.alexdev.http.util.HousekeepingUtil;
 import org.alexdev.http.util.RconUtil;
@@ -30,7 +31,8 @@ public class HousekeepingRoomBadgesController {
         PlayerDetails playerDetails = (PlayerDetails) tpl.get("playerDetails");
 
         if (!HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "room_badges")) {
-            client.redirect("/" + Routes.HOUSEKEEPING_DEFAULT_PATH);
+            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/permissions");
+            HousekeepingLogsDao.logHousekeepingAction("BAD_PERMISSIONS", playerDetails.getId(), playerDetails.getName(), "URL: " + client.request().uri(), client.getIpAddress());
             return;
         }
 
@@ -56,6 +58,7 @@ public class HousekeepingRoomBadgesController {
                     }
 
                     badges.get(roomId).add(badgeCode);
+                    HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Edited Room Badge with the ID " + roomId + " y " + badgeCode + ". URL: " + client.request().uri(), client.getIpAddress());
                 }
 
                 BadgeDao.updateBadges(badges);
@@ -92,7 +95,8 @@ public class HousekeepingRoomBadgesController {
         PlayerDetails playerDetails = (PlayerDetails) tpl.get("playerDetails");
 
         if (!HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "room_badges")) {
-            client.redirect("/" + Routes.HOUSEKEEPING_DEFAULT_PATH);
+            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/permissions");
+            HousekeepingLogsDao.logHousekeepingAction("BAD_PERMISSIONS", playerDetails.getId(), playerDetails.getName(), "URL: " + client.request().uri(), client.getIpAddress());
             return;
         }
 
@@ -109,6 +113,7 @@ public class HousekeepingRoomBadgesController {
 
             String[] data = client.get().getString("id").split("_");
             BadgeDao.deleteRoomBadge(data[0], data[1]);
+            HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Deleted Room Badge with the ID " + data[0] + " and " + data[1] + ". URL: " + client.request().uri(), client.getIpAddress());
         }
 
         sendRoomBadgeUpdate();
@@ -134,7 +139,8 @@ public class HousekeepingRoomBadgesController {
         PlayerDetails playerDetails = (PlayerDetails) tpl.get("playerDetails");
 
         if (!HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "room_badges")) {
-            client.redirect("/" + Routes.HOUSEKEEPING_DEFAULT_PATH);
+            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/permissions");
+            HousekeepingLogsDao.logHousekeepingAction("BAD_PERMISSIONS", playerDetails.getId(), playerDetails.getName(), "URL: " + client.request().uri(), client.getIpAddress());
             return;
         }
 
@@ -143,6 +149,7 @@ public class HousekeepingRoomBadgesController {
                 BadgeDao.createEntryBadge(
                         client.post().getInt("roomid"),
                         client.post().getString("badgecode"));
+                HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Created Room Badge with the ID " + client.post().getInt("roomid") + " and " + client.post().getString("badgecode") + ". URL: " + client.request().uri(), client.getIpAddress());
 
                 client.session().set("alertColour", "success");
                 client.session().set("alertMessage", "Successfully created the room entry badge");

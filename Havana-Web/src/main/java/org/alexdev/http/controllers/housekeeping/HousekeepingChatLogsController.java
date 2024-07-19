@@ -4,6 +4,7 @@ import org.alexdev.duckhttpd.server.connection.WebConnection;
 import org.alexdev.duckhttpd.template.Template;
 import org.alexdev.havana.game.player.PlayerDetails;
 import org.alexdev.http.Routes;
+import org.alexdev.http.dao.housekeeping.HousekeepingLogsDao;
 import org.alexdev.http.dao.housekeeping.HousekeepingRoomDao;
 import org.alexdev.http.game.housekeeping.HousekeepingManager;
 import org.alexdev.http.util.SessionUtil;
@@ -32,7 +33,8 @@ public class HousekeepingChatLogsController {
         PlayerDetails playerDetails = (PlayerDetails) tpl.get("playerDetails");
 
         if (!HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "bans")) {
-            client.redirect("/" + Routes.HOUSEKEEPING_PATH);
+            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/permissions");
+            HousekeepingLogsDao.logHousekeepingAction("BAD_PERMISSIONS", playerDetails.getId(), playerDetails.getName(), "URL: " + client.request().uri(), client.getIpAddress());
             return;
         }
 
@@ -75,75 +77,30 @@ public class HousekeepingChatLogsController {
             tpl.render();
         }
 
-            int currentPage = 0;
+        int currentPage = 0;
 
-            if (client.get().contains("page")) {
-                currentPage = Integer.parseInt(client.get().getString("page"));
-            }
-
-            String sortBy = "timestamp";
-
-            if (client.get().contains("sort")) {
-                if (client.get().getString("sort").equals("room_id") ||
-                    client.get().getString("sort").equals("timestamp")) {
-                    sortBy = client.get().getString("sort");
-                }
-            }
-
-            //Template tpl = client.template("housekeeping/dashboard");
-            tpl.set("housekeepingManager", HousekeepingManager.getInstance());
-
-            tpl.set("pageName", "Room Chatlogs");
-            tpl.set("chatlogs", HousekeepingRoomDao.getModChatlog(currentPage, sortBy));
-            tpl.set("nextChatlogs", HousekeepingRoomDao.getModChatlog(currentPage + 1, sortBy));
-            tpl.set("previousChatlogs", HousekeepingRoomDao.getModChatlog(currentPage - 1, sortBy));
-            tpl.set("page", currentPage);
-            tpl.set("sortBy", sortBy);
-            tpl.render();
-
-            // Delete alert after it's been rendered
-            client.session().delete("alertMessage");
-    }
-
-    public static void roomsearch(WebConnection client) {
-        if (!client.session().getBoolean(SessionUtil.LOGGED_IN_HOUSKEEPING)) {
-            client.redirect("/" + Routes.HOUSEKEEPING_DEFAULT_PATH);
-            return;
+        if (client.get().contains("page")) {
+            currentPage = Integer.parseInt(client.get().getString("page"));
         }
 
-        Template tpl = client.template("housekeeping/admin_tools/room_chatlogs");
+        String sortBy = "timestamp";
+
+        if (client.get().contains("sort")) {
+            if (client.get().getString("sort").equals("room_id") ||
+                    client.get().getString("sort").equals("timestamp")) {
+                sortBy = client.get().getString("sort");
+            }
+        }
+
+        //Template tpl = client.template("housekeeping/dashboard");
         tpl.set("housekeepingManager", HousekeepingManager.getInstance());
 
-        PlayerDetails playerDetails = (PlayerDetails) tpl.get("playerDetails");
-
-        if (!HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "bans")) {
-            client.redirect("/" + Routes.HOUSEKEEPING_DEFAULT_PATH);
-            return;
-        }
-
-        if (client.post().queries().size() > 0) {
-            String field = client.post().getString("searchField");
-            String input = client.post().getString("searchQuery");
-            String type = client.post().getString("searchType");
-
-            List<String> whitelistColumns = new ArrayList<>();
-            whitelistColumns.add("id");
-            whitelistColumns.add("message");
-            whitelistColumns.add("room_id");
-            whitelistColumns.add("room_name");
-
-            List<Map<String, Object>> chatLogs = null;
-
-            if (whitelistColumns.contains(field)) {
-                chatLogs = HousekeepingRoomDao.searchChatLogs(type, field, input);
-            } else {
-                chatLogs = new ArrayList<>();
-            }
-
-            tpl.set("searchChatlogs", chatLogs);
-        }
-
         tpl.set("pageName", "Room Chatlogs");
+        tpl.set("chatlogs", HousekeepingRoomDao.getModChatlog(currentPage, sortBy));
+        tpl.set("nextChatlogs", HousekeepingRoomDao.getModChatlog(currentPage + 1, sortBy));
+        tpl.set("previousChatlogs", HousekeepingRoomDao.getModChatlog(currentPage - 1, sortBy));
+        tpl.set("page", currentPage);
+        tpl.set("sortBy", sortBy);
         tpl.render();
 
         // Delete alert after it's been rendered
@@ -162,7 +119,8 @@ public class HousekeepingChatLogsController {
         PlayerDetails playerDetails = (PlayerDetails) tpl.get("playerDetails");
 
         if (!HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "bans")) {
-            client.redirect("/" + Routes.HOUSEKEEPING_DEFAULT_PATH);
+            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/permissions");
+            HousekeepingLogsDao.logHousekeepingAction("BAD_PERMISSIONS", playerDetails.getId(), playerDetails.getName(), "URL: " + client.request().uri(), client.getIpAddress());
             return;
         }
 

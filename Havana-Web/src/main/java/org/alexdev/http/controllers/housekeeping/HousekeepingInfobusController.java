@@ -10,6 +10,7 @@ import org.alexdev.havana.game.player.PlayerDetails;
 import org.alexdev.havana.server.rcon.messages.RconHeader;
 import org.alexdev.havana.util.DateUtil;
 import org.alexdev.http.Routes;
+import org.alexdev.http.dao.housekeeping.HousekeepingLogsDao;
 import org.alexdev.http.game.housekeeping.HousekeepingManager;
 import org.alexdev.http.util.HtmlUtil;
 import org.alexdev.http.util.RconUtil;
@@ -42,7 +43,8 @@ public class HousekeepingInfobusController {
         PlayerDetails playerDetails = (PlayerDetails) tpl.get("playerDetails");
 
         if (!HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "infobus")) {
-            client.redirect("/" + Routes.HOUSEKEEPING_DEFAULT_PATH);
+            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/permissions");
+            HousekeepingLogsDao.logHousekeepingAction("BAD_PERMISSIONS", playerDetails.getId(), playerDetails.getName(), "URL: " + client.request().uri(), client.getIpAddress());
             return;
         }
 
@@ -66,7 +68,8 @@ public class HousekeepingInfobusController {
         PlayerDetails playerDetails = (PlayerDetails) tpl.get("playerDetails");
 
         if (!HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "infobus")) {
-            client.redirect("/" + Routes.HOUSEKEEPING_DEFAULT_PATH);
+            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/permissions");
+            HousekeepingLogsDao.logHousekeepingAction("BAD_PERMISSIONS", playerDetails.getId(), playerDetails.getName(), "URL: " + client.request().uri(), client.getIpAddress());
             return;
         }
 
@@ -80,6 +83,7 @@ public class HousekeepingInfobusController {
                 InfobusPollData infobusPollData = new InfobusPollData(question);
                 infobusPollData.getAnswers().addAll(client.post().getArray("answers[]"));
                 InfobusDao.createInfobusPoll(playerDetails.getId(), infobusPollData);
+                HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Created Infobus Poll titled " + question + ". URL: " + client.request().uri(), client.getIpAddress());
 
                 client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/campaign_management/infobus_polls");
                 return;
@@ -125,6 +129,7 @@ public class HousekeepingInfobusController {
                 client.session().set("alertColour", "danger");
                 client.session().set("alertMessage", "No permission to delete other polls");
                 client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/permissions");
+                HousekeepingLogsDao.logHousekeepingAction("BAD_PERMISSIONS", playerDetails.getId(), playerDetails.getName(), "URL: " + client.request().uri(), client.getIpAddress());
                 return;
             }
         }
@@ -133,6 +138,7 @@ public class HousekeepingInfobusController {
             client.session().set("alertColour", "danger");
             client.session().set("alertMessage", "No permission to delete");
             client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/permissions");
+            HousekeepingLogsDao.logHousekeepingAction("BAD_PERMISSIONS", playerDetails.getId(), playerDetails.getName(), "URL: " + client.request().uri(), client.getIpAddress());
             return;
         }
 
@@ -155,6 +161,7 @@ public class HousekeepingInfobusController {
 
             InfobusDao.delete(client.get().getInt("id"));
             InfobusDao.clearAnswers(client.get().getInt("id"));
+            HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Deleted Infobus Poll with the ID " + client.get().getInt("id") + ". URL: " + client.request().uri(), client.getIpAddress());
         }
 
         client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/campaign_management/infobus_polls");
@@ -178,7 +185,8 @@ public class HousekeepingInfobusController {
         PlayerDetails playerDetails = (PlayerDetails) tpl.get("playerDetails");
 
         if (!HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "infobus")) {
-            client.redirect("/" + Routes.HOUSEKEEPING_DEFAULT_PATH);
+            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/permissions");
+            HousekeepingLogsDao.logHousekeepingAction("BAD_PERMISSIONS", playerDetails.getId(), playerDetails.getName(), "URL: " + client.request().uri(), client.getIpAddress());
             return;
         }
 
@@ -197,6 +205,8 @@ public class HousekeepingInfobusController {
         RconUtil.sendCommand(RconHeader.INFOBUS_POLL, new HashMap<>() {{
             put("pollId", String.valueOf(poll.getId()));
         }});
+
+        HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Send Infobus Poll with the ID " + poll.getId() + ". URL: " + client.request().uri(), client.getIpAddress());
 
         client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/campaign_management/infobus_polls");
 
@@ -219,7 +229,8 @@ public class HousekeepingInfobusController {
         PlayerDetails playerDetails = (PlayerDetails) tpl.get("playerDetails");
 
         if (!HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "infobus")) {
-            client.redirect("/" + Routes.HOUSEKEEPING_DEFAULT_PATH);
+            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/permissions");
+            HousekeepingLogsDao.logHousekeepingAction("BAD_PERMISSIONS", playerDetails.getId(), playerDetails.getName(), "URL: " + client.request().uri(), client.getIpAddress());
             return;
         }
 
@@ -254,12 +265,13 @@ public class HousekeepingInfobusController {
                         client.session().set("alertMessage", "Cannot activate this poll while there's already a different active poll");
                         enabled = false;
                     } else {*/
-                        client.session().set("alertColour", "success");
-                        client.session().set("alertMessage", "The infobus poll was successfully saved");
+                    client.session().set("alertColour", "success");
+                    client.session().set("alertMessage", "The infobus poll was successfully saved");
 
                     InfobusPollData infobusPollData = new InfobusPollData(question);
                     infobusPollData.getAnswers().addAll(client.post().getArray("answers[]"));
                     InfobusDao.saveInfobusPoll(id, infobusPollData);
+                    HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Edited Infobus Poll with the ID " + id + ". URL: " + client.request().uri(), client.getIpAddress());
                 }
 
                 //RconUtil.sendCommand(RconHeader.REFRESH_INFOBUS_POLLS, new HashMap<>());
@@ -294,7 +306,8 @@ public class HousekeepingInfobusController {
         PlayerDetails playerDetails = (PlayerDetails) tpl.get("playerDetails");
 
         if (!HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "infobus")) {
-            client.redirect("/" + Routes.HOUSEKEEPING_DEFAULT_PATH);
+            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/permissions");
+            HousekeepingLogsDao.logHousekeepingAction("BAD_PERMISSIONS", playerDetails.getId(), playerDetails.getName(), "URL: " + client.request().uri(), client.getIpAddress());
             return;
         }
 
@@ -311,6 +324,7 @@ public class HousekeepingInfobusController {
             client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/campaign_management/infobus_polls");
             return;
         } else {
+            HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Looked the Infobus Poll results with the ID " + client.get().getInt("id") + ". URL: " + client.request().uri(), client.getIpAddress());
             tpl.set("poll", infobusPoll);
         }
 
@@ -381,7 +395,8 @@ public class HousekeepingInfobusController {
         PlayerDetails playerDetails = (PlayerDetails) tpl.get("playerDetails");
 
         if (!HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "infobus")) {
-            client.redirect("/" + Routes.HOUSEKEEPING_DEFAULT_PATH);
+            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/permissions");
+            HousekeepingLogsDao.logHousekeepingAction("BAD_PERMISSIONS", playerDetails.getId(), playerDetails.getName(), "URL: " + client.request().uri(), client.getIpAddress());
             return;
         }
 
@@ -402,6 +417,7 @@ public class HousekeepingInfobusController {
             client.session().set("alertMessage", "The infobus poll has had all answers cleared");
 
             InfobusDao.clearAnswers(infobusPoll.getId());
+            HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Empty the Infobus Poll answers with the ID " + infobusPoll.getId() + ". URL: " + client.request().uri(), client.getIpAddress());
             client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/campaign_management/infobus_polls");
         }
     }
@@ -416,7 +432,8 @@ public class HousekeepingInfobusController {
         PlayerDetails playerDetails = PlayerDao.getDetails(userId);
 
         if (!HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "infobus")) {
-            client.redirect("/" + Routes.HOUSEKEEPING_DEFAULT_PATH);
+            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/permissions");
+            HousekeepingLogsDao.logHousekeepingAction("BAD_PERMISSIONS", playerDetails.getId(), playerDetails.getName(), "URL: " + client.request().uri(), client.getIpAddress());
             return;
         }
 
@@ -424,6 +441,7 @@ public class HousekeepingInfobusController {
         client.session().set("alertMessage", "The infobus status has been sent");
 
         RconUtil.sendCommand(RconHeader.INFOBUS_END_EVENT, new HashMap<>());
+        HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Closed the Infobus event. URL: " + client.request().uri(), client.getIpAddress());
         client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/campaign_management/infobus_polls");
     }
 
@@ -437,13 +455,16 @@ public class HousekeepingInfobusController {
         PlayerDetails playerDetails = PlayerDao.getDetails(userId);
 
         if (!HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "infobus")) {
-            client.redirect("/" + Routes.HOUSEKEEPING_DEFAULT_PATH);
+            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/permissions");
+            HousekeepingLogsDao.logHousekeepingAction("BAD_PERMISSIONS", playerDetails.getId(), playerDetails.getName(), "URL: " + client.request().uri(), client.getIpAddress());
             return;
         }
 
         RconUtil.sendCommand(RconHeader.INFOBUS_DOOR_STATUS, new HashMap<>() {{
             put("doorStatus", String.valueOf(client.get().getInt("status")));
         }});
+
+        HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Changed the Infobus Door Status to " + client.get().getInt("status") + ". URL: " + client.request().uri(), client.getIpAddress());
 
         client.session().set("alertColour", "success");
         client.session().set("alertMessage", "The infobus door status has been sent");

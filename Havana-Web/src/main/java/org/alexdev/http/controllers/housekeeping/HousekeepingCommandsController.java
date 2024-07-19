@@ -8,6 +8,7 @@ import org.alexdev.havana.server.rcon.messages.RconHeader;
 import org.alexdev.havana.util.config.GameConfiguration;
 import org.alexdev.http.Routes;
 import org.alexdev.http.dao.housekeeping.HousekeepingCommandsDao;
+import org.alexdev.http.dao.housekeeping.HousekeepingLogsDao;
 import org.alexdev.http.dao.housekeeping.HousekeepingPlayerDao;
 import org.alexdev.http.game.housekeeping.HousekeepingManager;
 import org.alexdev.http.util.RconUtil;
@@ -163,6 +164,7 @@ public class HousekeepingCommandsController {
 
         if (!HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "user/create")) {
             client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/permissions");
+            HousekeepingLogsDao.logHousekeepingAction("BAD_PERMISSIONS", playerDetails.getId(), playerDetails.getName(), "URL: " + client.request().uri(), client.getIpAddress());
             return;
         }
 
@@ -211,7 +213,8 @@ public class HousekeepingCommandsController {
         PlayerDetails playerDetails = PlayerDao.getDetails(userId);
 
         if (!HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "user/create")) {
-            client.redirect("/" + Routes.HOUSEKEEPING_DEFAULT_PATH);
+            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/permissions");
+            HousekeepingLogsDao.logHousekeepingAction("BAD_PERMISSIONS", playerDetails.getId(), playerDetails.getName(), "URL: " + client.request().uri(), client.getIpAddress());
             return;
         }
 
@@ -226,7 +229,7 @@ public class HousekeepingCommandsController {
             String moderator = client.get().getString("user");
             String message = client.get().getString("ha");
 
-            boolean dbInsertSuccess = HousekeepingCommandsDao.insertRconLog("HOTEL_ALERT", "", moderator, message);
+            boolean dbInsertSuccess = HousekeepingCommandsDao.insertRconLog("HOTEL_ALERT", null, moderator, message);
 
             if (dbInsertSuccess) {
                 client.session().set("alertColour", "success");
@@ -253,6 +256,7 @@ public class HousekeepingCommandsController {
 
         if (!HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "bans")) {
             client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/permissions");
+            HousekeepingLogsDao.logHousekeepingAction("BAD_PERMISSIONS", playerDetails.getId(), playerDetails.getName(), "URL: " + client.request().uri(), client.getIpAddress());
             return;
         }
 
@@ -293,7 +297,8 @@ public class HousekeepingCommandsController {
         PlayerDetails playerDetails = PlayerDao.getDetails(userId);
 
         if (!HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "bans")) {
-            client.redirect("/" + Routes.HOUSEKEEPING_DEFAULT_PATH);
+            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/permissions");
+            HousekeepingLogsDao.logHousekeepingAction("BAD_PERMISSIONS", playerDetails.getId(), playerDetails.getName(), "URL: " + client.request().uri(), client.getIpAddress());
             return;
         }
 
@@ -335,6 +340,7 @@ public class HousekeepingCommandsController {
 
         if (!HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "bans")) {
             client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/permissions");
+            HousekeepingLogsDao.logHousekeepingAction("BAD_PERMISSIONS", playerDetails.getId(), playerDetails.getName(), "URL: " + client.request().uri(), client.getIpAddress());
             return;
         }
 
@@ -344,6 +350,7 @@ public class HousekeepingCommandsController {
                 put("moderator", playerDetails.getName());
 
             }});
+
         } catch (Exception e) {
             client.session().set("alertColour", "danger");
             client.session().set("alertMessage", "Error Picking Up the CFH: " + e.getMessage());
@@ -364,6 +371,7 @@ public class HousekeepingCommandsController {
 
         if (!HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "bans")) {
             client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/permissions");
+            HousekeepingLogsDao.logHousekeepingAction("BAD_PERMISSIONS", playerDetails.getId(), playerDetails.getName(), "URL: " + client.request().uri(), client.getIpAddress());
             return;
         }
 
@@ -400,6 +408,7 @@ public class HousekeepingCommandsController {
 
         if (!HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "bans")) {
             client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/permissions");
+            HousekeepingLogsDao.logHousekeepingAction("BAD_PERMISSIONS", playerDetails.getId(), playerDetails.getName(), "URL: " + client.request().uri(), client.getIpAddress());
             return;
         }
 
@@ -435,6 +444,7 @@ public class HousekeepingCommandsController {
 
         if (!HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "bans")) {
             client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/permissions");
+            HousekeepingLogsDao.logHousekeepingAction("BAD_PERMISSIONS", playerDetails.getId(), playerDetails.getName(), "URL: " + client.request().uri(), client.getIpAddress());
             return;
         }
 

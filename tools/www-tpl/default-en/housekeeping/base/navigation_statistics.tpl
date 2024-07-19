@@ -19,6 +19,12 @@
  <div class="subnav-header">Staff logs tools</div>
       <div class="list-group list-group-flush" style="padding-left: 2px;">
 			{% if housekeepingManager.hasPermission(playerDetails.getRank(), 'configuration') %}
+			<text><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/statistics/permissions" class="subnav-link">Suspicius Staff logs</a></text>
+			{% endif %}
+			{% if housekeepingManager.hasPermission(playerDetails.getRank(), 'configuration') %}
+			<text><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/statistics/hklogs.action" class="subnav-link">Housekeeping logs</a></text>
+			{% endif %}	  
+			{% if housekeepingManager.hasPermission(playerDetails.getRank(), 'configuration') %}
 			<text><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/statistics/hklogs.login" class="subnav-link">Housekeeping login logs</a></text>
 			{% endif %}
       </div>

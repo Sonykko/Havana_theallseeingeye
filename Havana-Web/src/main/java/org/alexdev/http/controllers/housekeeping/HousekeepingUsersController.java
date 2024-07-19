@@ -6,6 +6,7 @@ import org.alexdev.havana.dao.mysql.PlayerDao;
 import org.alexdev.havana.game.player.PlayerDetails;
 import org.alexdev.havana.util.DateUtil;
 import org.alexdev.http.Routes;
+import org.alexdev.http.dao.housekeeping.HousekeepingLogsDao;
 import org.alexdev.http.dao.housekeeping.HousekeepingPlayerDao;
 import org.alexdev.http.game.housekeeping.HousekeepingManager;
 import org.alexdev.http.util.SessionUtil;
@@ -34,7 +35,8 @@ public class HousekeepingUsersController {
         PlayerDetails playerDetails = PlayerDao.getDetails(webConnection.session().getInt("user.id"));
 
         if (!HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "user/imitate")) {
-            webConnection.redirect("/" + Routes.HOUSEKEEPING_DEFAULT_PATH);
+            webConnection.redirect("/" + Routes.HOUSEKEEPING_PATH + "/permissions");
+            HousekeepingLogsDao.logHousekeepingAction("BAD_PERMISSIONS", playerDetails.getId(), playerDetails.getName(), "URL: " + webConnection.request().uri(), webConnection.getIpAddress());
             return;
         }
 
@@ -71,7 +73,8 @@ public class HousekeepingUsersController {
         PlayerDetails playerDetails = (PlayerDetails) tpl.get("playerDetails");
 
         if (!HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "user/search")) {
-            client.redirect("/" + Routes.HOUSEKEEPING_DEFAULT_PATH);
+            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/permissions");
+            HousekeepingLogsDao.logHousekeepingAction("BAD_PERMISSIONS", playerDetails.getId(), playerDetails.getName(), "URL: " + client.request().uri(), client.getIpAddress());
             return;
         }
 
@@ -138,7 +141,8 @@ public class HousekeepingUsersController {
         PlayerDetails playerDetails = (PlayerDetails) tpl.get("playerDetails");
 
         if (!HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "user/create")) {
-            client.redirect("/" + Routes.HOUSEKEEPING_DEFAULT_PATH);
+            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/permissions");
+            HousekeepingLogsDao.logHousekeepingAction("BAD_PERMISSIONS", playerDetails.getId(), playerDetails.getName(), "URL: " + client.request().uri(), client.getIpAddress());
             return;
         }
         /*tpl.set("defaultFigure", Configuration.REGISTER_FIGURE);
@@ -182,6 +186,7 @@ public class HousekeepingUsersController {
 
                 client.session().set("alertColour", "success");
                 client.session().set("alertMessage", "The new user has been successfully created. <a href=\"/ase/habbo/es/housekeeping/extra/hobba/admin_tools/users/edit?id=" + userId + "\">Click here</a> to edit them.");
+                HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Created User with the ID " + userId + ". URL: " + client.request().uri(), client.getIpAddress());
             }
         }
 
@@ -209,7 +214,8 @@ public class HousekeepingUsersController {
         PlayerDetails playerDetails = (PlayerDetails) tpl.get("playerDetails");
 
         if (!HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "user/edit")) {
-            client.redirect("/" + Routes.HOUSEKEEPING_DEFAULT_PATH);
+            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/permissions");
+            HousekeepingLogsDao.logHousekeepingAction("BAD_PERMISSIONS", playerDetails.getId(), playerDetails.getName(), "URL: " + client.request().uri(), client.getIpAddress());
             return;
         }
 
@@ -271,6 +277,7 @@ public class HousekeepingUsersController {
                     PlayerDao.saveMotto(player.getId(), player.getMotto());
                     PlayerDao.saveCurrency(player.getId(), player.getCredits(), player.getPixels());
                     PlayerDao.saveEmail(player.getId(), player.getEmail());
+                    HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Edited User with the name " + player.getName() + " and with the ID " + player.getId() + ". URL: " + client.request().uri(), client.getIpAddress());
 
                     client.session().set("alertColour", "success");
                     client.session().set("alertMessage", "The user has been successfully saved");
@@ -305,7 +312,8 @@ public class HousekeepingUsersController {
         PlayerDetails playerDetails = (PlayerDetails) tpl.get("playerDetails");
 
         if (!HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "user/edit")) {
-            client.redirect("/" + Routes.HOUSEKEEPING_DEFAULT_PATH);
+            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/permissions");
+            HousekeepingLogsDao.logHousekeepingAction("BAD_PERMISSIONS", playerDetails.getId(), playerDetails.getName(), "URL: " + client.request().uri(), client.getIpAddress());
             return;
         }
 
@@ -351,5 +359,4 @@ public class HousekeepingUsersController {
         // Delete alert after it's been rendered
         client.session().delete("alertMessage");
     }
-
 }

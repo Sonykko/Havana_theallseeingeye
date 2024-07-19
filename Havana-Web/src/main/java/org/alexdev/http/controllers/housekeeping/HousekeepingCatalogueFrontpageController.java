@@ -8,6 +8,7 @@ import org.alexdev.havana.server.rcon.messages.RconHeader;
 import org.alexdev.havana.util.config.GameConfiguration;
 import org.alexdev.http.Routes;
 import org.alexdev.http.dao.NewsDao;
+import org.alexdev.http.dao.housekeeping.HousekeepingLogsDao;
 import org.alexdev.http.game.housekeeping.HousekeepingManager;
 import org.alexdev.http.util.RconUtil;
 import org.alexdev.http.util.SessionUtil;
@@ -18,14 +19,15 @@ import java.util.List;
 public class HousekeepingCatalogueFrontpageController {
     public static void edit(WebConnection client) {
         if (!client.session().getBoolean(SessionUtil.LOGGED_IN_HOUSKEEPING)) {
-            client.redirect("/" + Routes.HOUSEKEEPING_PATH);
+            client.redirect("/" + Routes.HOUSEKEEPING_DEFAULT_PATH);
             return;
         }
 
         PlayerDetails session = PlayerDao.getDetails(client.session().getInt("user.id"));
 
         if (!HousekeepingManager.getInstance().hasPermission(session.getRank(), "catalogue/edit_frontpage")) {
-            client.redirect("/" + Routes.HOUSEKEEPING_PATH);
+            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/permissions");
+            HousekeepingLogsDao.logHousekeepingAction("BAD_PERMISSIONS", client.session().getInt("user.id"), session.getName(), client.request().uri(), client.getIpAddress());
             return;
         }
 
@@ -45,6 +47,8 @@ public class HousekeepingCatalogueFrontpageController {
             GameConfiguration.getInstance().updateSetting("catalogue.frontpage.input.2",  client.post().getString("header"));
             GameConfiguration.getInstance().updateSetting("catalogue.frontpage.input.3",  client.post().getString("subtext"));
             GameConfiguration.getInstance().updateSetting("catalogue.frontpage.input.4",  client.post().getString("link"));
+
+            HousekeepingLogsDao.logHousekeepingAction("BAD_PERMISSIONS", client.session().getInt("user.id"), session.getName(), "Updated Catalogue frontpage. URL: " + client.request().uri(), client.getIpAddress());
 
             RconUtil.sendCommand(RconHeader.REFRESH_CATALOGUE_FRONTPAGE, new HashMap<>());
         }

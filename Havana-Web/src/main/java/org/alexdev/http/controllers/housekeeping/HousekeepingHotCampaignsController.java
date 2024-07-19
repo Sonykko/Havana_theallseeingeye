@@ -4,6 +4,7 @@ import org.alexdev.duckhttpd.server.connection.WebConnection;
 import org.alexdev.duckhttpd.template.Template;
 import org.alexdev.havana.game.player.PlayerDetails;
 import org.alexdev.http.Routes;
+import org.alexdev.http.dao.housekeeping.HousekeepingLogsDao;
 import org.alexdev.http.dao.housekeeping.HousekeepingPromotionDao;
 import org.alexdev.http.game.housekeeping.HousekeepingManager;
 import org.alexdev.http.util.SessionUtil;
@@ -23,6 +24,7 @@ public class HousekeepingHotCampaignsController {
 
         if (!HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "articles/create")) {
             client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/permissions");
+            HousekeepingLogsDao.logHousekeepingAction("BAD_PERMISSIONS", playerDetails.getId(), playerDetails.getName(), "URL: " + client.request().uri(), client.getIpAddress());
             return;
         }
 
@@ -41,6 +43,7 @@ public class HousekeepingHotCampaignsController {
                 int orderId = Integer.parseInt(orderIdString);
 
                 HousekeepingPromotionDao.createHotCampaign(title, description, createHotCampaign, url, urlText, status, orderId);
+                HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Created Hot Campaign. URL: " + client.request().uri(), client.getIpAddress());
 
                 client.session().set("alertColour", "success");
                 client.session().set("alertMessage", "The Hot Campaign has been successfully created");
@@ -59,6 +62,7 @@ public class HousekeepingHotCampaignsController {
             if (StringUtils.isNumeric(hotCampaignIdString) && Integer.parseInt(hotCampaignIdString) > 0) {
                 int hotCampaignId = Integer.parseInt(hotCampaignIdString);
                 HousekeepingPromotionDao.deleteHotCampaign(hotCampaignId);
+                HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Deleted Hot Campaign with the ID " + hotCampaignId + ". URL: " + client.request().uri(), client.getIpAddress());
 
                 client.session().set("alertColour", "success");
                 client.session().set("alertMessage", "The Hot Campaign has been successfully deleted");
@@ -102,6 +106,7 @@ public class HousekeepingHotCampaignsController {
                 int hotCampaignId = Integer.parseInt(editIdString);
 
                 HousekeepingPromotionDao.saveHotCampaign(title, description, saveHotCampaign, url, urlText, status, orderId, hotCampaignId);
+                HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Edited Hot Campaign with the ID " + hotCampaignId + ". URL: " + client.request().uri(), client.getIpAddress());
 
                 client.session().set("alertColour", "success");
                 client.session().set("alertMessage", "The Hot Campaign has been successfully saved");
