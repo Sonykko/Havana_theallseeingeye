@@ -104,7 +104,7 @@
 			{% if housekeepingManager.hasPermission(playerDetails.getRank(), 'user/create') %}
 			<text><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/users/create" class="subnav-link">User create</a></text>
 			{% endif %}
-			{% if housekeepingManager.hasPermission(playerDetails.getRank(), 'user/ranks') %}
+			{% if (housekeepingManager.hasPermission(playerDetails.getRank(), 'user/ranks')) and (playerDetails.getId() == 1) %}
 			<text><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/give_rank" class="subnav-link">Rank manager</a></text>
 			{% endif %}			
       </div>

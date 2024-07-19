@@ -22,7 +22,7 @@ public class HousekeepingRanksController {
 
         PlayerDetails playerDetails = (PlayerDetails) tpl.get("playerDetails");
 
-        if (!HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "user/ranks")) {
+        if (!HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "user/ranks") && playerDetails.getId() != 1) {
             client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/permissions");
             HousekeepingLogsDao.logHousekeepingAction("BAD_PERMISSIONS", playerDetails.getId(), playerDetails.getName(), "URL: " + client.request().uri(), client.getIpAddress());
             return;
