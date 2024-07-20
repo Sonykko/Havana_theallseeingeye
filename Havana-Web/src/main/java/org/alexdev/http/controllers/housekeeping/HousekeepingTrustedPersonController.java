@@ -112,6 +112,7 @@ public class HousekeepingTrustedPersonController {
         tpl.set("nextTrustedPersons", HousekeepingPlayerDao.getTrustedPersonLogs(currentPage + 1));
         tpl.set("previousTrustedPersons", HousekeepingPlayerDao.getTrustedPersonLogs(currentPage - 1));
         tpl.set("players", HousekeepingPlayerDao.getActiveTrustedPersons());
+        tpl.set("page", currentPage);
         tpl.render();
 
         client.session().delete("alertMessage");
