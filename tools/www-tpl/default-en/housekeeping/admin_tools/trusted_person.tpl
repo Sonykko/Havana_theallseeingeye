@@ -7,7 +7,7 @@
     <p>With this tool you can set or revoke a trusted person for a given user.</p>
 	{% include "housekeeping/base/alert.tpl" %}
     <form class="table-responsive col-md-4" method="post">
-        <div class="pepe"><div class="form-group">
+        <div class="form-group">
             <label for="userName">{{ site.siteName }} name</label>
             <input type="text" name="userName" class="form-control" id="userName" placeholder="Enter here the {{ site.siteName }} name..." value="" />
         </div>
@@ -17,7 +17,7 @@
         <div class="form-group">
             <label for="userID">User ID</label>
             <input type="text" name="userID" class="form-control" id="userID" placeholder="Enter here the user ID..." value="" />
-        </div></div>
+        </div>
 			<div class="form-group">
 				<label>Choose action</label>
 				<select name="type" id="type" class="form-control">

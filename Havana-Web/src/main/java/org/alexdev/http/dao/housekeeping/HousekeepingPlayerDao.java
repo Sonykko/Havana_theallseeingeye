@@ -323,7 +323,7 @@ public class HousekeepingPlayerDao {
     public static List<Map<String, Object>> getTrustedPersonLogs(int page) {
         List<Map<String, Object>> TrustedPersonList = new ArrayList<>();
 
-        int rows = 50;
+        int rows = 25;
         int nextOffset = page * rows;
 
         if (nextOffset >= 0) {
