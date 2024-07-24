@@ -100,7 +100,7 @@ public class HousekeepingCommandsController {
 
             if (playerDetails != null) {
                 RconUtil.sendCommand(RconHeader.DISCONNECT_USER, new HashMap<>() {{
-                    put("username", playerDetails.getId());
+                    put("userId", playerDetails.getId());
                 }});
 
                 int banningId = client.session().getInt("user.id");
@@ -168,7 +168,7 @@ public class HousekeepingCommandsController {
             return;
         }
 
-        String message = GameConfiguration.getInstance().getString("rcon.kick.message");
+        String message = client.get().getString("alertMessage");
 
         Map<String, String> params = client.get().getValues();
         String users = params.get("users");
@@ -262,7 +262,7 @@ public class HousekeepingCommandsController {
 
         String user = client.get().getString("user");
         String moderator = playerDetails.getName();
-        String message = GameConfiguration.getInstance().getString("rcon.kick.message");
+        String message = client.get().getString("alertMessage");
 
         try {
             RconUtil.sendCommand(RconHeader.MOD_KICK_USER, new HashMap<>() {{

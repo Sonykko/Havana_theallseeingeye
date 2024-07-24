@@ -3,6 +3,7 @@ package org.alexdev.http.controllers.housekeeping;
 import org.alexdev.duckhttpd.server.connection.WebConnection;
 import org.alexdev.duckhttpd.template.Template;
 import org.alexdev.havana.game.player.PlayerDetails;
+import org.alexdev.havana.util.config.GameConfiguration;
 import org.alexdev.http.Routes;
 import org.alexdev.http.dao.housekeeping.HousekeepingCommandsDao;
 import org.alexdev.http.dao.housekeeping.HousekeepingLogsDao;
@@ -157,8 +158,12 @@ public class HousekeepingRCONController {
 
         if ("kick".equals(action)) {
             String username = client.session().getString("badguy");
+            String commonMessage = GameConfiguration.getInstance().getString("rcon.kick.message");
+            String customMessage = client.post().getString("customMessage");
+            String alertMessage = customMessage != null && !customMessage.isEmpty() ? customMessage : commonMessage;
+
             if (username != null && !username.isEmpty()) {
-                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/api/kick?user=" + username);
+                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/api/kick?user=" + username + "&alertMessage=" + alertMessage);
                 return;
             } else {
                 client.session().set("alertColour", "danger");
@@ -167,7 +172,9 @@ public class HousekeepingRCONController {
         } else if ("ban".equals(action)) {
             if (client.post().contains("username") && client.post().contains("alertMessage")) {
                 String username = client.session().getString("badguy");
-                String alertMessage = client.post().getString("alertMessage");
+                String commonMessage = client.post().getString("commonMessage");
+                String customMessage = client.post().getString("customMessage");
+                String alertMessage = customMessage != null && !customMessage.isEmpty() ? customMessage : commonMessage;
                 String notes = client.post().getString("notes");
                 int banSeconds = client.post().getInt("banSeconds");
                 boolean doBanMachine = client.post().getBoolean("doBanMachine");
@@ -225,8 +232,13 @@ public class HousekeepingRCONController {
         if ("massKick".equals(action)) {
             List<String> usernames = client.post().getArray("userNames");
             usernames = usernames.stream().map(s -> replaceLineBreaks(s)).collect(Collectors.toList());
+
+            String commonMessage = GameConfiguration.getInstance().getString("rcon.kick.message");
+            String customMessage = client.post().getString("customMessage");
+            String alertMessage = customMessage != null && !customMessage.isEmpty() ? customMessage : commonMessage;
+
             if (usernames != null && !usernames.isEmpty()) {
-                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/api/mass_kick?users=" + usernames);
+                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/api/mass_kick?users=" + usernames + "&alertMessage=" +  alertMessage);
                 return;
             } else {
                 client.session().set("alertColour", "danger");
@@ -236,7 +248,9 @@ public class HousekeepingRCONController {
             if (client.post().contains("userNames") && client.post().contains("alertMessage")) {
                 List<String> usernames = client.post().getArray("userNames");
                 usernames = usernames.stream().map(s -> replaceLineBreaks(s)).collect(Collectors.toList());
-                String alertMessage = client.post().getString("alertMessage");
+                String commonMessage = client.post().getString("commonMessage");
+                String customMessage = client.post().getString("customMessage");
+                String alertMessage = customMessage != null && !customMessage.isEmpty() ? customMessage : commonMessage;
                 String notes = client.post().getString("notes");
                 int banSeconds = client.post().getInt("banSeconds");
                 boolean doBanMachine = client.post().getBoolean("doBanMachine");
