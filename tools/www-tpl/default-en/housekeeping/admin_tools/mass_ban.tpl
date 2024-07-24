@@ -11,15 +11,17 @@
 				<label for="pwd">The bad guys</label>
 				<textarea class="form-control" id="userNames" name="userNames" rows="5" cols="50" placeholder="Type every single name with a line break..."></textarea>
 			</div>
-			<div class="form-group">				
-				<label>Choose a common message</label>
-				<select name="alertMessage" id="alertMessage" class="form-control">
-					{% set num = 1 %}
+			<div class="form-group">
+				<select name="commonMessage" id="commonMessage" class="form-control">
+					<option value="">Choose a common message</option>
 					{% for CFHTopics in CFHTopics %}
-					<option value="{{ CFHTopics.sanctionReasonValue }}. {{ CFHTopics.sanctionReasonDesc }}" {%if CFHTopics.sanctionReasonId == 'AUTO_TRIGGER' %}selected{% endif %}>{{ CFHTopics.sanctionReasonValue }}</option>
-					{% set num = num + 1 %}
+					<option value="{{ CFHTopics.sanctionReasonValue }}. {{ CFHTopics.sanctionReasonDesc }}">{{ CFHTopics.sanctionReasonValue }}</option>
 					{% endfor %}
 				</select>
+			</div>
+			<div class="form-group">
+				<label for="customMessage">Message</label>
+				<input type="text" class="form-control" id="customMessage" name="customMessage"  value="" placeholder="Enter here the custom message..." />
 			</div>
 			<div class="form-group">
 				<label>Ban time</label>
@@ -42,7 +44,7 @@
 			</div>
 			<div class="form-group">
 				<label for="pwd">Extra info</label>
-				<textarea class="form-control" name="alertMessage" placeholder="Enter here additional notes..." placeholder="Remote ban tool ban" style="height: 100px"></textarea>
+				<textarea class="form-control" name="alertMessage" placeholder="Enter here additional notes..." style="height: 100px"></textarea>
 			</div>
 			<div class="form-group" style="margin-bottom: 0;">
 				<label style="display: flex;align-items: center;user-select: none;margin-bottom: 0;">

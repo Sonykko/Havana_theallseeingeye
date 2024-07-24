@@ -14,14 +14,16 @@
 				<input type="text" class="form-control" id="text" name="username"  value="{{ userBan }}" placeholder="Enter here the username..." readonly>
 			</div>
 			<div class="form-group">
-				<label>Choose a common message</label>
-				<select name="alertMessage" id="alertMessage" class="form-control">
-					{% set num = 1 %}
+				<select name="commonMessage" id="commonMessage" class="form-control">
+					<option value="">Choose a common message</option>
 					{% for CFHTopics in CFHTopics %}
-					<option value="{{ CFHTopics.sanctionReasonValue }}. {{ CFHTopics.sanctionReasonDesc }}" {%if CFHTopics.sanctionReasonId == 'AUTO_TRIGGER' %}selected{% endif %}>{{ CFHTopics.sanctionReasonValue }}</option>
-					{% set num = num + 1 %}
+					<option value="{{ CFHTopics.sanctionReasonValue }}. {{ CFHTopics.sanctionReasonDesc }}">{{ CFHTopics.sanctionReasonValue }}</option>
 					{% endfor %}
 				</select>
+			</div>
+			<div class="form-group">
+				<label for="customMessage">Message</label>
+				<input type="text" class="form-control" id="customMessage" name="customMessage"  value="" placeholder="Enter here the custom message..." />
 			</div>
 			<div class="form-group">
 				<label>Ban time</label>
