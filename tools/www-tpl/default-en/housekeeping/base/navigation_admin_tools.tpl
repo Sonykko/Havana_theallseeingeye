@@ -72,6 +72,9 @@
 			{% if housekeepingManager.hasPermission(playerDetails.getRank(), 'bans') %}
 			<text><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/room_chatlogs" class="subnav-link">Room action log</a></text>
 			{% endif %}
+			{% if housekeepingManager.hasPermission(playerDetails.getRank(), 'bans') %}
+			<text><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/stickie_viewer" class="subnav-link">Stickie viewer</a></text>
+			{% endif %}				
       </div>
     </div>
 {% endif %}

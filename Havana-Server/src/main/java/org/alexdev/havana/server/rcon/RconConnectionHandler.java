@@ -4,6 +4,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import org.alexdev.havana.Havana;
 import org.alexdev.havana.dao.mysql.*;
+import org.alexdev.havana.game.GameScheduler;
 import org.alexdev.havana.game.achievements.AchievementManager;
 import org.alexdev.havana.game.achievements.AchievementType;
 import org.alexdev.havana.game.ads.AdManager;
@@ -202,6 +203,34 @@ public class RconConnectionHandler extends ChannelInboundHandlerAdapter {
 
                     cfhFollow.getRoom().forward(moderatorFollow, false);
                     CallForHelpManager.getInstance().deleteCall(cfhFollow);
+                    break;
+                case MOD_STICKIE_DELETE:
+                    int stickieId = Integer.parseInt(message.getValues().get("stickieId"));
+                    String stickieText = message.getValues().get("stickieText");
+                    boolean deleteStickie = Boolean.parseBoolean(message.getValues().get("deleteStickie"));
+
+                    if (stickieId <= 0) {
+                        return;
+                    }
+
+                    if (stickieText == null) {
+                        return;
+                    }
+
+                    if (ItemManager.getInstance().resolveItem(stickieId) == null) {
+                        return;
+                    }
+
+                    ItemManager.getInstance().resolveItem(stickieId).setCustomData(stickieText);
+                    ItemManager.getInstance().resolveItem(stickieId).updateStatus();
+                    ItemDao.stickieNoteModerateText(stickieText, stickieId);
+                    ItemManager.reset();
+
+                    if (deleteStickie) {
+                        GameScheduler.getInstance().queueDeleteItem((long) stickieId);
+                        GameScheduler.getInstance().performItemDeletion();
+                        ItemManager.reset();
+                    }
                     break;
                 case REFRESH_CATALOGUE_PAGES:
                     CatalogueManager.reset();
