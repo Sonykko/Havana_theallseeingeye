@@ -682,6 +682,24 @@ public class ItemDao {
         }
     }
 
+    public static void stickieNoteModerateText(String stickieText, int stickieId) {
+        Connection sqlConnection = null;
+        PreparedStatement preparedStatement = null;
+
+        try {
+            sqlConnection = Storage.getStorage().getConnection();
+            preparedStatement = Storage.getStorage().prepare("UPDATE items SET custom_data = ? WHERE id = ?", sqlConnection);
+            preparedStatement.setString(1, stickieText);
+            preparedStatement.setInt(2, stickieId);
+            preparedStatement.execute();
+        } catch (Exception e) {
+            Storage.logError(e);
+        } finally {
+            Storage.closeSilently(preparedStatement);
+            Storage.closeSilently(sqlConnection);
+        }
+    }
+
     /**
      * Fill item with data retrieved from the SQL query.
      *

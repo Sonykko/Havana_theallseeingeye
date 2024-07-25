@@ -11159,6 +11159,7 @@ a.list-group-item-danger.active:hover, a.list-group-item-danger.active:focus {
 	display: flex;
 	flex-direction: column;
 	width: 240px;
+	margin-bottom: 15px;
 }
 
 .footer a {
@@ -11198,4 +11199,75 @@ a.list-group-item-danger.active:hover, a.list-group-item-danger.active:focus {
 
 .pagination-buttons-box {
 	margin-bottom: 1rem;
+}
+
+.stickie__search__form {
+	max-width: unset;
+}
+
+.stickie__search__query {
+	max-width: min-content;
+	max-width: -moz-fit-content;
+}
+
+.stickie__search__names {
+	display: flex;
+	flex-direction: column;
+	font-weight: normal;
+	justify-content: center;
+	width: max-content;
+}
+
+.stickie__search__names label {
+	font-weight: normal;
+}
+
+.stickie__search__inputs {
+	display: flex;
+	flex-direction: column;
+	padding-left:5px;
+	justify-content: center;
+}
+
+.stickie__search__inputs input, select {
+	height:25px;
+}
+
+.stickie__ban__parent {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-end;
+}
+
+.stickie__ban__toggle {
+	width: 100%;
+	display: flex;
+	justify-content: flex-end;
+	background-color: #f6f6f6;
+	margin-bottom: 15px;
+}
+
+.stickie__ban__toggle p {
+	padding: 5px;
+	margin-bottom: 0px;
+}
+
+.stickie__ban__tool {
+	background-color: #f6f6f6;
+	width: 100%;
+}
+
+.stickie__ban__tool form {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-end;
+	width: 100%;
+}
+
+.stickie__ban__tool select {
+	height:25px;
+}
+
+.stickie__ban__tool label {
+	font-weight: normal;
 }
