@@ -359,6 +359,7 @@ INSERT INTO `settings_desc` (`setting`, `description`, `category`) VALUES
 ('profile.editing', 'Profile editing', 'miscellaneous'),
 ('rare.cycle.page.id', 'Set the ID of the catalogue Rare cycle page', 'catalogue'),
 ('rcon.cfh.reply.message', 'Set the default CFH reply message', 'housekeeping'),
+('rcon.delete.stickie.message', 'Set the default reason for Delete Stickie Note', 'housekeeping'),
 ('rcon.kick.message', 'Set the default alert message for Remote Kick', 'housekeeping'),
 ('rcon.superban.message', 'Set the default reason for Remote Superban', 'housekeeping'),
 ('regenerate.map.enabled', 'true', NULL),
@@ -688,6 +689,7 @@ UPDATE `settings` SET
       WHEN `setting` = 'profile.editing' THEN 'miscellaneous'
       WHEN `setting` = 'rare.cycle.page.id' THEN 'catalogue'
 	  WHEN `setting` = 'rcon.cfh.reply.message' THEN 'housekeeping'
+	  WHEN `setting` = 'rcon.delete.stickie.message' THEN 'housekeeping'
       WHEN `setting` = 'rcon.kick.message' THEN 'housekeeping'
       WHEN `setting` = 'rcon.superban.message' THEN 'housekeeping'
       WHEN `setting` = 'regenerate.map.enabled' THEN NULL
