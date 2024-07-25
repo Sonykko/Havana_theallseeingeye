@@ -37,6 +37,7 @@ This is a project to recreate the supossed "Hobbanet" or theallseeingeye Habbo H
   - Check Hobba applicant tool
   - Rank manager
   - Trusted person admin
+  - Stickie viewer
 - Campaign management
   - Ads banners tool
   - Staff picks tool (missing rooms)
