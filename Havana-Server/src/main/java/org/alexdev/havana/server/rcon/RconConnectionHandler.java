@@ -43,6 +43,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 
 public class RconConnectionHandler extends ChannelInboundHandlerAdapter {
     final private static Logger log = LoggerFactory.getLogger(RconConnectionHandler.class);
@@ -227,10 +228,30 @@ public class RconConnectionHandler extends ChannelInboundHandlerAdapter {
                     ItemManager.reset();
 
                     if (deleteStickie) {
-                        GameScheduler.getInstance().queueDeleteItem((long) stickieId);
-                        GameScheduler.getInstance().performItemDeletion();
-                        ItemManager.reset();
+                        Room roomStickie = ItemManager.getInstance().resolveItem(stickieId).getRoom();
+                        Item stickieItem = ItemManager.getInstance().resolveItem(stickieId);
+                        List<Player> playersStickie = PlayerManager.getInstance().getPlayers();
+
+                        if (roomStickie == null) {
+                            return;
+                        }
+
+                        if (stickieItem == null) {
+                            return;
+                        }
+
+                        if (playersStickie == null) {
+                            return;
+                        }
+
+                        for (Player target : playersStickie) {
+                            roomStickie.getMapping().removeItem(stickieItem);
+                            stickieItem.delete();
+
+                            target.getRoomUser().getTimerManager().resetRoomTimer();
+                        }
                     }
+                    ItemManager.reset();
                     break;
                 case REFRESH_CATALOGUE_PAGES:
                     CatalogueManager.reset();
