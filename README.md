@@ -62,11 +62,11 @@ Download the latest development build from the [releases page](https://github.co
 
 # Installation
 
-1. Create a folder called Havana, after clone or download this repo and extract it to your new Havana folder
+1. Create a folder called Havana, after clone or download this repo and extract it to your new Havana folder. After run from tool folder in your DB first the havana.sql and optional the groups.sql
 
 2. Put the Havana-Server.jar and Havana-Web.jar files downloaded in the Releases page in the root folder and after, run it up. When they go ready, close it
 
-3. Run first the havana.sql (optional the groups.sql) and after the theallseeingeye.sql from tool folder in your DB in order to do work properly this project
+3. Run the theallseeingeye.sql from tool folder in your DB in order to do work properly this project
 
 4. Download the [havana_www_28_07_2024.zip](https://www.mediafire.com/file/6kn4ghtb37lfc1p/havana_www_28_07_2024.zip/file) file, and then extract it to /tools/www/ and move and replace the www folder from Git repro/root folder to your Havana tool path
 
