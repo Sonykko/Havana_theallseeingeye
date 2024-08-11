@@ -62,23 +62,18 @@ Download the latest development build from the [releases page](https://github.co
 
 # Installation
 
-1. Download and install first [HavanaR39 from Jeppe](https://github.com/jeppe9821/HavanaR39)
+1. Create a folder called Havana, after clone or download this repo and extract it to your new Havana folder
 
-2. Compile the Havana-Server and Havana-Web theallseeingeye sources and after, run it up. When they go ready, close it
+2. Compile the Havana-Server and Havana-Web sources and put the .jar files in the root folder and after, run it up. When they go ready, close it
 
-3. Run the theallseeingeye.sql from root folder of Git repro in your DB in order to do work properly this project
+3. Run first the havana.sql (optional the groups.sql) and after the theallseeingeye.sql from tool folder in your DB in order to do work properly this project
 
-4. Insert this SQL if you want a custom path for Housekeeping:
-```sql
-INSERT INTO `settings` (`setting`, `value`, `category`)
-VALUES ('site.housekeeping', 'http://localhost/', 'hotel');
-```
-
-5. Go to your tpl folder and go to /base/header.tpl and edit the URL of the Housekeeping with this:
+4. Go to your tpl folder and go to /base/header.tpl and edit the URL of the Housekeeping with this:
 ```html
-{{ site.sitePath }}/ase/housekeeping/es <!-- use this for no custom HK folder -->
-{{ site.housekeeping }}/ase/housekeeping/es <!-- use this for custom HK folder -->
+{{ site.sitePath }}/ase/housekeeping/es
 ```
+
+5. Download the [www.zip](https://www.mediafire.com/file/0w0lsy335vyrh1w/www.zip/file) file, and then extract it to /tools/www/ and move and replace the www folder from Git repro/root folder to your Havana tool path
 
 6. Go to all your external_texts.txt files from v31 and search for this var:
 ```html
@@ -88,8 +83,6 @@ And remplace with this:
 ```html
 chatlog.url=https://example.com/ase/habbo/es/housekeeping/extra/hobba/chatlog.action?chatId=
 ```
-
-7. Move the www and www_tpl folder from Git repro to your Havana tool path
 
 #
 
@@ -292,7 +285,7 @@ Install any JDK version that is equal or above >= 17 to run the jar files.
 
 Run both Havana-Server.jar and Havana-Web.jar at least once to generate the necessary configuration files, configure the MySQL attributes to connect to the MariaDB server.
 
-Download the [havana_www.zip](https://www.mediafire.com/file/x94neh4qbu3l2s2/havana_www.zip/file) file, and then extract it to /tools/www/ this directory is located where you ran Havana-Web.jar.
+Download the [www.zip](https://www.mediafire.com/file/0w0lsy335vyrh1w/www.zip/file) file, and then extract it to /tools/www/ this directory is located where you ran Havana-Web.jar.
 
 *(This is the default directory for static content within the Havana-Web project, but the directory where it looks for static images can be configured in the Housekeeping settings).*
 
