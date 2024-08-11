@@ -66,16 +66,11 @@ Download the latest development build from the [releases page](https://github.co
 
 2. Put the Havana-Server.jar and Havana-Web.jar files downloaded in the Releases page in the root folder and after, run it up. When they go ready, close it
 
-3. Run the first havana.sql (optional the groups.sql) and after the theallseeingeye.sql from tool folder in your DB in order to do work properly this project
+3. Run first the havana.sql (optional the groups.sql) and after the theallseeingeye.sql from tool folder in your DB in order to do work properly this project
 
-4. Go to your tpl folder and go to /base/header.tpl and edit the URL of the Housekeeping with this:
-```html
-{{ site.sitePath }}/ase/housekeeping/es
-```
+4. Download the [havana_www_28_07_2024.zip](https://www.mediafire.com/file/6kn4ghtb37lfc1p/havana_www_28_07_2024.zip/file) file, and then extract it to /tools/www/ and move and replace the www folder from Git repro/root folder to your Havana tool path
 
-5. Download the [havana_www_28_07_2024.zip](https://www.mediafire.com/file/6kn4ghtb37lfc1p/havana_www_28_07_2024.zip/file) file, and then extract it to /tools/www/ and move and replace the www folder from Git repro/root folder to your Havana tool path
-
-6. Go to all your external_texts.txt files from v31 and search for this var:
+5. Go to all your external_texts.txt files from v31 and search for this var:
 ```html
 chatlog.url
 ```

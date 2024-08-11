@@ -172,7 +172,7 @@
 			</li>
 			{% endif %}
 			{% if playerDetails.getRank().getRankId() >= 6 %}
-				<li id="tab-register-now"><a href="{{ site.sitePath }}/allseeingeye/hk/">Housekeeping</a><span></span></li>
+				<li id="tab-register-now"><a href="{{ site.sitePath }}/ase/housekeeping/es">Housekeeping</a><span></span></li>
 			{% endif %}
 			
 		</ul>
