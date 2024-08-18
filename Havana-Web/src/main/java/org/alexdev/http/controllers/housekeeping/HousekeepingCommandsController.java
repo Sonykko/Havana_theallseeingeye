@@ -317,7 +317,7 @@ public class HousekeepingCommandsController {
 
             if (dbInsertSuccess) {
                 client.session().set("alertColour", "success");
-                client.session().set("alertMessage", "The Alert has been sent and logged in the database");
+                client.session().set("alertMessage", "Gave alert to " + user);
             } else {
                 client.session().set("alertColour", "danger");
                 client.session().set("alertMessage", "Error inserting the Alert into the database");
