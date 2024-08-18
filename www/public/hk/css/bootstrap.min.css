@@ -11271,3 +11271,157 @@ a.list-group-item-danger.active:hover, a.list-group-item-danger.active:focus {
 .stickie__ban__tool label {
 	font-weight: normal;
 }
+
+.massban__tool__form {
+	display: flex;
+	align-items: flex-end;
+	width: fit-content;
+	width: -moz-fit-content;
+	flex-direction: column;
+}
+
+.massban__tool__badguys {
+	display: flex;
+	align-items: center;
+	padding-bottom: 10px;
+	justify-content: space-between;
+	width: 100%;
+}
+
+.massban__tool__badguys label {
+	padding-right: 20px;
+}
+
+.massban__tool__badguys textarea {
+	overflow-y: scroll;
+	height: 350px;
+	width: 350px;
+}
+
+.massban__tool__commonmessage {
+	padding-bottom:10px;
+}
+
+.massban__tool__custommessage {
+	display: flex;
+	width: 100%;
+	justify-content: space-between;
+	padding-bottom:10px;
+}
+
+.massban__tool__custommessage input {
+	width: 360px;
+}
+
+.massban__tool__time {
+	display: flex;
+	width: 100%; 
+	justify-content: space-between;
+	padding-bottom:10px;
+}
+
+.alert__tool {
+	width: 100%;
+	padding: 15px 0px 15px 0px;
+}
+
+.alert__tool__form {
+	display: flex;
+	align-items: flex-end;
+	width: fit-content;
+	width: -moz-fit-content;
+	flex-direction: column;
+}
+
+.alert__tool__recipient {
+	display: flex;
+	width: 100%;
+	justify-content: space-between;
+	padding-bottom: 10px;
+}
+
+.alert__tool__recipient label {
+	padding-right: 10px;
+}
+
+.alert__tool__recipient input {
+	width: 300px;
+}
+
+.alert__tool__commonmessage {
+	padding-bottom:10px;	
+}
+
+.alert__tool__commonmessage select {
+	width: 300px;
+}
+
+.alert__tool__custommessage {
+	display: flex;
+	width: 100%;
+	justify-content: space-between;
+	padding-bottom: 10px;
+}
+
+.alert__tool__custommessage input {
+	width: 300px;
+}
+
+.alert__tool__submit {
+	width: 300px;
+}
+
+.ban__tool {
+	width: 100%;
+	padding-top: 15px;
+}
+
+.ban__tool form {
+	display: flex;
+	align-items: flex-end;
+	width: fit-content;
+	width: -moz-fit-content;
+	flex-direction: column;
+}
+
+.ban__tool table {
+	display: flex;
+}
+
+.ban__tool thead tr {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	width: min-content;
+	gap: 1px;
+	padding-right: 5px;
+}
+
+.ban__tool thead label {
+	margin-bottom: 0;
+}
+
+.ban__tool tbody tr {
+	display: flex;
+	flex-direction: column;
+	width: -webkit-fill-available;
+	gap: 10px;
+}
+
+.ban__tool #text {
+	width: 330px;
+}
+
+.ban__tool #commonMessage {
+	width: 550px;
+}
+
+.ban__tool #customMessage {
+	width: 650px;
+}
+
+.ban__tool #extraInfo {
+	height: 100px;
+	width: 400px;
+	overflow-y: scroll;
+}
