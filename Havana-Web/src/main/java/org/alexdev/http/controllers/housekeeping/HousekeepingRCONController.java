@@ -7,6 +7,7 @@ import org.alexdev.havana.util.config.GameConfiguration;
 import org.alexdev.http.Routes;
 import org.alexdev.http.dao.housekeeping.HousekeepingCommandsDao;
 import org.alexdev.http.dao.housekeeping.HousekeepingLogsDao;
+import org.alexdev.http.dao.housekeeping.HousekeepingPlayerDao;
 import org.alexdev.http.game.housekeeping.HousekeepingManager;
 import org.alexdev.http.util.SessionUtil;
 
@@ -105,16 +106,25 @@ public class HousekeepingRCONController {
             }
         }
 
-        if (client.post().contains("user") && client.post().contains("message")) {
+        if (client.post().contains("user")) {
             String user = client.post().getString("user");
-            String message = client.post().getString("message");
+            String commonMessage = client.post().getString("commonMessage");
+            String customMessage = client.post().getString("customMessage");
+            String message = customMessage != null && !customMessage.isEmpty() ? customMessage : commonMessage;
 
             if (user != null && !user.isEmpty() && message != null && !message.isEmpty()) {
-                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/api/alert?user=" + user + "&message=" + message);
-                return;
+                String checkName = HousekeepingPlayerDao.CheckDBName(user);
+
+                if (!checkName.equalsIgnoreCase(user)) {
+                    client.session().set("alertColour", "danger");
+                    client.session().set("alertMessage", "The user does not exist");
+                } else {
+                    client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/api/alert?user=" + user + "&message=" + message);
+                    return;
+                }
             } else {
                 client.session().set("alertColour", "danger");
-                client.session().set("alertMessage", "Please enter a valid values");
+                client.session().set("alertMessage", "Please fill and enter all valid values");
             }
         }
 
@@ -122,6 +132,7 @@ public class HousekeepingRCONController {
         tpl.set("housekeepingManager", HousekeepingManager.getInstance());
 
         tpl.set("pageName", "User Alert");
+        tpl.set("CFHTopics", HousekeepingCommandsDao.getCFHTopics());
         tpl.set("remoteAlertLogs", HousekeepingCommandsDao.RemoteAlertLogs(currentPage, sortBy));
         tpl.set("nextremoteAlertLogs", HousekeepingCommandsDao.RemoteAlertLogs(currentPage + 1, sortBy));
         tpl.set("previousremoteAlertLogs", HousekeepingCommandsDao.RemoteAlertLogs(currentPage - 1, sortBy));
