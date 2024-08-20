@@ -1,11 +1,8 @@
 <nav class="header-box">
         <!--<button class="btn btn-primary" id="menu-toggle">Toggle Menu</button>-->
-		<text style="padding-inline: inherit;">Logged in as: <b>{{ playerDetails.getName() }}</b> (Prevous login at {{ playerDetails.getLastLoginTimeHK() }} from {{ playerDetails.getLastLoginIPHK() }})</text>	                                  
-            
-              <a class="header-links" href="{{ site.sitePath }}/ase/housekeeping/es/logout">Logout</a>
-			  
-			  <a class="header-links" href="{{ site.sitePath }}">Secure login to {{ site.siteName }}</a>
-            
+		<text style="padding-inline: inherit;">Logged in as: <b>{{ playerDetails.getName() }}</b> (Prevous login at {{ playerDetails.getLastLoginTimeHK() }} from {{ playerDetails.getLastLoginIPHK() }}) <a class="" href="{{ site.sitePath }}/ase/housekeeping/es/logout" style="color:#404eb2;">Logout</a></text>
+        			<a class="header-links" href="{{ site.sitePath }}">Secure login to {{ site.siteName }}</a>
+
             <!-- 
 			<li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
