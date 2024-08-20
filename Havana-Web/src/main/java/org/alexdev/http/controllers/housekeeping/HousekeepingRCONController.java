@@ -181,23 +181,21 @@ public class HousekeepingRCONController {
                 client.session().set("alertMessage", "Please enter a valid username");
             }
         } else if ("ban".equals(action)) {
-            if (client.post().contains("username") && client.post().contains("alertMessage")) {
-                String username = client.session().getString("badguy");
-                String commonMessage = client.post().getString("commonMessage");
-                String customMessage = client.post().getString("customMessage");
-                String alertMessage = customMessage != null && !customMessage.isEmpty() ? customMessage : commonMessage;
-                String notes = client.post().getString("notes");
-                int banSeconds = client.post().getInt("banSeconds");
-                boolean doBanMachine = client.post().getBoolean("doBanMachine");
-                boolean doBanIP = client.post().getBoolean("doBanIP");
+            String username = client.session().getString("badguy");
+            String commonMessage = client.post().getString("commonMessage");
+            String customMessage = client.post().getString("customMessage");
+            String alertMessage = customMessage != null && !customMessage.isEmpty() ? customMessage : commonMessage;
+            String notes = client.post().getString("notes");
+            int banSeconds = client.post().getInt("banSeconds");
+            boolean doBanMachine = client.post().getBoolean("doBanMachine");
+            boolean doBanIP = client.post().getBoolean("doBanIP");
 
-                if (username != null && !username.isEmpty()) {
-                    client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/api/ban?username=" + username + "&alertMessage=" + alertMessage + "&notes=" + notes + "&banSeconds=" + banSeconds + "&doBanMachine=" + doBanMachine + "&doBanIP=" + doBanIP);
-                    return;
-                } else {
-                    client.session().set("alertColour", "danger");
-                    client.session().set("alertMessage", "Please enter a valid username");
-                }
+            if (username != null && !username.isEmpty()) {
+                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/api/ban?username=" + username + "&alertMessage=" + alertMessage + "&notes=" + notes + "&banSeconds=" + banSeconds + "&doBanMachine=" + doBanMachine + "&doBanIP=" + doBanIP);
+                return;
+            } else {
+                client.session().set("alertColour", "danger");
+                client.session().set("alertMessage", "Please enter a valid username");
             }
         }
 
