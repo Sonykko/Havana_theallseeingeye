@@ -65,7 +65,7 @@
 								</select>					
 							</td>
 							<td>
-								<textarea id="extraInfo" name="extraInfo"></textarea>
+								<textarea id="notes" name="notes"></textarea>
 							</td>
 							<td class="form-group" style="margin-bottom: 0;">
 								<label style="display: flex;align-items: center;user-select: none;margin-bottom: 0;">
