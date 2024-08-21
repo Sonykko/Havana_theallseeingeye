@@ -650,7 +650,8 @@ pre code {
 .container-fluid {
   width: 100%;
   padding-right: 15px;
-  padding-left: 15px;
+  /*padding-left: 15px;*/
+  padding-left: 50px;
   margin-right: auto;
   margin-left: auto;
 }
@@ -5751,10 +5752,13 @@ a.badge-dark:focus, a.badge-dark.focus {
   display: flex;
   -webkit-box-orient: vertical;
   -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
   padding-left: 0;
   margin-bottom: 0;
+  padding-bottom: 5px;
+  padding-top: 5px;
+  line-height: 18px;
 }
 
 .list-group-item-action {
@@ -11105,22 +11109,28 @@ a.list-group-item-danger.active:hover, a.list-group-item-danger.active:focus {
 
 .subnav-box {
 	margin-top: 30px;
-    width: 240px;
+    /*width: 240px;*/
+    width: 270px;
     border: solid;
     margin-left: 10px;
-    border-width: 2px;
+    border-width: 1px;
     height: fit-content;
     margin-bottom: -10px;
 }
 
 .subnav-header {
 	border-bottom: solid;
-    border-width: 2px;
-    border-color: black;
-    background-color: #0066cc;
-    color: #FFF;
-    font-weight: bold;
-    padding-left: 5px;
+	border-width: 1px;
+	border-color: black;
+	background-color: #0066cc;
+	color: #FFF;
+	font-weight: bold;
+	padding-left: 5px;
+	/*padding-top: 3px;
+	padding-bottom: 2px;*/
+    height: 30px;
+    display: flex;
+    align-items: center;	
 }
 
 .subnav-link {
@@ -11131,10 +11141,11 @@ a.list-group-item-danger.active:hover, a.list-group-item-danger.active:focus {
 
 .subnav-time {
 	margin-top: 30px;
-    width: 240px;
+    /*width: 240px;*/
+    width: 270px;
     border: solid;
     margin-left: 10px;
-    border-width: 2px;
+    border-width: 1px;
     height: fit-content;
     margin-bottom: 15px;
 	display: table-caption;	
@@ -11158,7 +11169,7 @@ a.list-group-item-danger.active:hover, a.list-group-item-danger.active:focus {
 	margin-left: 15px;
 	display: flex;
 	flex-direction: column;
-	width: 240px;
+	width: 270px;
 	margin-bottom: 15px;
 }
 
@@ -11420,7 +11431,7 @@ a.list-group-item-danger.active:hover, a.list-group-item-danger.active:focus {
 	width: 650px;
 }
 
-.ban__tool #extraInfo {
+.ban__tool #notes {
 	height: 100px;
 	width: 400px;
 	overflow-y: scroll;

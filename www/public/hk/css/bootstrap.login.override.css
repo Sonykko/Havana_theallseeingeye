@@ -53,8 +53,9 @@
 	margin-bottom: 1rem;
 }
 .hkw-text {
-	width: 350px;
+	width: 360px;
 	margin: 10px;
+	line-height: 17px;
 }
 .hkw-end{
 	margin-bottom: 0px;
@@ -83,8 +84,11 @@
     border-width: 0;
     font-weight: bold;
     display: block;
-    border-bottom-width: 2px;
+    border-bottom-width: 1px;
     /* border-left-width: 2px; */
+	height: 30px;
+    display: flex;
+    align-items: center;
 }
 .login-box {
     /* border-style: solid; */
@@ -96,6 +100,6 @@
 }
 .login-data-box {
 	border: solid;
-	border-width: 2px;
+	border-width: 1px;
 	margin: 10px;
 }
