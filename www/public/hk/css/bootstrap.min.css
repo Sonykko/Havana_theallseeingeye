@@ -651,7 +651,7 @@ pre code {
   width: 100%;
   padding-right: 15px;
   /*padding-left: 15px;*/
-  padding-left: 50px;
+  padding-left: 55px;
   margin-right: auto;
   margin-left: auto;
 }
@@ -11110,7 +11110,7 @@ a.list-group-item-danger.active:hover, a.list-group-item-danger.active:focus {
 .subnav-box {
 	margin-top: 30px;
     /*width: 240px;*/
-    width: 270px;
+    width: 280px;
     border: solid;
     margin-left: 10px;
     border-width: 1px;
@@ -11142,7 +11142,7 @@ a.list-group-item-danger.active:hover, a.list-group-item-danger.active:focus {
 .subnav-time {
 	margin-top: 30px;
     /*width: 240px;*/
-    width: 270px;
+    width: 280px;
     border: solid;
     margin-left: 10px;
     border-width: 1px;
@@ -11169,7 +11169,7 @@ a.list-group-item-danger.active:hover, a.list-group-item-danger.active:focus {
 	margin-left: 15px;
 	display: flex;
 	flex-direction: column;
-	width: 270px;
+	width: 280px;
 	margin-bottom: 15px;
 }
 
