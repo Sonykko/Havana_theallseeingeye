@@ -19,8 +19,8 @@
  <div class="subnav-header">Rooms tools</div>
       <div class="list-group list-group-flush" style="padding-left: 2px;">
 			{% if housekeepingManager.hasPermission(playerDetails.getRank(), 'room_ads') %}
-			<text><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/campaign_management/room_ads/create?id=" class="subnav-link">Create room advertisement</a></text>
-			<text><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/campaign_management/room_ads" class="subnav-link">Edit & delete rooms advertisements</a></text>
+			<text><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/campaign_management/room_ads/create?id=" class="subnav-link">Create room ads</a></text>
+			<text><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/campaign_management/room_ads" class="subnav-link">Edit & delete rooms ads</a></text>
 			{% endif %}	
 			{% if housekeepingManager.hasPermission(playerDetails.getRank(), 'room_badges') %}
 			<text><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/campaign_management/room_badges/create?id=" class="subnav-link">Create room badge</a></text>
@@ -32,7 +32,7 @@
 	
 {% if housekeepingManager.hasPermission(playerDetails.getRank(), 'infobus') %}
 	<div class="subnav-box">
-<div class="subnav-header">Infobus</div>
+<div class="subnav-header">Info bus</div>
       <div class="list-group list-group-flush" style="padding-left: 2px;">        
 			<text><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/campaign_management/infobus_polls/create" class="subnav-link">Create infobus poll</a></text>
 			<text><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/campaign_management/infobus_polls" class="subnav-link">Manage infobus polls & doors</a></text>		
