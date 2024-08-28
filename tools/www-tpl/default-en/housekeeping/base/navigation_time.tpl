@@ -1,4 +1,5 @@
-
+	{% include "housekeeping/base/footer.tpl" %}	
+	
 	<div class="subnav-time"><b>Local time:</b>
 	<div id="current_date"></p>
 			<script>
@@ -18,5 +19,3 @@
           
     </script>
 	</div>
-	
-	{% include "housekeeping/base/footer.tpl" %}	

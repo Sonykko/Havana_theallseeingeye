@@ -654,6 +654,7 @@ pre code {
   padding-left: 55px;
   margin-right: auto;
   margin-left: auto;
+  margin-top: 15px;
 }
 
 .row {
@@ -5754,7 +5755,7 @@ a.badge-dark:focus, a.badge-dark.focus {
   -webkit-box-direction: normal;
   -ms-flex-direction: column;
   flex-direction: column;
-  padding-left: 0;
+  padding-left: 0 !important;
   margin-bottom: 0;
   padding-bottom: 5px;
   padding-top: 5px;
@@ -8613,7 +8614,7 @@ button.bg-dark:focus {
 .mt-4,
 .my-4 {
   margin-top: 1.5rem !important;
-  margin-top: 1.5rem !important;
+  padding-top: 5px;
   font-weight: bold;
   /*margin-bottom: 0;*/ 
 }
@@ -11055,7 +11056,7 @@ a.list-group-item-danger.active:hover, a.list-group-item-danger.active:focus {
 	display: flex;
     float: right;
     text-decoration: underline;
-    color: #404eb2;
+    /*color: #404eb2;*/
 	padding-inline-end: inherit;
 }
 
@@ -11078,6 +11079,7 @@ a.list-group-item-danger.active:hover, a.list-group-item-danger.active:focus {
     justify-content: center;
     min-width: 209px;
     text-decoration: underline;
+	font-weight: bold;
 }
 
 .nav-links.active,
@@ -11115,7 +11117,7 @@ a.list-group-item-danger.active:hover, a.list-group-item-danger.active:focus {
     margin-left: 10px;
     border-width: 1px;
     height: fit-content;
-    margin-bottom: -10px;
+    margin-bottom: -12px;
 }
 
 .subnav-header {
@@ -11125,7 +11127,7 @@ a.list-group-item-danger.active:hover, a.list-group-item-danger.active:focus {
 	background-color: #0066cc;
 	color: #FFF;
 	font-weight: bold;
-	padding-left: 5px;
+	padding-left: 6px;
 	/*padding-top: 3px;
 	padding-bottom: 2px;*/
     height: 30px;
@@ -11136,22 +11138,25 @@ a.list-group-item-danger.active:hover, a.list-group-item-danger.active:focus {
 .subnav-link {
     /*text-decoration: underline;
     color: #404eb2;*/
-	padding-left: 2px;
+	padding-left: 6px;
 }
 
 .subnav-time {
-	margin-top: 30px;
+	/*! margin-top: 30px; */
     /*width: 240px;*/
     width: 280px;
     border: solid;
     margin-left: 10px;
     border-width: 1px;
     height: fit-content;
-    margin-bottom: 15px;
+    margin-bottom: 17px;
 	display: table-caption;	
 	color: #000;
     border-color: black;
     padding-left: 2px;
+	padding: 5px;
+	line-height: 17px;
+	opacity: 0.6;
 }
 
 .page-content {
@@ -11166,11 +11171,12 @@ a.list-group-item-danger.active:hover, a.list-group-item-danger.active:focus {
 }
 
 .footer {
-	margin-left: 15px;
+	margin-left: 10px;
 	display: flex;
 	flex-direction: column;
 	width: 280px;
-	margin-bottom: 15px;
+	margin-bottom: 12px;
+	margin-top: 24px;
 }
 
 .footer a {
