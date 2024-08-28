@@ -52,8 +52,8 @@ This is a project to recreate the supossed "Hobbanet" or theallseeingeye Habbo H
 # Screenshots
 
 ![image](https://i.imgur.com/Zi0LTM6.png)
-![image](https://i.imgur.com/CfeY6qy.png)
-![image](https://i.imgur.com/wElV219.png)
+![image](https://i.imgur.com/4fhQqSu.png)
+![image](https://i.imgur.com/UbveNuq.png)
 ![image](https://i.imgur.com/8IWhvCD.gif)
 
 # Download
