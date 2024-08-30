@@ -42,6 +42,7 @@ CREATE TABLE `bans_reasons` (
 
 CREATE TABLE `cfh_logs` (
   `cfh_id` int(11) NOT NULL,
+  `user_id` int(11) DEFAULT NULL, 
   `user` varchar(255) DEFAULT NULL,
   `room_id` int(11) DEFAULT NULL,
   `room` varchar(255) DEFAULT NULL,
