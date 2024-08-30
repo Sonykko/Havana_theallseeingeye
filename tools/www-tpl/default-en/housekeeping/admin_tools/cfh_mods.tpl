@@ -19,25 +19,25 @@
             <table class="table table-striped">
               <thead>
                 <tr>
-                  <th>Habbo</th>
-				  <th>Created Date</th>
-				  <th>Reason for help</th>
-				  <th>Room</th>
-				  <th>Status</th>			
+                  <th>Caller</th>
+				  <th>Time</th>
+				  <th>Room name</th>
+				  <th>Message</th>
+				  <th></th>			
                 </tr>
               </thead>
               <tbody>
 			    {% set num = 1 %}
 				{% for cfhlog in cfhlogs %}
                 <tr>
-				  <td><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/chatlog.action?chatId={{ cfhlog.userId }}" style="color: black;"><b><u>{{ cfhlog.username }}</u></b> (id: {{ cfhlog.userId }})</a></td>
-				  <td>{{ cfhlog.createdTime }}</td>				  
-				  <td>{{ cfhlog.reason }}</td>
-				  <td>{{ cfhlog.roomName }} (id: {{ cfhlog.roomId }})</td>
+				  <td><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/chatlog.action?chatId={{ cfhlog.userId }}">{{ cfhlog.username }} (id: {{ cfhlog.userId }})</a></td>
+				  <td>{{ cfhlog.createdTime }}</td>	
+				  <td>{{ cfhlog.roomName }} (id: {{ cfhlog.roomId }})</td>				  
+				  <td>{{ cfhlog.reason }}</td>				  
 				  {% if cfhlog.status != "1" %}
-				  <td style="color:red;display:flex;flex-direction:column;"><b>Not Picked</b><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/api/cfh.pick?cryId={{ cfhlog.cryId }}&moderator={{ playerDetails.getName() }}"><button>Pick Up</button></a></td>
+				  <td><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/api/cfh.pick?cryId={{ cfhlog.cryId }}">Pick Up</a></td>
 				  {% else %}
-				  <td style="color:limegreen;"><b>Picked Up</b></td>
+				  <td>-</td>
 				  {% endif %}
                 </tr>
 			   {% set num = num + 1 %}

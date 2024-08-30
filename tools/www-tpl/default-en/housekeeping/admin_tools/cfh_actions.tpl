@@ -23,14 +23,14 @@
 				</div>
 				{% else %}
                 <tr>
-                  <td style="display: flex;flex-direction: column;">
-					  <text>- <b>Moderator:</b> {% if cfhlog.status != "1" %}-{% else %}{{ cfhlog.moderator }}{% endif %}</text>
-					  <text>- <b>Habbo:</b> <a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/chatlog.action?chatId={{ cfhlog.userId }}" style="color: black;"><u>{{ cfhlog.username }}</u> (id: {{ cfhlog.userId }})</a></text>
-					  <text>- <b>Created Date:</b> {{ cfhlog.createdTime }}</text>
+                  <td style="display: flex;flex-direction: column;">					  
+					  <text>- <b>Caller:</b> <a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/chatlog.action?chatId={{ cfhlog.userId }}"><u>{{ cfhlog.username }}</u> (id: {{ cfhlog.userId }})</a></text>
+					  <text>- <b>Time:</b> {{ cfhlog.createdTime }}</text>
+					  <text>- <b>Room name:</b> {{ cfhlog.roomName }} (id: {{ cfhlog.roomId }})</text>
+					  <text>- <b>Reason for action:</b> {{ cfhlog.reason }}</text>					  
+					  <text>- <b>Picked by:</b> {% if cfhlog.status != "1" %}-{% else %}{{ cfhlog.moderator }}{% endif %}</text>
+					  <text>- <b>Time pick up:</b> {% if cfhlog.status != "1" %}-{% else %}{{ cfhlog.pickedTime }}{% endif %}</text>	
 					  <text>- <b>Status:</b> {% if cfhlog.status == "1" %}Picked Up{% else %}{{ cfhlog.action }}{% endif %}</text>
-					  <text>- <b>Pick Up Date:</b> {% if cfhlog.status != "1" %}-{% else %}{{ cfhlog.pickedTime }}{% endif %}</text>
-					  <text>- <b>Reason for action:</b> {{ cfhlog.reason }}</text>
-					  <text>- <b>Room:</b> {{ cfhlog.roomName }} (id: {{ cfhlog.roomId }})</text>
 				  </td>
 				  <td>
 					<form method="post">
