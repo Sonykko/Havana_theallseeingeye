@@ -53,7 +53,9 @@ CREATE TABLE `cfh_logs` (
   `is_deleted` varchar(255) DEFAULT NULL,
   `cry_id` varchar(255) DEFAULT NULL,
   `moderator` varchar(255) DEFAULT NULL,
-  `picked_time` varchar(255) DEFAULT NULL
+  `picked_time` varchar(255) DEFAULT NULL,
+  `action` varchar(255) DEFAULT NULL,
+  `message_to_user` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
