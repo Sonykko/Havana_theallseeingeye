@@ -40,7 +40,7 @@ public class HousekeepingBannersController {
 
             if (orderIdBanner > 0) {
                 HousekeepingPromotionDao.createBanner(textBanner, createBanner, urlBanner, statusBanner, advancedBanner, orderIdBanner);
-                HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Ha creado un Ad Banner. URL: " + client.request().uri(), client.getIpAddress());
+                HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Created Ad Banner. URL: " + client.request().uri(), client.getIpAddress());
 
                 client.session().set("alertColour", "success");
                 client.session().set("alertMessage", "The Banner has been successfully created");
@@ -59,7 +59,7 @@ public class HousekeepingBannersController {
 
             if (bannerId > 0) {
                 HousekeepingPromotionDao.deleteBanner(bannerId);
-                HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Ha eliminado el Ad Banner con la ID " + bannerId + ". URL: " + client.request().uri(), client.getIpAddress());
+                HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Deleted Ad Banner with the ID " + bannerId + ". URL: " + client.request().uri(), client.getIpAddress());
 
                 client.session().set("alertColour", "success");
                 client.session().set("alertMessage", "The Banner has been successfully deleted");
@@ -101,7 +101,7 @@ public class HousekeepingBannersController {
 
             if (orderIdBanner > 0 && bannerId > 0) {
                 HousekeepingPromotionDao.saveBanner(textBanner, saveBanner, urlBanner, statusBanner, advancedBanner, orderIdBanner, bannerId);
-                HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Ha editado el Ad Banner con la ID " + bannerId + ". URL: " + client.request().uri(), client.getIpAddress());
+                HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Edit Ad Banner with the ID " + bannerId + ". URL: " + client.request().uri(), client.getIpAddress());
 
                 client.session().set("alertColour", "success");
                 client.session().set("alertMessage", "The Banner has been successfully saved");
