@@ -34,6 +34,7 @@ This is a project to recreate the supossed "Hobbanet" or theallseeingeye Habbo H
   - User create (original feature)
   - Wordfilter tool
   - Voucher codes tool
+  - Hobba applications
   - Check Hobba applicant tool
   - Rank manager
   - Trusted person admin
