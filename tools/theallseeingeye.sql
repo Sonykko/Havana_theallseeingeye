@@ -202,6 +202,15 @@ INSERT INTO `bans_reasons` (`id`, `sanctionReasonId`, `sanctionReasonValue`, `sa
 -- --------------------------------------------------------
 
 --
+-- Volcado de datos para la tabla `cms_banners`
+--
+
+INSERT INTO `cms_banners` (`id`, `text`, `banner`, `url`, `status`, `advanced`, `order_id`) VALUES
+(1, 'Keep it (un)real!', 'https://i.imgur.com/6JN4Vwu.gif', 'https://forum.ragezone.com/members/861739.html', '1', '0', 1);
+
+-- --------------------------------------------------------
+
+--
 -- Volcado de datos para la tabla `cms_hot_campaigns`
 --
 
