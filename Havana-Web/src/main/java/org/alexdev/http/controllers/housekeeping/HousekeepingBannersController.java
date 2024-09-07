@@ -95,7 +95,7 @@ public class HousekeepingBannersController {
             String orderIdBannerStr = client.post().getString("orderIdBanner");
             int orderIdBanner = StringUtils.isNumeric(orderIdBannerStr) ? Integer.parseInt(orderIdBannerStr) : 0;
 
-            String bannerIdStr = client.post().getString("edit");
+            String bannerIdStr = client.get().getString("edit");
             int bannerId = StringUtils.isNumeric(bannerIdStr) ? Integer.parseInt(bannerIdStr) : 0;
 
 
