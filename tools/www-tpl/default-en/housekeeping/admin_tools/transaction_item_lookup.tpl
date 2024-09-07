@@ -6,7 +6,7 @@
      <h2 class="mt-4">Transaction Item Lookup</h2>
 		{% include "housekeeping/base/alert.tpl" %}
 		<br>
-		{% include "housekeeping/transaction/search_results.tpl" %}
+		{% include "housekeeping/admin_tools/transaction/search_results.tpl" %}
       </div>
     </div>
   </div>
@@ -20,3 +20,5 @@
   </script>
 </body>
 </html>
+
+{% include "housekeeping/base/footer.tpl" %}
