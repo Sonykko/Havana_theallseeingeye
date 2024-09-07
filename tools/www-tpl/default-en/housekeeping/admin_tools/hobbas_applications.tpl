@@ -3,38 +3,9 @@
     {% set bansActive = " active " %}
     {% include "housekeeping/base/navigation.tpl" %}
     {% include "housekeeping/base/navigation_admin_tools.tpl" %}
-    <h2 class="mt-4">Check Hobba applicant</h2>
-    <p>With this tool you can check if a user is qualified to become a Hobba and if not, why.</p>
-    <form class="table-responsive col-md-4" method="post" style="padding-left: 0;">
-        <div class="form-group">
-            <label for="userName">{{ site.siteName }} name</label>
-            <input type="text" name="userName" class="form-control" id="userName" placeholder="Enter here the {{ site.siteName }} name..." value="" />
-        </div>
-        <div class="form-group">
-            <text>OR</text>
-        </div>
-        <div class="form-group">
-            <label for="userID">User ID/label>
-            <input type="text" name="userID" class="form-control" id="userID" placeholder="Enter here the user ID..." value="" />
-        </div>
-        <button type="submit">Search</button>
-    </form>
-	
-    {% if hasReasons %}
-	<hr>
-	{% include "housekeeping/base/alert.tpl" %}
-            {% for reason in reasons %}
-                <p>{{ reason }}</p>
-            {% endfor %}
-		{{ finalMessage }}
-	<hr>
-	{% else %}
-	{% include "housekeeping/base/alert.tpl" %}
-	{{ finalMessage }}
-    {% endif %}		
-
-    <h3 class="mt-4">View Hobba applications form logs</h3>
-    <p>Here you can see the most recent logs of users Hobba applications.</p>
+    <h2 class="mt-4">Hobba applications</h2>
+    <p>Here you can see and admin the users Hobba applications form logs.</p>
+	{% include "housekeeping/base/alert.tpl" %}	
 	<div class="pagination-buttons-box">
     {% if nexthobbasFormLogs|length > 0 %}
         {% set ourNextPage = page + 1 %}
@@ -68,7 +39,16 @@
                     <td>{{ HobbasFormsList.firstname }}</td>
                     <td>{{ HobbasFormsList.lastname }}</td>
                     <td>{{ HobbasFormsList.timestamp }}</td>
-                    <td>{{ HobbasFormsList.picked_up }}</td>
+                    <td>
+					{% if HobbasFormsList.picked_up == '1' %}
+					Picked
+					{% else %}
+						<form method="post">
+							<input type="hidden" id="logId" name="logId" value="{{ HobbasFormsList.id }}" />
+							<button type="submit">Pick Up</button>
+						</form>					
+					{% endif%}
+					</td>
                 </tr>
                 {% set num = num + 1 %}
                 {% endfor %}

@@ -122,7 +122,10 @@
  <div class="subnav-header">Hobba management tools</div>
       <div class="list-group list-group-flush" style="padding-left: 2px;">        
 			{% if housekeepingManager.hasPermission(playerDetails.getRank(), 'bans') %}
-			<text><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/hobbas" class="subnav-link">Check Hobba applicant</a></text>
+			<text><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/hobbas/applications" class="subnav-link">Hobba applications</a></text>
+			{% endif %}	  
+			{% if housekeepingManager.hasPermission(playerDetails.getRank(), 'bans') %}
+			<text><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/hobbas/check" class="subnav-link">Check Hobba applicant</a></text>
 			{% endif %}
       </div>
     </div>

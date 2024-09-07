@@ -16,13 +16,13 @@ import java.util.List;
 import java.util.Map;
 
 public class HousekeepingHobbasController {
-    public static void hobbas(WebConnection client) {
+    public static void hobbas_check(WebConnection client) {
         if (!client.session().getBoolean(SessionUtil.LOGGED_IN_HOUSKEEPING)) {
             client.redirect("/" + Routes.HOUSEKEEPING_DEFAULT_PATH);
             return;
         }
 
-        Template tpl = client.template("housekeeping/admin_tools/hobbas");
+        Template tpl = client.template("housekeeping/admin_tools/hobbas_check");
         tpl.set("housekeepingManager", HousekeepingManager.getInstance());
 
         PlayerDetails playerDetails = (PlayerDetails) tpl.get("playerDetails");
@@ -31,12 +31,6 @@ public class HousekeepingHobbasController {
             client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/permissions");
             HousekeepingLogsDao.logHousekeepingAction("BAD_PERMISSIONS", playerDetails.getId(), playerDetails.getName(), "URL: " + client.request().uri(), client.getIpAddress());
             return;
-        }
-
-        int currentPage = 0;
-
-        if (client.get().contains("page")) {
-            currentPage = Integer.parseInt(client.get().getString("page"));
         }
 
         String finalMessage = "";
@@ -94,6 +88,55 @@ public class HousekeepingHobbasController {
         tpl.set("hasReasons", hasReasons);
         tpl.set("reasons", reasons);
         tpl.set("pageName", "Check Hobba applicant");
+        tpl.render();
+
+        client.session().delete("alertMessage");
+    }
+
+    public static void hobbas_applications(WebConnection client) {
+        if (!client.session().getBoolean(SessionUtil.LOGGED_IN_HOUSKEEPING)) {
+            client.redirect("/" + Routes.HOUSEKEEPING_DEFAULT_PATH);
+            return;
+        }
+
+        Template tpl = client.template("housekeeping/admin_tools/hobbas_applications");
+        tpl.set("housekeepingManager", HousekeepingManager.getInstance());
+
+        PlayerDetails playerDetails = (PlayerDetails) tpl.get("playerDetails");
+
+        if (!HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "bans")) {
+            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/permissions");
+            HousekeepingLogsDao.logHousekeepingAction("BAD_PERMISSIONS", playerDetails.getId(), playerDetails.getName(), "URL: " + client.request().uri(), client.getIpAddress());
+            return;
+        }
+
+        int currentPage = 0;
+
+        if (client.get().contains("page")) {
+            currentPage = Integer.parseInt(client.get().getString("page"));
+        }
+
+        if (client.post().contains("logId")) {
+            String logId = client.post().getString("logId");
+
+            if (StringUtils.isNumeric(logId) && Integer.parseInt(logId) > 0) {
+                HousekeepingHobbasDao.updateApplication(Integer.parseInt(logId));
+
+                client.session().set("alertColour", "success");
+                client.session().set("alertMessage", "The Hobba application has been picked up");
+
+                HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Has picked up the Hobba application with the ID: " + logId + ". URL: " + client.request().uri(), client.getIpAddress());
+
+                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/hobbas/applications");
+            } else {
+                client.session().set("alertColour", "danger");
+                client.session().set("alertMessage", "Please enter a valid Hobba application form ID");
+
+                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/hobbas/applications");
+            }
+        }
+
+        tpl.set("pageName", "Hobba applications");
         tpl.set("hobbasFormLogs", HousekeepingHobbasDao.getLogs(currentPage));
         tpl.set("nexthobbasFormLogs", HousekeepingHobbasDao.getLogs(currentPage + 1));
         tpl.set("previoushobbasFormLogs", HousekeepingHobbasDao.getLogs(currentPage - 1));

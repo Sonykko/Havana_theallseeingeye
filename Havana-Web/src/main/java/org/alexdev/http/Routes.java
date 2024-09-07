@@ -334,7 +334,8 @@ public class Routes {
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/mass_unban", HousekeepingRCONController::massUnbanUserRCON);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/vouchers", HousekeepingCoinsController::vouchers);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/wordfilter", HousekeepingWordfilterController::wordfilter);
-        RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/hobbas", HousekeepingHobbasController::hobbas);
+        RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/hobbas/check", HousekeepingHobbasController::hobbas_check);
+        RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/hobbas/applications", HousekeepingHobbasController::hobbas_applications);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/give_rank", HousekeepingRanksController::giveRank);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/trusted_person", HousekeepingTrustedPersonController::trusted_person);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/stickie_viewer", HousekeepingStickieNotesController::stickie_viewer);
