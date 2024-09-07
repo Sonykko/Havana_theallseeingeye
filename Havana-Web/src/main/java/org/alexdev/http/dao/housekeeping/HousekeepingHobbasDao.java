@@ -5,7 +5,6 @@ import org.alexdev.havana.dao.Storage;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -70,6 +69,7 @@ public class HousekeepingHobbasDao {
         try {
             sqlConnection = Storage.getStorage().getConnection();
 
+            // Si el input es un userName, buscar el userID
             if (!isNumeric(user)) {
                 String queryUserID = "SELECT id FROM users WHERE username = ?";
                 preparedStatement = Storage.getStorage().prepare(queryUserID, sqlConnection);
@@ -87,6 +87,7 @@ public class HousekeepingHobbasDao {
                 Storage.closeSilently(preparedStatement);
             }
 
+            // Obtener el username basado en el userID
             String queryUsername = "SELECT username FROM users WHERE id = ?";
             preparedStatement = Storage.getStorage().prepare(queryUsername, sqlConnection);
             preparedStatement.setString(1, user);
@@ -103,6 +104,7 @@ public class HousekeepingHobbasDao {
             Storage.closeSilently(resultSet);
             Storage.closeSilently(preparedStatement);
 
+            // Comprobar si el usuario ya es Hobba
             String queryRank = "SELECT rank, created_at FROM users WHERE id = ?";
             preparedStatement = Storage.getStorage().prepare(queryRank, sqlConnection);
             preparedStatement.setString(1, user);
@@ -133,7 +135,8 @@ public class HousekeepingHobbasDao {
             Storage.closeSilently(resultSet);
             Storage.closeSilently(preparedStatement);
 
-            String queryApplication = "SELECT COUNT(*) AS count FROM hobbas_forms WHERE habboname = ?";
+            // Buscar en hobbas_forms para comprobar si hay una aplicación
+            String queryApplication = "SELECT COUNT(*) AS count FROM hobbas_forms WHERE habboname = ? AND picked_up = 0";
             preparedStatement = Storage.getStorage().prepare(queryApplication, sqlConnection);
             preparedStatement.setString(1, username);
             resultSet = preparedStatement.executeQuery();
@@ -147,6 +150,7 @@ public class HousekeepingHobbasDao {
             Storage.closeSilently(resultSet);
             Storage.closeSilently(preparedStatement);
 
+            // Buscar en users_bans por el userID (banned_value)
             String queryBans = "SELECT COUNT(*) AS count FROM users_bans WHERE banned_value = ?";
             preparedStatement = Storage.getStorage().prepare(queryBans, sqlConnection);
             preparedStatement.setString(1, user);
@@ -161,6 +165,8 @@ public class HousekeepingHobbasDao {
             Storage.closeSilently(resultSet);
             Storage.closeSilently(preparedStatement);
 
+            // Realizar las demás comprobaciones necesarias
+            // Comprobar cantidad de salas
             String queryRooms = "SELECT COUNT(*) AS count FROM rooms WHERE owner_id = ?";
             preparedStatement = Storage.getStorage().prepare(queryRooms, sqlConnection);
             preparedStatement.setString(1, user);
@@ -175,6 +181,7 @@ public class HousekeepingHobbasDao {
             Storage.closeSilently(resultSet);
             Storage.closeSilently(preparedStatement);
 
+            // Comprobar cantidad de amigos
             String queryBuddies = "SELECT COUNT(*) AS count FROM messenger_friends WHERE to_id = ?";
             preparedStatement = Storage.getStorage().prepare(queryBuddies, sqlConnection);
             preparedStatement.setString(1, user);
@@ -189,6 +196,7 @@ public class HousekeepingHobbasDao {
             Storage.closeSilently(resultSet);
             Storage.closeSilently(preparedStatement);
 
+            // Comprobar la antigüedad del personaje
             String queryCharacterAge = "SELECT TIMESTAMPDIFF(DAY, created_at, NOW()) AS age FROM users WHERE id = ?";
             preparedStatement = Storage.getStorage().prepare(queryCharacterAge, sqlConnection);
             preparedStatement.setString(1, user);
@@ -209,6 +217,29 @@ public class HousekeepingHobbasDao {
         }
 
         return results;
+    }
+
+    public static void updateApplication(int logId) {
+
+        Connection sqlConnection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+
+        try {
+            sqlConnection = Storage.getStorage().getConnection();
+            preparedStatement = Storage.getStorage().prepare("UPDATE hobbas_forms SET picked_up = 1 WHERE id = ?", sqlConnection);
+
+            preparedStatement.setInt(1, logId);
+
+            resultSet = preparedStatement.executeQuery();
+
+        } catch (Exception e) {
+            Storage.logError(e);
+        } finally {
+            Storage.closeSilently(resultSet);
+            Storage.closeSilently(preparedStatement);
+            Storage.closeSilently(sqlConnection);
+        }
     }
 
     private static boolean isNumeric(String str) {
