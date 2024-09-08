@@ -1,4 +1,4 @@
-+{% include "housekeeping/base/header.tpl" %}
+{% include "housekeeping/base/header.tpl" %}
   <body>
 	{% set dashboardActive = " active " %}
 	{% include "housekeeping/base/navigation.tpl" %}
