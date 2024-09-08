@@ -38,10 +38,10 @@ public class HousekeepingStaffPicksController {
         String type = "";
 
         if (client.post().contains("create") && client.post().contains("type")) {
-            pickId = client.post().getInt("create");
-            type = client.post().getString("type");
+            if (!StringUtils.isEmpty(client.post().getString("create")) && StringUtils.isNumeric(client.post().getString("create")) && client.post().getInt("create") > 0) {
+                pickId = client.post().getInt("create");
+                type = client.post().getString("type");
 
-            if (StringUtils.isNumeric(client.post().getString("create")) && client.post().getInt("create") > 0) {
                 HousekeepingPromotionDao.createPickReco(pickId, type, 1);
                 HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Created Staff Pick with the ID " + pickId + " of type " + type + ". URL: " + client.request().uri(), client.getIpAddress());
 
@@ -56,10 +56,10 @@ public class HousekeepingStaffPicksController {
         }
 
         if (client.get().contains("delete") && client.get().contains("type")) {
-            pickId = client.get().getInt("delete");
-            type = client.get().getString("type");
+            if (!StringUtils.isEmpty(client.get().getString("delete")) && StringUtils.isNumeric(client.get().getString("delete")) && client.get().getInt("delete") > 0) {
+                pickId = client.get().getInt("delete");
+                type = client.get().getString("type");
 
-            if (StringUtils.isNumeric(client.get().getString("delete")) && client.get().getInt("delete") > 0) {
                 HousekeepingPromotionDao.deletePickReco(pickId, type, 1);
                 HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Deleted Staff Pick with the ID " + pickId + " of type " + type + ". URL: " + client.request().uri(), client.getIpAddress());
 
@@ -75,31 +75,36 @@ public class HousekeepingStaffPicksController {
         }
 
         if (client.get().contains("edit") && client.get().contains("type")) {
-            pickId = client.get().getInt("edit");
-            type = client.get().getString("type");
+            if (!StringUtils.isEmpty(client.get().getString("edit")) && StringUtils.isNumeric(client.get().getString("edit")) && client.get().getInt("edit") > 0) {
+                pickId = client.get().getInt("edit");
+                type = client.get().getString("type");
 
-            List<Map<String, Object>> staffPicksListRoomGroupEdit = HousekeepingPromotionDao.EditPickReco(pickId, type, 1);
+                List<Map<String, Object>> staffPicksListRoomGroupEdit = HousekeepingPromotionDao.EditPickReco(pickId, type, 1);
 
-            for (Map<String, Object> staffPickEdit : staffPicksListRoomGroupEdit) {
-                int pickIdRoomGroup = (int) staffPickEdit.get("ID");
-                String typeRoomGroup = (String) staffPickEdit.get("type");
+                for (Map<String, Object> staffPickEdit : staffPicksListRoomGroupEdit) {
+                    int pickIdRoomGroup = (int) staffPickEdit.get("ID");
+                    String typeRoomGroup = (String) staffPickEdit.get("type");
 
-                if ("GROUP".equals(typeRoomGroup)) {
-                    Group group = GroupDao.getGroup(pickIdRoomGroup);
+                    if ("GROUP".equals(typeRoomGroup)) {
+                        Group group = GroupDao.getGroup(pickIdRoomGroup);
 
-                    staffPickEdit.put("name", group.getName());
-                    staffPickEdit.put("description", group.getDescription());
-                    staffPickEdit.put("owner", PlayerDao.getDetails(group.getOwnerId()).getName());
-                    staffPickEdit.put("id", group.getId());
-                    staffPickEdit.put("pickId", pickIdRoomGroup);
-                    staffPickEdit.put("type", typeRoomGroup);
+                        staffPickEdit.put("name", group.getName());
+                        staffPickEdit.put("description", group.getDescription());
+                        staffPickEdit.put("owner", PlayerDao.getDetails(group.getOwnerId()).getName());
+                        staffPickEdit.put("id", group.getId());
+                        staffPickEdit.put("pickId", pickIdRoomGroup);
+                        staffPickEdit.put("type", typeRoomGroup);
+                    }
                 }
-            }
 
-            tpl.set("editingPick", true);
-            tpl.set("EditStaffPick", staffPicksListRoomGroupEdit);
-            client.session().set("editSession", pickId);
-            client.session().set("typeSession", type);
+                tpl.set("editingPick", true);
+                tpl.set("EditStaffPick", staffPicksListRoomGroupEdit);
+                client.session().set("editSession", pickId);
+                client.session().set("typeSession", type);
+            } else {
+                client.session().set("alertColour", "danger");
+                client.session().set("alertMessage", "Please enter a valid Pick ID");
+            }
         } else {
             tpl.set("editingPick", false);
             client.session().set("editSession", pickId);
@@ -107,14 +112,14 @@ public class HousekeepingStaffPicksController {
         }
 
         if (client.post().getString("sid").equals("7")) {
-            pickId = client.session().getInt("editSession");
-            type = client.session().getString("typeSession");
+            if (!StringUtils.isEmpty(client.post().getString("IdSave")) && StringUtils.isNumeric(client.post().getString("IdSave")) && client.post().getInt("IdSave") > 0) {
+                pickId = client.session().getInt("editSession");
+                type = client.session().getString("typeSession");
 
-            String pickIdSave = client.post().getString("IdSave");
-            String typeSave = client.post().getString("typeSave");
-            int isPickedSave = client.post().getInt("isPickedSave");
+                String pickIdSave = client.post().getString("IdSave");
+                String typeSave = client.post().getString("typeSave");
+                int isPickedSave = client.post().getInt("isPickedSave");
 
-            if (StringUtils.isNumeric(client.post().getString("IdSave")) && client.post().getInt("IdSave") > 0) {
                 HousekeepingPromotionDao.SavePickReco(pickIdSave, typeSave, isPickedSave, pickId, type, 1);
                 HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Edited Staff Pick with the ID " + pickId + " (before), " + pickIdSave + "(after). URL: " + client.request().uri(), client.getIpAddress());
 
@@ -124,7 +129,6 @@ public class HousekeepingStaffPicksController {
 
                 return;
             }
-
             client.session().set("alertColour", "danger");
             client.session().set("alertMessage", "Please enter a valid Pick ID");
         }
