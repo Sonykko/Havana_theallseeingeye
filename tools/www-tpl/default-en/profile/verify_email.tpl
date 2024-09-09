@@ -132,8 +132,8 @@ body { behavior: url({{ site.staticContentPath }}/web-gallery/js/csshover.htc); 
 </div>
 <br /><br /><hr>
 <div class="settings-step">
-	<p>We have noticed that you have logged in with your Habbo account. In order to change your email you need to go to the account management settings page. Click the link below to enter the Habbo account change email page.</p>
-	<p><a href="{{ site.sitePath }}/profile?tab=3">Go to the Habbo account change email page</a></p>
+	<p>We have noticed that you have logged in with your {{ site.siteName }} account. In order to change your email you need to go to the account management settings page. Click the link below to enter the {{ site.siteName }} account change email page.</p>
+	<p><a href="{{ site.sitePath }}/profile?tab=3">Go to the {{ site.siteName }} account change email page</a></p>
 </div>
 </div>
 </div>
