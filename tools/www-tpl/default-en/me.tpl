@@ -91,16 +91,16 @@ body { behavior: url({{ site.staticContentPath }}/web-gallery/js/csshover.htc); 
 				</li>
 				<!-- 
 				<li class="{% if gameConfig.getInteger('guides.group.id') == 0 %} last{% endif %}">
-					<a href="{{ site.sitePath }}/beta_client" target="beta_client" onclick="openOrFocusHabbo(this); return false;" style="color: red">Try Beta Habbo!</a>
+					<a href="{{ site.sitePath }}/beta_client" target="beta_client" onclick="openOrFocusHabbo(this); return false;" style="color: red">Try Beta {{ site.siteName }}!</a>
 				</li>
 				{% if gameConfig.getInteger('guides.group.id') > 0 %}
 				<li class=" last">
-					<a href="{{ site.sitePath }}/groups/officialhabboguides">Habbo Guides</a>
+					<a href="{{ site.sitePath }}/groups/officialhabboguides">{{ site.siteName }} Guides</a>
 				</li>
 				{% endif %}
 				-->
 				<li class=" last">
-					<a href="{{ site.sitePath }}/groups/officialhabboguides">Habbo Guides</a>
+					<a href="{{ site.sitePath }}/groups/officialhabboguides">{{ site.siteName }} Guides</a>
 				</li>
 			</ul>
 		</div>
@@ -196,7 +196,7 @@ body { behavior: url({{ site.staticContentPath }}/web-gallery/js/csshover.htc); 
 			<li id="feed-item-hc-reminder">
 				<a href="#" class="remove-feed-item" id="remove-hc-reminder" title="Remove notification">Remove notification</a>
 
-				<div>Your Habbo Club is expired. Do you want to extend your Habbo Club?	</div>
+				<div>Your {{ site.siteName }} Club is expired. Do you want to extend your {{ site.siteName }} Club?	</div>
 				<div class="clearfix">
 					<table width="100px" style="margin-top:6px; margin-left:-12px">
 						<tr>
@@ -340,7 +340,7 @@ body { behavior: url({{ site.staticContentPath }}/web-gallery/js/csshover.htc); 
                         </ul>
                         <script type="text/javascript">
                         L10N.put("roomselection.hide.title", "Hide room selection");
-                        L10N.put("roomselection.old_user.done", "And you\'re done! Habbo Hotel will now open in a new window and you\'ll be redirected to your room in no time!");
+                        L10N.put("roomselection.old_user.done", "And you\'re done! {{ site.siteName }} Hotel will now open in a new window and you\'ll be redirected to your room in no time!");
                         //HabboView.add(RoomSelectionHabblet.initClosableHabblet);
                         </script>	
 					</div>
@@ -394,7 +394,7 @@ body { behavior: url({{ site.staticContentPath }}/web-gallery/js/csshover.htc); 
             <div class="hotcampaign-container">
                 <a href="{{ site.sitePath }}/articles"><img src="{{ site.staticContentPath }}/c_images/hot_campaign_images_gb/hc.gif" align="left" alt="" /></a>
                 <h3>Exclusive Furniture!</h3>
-                <p>Join Habbo Club today and get access to exclusive furniture!</p>
+                <p>Join {{ site.siteName }} Club today and get access to exclusive furniture!</p>
 
                 <p class="link"><a href="https://classichabbo.com/credits/club">Go there &raquo;</a></p>
             </div>
@@ -545,7 +545,7 @@ body { behavior: url({{ site.staticContentPath }}/web-gallery/js/csshover.htc); 
         <h3>Enjoy {{ site.siteName }} more with real life friends!</h3>
 
         <div class="copytext">
-            <p>Invite your friends to Habbo and earn cool badges! Send a link to your friend and ask them to register and activate their email. If they are using Habbo in active way you get rewarded with a badge.</p>
+            <p>Invite your friends to {{ site.siteName }} and earn cool badges! Send a link to your friend and ask them to register and activate their email. If they are using {{ site.siteName }} in active way you get rewarded with a badge.</p>
         </div>
         <div class="invitation-buttons clearfix"> 
             <a  class="new-button" id="getlink-friend-invite-button" href="#"><b>Click for the invitation link!</b><i></i></a>
