@@ -198,7 +198,7 @@
     <div id="linktool-scope">
         <label for="linktool-query-input">Create link to a:</label>
 
-        <input type="radio" name="scope" class="linktool-scope" value="1" checked="checked"/>Habbo        <input type="radio" name="scope" class="linktool-scope" value="2"/>Room        <input type="radio" name="scope" class="linktool-scope" value="3"/>Group&nbsp;
+        <input type="radio" name="scope" class="linktool-scope" value="1" checked="checked"/>{{ site.siteName }}        <input type="radio" name="scope" class="linktool-scope" value="2"/>Room        <input type="radio" name="scope" class="linktool-scope" value="3"/>Group&nbsp;
     </div>
     <div class="linktool-input">
         <input id="linktool-query" type="text" size="30" name="query" value=""/>
