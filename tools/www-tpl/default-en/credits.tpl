@@ -98,7 +98,7 @@ body { behavior: url({{ site.staticContentPath }}/web-gallery/js/csshover.htc); 
 							
 						<script src="{{ site.staticContentPath }}/web-gallery/static/js/credits.js" type="text/javascript"></script>
 <p class="credits-countries-select">
-The good thing about this server is that credits a free, yes, free. You won't have to spend a thing to get credits for building your favourite rooms. Just find out by using the methods below to receive credits.
+The good thing about {{ site.siteName }} is that credits a free, yes, free. You won't have to spend a thing to get credits for building your favourite rooms. Just find out by using the methods below to receive credits.
 </p>
 <ul id="credits-methods">
 	<li id="credits-type-promo">
@@ -297,7 +297,7 @@ PaymentMethodHabblet.init();
 							<h2 class="title">Always Ask Permission First!
 							</h2>
 						<div id="credits-safety" class="box-content credits-info">
-    <div class="credit-info-text clearfix"><img class="credits-image" src="{{ site.sitePath }}/web-gallery/v2/images/credits_permission.png" width="114" height="136"/><p class="credits-text">Always ask permission from your parent or guardian before you buy Habbo Coins. If you do not do this and the payment is later canceled or declined, you will be permanently banned.</p></div>
+    <div class="credit-info-text clearfix"><img class="credits-image" src="{{ site.sitePath }}/web-gallery/v2/images/credits_permission.png" width="114" height="136"/><p class="credits-text">Always ask permission from your parent or guardian before you buy {{ site.siteName }} Coins. If you do not do this and the payment is later canceled or declined, you will be permanently banned.</p></div>
     <p class="credits-text-2">Uh-oh!</p>
 </div>
 	
