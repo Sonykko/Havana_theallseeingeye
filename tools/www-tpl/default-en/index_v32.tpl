@@ -130,9 +130,9 @@
                   <script type="text/javascript">
                      var sb = new SpeechBubble();
                      var i = 0;
-                     sb.add("fp-bubble-"+i++, "frontpage-image", 365, 62, "Create your own Habbo...");
+                     sb.add("fp-bubble-"+i++, "frontpage-image", 365, 62, "Create your own {{ site.siteName }}...");
                      sb.add("fp-bubble-"+i++, "frontpage-image", 372, 159, "...and make new friends!");
-                     sb.add("fp-bubble-"+i++, "frontpage-image", 115, 83, "Join us in Habbo, world\'s biggest virtual world.");
+                     sb.add("fp-bubble-"+i++, "frontpage-image", 115, 83, "Join us in {{ site.siteName }}, world\'s biggest virtual world.");
                      HabboView.add(function() {sb.render();});
                   </script>
                </div>
