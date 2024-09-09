@@ -83,7 +83,7 @@ body { behavior: url({{ site.staticContentPath }}/web-gallery/js/csshover.htc); 
 			</li>
 			{% if gameConfig.getInteger('guides.group.id') > 0 %}
 			<li class=" last">
-				<a href="{{ site.sitePath }}/groups/officialhabboguides">Habbo Guides</a>
+				<a href="{{ site.sitePath }}/groups/officialhabboguides">{{ site.siteName }} Guides</a>
 			</li>
 			{% endif %}
 		</ul>
