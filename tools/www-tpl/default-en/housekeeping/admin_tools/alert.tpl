@@ -4,7 +4,7 @@
     {% include "housekeeping/base/navigation.tpl" %}
     {% include "housekeeping/base/navigation_admin_tools.tpl" %}
 		<h2 class="mt-4">Remote alerting</h2>
-		  <p>This tool allows you to send an alert to a Habbo if you are not in the same room (you don't even need to be in the hotel). You can use this to answer Calls for help that aren't urgent (eg 'How do I dance?' or 'How do I become a Hobba?'), so that you don't have to go to the room.</p>
+		  <p>This tool allows you to send an alert to a {{ site.siteName }} if you are not in the same room (you don't even need to be in the hotel). You can use this to answer Calls for help that aren't urgent (eg 'How do I dance?' or 'How do I become a Hobba?'), so that you don't have to go to the room.</p>
 		  <div class="alert__tool">
 			  <form class="alert__tool__form" method="post">	
 				<div class="alert__tool__recipient">
