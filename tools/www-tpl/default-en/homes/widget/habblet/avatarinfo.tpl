@@ -15,7 +15,7 @@
 {% endif %}
 
 </p>
-<p>Habbo created on: <b>{{ avatar.getCreatedAt() }}</b></p>
-<p><a href="{{ site.sitePath }}/home/{{ avatar.getName() }}" class="arrow">View Habbo page</a></p>
+<p>{{ site.siteName }} created on: <b>{{ avatar.getCreatedAt() }}</b></p>
+<p><a href="{{ site.sitePath }}/home/{{ avatar.getName() }}" class="arrow">View {{ site.siteName }} page</a></p>
 	</div>
 </div>
