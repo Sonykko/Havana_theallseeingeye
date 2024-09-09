@@ -75,9 +75,9 @@ body { behavior: url({{ site.staticContentPath }}/web-gallery/js/csshover.htc); 
 						<div class="cbb clearfix green">
     <h2 class="title">Register for free</h2>
     <div class="box-content">
-        <p>Register for free by clicking the Create Your Habbo -button below. If you have already registered, please sign in on the right.</p>
+        <p>Register for free by clicking the Create Your {{ site.siteName }}-button below. If you have already registered, please sign in on the right.</p>
         <div class="register-button clearfix">
-            <a href="{{ site.sitePath }}/register" onclick="HabboClient.closeHabboAndOpenMainWindow(this); return false;">Create Your Habbo »</a>
+            <a href="{{ site.sitePath }}/register" onclick="HabboClient.closeHabboAndOpenMainWindow(this); return false;">Create Your {{ site.siteName }} »</a>
             <span></span>
         </div>                
     </div>
@@ -128,7 +128,7 @@ body { behavior: url({{ site.staticContentPath }}/web-gallery/js/csshover.htc); 
 <div id="remember-me-notification" class="bottom-bubble" style="display:none;">
 	<div class="bottom-bubble-t"><div></div></div>
 	<div class="bottom-bubble-c">
-                By selecting this you will stay logged in to Habbo, until you &quot;Log out&quot;.
+                By selecting this you will stay logged in to {{ site.siteName }}, until you &quot;Log out&quot;.
 	</div>
 	<div class="bottom-bubble-b"><div></div></div>
 </div>
