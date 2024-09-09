@@ -100,10 +100,10 @@ body { behavior: url({{ site.staticContentPath }}/web-gallery/js/csshover.htc); 
     <div class="pixels-infobox-text">
             <h3>You can earn Pixels in a variety of ways:</h3>
             <ul>
-                <li><p>1. Sign into Habbo once a day</p></li>
-                <li><p>2. Get rewarded for spending time each day in Habbo- the longer you stay the more you earn!</p></li>
+                <li><p>1. Sign into {{ site.siteName }} once a day</p></li>
+                <li><p>2. Get rewarded for spending time each day in {{ site.siteName }} - the longer you stay the more you earn!</p></li>
                 <li><p>3. Complete Achievements, work as a Guide and give respect to other users</p></li>
-                <li><p>4. Join Habbo Club!</p></li>
+                <li><p>4. Join {{ site.siteName }} Club!</p></li>
             </ul>
             <p>How to spend? Check out catalog and the new Pixel Shop!</p>
             <p><a href="{{ site.sitePath }}/help" target="_blank">FAQ</a></p>
