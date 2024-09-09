@@ -123,7 +123,7 @@ body { behavior: url({{ site.staticContentPath }}/web-gallery/js/csshover.htc); 
 <div class="right-column">
 
 <div class="cbb clearfix">
-    <h2 class="title">Forgotten Your Habbo Name?</h2>
+    <h2 class="title">Forgotten Your {{ site.siteName }} Name?</h2>
     <div class="box-content">
 		{% if invalidForgetName %}
 		<div class="rounded rounded-red">
