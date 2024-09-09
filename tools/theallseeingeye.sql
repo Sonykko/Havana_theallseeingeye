@@ -373,6 +373,8 @@ INSERT INTO `settings_desc` (`setting`, `description`, `category`) VALUES
 ('rcon.cfh.reply.message', 'Set the default CFH reply message', 'housekeeping'),
 ('rcon.delete.stickie.message', 'Set the default reason for Delete Stickie Note', 'housekeeping'),
 ('rcon.kick.message', 'Set the default alert message for Remote Kick', 'housekeeping'),
+('rcon.room.unacceptable.desc', 'Set the default description for Unacceptable room', 'housekeeping'),
+('rcon.room.unacceptable.name', 'Set the default name for Unacceptable room', 'housekeeping'),
 ('rcon.superban.message', 'Set the default reason for Remote Superban', 'housekeeping'),
 ('regenerate.map.enabled', 'true', NULL),
 ('regenerate.map.interval', '1', NULL),
@@ -703,6 +705,8 @@ UPDATE `settings` SET
 	  WHEN `setting` = 'rcon.cfh.reply.message' THEN 'housekeeping'
 	  WHEN `setting` = 'rcon.delete.stickie.message' THEN 'housekeeping'
       WHEN `setting` = 'rcon.kick.message' THEN 'housekeeping'
+      WHEN `setting` = 'rcon.room.unacceptable.desc' THEN 'housekeeping'
+      WHEN `setting` = 'rcon.room.unacceptable.name' THEN 'housekeeping'
       WHEN `setting` = 'rcon.superban.message' THEN 'housekeeping'
       WHEN `setting` = 'regenerate.map.enabled' THEN NULL
       WHEN `setting` = 'regenerate.map.interval' THEN NULL
