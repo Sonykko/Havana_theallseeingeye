@@ -37,9 +37,8 @@ public class HousekeepingRecommendedController {
         int recoId = 0;
 
         if (client.post().contains("create")) {
-            recoId = client.post().getInt("create");
-
-            if (StringUtils.isNumeric(client.post().getString("create")) && client.post().getInt("create") > 0) {
+            if (!StringUtils.isEmpty(client.post().getString("create")) && StringUtils.isNumeric(client.post().getString("create")) && client.post().getInt("create") > 0) {
+                recoId = client.post().getInt("create");
 
                 HousekeepingPromotionDao.createPickReco(recoId, "GROUP", 0);
                 HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Created Recommended group with the ID " + recoId + ". URL: " + client.request().uri(), client.getIpAddress());
@@ -50,15 +49,14 @@ public class HousekeepingRecommendedController {
 
                 return;
             }
-
             client.session().set("alertColour", "danger");
             client.session().set("alertMessage", "Please enter a valid Recommended ID");
         }
 
         if (client.get().contains("delete")) {
-            recoId = client.get().getInt("delete");
+            if (!StringUtils.isEmpty(client.get().getString("delete")) && StringUtils.isNumeric(client.get().getString("delete")) && client.get().getInt("delete") > 0) {
+                recoId = client.get().getInt("delete");
 
-            if (StringUtils.isNumeric(client.get().getString("delete")) && client.get().getInt("delete") > 0) {
                 HousekeepingPromotionDao.deletePickReco(recoId, "GROUP", 0);
                 HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Recommended group with the ID " + recoId + ". URL: " + client.request().uri(), client.getIpAddress());
 
@@ -68,49 +66,53 @@ public class HousekeepingRecommendedController {
 
                 return;
             }
-
             client.session().set("alertColour", "danger");
             client.session().set("alertMessage", "Please enter a valid Recommended ID");
         }
 
         if (client.get().contains("edit")) {
-            recoId = client.get().getInt("edit");
+            if (!StringUtils.isEmpty(client.get().getString("edit")) && StringUtils.isNumeric(client.get().getString("edit")) && client.get().getInt("edit") > 0) {
+                recoId = client.get().getInt("edit");
 
-            List<Map<String, Object>> recommendedEditList = HousekeepingPromotionDao.EditPickReco(recoId, "GROUP", 0);
+                List<Map<String, Object>> recommendedEditList = HousekeepingPromotionDao.EditPickReco(recoId, "GROUP", 0);
 
-            for (Map<String, Object> recommendedEdit : recommendedEditList) {
-                int recommendedId = (int) recommendedEdit.get("ID");
-                String typeRoomGroup = (String) recommendedEdit.get("type");
-                int isPicked = (int) recommendedEdit.get("isPicked");
+                for (Map<String, Object> recommendedEdit : recommendedEditList) {
+                    int recommendedId = (int) recommendedEdit.get("ID");
+                    String typeRoomGroup = (String) recommendedEdit.get("type");
+                    int isPicked = (int) recommendedEdit.get("isPicked");
 
-                Group group = GroupDao.getGroup(recommendedId);
+                    Group group = GroupDao.getGroup(recommendedId);
 
-                recommendedEdit.put("groupName", group.getName());
-                recommendedEdit.put("groupDescription", group.getDescription());
-                recommendedEdit.put("groupOwner", PlayerDao.getDetails(group.getOwnerId()).getName());
-                recommendedEdit.put("groupId", group.getId());
-                recommendedEdit.put("groupImage", group.getBadge());
-                recommendedEdit.put("type", typeRoomGroup);
-                recommendedEdit.put("isPicked", isPicked);
+                    recommendedEdit.put("groupName", group.getName());
+                    recommendedEdit.put("groupDescription", group.getDescription());
+                    recommendedEdit.put("groupOwner", PlayerDao.getDetails(group.getOwnerId()).getName());
+                    recommendedEdit.put("groupId", group.getId());
+                    recommendedEdit.put("groupImage", group.getBadge());
+                    recommendedEdit.put("type", typeRoomGroup);
+                    recommendedEdit.put("isPicked", isPicked);
 
+                }
+
+                tpl.set("editingReco", true);
+                tpl.set("RecommendedEditList", recommendedEditList);
+                client.session().set("editSession", recoId);
+            } else {
+                client.session().set("alertColour", "danger");
+                client.session().set("alertMessage", "Please enter a valid Recommended ID");
             }
-
-            tpl.set("editingReco", true);
-            tpl.set("RecommendedEditList", recommendedEditList);
-            client.session().set("editSession", recoId);
         } else {
             tpl.set("editingReco", false);
             client.session().set("editSession", recoId);
         }
 
         if (client.post().getString("sid").equals("7")) {
-            recoId = client.session().getInt("editSession");
+            if (!StringUtils.isEmpty(client.post().getString("IdSave")) && StringUtils.isNumeric(client.post().getString("IdSave")) && client.post().getInt("IdSave") > 0) {
 
-            String recoIdSave = client.post().getString("IdSave");
-            String typeSave = client.post().getString("typeSave");
-            int isPickedSave = client.post().getInt("isPickedSave");
+                recoId = client.session().getInt("editSession");
 
-            if (StringUtils.isNumeric(client.post().getString("IdSave")) && client.post().getInt("IdSave") > 0) {
+                String recoIdSave = client.post().getString("IdSave");
+                String typeSave = client.post().getString("typeSave");
+                int isPickedSave = client.post().getInt("isPickedSave");
 
                 //HousekeepingPromotionDao.SaveRecommended(recoIdSave, typeSave, isPicked, recoId);
                 HousekeepingPromotionDao.SavePickReco(recoIdSave, typeSave, isPickedSave, recoId, "GROUP", 0);
@@ -122,7 +124,6 @@ public class HousekeepingRecommendedController {
 
                 return;
             }
-
             client.session().set("alertColour", "danger");
             client.session().set("alertMessage", "Please enter a valid Recommended ID");
         }
