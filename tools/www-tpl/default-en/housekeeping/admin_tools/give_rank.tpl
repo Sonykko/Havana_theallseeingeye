@@ -4,7 +4,7 @@
     {% include "housekeeping/base/navigation.tpl" %}
     {% include "housekeeping/base/navigation_admin_tools.tpl" %}
 		<h2 class="mt-4">Rank manager</h2>
-		  <p>This tool allows you to set the rank to a Habbo if you are not in the same room (you don't even need to be in the hotel).</p>
+		  <p>This tool allows you to set the rank to a {{ site.siteName }} if you are not in the same room (you don't even need to be in the hotel).</p>
 		  {% include "housekeeping/base/alert.tpl" %}
 		  <form class="table-responsive col-md-4" method="post" style="padding-left: 0;">	
 		    <div class="form-group">
