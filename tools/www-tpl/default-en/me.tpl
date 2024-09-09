@@ -388,7 +388,27 @@ body { behavior: url({{ site.staticContentPath }}/web-gallery/js/csshover.htc); 
         </li>
 		{% set num = num + 1 %}
 		{% endfor %}
-        
+
+		{% if playerDetails.hasClubSubscription() %}
+		<li class="odd">
+			<div class="hotcampaign-container">
+				<a href="{{ site.sitePath }}/articles"><img src="{{ site.staticContentPath }}/c_images/hot_campaign_images_gb/Habbo_Club_cb_IT.gif" align="left" alt="" /></a>
+				<h3>Welcome to the {{ site.siteName }} Club!</h3>
+				<p>Enjoy your exclusive outfits, furniture, and perks. We're happy to have you with us. Have fun exploring {{ site.siteName }}!</p>
+			</div>
+		</li>
+		</li> <!-- class odd -->
+		{% else %}
+		<li class="odd">
+			<div class="hotcampaign-container">
+				<a href="{{ site.sitePath }}/articles"><img src="{{ site.staticContentPath }}/c_images/hot_campaign_images_gb/hc.gif" align="left" alt="" /></a>
+				<h3>Exclusive Furniture!</h3>
+				<p>Join {{ site.siteName }} Club today and get access to exclusive furniture!</p>
+				<p class="link"><a href="{{ site.sitePath }}/credits/club">Check it out &raquo;</a></p>
+			</div>
+		</li>
+		{% endif %}
+
         <!-- 
         <li class="odd">
             <div class="hotcampaign-container">
