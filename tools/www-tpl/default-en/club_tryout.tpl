@@ -72,13 +72,14 @@ body { behavior: url({{ site.staticContentPath }}/web-gallery/js/csshover.htc); 
 
 <div id="content-container">
 
+{% if session.currentPage == "credits" %}
 <div id="navi2-container" class="pngbg">
     <div id="navi2" class="pngbg clearfix">
 		<ul>
 			<li class="">
 				<a href="{{ site.sitePath }}/credits">Coins</a>			</li>
-			<li class="">
-				<a href="{{ site.sitePath }}/credits/club">{{ site.siteName }} Club</a>			</li>
+			<li class="selected">
+				{{ site.siteName }} Club			</li>
 			<li class="">
 				<a href="{{ site.sitePath }}/credits/collectables">Collectables</a>			</li>
     		<li class=" last">
@@ -86,6 +87,8 @@ body { behavior: url({{ site.staticContentPath }}/web-gallery/js/csshover.htc); 
 		</ul>
     </div>
 </div>
+{% endif %}
+
 <div id="container">
 	<div id="content" style="position: relative" class="clearfix">
     <div id="column1" class="column">
