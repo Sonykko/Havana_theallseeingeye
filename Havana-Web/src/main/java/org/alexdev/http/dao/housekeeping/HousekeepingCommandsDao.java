@@ -195,6 +195,52 @@ public class HousekeepingCommandsDao {
         return MassAlertsLogsList;
     }
 
+    public static List<Map<String, Object>> RemoteRoomKicksLogs(int page, String sortBy) {
+        List<Map<String, Object>> RemoteRoomKicksLogsList = new ArrayList<>();
+
+        int rows = 20;
+        int nextOffset = page * rows;
+
+        if (nextOffset >= 0) {
+            Connection sqlConnection = null;
+            PreparedStatement preparedStatement = null;
+            ResultSet resultSet = null;
+
+            try {
+                sqlConnection = Storage.getStorage().getConnection();
+                preparedStatement = Storage.getStorage().prepare(
+                        "SELECT * FROM housekeeping_rcon_logs WHERE type = 'REMOTE_ROOM_KICK' OR type = 'REMOTE_ROOM_ALERT' ORDER BY " + sortBy + " DESC LIMIT ? OFFSET ?",
+                        sqlConnection
+                );
+                preparedStatement.setInt(1, rows);
+                preparedStatement.setInt(2, nextOffset);
+
+                resultSet = preparedStatement.executeQuery();
+
+                while (resultSet.next()) {
+                    Map<String, Object> remoteRoomKickLog = new HashMap<>();
+                    remoteRoomKickLog.put("id", resultSet.getInt("id"));
+                    remoteRoomKickLog.put("type", resultSet.getString("type"));
+                    remoteRoomKickLog.put("user", resultSet.getString("user"));
+                    remoteRoomKickLog.put("moderator", resultSet.getString("moderator"));
+                    remoteRoomKickLog.put("message", resultSet.getString("message"));
+                    remoteRoomKickLog.put("timestamp", resultSet.getString("timestamp"));
+
+                    RemoteRoomKicksLogsList.add(remoteRoomKickLog);
+                }
+
+            } catch (Exception e) {
+                Storage.logError(e);
+            } finally {
+                Storage.closeSilently(resultSet);
+                Storage.closeSilently(preparedStatement);
+                Storage.closeSilently(sqlConnection);
+            }
+        }
+
+        return RemoteRoomKicksLogsList;
+    }
+
     public static List<Map<String, Object>> getCFHTopics() {
         List<Map<String, Object>> CFHTopicsList = new ArrayList<>();
 

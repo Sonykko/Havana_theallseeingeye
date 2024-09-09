@@ -6,6 +6,7 @@ public enum RconHeader {
     CFH_REPLY("cfh_reply"),
     CFH_BLOCK("cfh_block"),
     CFH_FOLLOW("cfh_follow"),
+    MOD_ROOM_KICK("mod_room_kick"),
     MOD_STICKIE_DELETE("mod_stickie_delete"),
     REFRESH_CATALOGUE_PAGES("refresh_catalogue_pages"),
     REFRESH_NAVIGATOR("refresh_navigator"),

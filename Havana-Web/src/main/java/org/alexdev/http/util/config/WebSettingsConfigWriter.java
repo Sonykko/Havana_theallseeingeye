@@ -99,6 +99,8 @@ public class WebSettingsConfigWriter implements ConfigWriter {
         config.put("rcon.kick.message", "Has sido expulsado por un Moderador.");
         config.put("rcon.superban.message", "Has sido baneado por no respetar la Manera Habbo");
         config.put("rcon.delete.stickie.message", "Nota eliminada por no respetar la Manera Habbo");
+        config.put("rcon.room.unacceptable.name", "Nombre contra las normas");
+        config.put("rcon.room.unacceptable.desc", "Sala contra las normas");
 
         config.put("hobba.form.lang", "ES");
 

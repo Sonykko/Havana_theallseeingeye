@@ -470,6 +470,60 @@ public class HousekeepingCommandsController {
         }
     }
 
+    public static void roomKick(WebConnection client) {
+        if (!client.session().getBoolean(SessionUtil.LOGGED_IN_HOUSKEEPING)) {
+            client.send("");
+        }
+
+        int userId = client.session().getInt("user.id");
+        PlayerDetails playerDetails = PlayerDao.getDetails(userId);
+
+        if (!HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "bans")) {
+            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/permissions");
+            HousekeepingLogsDao.logHousekeepingAction("BAD_PERMISSIONS", playerDetails.getId(), playerDetails.getName(), "URL: " + client.request().uri(), client.getIpAddress());
+            return;
+        }
+
+        String moderator = playerDetails.getName();
+        String roomKick = client.get().getString("roomId");
+        String message = client.get().getString("alertRoomKick");
+        String action = client.get().getString("action");
+        boolean unacceptable = client.get().getBoolean("unacceptable");
+        String unacceptableValue = GameConfiguration.getInstance().getString("rcon.room.unacceptable.name");
+        String unacceptableDescValue = GameConfiguration.getInstance().getString("rcon.room.unacceptable.desc");
+        String unacceptableAlertText = unacceptable ? " and the room has been saved as Unacceptable" : "";
+
+        try {
+            RconUtil.sendCommand(RconHeader.MOD_ROOM_KICK, new HashMap<>() {{
+                //put("moderatorRoomKick", moderator);
+                put("roomId", roomKick);
+                put("alertRoomKick", message);
+                put("action", action);
+                put("unacceptable", unacceptable);
+                put("unacceptableValue", unacceptableValue);
+                put("unacceptableDescValue", unacceptableDescValue);
+
+            }});
+
+            String type = action.equals("kick") ? "REMOTE_ROOM_KICK" : "REMOTE_ROOM_ALERT";
+
+            boolean dbInsertSuccess = HousekeepingCommandsDao.insertRconLog(type, roomKick, moderator, message);
+
+            if (dbInsertSuccess) {
+                client.session().set("alertColour", "success");
+                client.session().set("alertMessage", "The " + action + " has been sent and logged in the database" + unacceptableAlertText);
+            } else {
+                client.session().set("alertColour", "danger");
+                client.session().set("alertMessage", "Error inserting the " + action + " into the database");
+            }
+        } catch (Exception e) {
+            client.session().set("alertColour", "danger");
+            client.session().set("alertMessage", "Error sending the " + action + ": " + e.getMessage());
+        }
+
+        client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/room_kick");
+    }
+
     public static List<String> splitUsernames(String users) {
         String usersList = users.substring(1, users.length() - 1);
 
