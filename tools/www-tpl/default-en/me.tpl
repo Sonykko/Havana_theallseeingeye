@@ -174,9 +174,9 @@ body { behavior: url({{ site.staticContentPath }}/web-gallery/js/csshover.htc); 
             <a href="{{ site.sitePath }}/credits">{{ playerDetails.credits }}</a> Credits		</li>
         <li class="club">
             {% if playerDetails.hasClubSubscription() %}
-            <a href="{{ site.sitePath }}/club">{{ hcDays }} </a>HC days		</li>
+            <a href="{{ site.sitePath }}/club">{{ hcDays }} </a>HC day(s)		</li>
             {% else %}
-            <a href="{{ site.sitePath }}/club">Join {{ site.siteName }} club &raquo;</a>		</li>
+            <a href="{{ site.sitePath }}/club">Join {{ site.siteName }} Club &raquo;</a>		</li>
             {% endif %}
         <li class="activitypoints">
             <a href="{{ site.sitePath }}/credits/pixels">{{ playerDetails.pixels }}</a> Pixels		    </li>
@@ -396,7 +396,7 @@ body { behavior: url({{ site.staticContentPath }}/web-gallery/js/csshover.htc); 
                 <h3>Exclusive Furniture!</h3>
                 <p>Join {{ site.siteName }} Club today and get access to exclusive furniture!</p>
 
-                <p class="link"><a href="https://classichabbo.com/credits/club">Go there &raquo;</a></p>
+                <p class="link"><a href="{{ site.sitePath}}/credits/club">Go there &raquo;</a></p>
             </div>
         </li>
         -->
