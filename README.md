@@ -20,6 +20,7 @@ This is a project to recreate the supossed "Hobbanet" or theallseeingeye Habbo H
   - Remote alerting
   - Remote baning and kicking
   - Remote superban (original feature)
+  - Remote room alerting & kicking
   - User action log
   - Remote Calls for help admin
   - Remote mass alert
