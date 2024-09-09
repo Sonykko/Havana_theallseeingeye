@@ -205,6 +205,45 @@ public class RconConnectionHandler extends ChannelInboundHandlerAdapter {
                     cfhFollow.getRoom().forward(moderatorFollow, false);
                     CallForHelpManager.getInstance().deleteCall(cfhFollow);
                     break;
+                case MOD_ROOM_KICK:
+                    int roomId = Integer.parseInt(message.getValues().get("roomId"));
+                    Room roomKick = RoomManager.getInstance().getRoomById(roomId);
+                    String alertRoomKick = message.getValues().get("alertRoomKick");
+                    String actionRoomKick = message.getValues().get("action");
+                    boolean unacceptable = Boolean.parseBoolean(message.getValues().get("unacceptable"));
+                    String unacceptableValue = message.getValues().get("unacceptableValue");
+                    String unacceptableDescValue = message.getValues().get("unacceptableDescValue");
+
+                    if (roomKick == null) {
+                        return;
+                    }
+
+                    List<Player> players = RoomManager.getInstance().getRoomById(roomId).getEntityManager().getPlayers();
+
+                    for (Player target : players) {
+                        // Don't kick other moderators
+                        if (target.hasFuse(Fuseright.ROOM_KICK)) {
+                            continue;
+                        }
+
+                        if (actionRoomKick.equals("kick")) {
+                            target.getRoomUser().kick(true, true);
+                            //target.send(new HOTEL_VIEW());
+                        }
+
+                        target.send(new MODERATOR_ALERT(alertRoomKick));
+                    }
+
+                    if (unacceptable) {
+                        if (unacceptableValue == null || unacceptableDescValue == null) {
+                            return;
+                        }
+
+                        roomKick.getData().setName(unacceptableValue);
+                        roomKick.getData().setDescription(unacceptableDescValue);
+                        RoomDao.save(roomKick);
+                    }
+                    break;
                 case MOD_STICKIE_DELETE:
                     int stickieId = Integer.parseInt(message.getValues().get("stickieId"));
                     String stickieText = message.getValues().get("stickieText");

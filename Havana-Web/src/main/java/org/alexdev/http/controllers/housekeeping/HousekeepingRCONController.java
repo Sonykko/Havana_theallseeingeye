@@ -10,6 +10,7 @@ import org.alexdev.http.dao.housekeeping.HousekeepingLogsDao;
 import org.alexdev.http.dao.housekeeping.HousekeepingPlayerDao;
 import org.alexdev.http.game.housekeeping.HousekeepingManager;
 import org.alexdev.http.util.SessionUtil;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -323,6 +324,87 @@ public class HousekeepingRCONController {
 
         tpl.set("pageName", "Mass Unban Tool");
         tpl.set("CFHTopics", HousekeepingCommandsDao.getCFHTopics());
+        tpl.render();
+
+        // Delete alert after it's been rendered
+        client.session().delete("alertMessage");
+    }
+
+    public static void roomKickRCON(WebConnection client) {
+        if (!client.session().getBoolean(SessionUtil.LOGGED_IN_HOUSKEEPING)) {
+            client.redirect("/" + Routes.HOUSEKEEPING_DEFAULT_PATH);
+            return;
+        }
+
+        Template tpl = client.template("housekeeping/admin_tools/room_kick");
+        tpl.set("housekeepingManager", HousekeepingManager.getInstance());
+
+        PlayerDetails playerDetails = (PlayerDetails) tpl.get("playerDetails");
+
+        if (!HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "bans")) {
+            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/permissions");
+            HousekeepingLogsDao.logHousekeepingAction("BAD_PERMISSIONS", playerDetails.getId(), playerDetails.getName(), "URL: " + client.request().uri(), client.getIpAddress());
+            return;
+        }
+
+        int currentPage = 0;
+
+        if (client.get().contains("page")) {
+            currentPage = Integer.parseInt(client.get().getString("page"));
+        }
+
+        String sortBy = "id";
+
+        if (client.get().contains("sort")) {
+            if (client.get().getString("sort").equals("user") ||
+                    client.get().getString("sort").equals("id")) {
+                sortBy = client.get().getString("sort");
+            }
+        }
+
+        String action = client.post().getString("action");
+        String finalMessage = "";
+
+        if (client.post().queries().size() > 0) {
+            String roomId = client.post().getString("roomId");
+            String defaultMessage = GameConfiguration.getInstance().getString("rcon.kick.message");
+            String commonMessage = client.post().getString("commonMessage");
+            String customMessage = client.post().getString("customMessage");
+            String message = customMessage != null && !customMessage.isEmpty() ? customMessage : commonMessage;
+            boolean unacceptable = client.post().getBoolean("unacceptable");
+
+            if (roomId != null && !roomId.isEmpty() && StringUtils.isNumeric(roomId)) {
+                String actionType = null;
+
+                if ("roomKick".equals(action)) {
+                    actionType = "kick";
+                } else if ("roomAlert".equals(action)) {
+                    actionType = "alert";
+                }
+
+                if (("alert".equals(actionType)) && message.isEmpty()) {
+                    client.session().set("alertColour", "danger");
+                    client.session().set("alertMessage", "Please enter a valid message");
+                } else if (actionType != null) {
+                    finalMessage = !message.isEmpty() ? message : defaultMessage;
+                    client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/api/room.kick?roomId=" + roomId + "&alertRoomKick=" + finalMessage + "&action=" + actionType + "&unacceptable=" + unacceptable);
+                    return;
+                }
+            } else {
+                client.session().set("alertColour", "danger");
+                client.session().set("alertMessage", "Please enter a valid room ID");
+            }
+        }
+
+        tpl.set("housekeepingManager", HousekeepingManager.getInstance());
+
+        tpl.set("pageName", "Remote room alerting & kicking");
+        tpl.set("CFHTopics", HousekeepingCommandsDao.getCFHTopics());
+        tpl.set("remoteRoomKickLogs", HousekeepingCommandsDao.RemoteRoomKicksLogs(currentPage, sortBy));
+        tpl.set("nextremoteRoomKickLogs", HousekeepingCommandsDao.RemoteRoomKicksLogs(currentPage + 1, sortBy));
+        tpl.set("previousremoteRoomKickLogs", HousekeepingCommandsDao.RemoteRoomKicksLogs(currentPage - 1, sortBy));
+        tpl.set("page", currentPage);
+        tpl.set("sortBy", sortBy);
         tpl.render();
 
         // Delete alert after it's been rendered
