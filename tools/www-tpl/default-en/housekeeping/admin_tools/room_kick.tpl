@@ -5,7 +5,7 @@
     {% include "housekeeping/base/navigation_admin_tools.tpl" %}
 		<h2 class="mt-4">Remote room alerting & kicking</h2>
 		  <p>This tool allows you to send an alert to a room if you are not in the same room (you don't even need to be in the hotel). You can use this to answer Calls for help that aren't urgent (eg 'How do I dance?' or 'How do I become a Hobba?'), so that you don't have to go to the room.</p>
-		  {% include "housekeeping/base/alert.tpl" %}
+		  
 		  <div class="alert__tool">
 			  <form class="alert__tool__form" method="post">	
 				<div class="alert__tool__recipient">
@@ -32,11 +32,12 @@
 					<button type="submit" name="action" value="roomKick">Kick</button>
 				</div>
 			  </form>
-		  </div>		  
+		  </div>	
+		  {% include "housekeeping/base/alert.tpl" %}		  
 		  
 		  
-		<h2 class="mt-4">View alerts</h2>
-		  <p>Here can see the most recent logs of User Alerts created via RCON.</p>
+		<h2 class="mt-4">View action log</h2>
+		  <p>Here can see the most recent logs of Room alerts & kicks created via RCON.</p>
 		  <div class="pagination-buttons-box">
 			{% if nextremoteRoomKickLogs|length > 0 %}
 				{% set ourNextPage = page + 1 %}
@@ -65,7 +66,7 @@
 				{% for remoteRoomKickLog in remoteRoomKickLogs %}
                 <tr>
 				  <td>{{ remoteRoomKickLog.id }}</td>				  
-				  <td>{{ remoteRoomKickLog.type }}</td>		
+				  <td>{% if remoteRoomKickLog.type == "REMOTE_ROOM_KICK" %}Room kick{% elseif remoteRoomKickLog.type == "REMOTE_ROOM_ALERT" %}Room alert{% endif %}</td>		
 				  <td><a href="{{ site.sitePath }}/ase/habbo/es/housekeeping/extra/hobba/admin_tools/rooms/edit?id={{ remoteRoomKickLog.user }}">{{ remoteRoomKickLog.user }}</a></td>		
 				  <td>{{ remoteRoomKickLog.message }}</td>		
 				  <td>{{ remoteRoomKickLog.timestamp }}</td>				  
