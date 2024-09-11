@@ -24,6 +24,7 @@ import org.alexdev.havana.game.player.PlayerDetails;
 import org.alexdev.havana.game.player.PlayerManager;
 import org.alexdev.havana.game.room.Room;
 import org.alexdev.havana.game.room.RoomManager;
+import org.alexdev.havana.game.wordfilter.WordfilterManager;
 import org.alexdev.havana.log.Log;
 import org.alexdev.havana.messages.incoming.catalogue.GET_CATALOG_INDEX;
 import org.alexdev.havana.messages.outgoing.alerts.ALERT;
@@ -298,6 +299,9 @@ public class RconConnectionHandler extends ChannelInboundHandlerAdapter {
                 case REFRESH_NAVIGATOR:
                     NavigatorManager.getInstance().reset();
                     NavigatorManager.reset();
+                    break;
+                case REFRESH_WORDFILTER:
+                    WordfilterManager.reset();
                     break;
                 case MOD_ALERT_USER:
                     Player playerAlert = PlayerManager.getInstance().getPlayerByName(message.getValues().get("receiver"));
