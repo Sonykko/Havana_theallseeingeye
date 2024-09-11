@@ -308,8 +308,15 @@ public class RconConnectionHandler extends ChannelInboundHandlerAdapter {
                     }
                     break;
                 case MOD_KICK_USER:
-                    Player target = PlayerManager.getInstance().getPlayerByName(message.getValues().get("receiver"));
+                    String playerKick = message.getValues().get("receiver");
+                    Player target = PlayerManager.getInstance().getPlayerByName(playerKick);
                     String alertMessage = message.getValues().get("message");
+
+                    if (!target.getNetwork().isFlashConnection()) {
+                        target = PlayerManager.getInstance().getPlayerByName(playerKick);
+                    } else {
+                        target = PlayerManager.getInstance().getPlayerById(target.getDetails().getId());
+                    }
 
                     if (target != null) {
                         if (target.getRoomUser().getRoom() != null) {
