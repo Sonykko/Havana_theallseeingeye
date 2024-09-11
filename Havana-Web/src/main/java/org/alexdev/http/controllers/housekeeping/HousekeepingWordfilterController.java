@@ -13,6 +13,8 @@ import org.alexdev.http.util.SessionUtil;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class HousekeepingWordfilterController {
     public static void wordfilter (WebConnection client) {
@@ -38,24 +40,32 @@ public class HousekeepingWordfilterController {
             int isFilterable = client.post().getInt("isFilterable");
 
             if (!client.post().getString("addword").isEmpty()) {
-                HousekeepingWordfilterDao.createWord(addword, isBannable, isFilterable);
-                HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Added the word " + addword + " to Wordfilter. URL: " + client.request().uri(), client.getIpAddress());
+                boolean wordExists = HousekeepingWordfilterDao.CheckWord(addword);
 
-                try {
-                    RconUtil.sendCommand(RconHeader.REFRESH_WORDFILTER, new HashMap<>() {{}});
-                } catch (Exception e) {
+                if (!wordExists) {
+                    HousekeepingWordfilterDao.createWord(addword, isBannable, isFilterable);
+                    HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Added the word " + addword + " to Wordfilter. URL: " + client.request().uri(), client.getIpAddress());
+
+                    try {
+                        RconUtil.sendCommand(RconHeader.REFRESH_WORDFILTER, new HashMap<>() {{}});
+                    } catch (Exception e) {
+                        client.session().set("alertColour", "danger");
+                        client.session().set("alertMessage", "Error updating via RCON the word: " + e.getMessage());
+                    }
+
+                    client.session().set("alertColour", "success");
+                    client.session().set("alertMessage", "The word has been successfully added to wordfilter list");
+                    client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/wordfilter");
+
+                    return;
+                } else {
                     client.session().set("alertColour", "danger");
-                    client.session().set("alertMessage", "Error updating via RCON the word: " + e.getMessage());
+                    client.session().set("alertMessage", "The word already exists");
                 }
-
-                client.session().set("alertColour", "success");
-                client.session().set("alertMessage", "The word has been successfully added to wordfilter list");
-                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/wordfilter");
-
-                return;
+            } else {
+                client.session().set("alertColour", "danger");
+                client.session().set("alertMessage", "Please enter a valid word");
             }
-            client.session().set("alertColour", "danger");
-            client.session().set("alertMessage", "Please enter a valid word");
         }
 
         if (client.get().contains("delete")) {
@@ -98,9 +108,22 @@ public class HousekeepingWordfilterController {
             int wordId = client.get().getInt("edit");
 
             if (!client.post().getString("saveWord").isEmpty()) {
+                List<Map<String, Object>> wordEdit = HousekeepingWordfilterDao.editWord(wordId);
+                String currentWord = wordEdit.get(0).get("wordFilter").toString();
+
+                if (!saveWord.equalsIgnoreCase(currentWord)) {
+                    boolean wordExists = HousekeepingWordfilterDao.CheckWord(saveWord);
+
+                    if (wordExists) {
+                        client.session().set("alertColour", "danger");
+                        client.session().set("alertMessage", "The word already exists");
+                        client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/wordfilter?edit=" + wordId);
+                        return;
+                    }
+                }
+
                 HousekeepingWordfilterDao.saveWord(saveWord, isBannable, isFilterable, wordId);
                 HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Edited the word " + saveWord + " of Wordfilter. URL: " + client.request().uri(), client.getIpAddress());
-
                 try {
                     RconUtil.sendCommand(RconHeader.REFRESH_WORDFILTER, new HashMap<>() {{}});
                 } catch (Exception e) {
@@ -111,7 +134,6 @@ public class HousekeepingWordfilterController {
                 client.session().set("alertColour", "success");
                 client.session().set("alertMessage", "The word has been successfully saved");
                 client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/wordfilter");
-
                 return;
             }
 

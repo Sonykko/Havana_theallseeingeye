@@ -142,4 +142,32 @@ public class HousekeepingWordfilterDao {
             Storage.closeSilently(sqlConnection);
         }
     }
+
+    public static boolean CheckWord(String word) {
+        boolean wordExists = false;
+
+        Connection sqlConnection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+
+        try {
+            sqlConnection = Storage.getStorage().getConnection();
+            preparedStatement = Storage.getStorage().prepare("SELECT * FROM wordfilter WHERE word = ? LIMIT 1", sqlConnection);
+            preparedStatement.setString(1, word);
+            resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                wordExists = true;
+            }
+
+        } catch (Exception e) {
+            Storage.logError(e);
+        } finally {
+            Storage.closeSilently(resultSet);
+            Storage.closeSilently(preparedStatement);
+            Storage.closeSilently(sqlConnection);
+        }
+
+        return wordExists;
+    }
 }
