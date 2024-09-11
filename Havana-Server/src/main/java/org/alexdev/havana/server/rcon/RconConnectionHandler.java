@@ -207,6 +207,7 @@ public class RconConnectionHandler extends ChannelInboundHandlerAdapter {
                     CallForHelpManager.getInstance().deleteCall(cfhFollow);
                     break;
                 case MOD_ROOM_KICK:
+                    //Player moderatorRoomKick = PlayerManager.getInstance().getPlayerByName(message.getValues().get("moderatorRoomKick"));
                     int roomId = Integer.parseInt(message.getValues().get("roomId"));
                     Room roomKick = RoomManager.getInstance().getRoomById(roomId);
                     String alertRoomKick = message.getValues().get("alertRoomKick");
@@ -214,6 +215,7 @@ public class RconConnectionHandler extends ChannelInboundHandlerAdapter {
                     boolean unacceptable = Boolean.parseBoolean(message.getValues().get("unacceptable"));
                     String unacceptableValue = message.getValues().get("unacceptableValue");
                     String unacceptableDescValue = message.getValues().get("unacceptableDescValue");
+                    boolean roomLock = Boolean.parseBoolean(message.getValues().get("roomLock"));
 
                     if (roomKick == null) {
                         return;
@@ -242,6 +244,11 @@ public class RconConnectionHandler extends ChannelInboundHandlerAdapter {
 
                         roomKick.getData().setName(unacceptableValue);
                         roomKick.getData().setDescription(unacceptableDescValue);
+                        RoomDao.save(roomKick);
+                    }
+
+                    if (roomLock) {
+                        roomKick.getData().setAccessType(1);
                         RoomDao.save(roomKick);
                     }
                     break;

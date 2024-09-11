@@ -373,6 +373,7 @@ public class HousekeepingRCONController {
             String customMessage = client.post().getString("customMessage");
             String message = customMessage != null && !customMessage.isEmpty() ? customMessage : commonMessage;
             boolean unacceptable = client.post().getBoolean("unacceptable");
+            boolean roomLock = client.post().getBoolean("roomLock");
 
             if (roomId != null && !roomId.isEmpty() && StringUtils.isNumeric(roomId)) {
                 String actionType = null;
@@ -388,7 +389,7 @@ public class HousekeepingRCONController {
                     client.session().set("alertMessage", "Please enter a valid message");
                 } else if (actionType != null) {
                     finalMessage = !message.isEmpty() ? message : defaultMessage;
-                    client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/api/room.kick?roomId=" + roomId + "&alertRoomKick=" + finalMessage + "&action=" + actionType + "&unacceptable=" + unacceptable);
+                    client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/api/room.kick?roomId=" + roomId + "&alertRoomKick=" + finalMessage + "&action=" + actionType + "&unacceptable=" + unacceptable + "&roomLock=" + roomLock);
                     return;
                 }
             } else {

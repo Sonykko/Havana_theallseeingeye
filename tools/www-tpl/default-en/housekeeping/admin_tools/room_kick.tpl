@@ -25,7 +25,10 @@
 					<input type="text" name="customMessage" class="" id="customMessage" value="" />					
 				</div>	
 				<div class="" style="width: 300px;gap: 10px;display: flex;padding-bottom: 10px;">					
-					<input type="checkbox" name="unacceptable" value="true" />Set room as Unacceptable
+					<input type="checkbox" name="roomLock" value="true" />Change room lock to doorbell
+				</div>					
+				<div class="" style="width: 300px;gap: 10px;display: flex;padding-bottom: 10px;">					
+					<input type="checkbox" name="unacceptable" value="true" />Set room as 'Inappropriate to hotel management'
 				</div>				
 				<div class="alert__tool__submit">					
 					<button type="submit" name="action" value="roomAlert">Alert</button>

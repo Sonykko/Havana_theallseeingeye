@@ -492,7 +492,9 @@ public class HousekeepingCommandsController {
         boolean unacceptable = client.get().getBoolean("unacceptable");
         String unacceptableValue = GameConfiguration.getInstance().getString("rcon.room.unacceptable.name");
         String unacceptableDescValue = GameConfiguration.getInstance().getString("rcon.room.unacceptable.desc");
-        String unacceptableAlertText = unacceptable ? "and the room has been saved as Unacceptable" : "";
+        String unacceptableAlertText = unacceptable ? "and the room has been set as Inappropriate" : "";
+        boolean roomLock = client.get().getBoolean("roomLock");
+        String roomLockText = roomLock ? "and closed with doorbell" : "";
 
         try {
             RconUtil.sendCommand(RconHeader.MOD_ROOM_KICK, new HashMap<>() {{
@@ -503,6 +505,7 @@ public class HousekeepingCommandsController {
                 put("unacceptable", unacceptable);
                 put("unacceptableValue", unacceptableValue);
                 put("unacceptableDescValue", unacceptableDescValue);
+                put("roomLock", roomLock);
 
             }});
 
@@ -512,7 +515,7 @@ public class HousekeepingCommandsController {
 
             if (dbInsertSuccess) {
                 client.session().set("alertColour", "success");
-                client.session().set("alertMessage", "The " + action + " has been sent and logged in the database " + unacceptableAlertText);
+                client.session().set("alertMessage", "The " + action + " has been sent and logged in the database " + unacceptableAlertText + " " + roomLockText);
             } else {
                 client.session().set("alertColour", "danger");
                 client.session().set("alertMessage", "Error inserting the " + action + " into the database");
