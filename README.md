@@ -50,6 +50,8 @@ This is a project to recreate the supossed "Hobbanet" or theallseeingeye Habbo H
 - theallseeingeye - Hobbanet design
 - Website
   - Habbo Hobba application form
+- Server
+  - Support for Dual Flash/Shockwave connection for RELEASE39-22643-22891-200911110035_07c3a2a30713fd5bea8a8caf07e33438.
 
 # Screenshots
 
