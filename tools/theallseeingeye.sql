@@ -46,7 +46,7 @@ CREATE TABLE `cfh_logs` (
   `user` varchar(255) DEFAULT NULL,
   `room_id` int(11) DEFAULT NULL,
   `room` varchar(255) DEFAULT NULL,
-  `message` varchar(255) DEFAULT NULL,
+  `reason` varchar(255) DEFAULT NULL,
   `created_time` varchar(255) DEFAULT NULL,
   `category` varchar(255) DEFAULT NULL,
   `expire_time` varchar(255) DEFAULT NULL,
