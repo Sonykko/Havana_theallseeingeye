@@ -54,9 +54,16 @@ This is a project to recreate the supossed "Hobbanet" or theallseeingeye Habbo H
 # Screenshots
 
 ![image](https://i.imgur.com/Zi0LTM6.png)
+
 ![image](https://i.imgur.com/4fhQqSu.png)
+
 ![image](https://i.imgur.com/UbveNuq.png)
+
 ![image](https://i.imgur.com/8IWhvCD.gif)
+
+### (theallseeingeye with new r39 dual client support)
+
+![image](https://i.imgur.com/JfuUyxD.gif)
 
 # Download
 
@@ -257,6 +264,10 @@ The reason why Shockwave emulators exist is for multiple reasons, the first is t
 ![image](https://user-images.githubusercontent.com/1328523/188254197-30a5b3d3-7854-403c-a863-508c2300a086.png)
 
 ![image](https://user-images.githubusercontent.com/1328523/188258240-185c1233-0178-4ace-a9af-b3a22077e32d.png)
+
+### (Habbo version 39 dual client support)
+
+![image](https://github.com/user-attachments/assets/fbda50c7-76a7-421a-a145-4d406d35977b)
 
 # Download
 
