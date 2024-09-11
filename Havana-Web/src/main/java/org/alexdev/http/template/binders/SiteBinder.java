@@ -103,7 +103,7 @@ public class SiteBinder implements TemplateBinder {
         this.housekeepingPath = Routes.HOUSEKEEPING_PATH;
 
         this.hkNewStyle = GameConfiguration.getInstance().getBoolean("hk.new.style.enabled");
-        this.hkBuild = "2.3.2 build 35";
+        this.hkBuild = "2.3.5 build 36";
 
         template.set("site", this);
         template.set("gameConfig", GameConfiguration.getInstance());
