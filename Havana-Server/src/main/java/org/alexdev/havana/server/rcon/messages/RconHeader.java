@@ -10,6 +10,7 @@ public enum RconHeader {
     MOD_STICKIE_DELETE("mod_stickie_delete"),
     REFRESH_CATALOGUE_PAGES("refresh_catalogue_pages"),
     REFRESH_NAVIGATOR("refresh_navigator"),
+    REFRESH_WORDFILTER("refresh_wordfilter"),
     MOD_ALERT_USER("mod_alert_user"),
     MOD_KICK_USER("mod_kick_user"),
     HOTEL_ALERT("hotel_alert"),
