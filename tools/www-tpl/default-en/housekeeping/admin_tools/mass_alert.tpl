@@ -5,21 +5,30 @@
     {% include "housekeeping/base/navigation_admin_tools.tpl" %}
 		<h2 class="mt-4">Hotel Alert tool</h2>
 		  <p>Send a mass Hotel Alert to all online players.</p>
-		  {% include "housekeeping/base/alert.tpl" %}
-		  <form class="table-responsive col-md-4" method="post">	
-			<label for="message">Message</label>
-				<textarea name="message" class="form-control" id="message" placeholder="Enter here the Hotel Alert..." style="height:150px;"></textarea>
-								
-			<label for="sender">Sender</label>
-				<input type="text" name="sender" class="form-control" id="sender" placeholder="{{ playerDetails.getName() }}" value="{{ playerDetails.getName() }}" readonly>
-				<br>			
-			<button type="submit">Send Hotel Alert</button>
-		  </form>
 		  
+		  <div class="alert__tool">
+			  <form class="alert__tool__form" method="post">	
+				<div class="alert__tool__custommessage">
+					<label for="message" style="padding-right: 10px;">Message</label>
+						<input name="message" class="" id="message" placeholder="Enter here the Hotel Alert..." />
+				</div>					
+				<div class="alert__tool__recipient">
+					<label for="sender">Sender</label>
+					<input type="text" name="sender" class="" id="sender" placeholder="{{ playerDetails.getName() }}" value="{{ playerDetails.getName() }}" readonly>
+				</div>		
+				<div class="" style="width: 300px;gap: 10px;display: flex;padding-bottom: 10px;">					
+						<input type="checkbox" name="showSender" value="true" checked />Show sender in the alert
+					</div>
+				<div class="alert__tool__submit">		
+					<button type="submit">Send Hotel Alert</button>
+				</div>
+			  </form>
+		  </div>
+		  {% include "housekeeping/base/alert.tpl" %}
 		  
 		<h2 class="mt-4">Hotel Alert log</h2>
+		<div class="pagination-buttons-box">
 		  <p>Here can see the most recent logs of Hotel Alerts created via RCON.</p>
-		    <div class="pagination-buttons-box">
 			{% if nexthotelAlertLogs|length > 0 %}
 				{% set ourNextPage = page + 1 %}
 				<a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/mass_alert?page={{ ourNextPage }}&sort={{ sortBy }}"><button type="button">Next Page</button></a>
