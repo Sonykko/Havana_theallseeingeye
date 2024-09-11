@@ -51,9 +51,10 @@ public class HousekeepingRCONController {
         if (client.post().contains("sender") && client.post().contains("message")) {
             String sender = playerDetails.getName();
             String message = client.post().getString("message");
+            boolean showSender = client.post().getBoolean("showSender");
 
             if (message != null && !message.isEmpty()) {
-                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/api/massalert?user=" + sender + "&ha=" + message);
+                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/api/massalert?user=" + sender + "&ha=" + message + "&showSender=" + showSender);
                 return;
             } else {
                 client.session().set("alertColour", "danger");

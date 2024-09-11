@@ -223,6 +223,7 @@ public class HousekeepingCommandsController {
             RconUtil.sendCommand(RconHeader.HOTEL_ALERT, new HashMap<>() {{
                 put("sender", client.get().getString("user"));
                 put("message", client.get().getString("ha"));
+                put("showSender", client.get().getBoolean("showSender"));
 
             }});
 

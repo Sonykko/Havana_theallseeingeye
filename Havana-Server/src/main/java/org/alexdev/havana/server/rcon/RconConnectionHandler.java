@@ -325,11 +325,15 @@ public class RconConnectionHandler extends ChannelInboundHandlerAdapter {
                 case HOTEL_ALERT:
                     String messageSender = message.getValues().get("sender");
                     String hotelAlert = message.getValues().get("message");
+                    boolean showSender = Boolean.parseBoolean(message.getValues().get("showSender"));
 
                     StringBuilder alert = new StringBuilder();
                     alert.append(hotelAlert).append("<br>");
-                    alert.append("<br>");
-                    alert.append("- ").append(messageSender);
+
+                    if (showSender) {
+                        alert.append("<br>");
+                        alert.append("- ").append(messageSender);
+                    }
 
                     for (Player player : PlayerManager.getInstance().getPlayers()) {
                         player.send(new ALERT(alert.toString()));
