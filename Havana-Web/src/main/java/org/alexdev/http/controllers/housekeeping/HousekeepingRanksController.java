@@ -113,7 +113,7 @@ public class HousekeepingRanksController {
                 rankIdInt = Integer.parseInt(rankId);
             }
 
-            if (rankIdInt > 0 && rankIdInt < 8) {
+            if (rankIdInt > 0 && rankIdInt < 9) {
                 String rankNameVars = String.valueOf(PlayerRank.getRankForId(rankIdInt));
 
                 if (rankName.length() > 0 && rankBadge.length() > 0 && rankDescription.length() > 0) {
