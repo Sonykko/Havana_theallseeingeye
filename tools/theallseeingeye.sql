@@ -216,7 +216,7 @@ INSERT INTO `cms_banners` (`id`, `text`, `banner`, `url`, `status`, `advanced`, 
 
 INSERT INTO `cms_hot_campaigns` (`id`, `title`, `description`, `image`, `url`, `url_text`, `status`, `order_id`) VALUES
 (1, 'Under Construction', 'Put interesting text in here, because this text is just useless sitting here otherwise!', 'beta.gif', 'https://google.es', 'Go there', 1, 1),
-(2, 'Under Construction', 'Put interesting text in here, because this text is just useless sitting here otherwise!', 'habbobetahot.png', 'https://google.es', 'Go there', 1, 2);
+(2, 'Under Construction', 'Put interesting text in here, because this text is just useless sitting here otherwise!', 'habbobetahot.gif', 'https://google.es', 'Go there', 1, 2);
 
 -- --------------------------------------------------------
 
