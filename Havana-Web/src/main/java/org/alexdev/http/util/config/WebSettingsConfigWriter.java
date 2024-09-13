@@ -95,6 +95,7 @@ public class WebSettingsConfigWriter implements ConfigWriter {
         config.put("rcon.delete.stickie.message", "Nota eliminada por no respetar la Manera Habbo");
         config.put("rcon.room.unacceptable.name", "Nombre contra las normas");
         config.put("rcon.room.unacceptable.desc", "Sala contra las normas");
+        config.put("rcon.give.rank.message", "Se ha actualizado tu rango a %rank%");
 
         config.put("hobba.form.lang", "ES");
 

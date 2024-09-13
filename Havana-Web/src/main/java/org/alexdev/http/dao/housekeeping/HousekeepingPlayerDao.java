@@ -192,6 +192,81 @@ public class HousekeepingPlayerDao {
         return allRanksList;
     }
 
+    public static void setRank(String username, int rankId) {
+        Connection sqlConnection = null;
+        PreparedStatement preparedStatement = null;
+
+        try {
+
+            sqlConnection = Storage.getStorage().getConnection();
+            preparedStatement = Storage.getStorage().prepare("UPDATE users SET rank = ? WHERE username = ?", sqlConnection);
+            preparedStatement.setInt(1, rankId);
+            preparedStatement.setString(2, username);
+            preparedStatement.execute();
+
+        } catch (Exception e) {
+            Storage.logError(e);
+        } finally {
+            Storage.closeSilently(preparedStatement);
+            Storage.closeSilently(sqlConnection);
+        }
+    }
+
+    public static void setRankTextVars(int rankId, String rankName, String rankBadge, String rankDescription) {
+        Connection sqlConnection = null;
+        PreparedStatement preparedStatement = null;
+
+        try {
+
+            sqlConnection = Storage.getStorage().getConnection();
+            preparedStatement = Storage.getStorage().prepare("UPDATE ranks SET name = ?, badge = ?, description = ? WHERE id = ?", sqlConnection);
+            preparedStatement.setString(1, rankName);
+            preparedStatement.setString(2, rankBadge);
+            preparedStatement.setString(3, rankDescription);
+            preparedStatement.setInt(4, rankId);
+            preparedStatement.execute();
+
+        } catch (Exception e) {
+            Storage.logError(e);
+        } finally {
+            Storage.closeSilently(preparedStatement);
+            Storage.closeSilently(sqlConnection);
+        }
+    }
+
+    public static List<Map<String, Object>> getAllStaffsNames() {
+        List<Map<String, Object>> allStaffsNamesList = new ArrayList<>();
+
+        Connection sqlConnection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+
+        try {
+            sqlConnection = Storage.getStorage().getConnection();
+            preparedStatement = Storage.getStorage().prepare(
+                    "SELECT * FROM users WHERE rank > 2 ORDER BY rank DESC", sqlConnection);
+
+            resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                Map<String, Object> ranks = new HashMap<>();
+                ranks.put("id", resultSet.getInt("id"));
+                ranks.put("username", resultSet.getString("username"));
+
+                allStaffsNamesList.add(ranks);
+            }
+
+        } catch (Exception e) {
+            Storage.logError(e);
+        } finally {
+            Storage.closeSilently(resultSet);
+            Storage.closeSilently(preparedStatement);
+            Storage.closeSilently(sqlConnection);
+        }
+
+        return allStaffsNamesList;
+    }
+
     public static String CheckDBName(String username) {
         String UsernameIsValid = "";
 
@@ -246,26 +321,6 @@ public class HousekeepingPlayerDao {
         }
 
         return UserIdIsValid;
-    }
-
-    public static void setRank(String username, int rankId) {
-        Connection sqlConnection = null;
-        PreparedStatement preparedStatement = null;
-
-        try {
-
-            sqlConnection = Storage.getStorage().getConnection();
-            preparedStatement = Storage.getStorage().prepare("UPDATE users SET rank = ? WHERE username = ?", sqlConnection);
-            preparedStatement.setInt(1, rankId);
-            preparedStatement.setString(2, username);
-            preparedStatement.execute();
-
-        } catch (Exception e) {
-            Storage.logError(e);
-        } finally {
-            Storage.closeSilently(preparedStatement);
-            Storage.closeSilently(sqlConnection);
-        }
     }
 
     public static void setTrustedPerson(String username, int userID, String type) {
