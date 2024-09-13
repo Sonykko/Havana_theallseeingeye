@@ -372,6 +372,7 @@ INSERT INTO `settings_desc` (`setting`, `description`, `category`) VALUES
 ('rare.cycle.page.id', 'Set the ID of the catalogue Rare cycle page', 'catalogue'),
 ('rcon.cfh.reply.message', 'Set the default CFH reply message', 'housekeeping'),
 ('rcon.delete.stickie.message', 'Set the default reason for Delete Stickie Note', 'housekeeping'),
+('rcon.give.rank.message', 'Set the default message for remote give rank', 'housekeeping'),
 ('rcon.kick.message', 'Set the default alert message for Remote Kick', 'housekeeping'),
 ('rcon.room.unacceptable.desc', 'Set the default description for Unacceptable room', 'housekeeping'),
 ('rcon.room.unacceptable.name', 'Set the default name for Unacceptable room', 'housekeeping'),
@@ -704,6 +705,7 @@ UPDATE `settings` SET
       WHEN `setting` = 'rare.cycle.page.id' THEN 'catalogue'
 	  WHEN `setting` = 'rcon.cfh.reply.message' THEN 'housekeeping'
 	  WHEN `setting` = 'rcon.delete.stickie.message' THEN 'housekeeping'
+	  WHEN `setting` = 'rcon.give.rank.message' THEN 'housekeeping'
       WHEN `setting` = 'rcon.kick.message' THEN 'housekeeping'
       WHEN `setting` = 'rcon.room.unacceptable.desc' THEN 'housekeeping'
       WHEN `setting` = 'rcon.room.unacceptable.name' THEN 'housekeeping'
