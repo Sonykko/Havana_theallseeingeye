@@ -363,6 +363,7 @@ body { behavior: url({{ site.staticContentPath }}/web-gallery/js/csshover.htc); 
                 </div>
               </div>
 				{% endif %}
+				{% if hotCampaigns|length > 0 %}
 				<div class="habblet-container ">		
 						<div class="cbb clearfix orange ">
 
@@ -405,6 +406,7 @@ body { behavior: url({{ site.staticContentPath }}/web-gallery/js/csshover.htc); 
 						
 					</div>
 				</div>
+				{% endif %}
 
 				<script type="text/javascript">if (!$(document.body).hasClassName('process-template')) { Rounder.init(); }</script>
 				

@@ -10,6 +10,8 @@ import org.alexdev.http.game.housekeeping.HousekeepingManager;
 import org.alexdev.http.util.SessionUtil;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.List;
+
 public class HousekeepingHotCampaignsController {
     public static void hot_campaigns(WebConnection client) {
         if (!client.session().getBoolean(SessionUtil.LOGGED_IN_HOUSKEEPING)) {
@@ -119,8 +121,11 @@ public class HousekeepingHotCampaignsController {
             client.session().set("alertMessage", "Please enter a valid Hot Campaign order ID");
         }
 
+        List<String> images = HousekeepingPromotionDao.getHotCampaignImages();
+
         tpl.set("pageName", "Hot Campaigns");
         tpl.set("HotCampaigns", HousekeepingPromotionDao.getAllHotCampaigns());
+        tpl.set("images", images);
         tpl.render();
 
         client.session().delete("alertMessage");

@@ -3,6 +3,11 @@
     {% set articlesCreateActive = " active " %}
 	{% include "housekeeping/base/navigation.tpl" %}
 	{% include "housekeeping/base/navigation_campaign_management.tpl" %}
+	<script type="text/javascript">
+	function previewTS(el) {
+		document.getElementById('ts-preview').innerHTML = '<img src="{{ site.staticContentPath }}/c_images/hot_campaign_images_all/' + el + '" class="hot__campaign__image" /><br />';
+	}
+	</script>
 	     <h2 class="mt-4">Hot campaigns tool</h2>
 		{% include "housekeeping/base/alert.tpl" %}
 		{% if isHotCampaignEdit %}
@@ -16,10 +21,18 @@
 			<div class="form-group">
 				<label>Description</label>
 				<textarea name="description" class="form-control" id="description" placeholder="Enter here the description for the Hot Campaign...">{{ hotCampaignEdit.description }}</textarea>
-			</div>
+			</div>			
 			<div class="form-group">
 				<label>Image</label>
-				<input type="text" name="saveHotCampaign" class="form-control" id="saveHotCampaign" placeholder="Enter here a URL of the image for the Hot Campaign..." value="{{ hotCampaignEdit.image }}" />
+				<p>
+					<select onkeypress="previewTS(this.value);" onchange="previewTS(this.value);" name="saveHotCampaign" id="saveHotCampaign">
+					{% for image in images %}<option value="{{ image }}"{% if image == hotCampaignEdit.image %} selected{% endif %}>{{ image }}</option>{% endfor %}
+					</select>
+				</p>
+			</div>
+			<div class="form-group">
+				<label>Image Preview</label>
+				<div id="ts-preview"><img src="{{ site.staticContentPath }}/c_images/hot_campaign_images_all/{{ hotCampaignEdit.image }}" class="hot__campaign__image" /></div>
 			</div>
 			<div class="form-group">
 				<label>URL</label>
@@ -56,7 +69,15 @@
 			</div>
 			<div class="form-group">
 				<label>Image</label>
-				<input type="text" name="createHotCampaign" class="form-control" id="createHotCampaign" placeholder="Enter here a URL of the image for the Hot Campaign..." value="" />
+				<p>
+					<select onkeypress="previewTS(this.value);" onchange="previewTS(this.value);" name="createHotCampaign" id="createHotCampaign">
+					{% for image in images %}<option value="{{ image }}">{{ image }}</option>{% endfor %}
+					</select>
+				</p>
+			</div>
+			<div class="form-group">
+				<label>Image Preview</label>
+				<div id="ts-preview"><img src="{{ site.staticContentPath }}/c_images/hot_campaign_images_all/33_campaignButton.gif" class="hot__campaign__image" /></div>
 			</div>
 			<div class="form-group">
 				<label>URL</label>
@@ -103,11 +124,12 @@
 				  <td>{{ hotCampaign.id }}</td>                               
 				  <td>{{ hotCampaign.title }}</td>                 
 				  <td>{{ hotCampaign.description }}</td>                 
-				  <td>{{ hotCampaign.image }}</td>                 			 
+				  <td><img src="{{ site.staticContentPath }}/c_images/hot_campaign_images_all/{{ hotCampaign.image }}" class="hot__campaign__image" /></td>                 			 
 				  <td>{{ hotCampaign.url }}</td>                 			 
 				  <td>{{ hotCampaign.urlText }}</td>                 			 
 				  <td>{% if hotCampaign.status == 1 %}Active{% else %}Hidden{% endif %}</td>                 			             			 
 				  <td>{{ hotCampaign.orderId }}</td>                 			 
+				  <!--<td>{% if recommended.isPicked == 1 %}Yes{% else %}No{% endif %}</td>-->
 				  <td>
 					<a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/campaign_management/hot_campaigns?edit={{ hotCampaign.id }}" style="color:black;"><button type="button">Edit</button></a>
 					<a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/campaign_management/hot_campaigns?delete={{ hotCampaign.id }}" style="color:black;"><button type="button">Delete</button></a>
