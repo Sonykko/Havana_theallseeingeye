@@ -58,7 +58,7 @@ public class HousekeepingRecommendedController {
                 recoId = client.get().getInt("delete");
 
                 HousekeepingPromotionDao.deletePickReco(recoId, "GROUP", 0);
-                HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Recommended group with the ID " + recoId + ". URL: " + client.request().uri(), client.getIpAddress());
+                HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Deleted Recommended group with the ID " + recoId + ". URL: " + client.request().uri(), client.getIpAddress());
 
                 client.session().set("alertColour", "success");
                 client.session().set("alertMessage", "The Recommended has been successfully deleted");
