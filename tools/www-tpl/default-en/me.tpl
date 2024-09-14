@@ -350,9 +350,9 @@
                      </div>
                   </div>
                   {% endif %}
-                  <div class="habblet-container ">
-                     
-                     <div class="cbb clearfix orange ">
+				{% if hotCampaigns|length > 0 %}
+				<div class="habblet-container ">		
+					<div class="cbb clearfix orange ">
 						<h2 class="title">Hot Campaigns							</h2>
 						<div id="hotcampaigns-habblet-list-container">
 							<ul id="hotcampaigns-habblet-list">
@@ -373,21 +373,23 @@
 								</li>
 								{% set num = num + 1 %}
 								{% endfor %}
-                               <!--
-                                  <li class="odd">
-                                      <div class="hotcampaign-container">
-                                          <a href="{{ site.sitePath }}/articles"><img src="{{ site.staticContentPath }}/c_images/hot_campaign_images_gb/hc.gif" align="left" alt="" /></a>
-                                          <h3>Exclusive Furniture!</h3>
-                                          <p>Join Habbo Club today and get access to exclusive furniture!</p>
+								
+								<!-- 
+								<li class="odd">
+									<div class="hotcampaign-container">
+										<a href="{{ site.sitePath }}/articles"><img src="{{ site.staticContentPath }}/c_images/hot_campaign_images_gb/hc.gif" align="left" alt="" /></a>
+										<h3>Exclusive Furniture!</h3>
+										<p>Join Habbo Club today and get access to exclusive furniture!</p>
 
-                                          <p class="link"><a href="https://classichabbo.com/credits/club">Go there &raquo;</a></p>
-                                      </div>
-                                  </li>
-                                  -->
-                            </ul>
-                         </div>
-                      </div>
-                  </div>
+										<p class="link"><a href="https://classichabbo.com/credits/club">Go there &raquo;</a></p>
+									</div>
+								</li>
+								-->
+							</ul>
+						</div>					
+					</div>
+				</div>
+				{% endif %}
                   <script type="text/javascript">if (!$(document.body).hasClassName('process-template')) { Rounder.init(); }</script>
                   <div class="habblet-container minimail" id="mail">
                      <div class="cbb clearfix blue ">

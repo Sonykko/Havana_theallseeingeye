@@ -1,14 +1,14 @@
 package org.alexdev.http.dao.housekeeping;
 
+import org.alexdev.duckhttpd.util.config.Settings;
 import org.alexdev.havana.dao.Storage;
 
+import java.io.File;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class HousekeepingPromotionDao {
     public static List<Map<String, Object>> getAllPickReco(int isPick) {
@@ -416,5 +416,20 @@ public class HousekeepingPromotionDao {
             Storage.closeSilently(preparedStatement);
             Storage.closeSilently(sqlConnection);
         }
+    }
+
+    public static List<String> getHotCampaignImages() {
+        List<String> images = new ArrayList<String>();
+
+        for (File file : Objects.requireNonNull(Paths.get(Settings.getInstance().getSiteDirectory(), "c_images", "hot_campaign_images_all").toFile().listFiles())) {
+            if (!file.getName().contains(".gif")) {
+                continue;
+            }
+
+            images.add(file.getName());
+        }
+
+        Collections.sort(images);
+        return images;
     }
 }
