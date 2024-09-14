@@ -11,7 +11,7 @@
 		<form class="table-responsive col-md-4" method="post"><input type="hidden" name="sid" value="7">
 			<div class="form-group">
 				<label>Badge</label>
-				<div><img src="{{ site.staticContentPath }}/habbo-imaging/badge/{{ recommendedEdit.groupImage }}.gif" class="badge__group" /></div>
+				<div><img src="{{ site.sitePath }}/habbo-imaging/badge/{{ recommendedEdit.groupImage }}.gif" class="badge__group" /></div>
 			</div>
 			<div class="form-group">
 				<label>Name</label>
@@ -83,7 +83,7 @@
 			    {% set num = 1 %}
 				{% for recommended in RecommendedList %}
                 <tr>
-                  <td><img src="{{ site.staticContentPath }}/habbo-imaging/badge/{{ recommended.groupImage }}.gif" class="badge__group" /></td>
+                  <td><img src="{{ site.sitePath }}/habbo-imaging/badge/{{ recommended.groupImage }}.gif" class="badge__group" /></td>
 				  <td>{{ recommended.ID }}</td>                               
 				  <td>{{ recommended.groupName }}</td>                 
 				  <td>{{ recommended.groupDescription }}</td>                 
