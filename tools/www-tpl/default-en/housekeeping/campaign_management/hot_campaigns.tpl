@@ -102,6 +102,7 @@
 		</form>
           <h2 class="mt-4">Edit hot campaigns</h2>
 		  <p>The Hot Campaigns list is seen below.</p>
+		  {% if RecommendedList|length > 0 %}
           <div class="table-responsive">
             <table class="table table-striped">
               <thead>
@@ -141,6 +142,9 @@
               </tbody>
             </table>
       </div>
+	  {% else %}
+	  <p>No Hot Campaigns found to display.</p>
+	  {% endif %}	  
 	  {% endif %}
     </div>
   </div>
