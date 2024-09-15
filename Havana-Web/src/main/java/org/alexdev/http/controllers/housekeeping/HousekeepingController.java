@@ -170,7 +170,7 @@ public class HousekeepingController {
 
         client.session().set(SessionUtil.LOGGED_IN_HOUSKEEPING, true);
         client.session().set(SessionUtil.USER_ID, String.valueOf(playerDetails.getId()));
-        client.redirect("/ase/habbo/es/housekeeping/extra/hobba/statistics");
+        client.redirect("/ase/habbo/es/housekeeping/extra/hobba/admin_tools");
     }
 
     /**
