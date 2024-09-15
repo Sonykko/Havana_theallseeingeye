@@ -34,132 +34,172 @@ public class HousekeepingRecommendedController {
             return;
         }
 
-        int recoId = 0;
+        long recoId = 0;
 
         if (client.post().contains("create")) {
-            if (!StringUtils.isEmpty(client.post().getString("create")) && StringUtils.isNumeric(client.post().getString("create")) && client.post().getInt("create") > 0) {
-                recoId = client.post().getInt("create");
+            String create = client.post().getString("create");
 
-                Group group = GroupDao.getGroup(recoId);
-
-                if (group == null) {
-                    client.session().set("alertColour", "danger");
-                    client.session().set("alertMessage", "The Recommended ID not exists");
-                } else {
-                    HousekeepingPromotionDao.createPickReco(recoId, "GROUP", 0);
-                    HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Created Recommended group with the ID " + recoId + ". URL: " + client.request().uri(), client.getIpAddress());
-
-                    client.session().set("alertColour", "success");
-                    client.session().set("alertMessage", "The Recommended has been successfully created");
-                    client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/campaign_management/recommended");
-
-                    return;
-                }
-            } else {
+            if (StringUtils.isEmpty(create) || !StringUtils.isNumeric(create)) {
                 client.session().set("alertColour", "danger");
                 client.session().set("alertMessage", "Please enter a valid Recommended ID");
+                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/campaign_management/recommended");
+                return;
             }
+
+            recoId = Long.parseLong(create);
+
+            Group group = GroupDao.getGroup((int) recoId);
+
+            if (group == null) {
+                client.session().set("alertColour", "danger");
+                client.session().set("alertMessage", "The group not exists");
+                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/campaign_management/recommended");
+                return;
+            }
+
+            List<Map<String, Object>> checkPickReco = HousekeepingPromotionDao.EditPickReco((int) recoId, "GROUP", 0);
+
+            if (!checkPickReco.isEmpty()) {
+                client.session().set("alertColour", "danger");
+                client.session().set("alertMessage", "The Recommended ID is already a Recommended group");
+                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/campaign_management/recommended");
+                return;
+            }
+
+            HousekeepingPromotionDao.createPickReco((int) recoId, "GROUP", 0);
+            HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Created Recommended group with the ID " + recoId + ". URL: " + client.request().uri(), client.getIpAddress());
+
+            client.session().set("alertColour", "success");
+            client.session().set("alertMessage", "The Recommended has been successfully created");
+            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/campaign_management/recommended");
+            return;
         }
 
         if (client.get().contains("delete")) {
-            if (!StringUtils.isEmpty(client.get().getString("delete")) && StringUtils.isNumeric(client.get().getString("delete")) && client.get().getInt("delete") > 0) {
-                recoId = client.get().getInt("delete");
+            String delete = client.get().getString("delete");
 
-                Group group = GroupDao.getGroup(recoId);
-
-                if (group == null) {
-                    client.session().set("alertColour", "danger");
-                    client.session().set("alertMessage", "The Recommended ID not exists");
-                } else {
-
-                    HousekeepingPromotionDao.deletePickReco(recoId, "GROUP", 0);
-                    HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Deleted Recommended group with the ID " + recoId + ". URL: " + client.request().uri(), client.getIpAddress());
-
-                    client.session().set("alertColour", "success");
-                    client.session().set("alertMessage", "The Recommended has been successfully deleted");
-                    client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/campaign_management/recommended");
-
-                    return;
-                }
-            } else {
+            if (StringUtils.isEmpty(delete) || !StringUtils.isNumeric(delete)) {
                 client.session().set("alertColour", "danger");
                 client.session().set("alertMessage", "Please enter a valid Recommended ID");
+                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/campaign_management/recommended");
+                return;
             }
+
+            recoId = client.get().getInt("delete");
+
+            Group group = GroupDao.getGroup((int) recoId);
+            List<Map<String, Object>> checkPickReco = HousekeepingPromotionDao.EditPickReco((int) recoId, "GROUP", 0);
+
+            if (group == null || checkPickReco.isEmpty()) {
+                client.session().set("alertColour", "danger");
+                client.session().set("alertMessage", "The Recommended ID not exists");
+                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/campaign_management/recommended");
+                return;
+            }
+
+            HousekeepingPromotionDao.deletePickReco((int) recoId, "GROUP", 0);
+            HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Deleted Recommended group with the ID " + recoId + ". URL: " + client.request().uri(), client.getIpAddress());
+
+            client.session().set("alertColour", "success");
+            client.session().set("alertMessage", "The Recommended has been successfully deleted");
+            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/campaign_management/recommended");
+            return;
+
         }
 
         if (client.get().contains("edit")) {
-            if (!StringUtils.isEmpty(client.get().getString("edit")) && StringUtils.isNumeric(client.get().getString("edit")) && client.get().getInt("edit") > 0) {
-                recoId = client.get().getInt("edit");
+            String edit = client.get().getString("edit");
 
-                Group groupEdit = GroupDao.getGroup(recoId);
-
-                if (groupEdit == null) {
-                    client.session().set("alertColour", "danger");
-                    client.session().set("alertMessage", "The Recommended ID not exists");
-                } else {
-                    List<Map<String, Object>> recommendedEditList = HousekeepingPromotionDao.EditPickReco(recoId, "GROUP", 0);
-
-                    for (Map<String, Object> recommendedEdit : recommendedEditList) {
-                        int recommendedId = (int) recommendedEdit.get("ID");
-                        String typeRoomGroup = (String) recommendedEdit.get("type");
-                        int isPicked = (int) recommendedEdit.get("isPicked");
-
-                        Group group = GroupDao.getGroup(recommendedId);
-
-                        recommendedEdit.put("groupName", group.getName());
-                        recommendedEdit.put("groupDescription", group.getDescription());
-                        recommendedEdit.put("groupOwner", PlayerDao.getDetails(group.getOwnerId()).getName());
-                        recommendedEdit.put("groupId", group.getId());
-                        recommendedEdit.put("groupImage", group.getBadge());
-                        recommendedEdit.put("type", typeRoomGroup);
-                        recommendedEdit.put("isPicked", isPicked);
-
-                    }
-
-                    tpl.set("editingReco", true);
-                    tpl.set("RecommendedEditList", recommendedEditList);
-                    client.session().set("editSession", recoId);
-                }
-            } else {
+            if (StringUtils.isEmpty(edit) || !StringUtils.isNumeric(edit)) {
                 client.session().set("alertColour", "danger");
                 client.session().set("alertMessage", "Please enter a valid Recommended ID");
+                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/campaign_management/recommended");
+                return;
             }
+
+            recoId = client.get().getInt("edit");
+
+            Group groupEdit = GroupDao.getGroup((int) recoId);
+            List<Map<String, Object>> checkPickReco = HousekeepingPromotionDao.EditPickReco((int) recoId, "GROUP", 0);
+
+            if (groupEdit == null || checkPickReco.isEmpty()) {
+                tpl.set("editingReco", false);
+                client.session().set("alertColour", "danger");
+                client.session().set("alertMessage", "The Recommended ID not exists");
+                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/campaign_management/recommended");
+                return;
+            }
+
+            List<Map<String, Object>> recommendedEditList = HousekeepingPromotionDao.EditPickReco((int) recoId, "GROUP", 0);
+
+            for (Map<String, Object> recommendedEdit : recommendedEditList) {
+                int recommendedId = (int) recommendedEdit.get("ID");
+                String typeRoomGroup = (String) recommendedEdit.get("type");
+                int isPicked = (int) recommendedEdit.get("isPicked");
+
+                Group group = GroupDao.getGroup(recommendedId);
+
+                recommendedEdit.put("groupName", group.getName());
+                recommendedEdit.put("groupDescription", group.getDescription());
+                recommendedEdit.put("groupOwner", PlayerDao.getDetails(group.getOwnerId()).getName());
+                recommendedEdit.put("groupId", group.getId());
+                recommendedEdit.put("groupImage", group.getBadge());
+                recommendedEdit.put("type", typeRoomGroup);
+                recommendedEdit.put("isPicked", isPicked);
+
+            }
+
+            tpl.set("editingReco", true);
+            tpl.set("RecommendedEditList", recommendedEditList);
+            client.session().set("editSession", recoId);
         } else {
             tpl.set("editingReco", false);
             client.session().set("editSession", recoId);
         }
 
         if (client.post().getString("sid").equals("7")) {
-            if (!StringUtils.isEmpty(client.post().getString("IdSave")) && StringUtils.isNumeric(client.post().getString("IdSave")) && client.post().getInt("IdSave") > 0) {
+            String save = client.post().getString("IdSave");
 
-                recoId = client.session().getInt("editSession");
-
-                String recoIdSave = client.post().getString("IdSave");
-                int recoIdSaveInt = Integer.parseInt(recoIdSave);
-                String typeSave = client.post().getString("typeSave");
-                int isPickedSave = client.post().getInt("isPickedSave");
-
-                Group group = GroupDao.getGroup(recoId);
-                Group groupSave = GroupDao.getGroup(recoIdSaveInt);
-
-                if (group == null || groupSave == null) {
-                    client.session().set("alertColour", "danger");
-                    client.session().set("alertMessage", "The Recommended ID not exists");
-                } else {
-                    //HousekeepingPromotionDao.SaveRecommended(recoIdSave, typeSave, isPicked, recoId);
-                    HousekeepingPromotionDao.SavePickReco(recoIdSave, typeSave, isPickedSave, recoId, "GROUP", 0);
-                    HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Edited Recommended group with the ID " + recoId + " (anterior), " + recoIdSave + "(posterior). URL: " + client.request().uri(), client.getIpAddress());
-
-                    client.session().set("alertColour", "success");
-                    client.session().set("alertMessage", "The Recommended has been successfully saved");
-                    client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/campaign_management/recommended");
-
-                    return;
-                }
-            } else {
+            if (StringUtils.isEmpty(save) || !StringUtils.isNumeric(save)) {
                 client.session().set("alertColour", "danger");
                 client.session().set("alertMessage", "Please enter a valid Recommended ID");
+                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/campaign_management/recommended");
+                return;
             }
+
+            recoId = client.session().getInt("editSession");
+
+            String recoIdSave = client.post().getString("IdSave");
+            long recoIdSaveInt = Integer.parseInt(recoIdSave);
+            int setStaffPick = client.post().getInt("setStaffPick");
+
+            Group group = GroupDao.getGroup((int) recoId);
+            Group groupSave = GroupDao.getGroup((int) recoIdSaveInt);
+
+            List<Map<String, Object>> checkIsPic = HousekeepingPromotionDao.EditPickReco((int) recoIdSaveInt, "GROUP", 0);
+            List<Map<String, Object>> chechkIsReco = HousekeepingPromotionDao.EditPickReco((int) recoIdSaveInt, "GROUP", 1);
+
+            if (group == null || groupSave == null) {
+                client.session().set("alertColour", "danger");
+                client.session().set("alertMessage", "The Recommended ID not exists");
+                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/campaign_management/recommended");
+                return;
+            }
+
+            if (recoId != recoIdSaveInt && !checkIsPic.isEmpty() || setStaffPick == 1 && !chechkIsReco.isEmpty()) {
+                client.session().set("alertColour", "danger");
+                client.session().set("alertMessage", "The Recommended ID is already a Recommended group or Staff Pick");
+                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/campaign_management/recommended?edit=" + recoId);
+                return;
+            }
+
+            HousekeepingPromotionDao.SavePickReco(recoIdSave, "GROUP", setStaffPick, (int) recoId, "GROUP", 0);
+            HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Edited Recommended group with the ID " + recoId + " (anterior), " + recoIdSave + "(posterior). URL: " + client.request().uri(), client.getIpAddress());
+
+            client.session().set("alertColour", "success");
+            client.session().set("alertMessage", "The Recommended has been successfully saved");
+            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/campaign_management/recommended");
+            return;
         }
 
         List<Map<String, Object>> recommendedList = HousekeepingPromotionDao.getAllPickReco(0);
