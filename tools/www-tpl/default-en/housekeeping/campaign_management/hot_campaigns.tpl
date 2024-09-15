@@ -143,7 +143,7 @@
             </table>
       </div>
 	  {% else %}
-	  <p>No Recommended groups found to display.</p>
+	  <p>No Hot Campaigns found to display.</p>
 	  {% endif %}	  
 	  {% endif %}
     </div>
