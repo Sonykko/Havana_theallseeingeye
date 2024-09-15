@@ -100,6 +100,7 @@
 			</div>
 			<button type="submit">Add Hot Campaign</button>
 		</form>
+		<br /><br />
           <h2 class="mt-4">Edit hot campaigns</h2>
 		  <p>The Hot Campaigns list is seen below.</p>
 		  {% if HotCampaigns|length > 0 %}
@@ -115,7 +116,7 @@
 				  <th>URL Text</th>
 				  <th>Status</th>
 				  <th>Order ID</th>
-				  <th>Action</th>
+				  <th></th>
                 </tr>
               </thead>
               <tbody>
@@ -130,7 +131,6 @@
 				  <td>{{ hotCampaign.urlText }}</td>                 			 
 				  <td>{% if hotCampaign.status == 1 %}Active{% else %}Hidden{% endif %}</td>                 			             			 
 				  <td>{{ hotCampaign.orderId }}</td>                 			 
-				  <!--<td>{% if recommended.isPicked == 1 %}Yes{% else %}No{% endif %}</td>-->
 				  <td>
 					<a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/campaign_management/hot_campaigns?edit={{ hotCampaign.id }}" style="color:black;"><button type="button">Edit</button></a>
 					<a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/campaign_management/hot_campaigns?delete={{ hotCampaign.id }}" style="color:black;"><button type="button">Delete</button></a>
@@ -143,7 +143,7 @@
             </table>
       </div>
 	  {% else %}
-	  <p>No Hot Campaigns found to display.</p>
+	  <p>No Recommended groups found to display.</p>
 	  {% endif %}	  
 	  {% endif %}
     </div>
