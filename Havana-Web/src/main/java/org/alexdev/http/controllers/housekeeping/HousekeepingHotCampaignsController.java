@@ -11,6 +11,7 @@ import org.alexdev.http.util.SessionUtil;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
+import java.util.Map;
 
 public class HousekeepingHotCampaignsController {
     public static void hot_campaigns(WebConnection client) {
@@ -40,53 +41,90 @@ public class HousekeepingHotCampaignsController {
             String statusString = client.post().getString("status");
             String orderIdString = client.post().getString("orderId");
 
-            if (StringUtils.isNumeric(orderIdString) && Integer.parseInt(orderIdString) > 0) {
-                int status = Integer.parseInt(statusString);
-                int orderId = Integer.parseInt(orderIdString);
-
-                HousekeepingPromotionDao.createHotCampaign(title, description, createHotCampaign, url, urlText, status, orderId);
-                HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Created Hot Campaign. URL: " + client.request().uri(), client.getIpAddress());
-
-                client.session().set("alertColour", "success");
-                client.session().set("alertMessage", "The Hot Campaign has been successfully created");
+            if (!StringUtils.isNumeric(orderIdString)) {
+                client.session().set("alertColour", "danger");
+                client.session().set("alertMessage", "Please enter a valid Hot Campaign order ID");
                 client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/campaign_management/hot_campaigns");
 
                 return;
             }
 
-            client.session().set("alertColour", "danger");
-            client.session().set("alertMessage", "Please enter a valid Hot Campaign order ID");
+            int status = Integer.parseInt(statusString);
+            int orderId = Integer.parseInt(orderIdString);
+
+            if (title.isEmpty() || description.isEmpty()) {
+                client.session().set("alertColour", "danger");
+                client.session().set("alertMessage", "Please enter a valid Hot Campaign title and description");
+                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/campaign_management/hot_campaigns");
+                return;
+            }
+
+
+            HousekeepingPromotionDao.createHotCampaign(title, description, createHotCampaign, url, urlText, status, orderId);
+            HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Created Hot Campaign. URL: " + client.request().uri(), client.getIpAddress());
+
+            client.session().set("alertColour", "success");
+            client.session().set("alertMessage", "The Hot Campaign has been successfully created");
+            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/campaign_management/hot_campaigns");
+
+            return;
         }
 
         if (client.get().contains("delete")) {
             String hotCampaignIdString = client.get().getString("delete");
 
-            if (StringUtils.isNumeric(hotCampaignIdString) && Integer.parseInt(hotCampaignIdString) > 0) {
-                int hotCampaignId = Integer.parseInt(hotCampaignIdString);
-                HousekeepingPromotionDao.deleteHotCampaign(hotCampaignId);
-                HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Deleted Hot Campaign with the ID " + hotCampaignId + ". URL: " + client.request().uri(), client.getIpAddress());
-
-                client.session().set("alertColour", "success");
-                client.session().set("alertMessage", "The Hot Campaign has been successfully deleted");
+            if (!StringUtils.isNumeric(hotCampaignIdString)) {
+                client.session().set("alertColour", "danger");
+                client.session().set("alertMessage", "Please enter a valid Hot Campaign ID");
                 client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/campaign_management/hot_campaigns");
-
                 return;
             }
 
-            client.session().set("alertColour", "danger");
-            client.session().set("alertMessage", "Please enter a valid Hot Campaign ID");
+            int hotCampaignId = Integer.parseInt(hotCampaignIdString);
+
+            List<Map<String, Object>> checkHotCampaign = HousekeepingPromotionDao.EditHotCampaign(hotCampaignId);
+
+            if (checkHotCampaign.isEmpty()) {
+                client.session().set("alertColour", "danger");
+                client.session().set("alertMessage", "The Hot Campaign ID not exists");
+                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/campaign_management/hot_campaigns");
+                return;
+            }
+
+            HousekeepingPromotionDao.deleteHotCampaign(hotCampaignId);
+            HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Deleted Hot Campaign with the ID " + hotCampaignId + ". URL: " + client.request().uri(), client.getIpAddress());
+
+            client.session().set("alertColour", "success");
+            client.session().set("alertMessage", "The Hot Campaign has been successfully deleted");
+            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/campaign_management/hot_campaigns");
+            return;
         }
 
         if (client.get().contains("edit")) {
             String editIdString = client.get().getString("edit");
 
-            if (StringUtils.isNumeric(editIdString)) {
-                int editId = Integer.parseInt(editIdString);
-                tpl.set("HotCampaignEdit", HousekeepingPromotionDao.EditHotCampaign(editId));
-                tpl.set("isHotCampaignEdit", true);
-            } else {
+            if (!StringUtils.isNumeric(editIdString)) {
+                client.session().set("alertColour", "danger");
+                client.session().set("alertMessage", "Please enter a valid Hot Campaign ID");
+                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/campaign_management/hot_campaigns");
                 tpl.set("isHotCampaignEdit", false);
+                return;
             }
+
+            int editId = Integer.parseInt(editIdString);
+
+            List<Map<String, Object>> checkHotCampaign = HousekeepingPromotionDao.EditHotCampaign(editId);
+
+            if (checkHotCampaign.isEmpty()) {
+                client.session().set("alertColour", "danger");
+                client.session().set("alertMessage", "The Hot Campaign ID not exists");
+                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/campaign_management/hot_campaigns");
+                tpl.set("isHotCampaignEdit", false);
+                return;
+            }
+
+            tpl.set("HotCampaignEdit", HousekeepingPromotionDao.EditHotCampaign(editId));
+            tpl.set("isHotCampaignEdit", true);
         } else {
             tpl.set("isHotCampaignEdit", false);
         }
@@ -102,23 +140,41 @@ public class HousekeepingHotCampaignsController {
             String orderIdString = client.post().getString("orderId");
             String editIdString = client.get().getString("edit");
 
-            if (StringUtils.isNumeric(orderIdString) && Integer.parseInt(orderIdString) > 0) {
-                int status = Integer.parseInt(statusString);
-                int orderId = Integer.parseInt(orderIdString);
-                int hotCampaignId = Integer.parseInt(editIdString);
-
-                HousekeepingPromotionDao.saveHotCampaign(title, description, saveHotCampaign, url, urlText, status, orderId, hotCampaignId);
-                HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Edited Hot Campaign with the ID " + hotCampaignId + ". URL: " + client.request().uri(), client.getIpAddress());
-
-                client.session().set("alertColour", "success");
-                client.session().set("alertMessage", "The Hot Campaign has been successfully saved");
-                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/campaign_management/hot_campaigns");
-
+            if (!StringUtils.isNumeric(orderIdString)) {
+                client.session().set("alertColour", "danger");
+                client.session().set("alertMessage", "Please enter a valid Hot Campaign order ID");
+                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/campaign_management/hot_campaigns?edit="+ editIdString);
                 return;
             }
 
-            client.session().set("alertColour", "danger");
-            client.session().set("alertMessage", "Please enter a valid Hot Campaign order ID");
+            int status = Integer.parseInt(statusString);
+            int orderId = Integer.parseInt(orderIdString);
+            int hotCampaignId = Integer.parseInt(editIdString);
+
+            List<Map<String, Object>> checkHotCampaign = HousekeepingPromotionDao.EditHotCampaign(hotCampaignId);
+
+            if (checkHotCampaign.isEmpty()) {
+                client.session().set("alertColour", "danger");
+                client.session().set("alertMessage", "The Hot Campaign ID not exists");
+                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/campaign_management/hot_campaigns?edit="+ hotCampaignId);
+                return;
+            }
+
+            if (title.isEmpty() || description.isEmpty()) {
+                client.session().set("alertColour", "danger");
+                client.session().set("alertMessage", "Please enter a valid Hot Campaign title and description");
+                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/campaign_management/hot_campaigns?edit="+ hotCampaignId);
+                return;
+            }
+
+            HousekeepingPromotionDao.saveHotCampaign(title, description, saveHotCampaign, url, urlText, status, orderId, hotCampaignId);
+            HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Edited Hot Campaign with the ID " + hotCampaignId + ". URL: " + client.request().uri(), client.getIpAddress());
+
+            client.session().set("alertColour", "success");
+            client.session().set("alertMessage", "The Hot Campaign has been successfully saved");
+            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/campaign_management/hot_campaigns");
+
+            return;
         }
 
         List<String> images = HousekeepingPromotionDao.getHotCampaignImages();
