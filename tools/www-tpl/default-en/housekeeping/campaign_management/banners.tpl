@@ -90,7 +90,7 @@
                   <th>Status</th>
 				  <th>Is Advanced</th>
 				  <th>Order ID</th>
-				  <th>Action</th>
+				  <th></th>
                 </tr>
               </thead>
               <tbody>
