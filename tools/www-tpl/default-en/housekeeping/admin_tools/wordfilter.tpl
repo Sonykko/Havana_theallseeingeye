@@ -64,7 +64,7 @@
 				{% set ourNextPage = page - 1 %}
 				<a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/wordfilter?page={{ ourNextPage }}&sort={{ sortBy }}"><button type="button">Go back</button></a>
 			{% endif %}
-		  </div>
+		</div>
           <div class="table-responsive">
             <table class="table table-striped">
               <thead>
@@ -73,7 +73,7 @@
                   <th><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/wordfilter?page={{ page }}&sort=word">Word</a></th>
                   <th>Is Bannable?</th>
                   <th>Is Filterable?</th>
-                  <th>Action</th>
+                  <th></th>
                 </tr>
               </thead>
               <tbody>
@@ -84,7 +84,6 @@
 				  <td>{{ word.wordFilter }}</td>                                			 
 				  <td>{% if word.isBannable == 1 %}Yes{% else %}No{% endif %}</td>                 			 
 				  <td>{% if word.isFilterable == 1 %}Yes{% else %}No{% endif %}</td>                 			                  			 
-				  <!--<td>{% if recommended.isPicked == 1 %}Yes{% else %}No{% endif %}</td>-->
 				  <td>
 					<a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/wordfilter?edit={{ word.id }}" style="color:black;"><button type="button">Edit</button></a>
 					<a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/wordfilter?delete={{ word.id }}" style="color:black;"><button type="button">Delete</button></a>
