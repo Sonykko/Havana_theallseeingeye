@@ -10,6 +10,8 @@ import org.alexdev.http.game.housekeeping.HousekeepingManager;
 import org.alexdev.http.util.SessionUtil;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 public class HousekeepingCoinsController {
@@ -46,24 +48,43 @@ public class HousekeepingCoinsController {
             } else {
                 expiryDate = null;
             }
-            int isSingleUse = client.post().getInt("isSingleUse");
-            int allowNewUsers = client.post().getInt("allowNewUsers");
+            String isSingleUseStrg = client.post().getString("isSingleUse");
+            String allowNewUsersStrg = client.post().getString("allowNewUsers");
 
-            if (!client.post().getString("voucherCode").isEmpty()) {
-                String type = StringUtils.isEmpty(item) ? "" : "voucherItem";
-
-                HousekeepingCoinsDao.createVoucher(voucherCode, credits, expiryDate, isSingleUse, allowNewUsers, item, type);
-                HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Created the voucher code " + voucherCode + " with a value of " + credits + " credits. URL: " + client.request().uri(), client.getIpAddress());
-
-                client.session().set("alertColour", "success");
-                client.session().set("alertMessage", "The Voucher code has been successfully created");
+            if (voucherCode.isEmpty() || item.isEmpty() && credits.equals("0")) {
+                client.session().set("alertColour", "danger");
+                client.session().set("alertMessage", "Please enter a valid Voucher or sale code or amount of credits");
                 client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/vouchers");
-
                 return;
             }
 
-            client.session().set("alertColour", "danger");
-            client.session().set("alertMessage", "Please enter a valid Voucher code or amount of credits");
+            if (!isSingleUseStrg.equals("0") && !isSingleUseStrg.equals("1") || !allowNewUsersStrg.equals("0") && !allowNewUsersStrg.equals("1")) {
+                client.session().set("alertColour", "danger");
+                client.session().set("alertMessage", "Please enter a valid value for single use or allow new users");
+                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/vouchers");
+                return;
+            }
+
+            int isSingleUse = Integer.parseInt(isSingleUseStrg);
+            int allowNewUsers = Integer.parseInt(allowNewUsersStrg);
+
+            List<Map<String, Object>> checkVoucherCode = HousekeepingCoinsDao.getVoucherByCode(voucherCode);
+            if (!checkVoucherCode.isEmpty()) {
+                client.session().set("alertColour", "danger");
+                client.session().set("alertMessage", "The Voucher code already exists");
+                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/vouchers");
+                return;
+            }
+
+            String type = StringUtils.isEmpty(item) ? "" : "voucherItem";
+
+            HousekeepingCoinsDao.createVoucher(voucherCode, credits, expiryDate, isSingleUse, allowNewUsers, item, type);
+            HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Created the voucher code " + voucherCode + " with a value of " + credits + " credits. URL: " + client.request().uri(), client.getIpAddress());
+
+            client.session().set("alertColour", "success");
+            client.session().set("alertMessage", "The Voucher code has been successfully created");
+            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/vouchers");
+            return;
         }
 
         tpl.set("pageName", "Vouchers codes");
