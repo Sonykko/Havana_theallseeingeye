@@ -81,4 +81,36 @@ public class HousekeepingCoinsDao {
             Storage.closeSilently(sqlConnection);
         }
     }
+
+    public static List<Map<String, Object>> getVoucherByCode(String voucherCode) {
+        List<Map<String, Object>> getVoucher = new ArrayList<>();
+
+        Connection sqlConnection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+
+        try {
+            sqlConnection = Storage.getStorage().getConnection();
+            preparedStatement = Storage.getStorage().prepare("SELECT * FROM vouchers WHERE voucher_code = ?", sqlConnection);
+            preparedStatement.setString(1, voucherCode);
+
+            resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                Map<String, Object> getVoucherInfo = new HashMap<>();
+                getVoucherInfo.put("voucherCode", resultSet.getString("voucher_code"));
+
+                getVoucher.add(getVoucherInfo);
+            }
+
+        } catch (Exception e) {
+            Storage.logError(e);
+        } finally {
+            Storage.closeSilently(resultSet);
+            Storage.closeSilently(preparedStatement);
+            Storage.closeSilently(sqlConnection);
+        }
+
+        return getVoucher;
+    }
 }
