@@ -317,6 +317,8 @@ public class Routes {
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/api/cfh.block", HousekeepingCommandsController::cfhBlock);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/api/cfh.follow", HousekeepingCommandsController::cfhFollow);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/api/room.kick", HousekeepingCommandsController::roomKick);
+        RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/api/groups/show_badge_editor", HousekeepingGroupsController::showBadgeEditor);
+        RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/api/groups/update_group_badge", HousekeepingGroupsController::updateGroupBadge);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/transaction/lookup", HousekeepingTransactionsController::search);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/transaction/track_item", HousekeepingTransactionsController::item_lookup);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/bans_kicks", HousekeepingBansController::bans);
@@ -343,6 +345,7 @@ public class Routes {
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/trusted_person", HousekeepingTrustedPersonController::trusted_person);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/stickie_viewer", HousekeepingStickieNotesController::stickie_viewer);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/room_kick", HousekeepingRCONController::roomKickRCON);
+        RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/group_admin", HousekeepingGroupsController::group_admin);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/chatlog.action", HousekeepingChatLogsController::userchatlogs);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/users/imitate/*", HousekeepingUsersController::imitate);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/campaign_management/infobus_polls", HousekeepingInfobusController::polls);

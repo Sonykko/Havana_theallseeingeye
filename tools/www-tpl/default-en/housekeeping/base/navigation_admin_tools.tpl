@@ -122,6 +122,17 @@
 
 {% if housekeepingManager.hasPermission(playerDetails.getRank(), 'bans') %}	
 	<div class="subnav-box">
+ <div class="subnav-header">Group management tools</div>
+      <div class="list-group list-group-flush" style="padding-left: 2px;">        
+			{% if housekeepingManager.hasPermission(playerDetails.getRank(), 'bans') %}
+			<text><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/group_admin" class="subnav-link">Group admin</a></text>
+			{% endif %}	
+      </div>
+    </div>
+{% endif %}
+
+{% if housekeepingManager.hasPermission(playerDetails.getRank(), 'bans') %}	
+	<div class="subnav-box">
  <div class="subnav-header">Hobba management tools</div>
       <div class="list-group list-group-flush" style="padding-left: 2px;">        
 			{% if housekeepingManager.hasPermission(playerDetails.getRank(), 'bans') %}

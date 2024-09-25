@@ -2,6 +2,7 @@ package org.alexdev.havana.game.groups;
 
 import org.alexdev.havana.dao.mysql.GroupDao;
 import org.alexdev.havana.dao.mysql.GroupMemberDao;
+import org.alexdev.havana.dao.mysql.PlayerDao;
 import org.alexdev.havana.game.player.PlayerRank;
 import org.alexdev.havana.game.wordfilter.WordfilterManager;
 import org.alexdev.havana.util.DateUtil;
@@ -14,6 +15,7 @@ public class Group {
     private String name;
     private String description;
     private int ownerId;
+    private String ownerName;
     private int roomId;
     private String badge;
     private boolean recommended;
@@ -171,6 +173,12 @@ public class Group {
 
     public int getOwnerId() {
         return ownerId;
+    }
+
+    public String getOwnerName() {
+        String ownerName = PlayerDao.getName(this.getOwnerId());
+
+        return ownerName;
     }
 
     public int getRoomId() {
