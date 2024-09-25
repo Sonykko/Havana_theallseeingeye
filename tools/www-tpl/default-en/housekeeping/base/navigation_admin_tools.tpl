@@ -20,10 +20,10 @@
 			{% endif %}
 			{% if housekeepingManager.hasPermission(playerDetails.getRank(), 'bans') %}
 			<text><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/bans_kicks" class="subnav-link">Remote banning and kicking</a></text>
-			{% endif %}		
+			{% endif %}	
 			{% if housekeepingManager.hasPermission(playerDetails.getRank(), 'bans') %}
 			<text><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/room_kick" class="subnav-link">Remote room alerting & kicking</a></text>
-			{% endif %}					
+			{% endif %}				
 			{% if housekeepingManager.hasPermission(playerDetails.getRank(), 'bans') %}
 			<text><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/chatlog.action" class="subnav-link">User action log</a></text>
 			{% endif %}		
@@ -115,7 +115,18 @@
 			{% endif %}
 			{% if (housekeepingManager.hasPermission(playerDetails.getRank(), 'user/ranks')) and (playerDetails.getId() == 1) %}
 			<text><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/give_rank" class="subnav-link">Rank manager</a></text>
-			{% endif %}			
+			{% endif %}				
+      </div>
+    </div>
+{% endif %}
+
+{% if housekeepingManager.hasPermission(playerDetails.getRank(), 'bans') %}	
+	<div class="subnav-box">
+ <div class="subnav-header">Group management tools</div>
+      <div class="list-group list-group-flush" style="padding-left: 2px;">        
+			{% if housekeepingManager.hasPermission(playerDetails.getRank(), 'bans') %}
+			<text><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/group_admin" class="subnav-link">Group admin</a></text>
+			{% endif %}	
       </div>
     </div>
 {% endif %}
