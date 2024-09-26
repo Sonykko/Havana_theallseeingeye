@@ -190,7 +190,7 @@
       <div class="modal-header">
         <h5 class="modal-title" id="badgeEditorLabel">Edit Badge</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
+          <span aria-hidden="true" style="height: 15px;width: 15px;position: absolute;right: 13px;top: 9px;text-indent: -10000px;background: transparent url({{ site.staticContentPath }}/web-gallery/v2/images/close_x.gif) no-repeat;"><img src="{{ site.staticContentPath }}/web-gallery/v2/images/close_x.gif" width="15" height="15" alt=""></span>
         </button>
       </div>
       <div class="modal-body" id="badgeEditorContent">
