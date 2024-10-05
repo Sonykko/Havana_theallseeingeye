@@ -242,7 +242,7 @@ INSERT INTO `ranks` (`id`, `name`, `badge`, `description`) VALUES
 
 INSERT INTO `settings_desc` (`setting`, `description`, `category`) VALUES
 ('afk.timer.seconds', 'Set the time to get afk in seconds', 'client'),
-('alerts.gift.message', 'Ha llegado un nuevo regalo. Esta vez has recibido %item_name%.', NULL),
+('alerts.gift.message', 'Set the alerts gift message', 'site'),
 ('april.fools', 'April fools', 'miscellaneous'),
 ('battleball.create.game.enabled', 'Toggle can create game of BattleBall as true or false', 'games'),
 ('battleball.game.lifetime.seconds', 'Set the minimum game duration of BattleBall in seconds', 'games'),
@@ -251,25 +251,25 @@ INSERT INTO `settings_desc` (`setting`, `description`, `category`) VALUES
 ('battleball.restart.game.seconds', 'Set the restart game time of BattleBall in seconds', 'games'),
 ('battleball.start.minimum.active.teams', 'Set the minimum teams needed to start a game of BattleBall', 'games'),
 ('battleball.ticket.charge', 'Set the ticket charge of BattleBall', 'games'),
-('carry.timer.seconds', '300', NULL),
+('carry.timer.seconds', 'Set the carry timer in seconds', 'client'),
 ('catalogue.frontpage.input.1', 'ts_coll_09_sept_asteroid.gif', NULL),
 ('catalogue.frontpage.input.2', '¡Servidor Beta!', NULL),
 ('catalogue.frontpage.input.3', 'Porfavor comparte con nosotros mientras que hacemos los arreglos finales', NULL),
 ('catalogue.frontpage.input.4', 'http://localhost', NULL),
-('chat.spam.count', '10', NULL),
-('childline.group.id', 'Set the ID of Childline group', 'server'),
-('club.gift.interval', '30', NULL),
-('club.gift.present.label', '¡Ha llegado un nuevo regalo mensual del Habbo Club!', NULL),
-('club.gift.timeunit', 'DAYS', NULL),
+('chat.spam.count', 'Set the chat spam count', 'client'),
+('childline.group.id', 'Set the ID of Childline group', 'group'),
+('club.gift.interval', 'Set the Habbo Club gift interval', 'club'),
+('club.gift.present.label', 'Set the Habbo Club gif present label message', 'club'),
+('club.gift.timeunit', 'Set the Habbo Club gift timeunit', 'club'),
 ('collectables.page', 'Set the ID of the catalogue Collectibles page', 'catalogue'),
 ('credits.scheduler.amount', 'Set the credits scheduler amount', 'coins'),
 ('credits.scheduler.interval', 'Set the credits scheduler interval', 'coins'),
 ('credits.scheduler.timeunit', 'Set the credits scheduler timeunit', 'coins'),
 ('daily.credits.amount', 'Set the daily credits amount', 'coins'),
 ('daily.credits.wait.time', 'Set the daily credits wait time in seconds', 'coins'),
-('delete.chatlogs.after.x.age', '2592000', NULL),
-('delete.iplogs.after.x.age', '2592000', NULL),
-('delete.tradelogs.after.x.age', '2592000', NULL),
+('delete.chatlogs.after.x.age', 'Set the delete chatlogs afer x age in seconds', 'server'),
+('delete.iplogs.after.x.age', 'Set the delete iplogs after x age in seconds', 'server'),
+('delete.tradelogs.after.x.age', 'Set the delete tradelogs afer x age in seconds', 'server'),
 ('discussions.per.page', 'Set the max number of forum discussions per page', 'site'),
 ('discussions.replies.per.page', 'Set the max number of forum discussions replies per page', 'site'),
 ('email.smtp.enable', 'Toggle status of email SMTP service as true or false', 'email'),
@@ -281,12 +281,12 @@ INSERT INTO `settings_desc` (`setting`, `description`, `category`) VALUES
 ('email.smtp.port', 'Set the port of email SMTP', 'email'),
 ('email.static.content.path', 'Set the URL of email static content path', 'email'),
 ('enforce.strict.packet.policy', 'Enforce strict packet policy', 'miscellaneous'),
-('events.category.count', '11', NULL),
-('events.expiry.minutes', '120', NULL),
-('free.month.hc.registration', 'true', NULL),
-('fuck.aaron', 'true', NULL),
-('group.default.badge', 'b0503Xs09114s05013s05015', NULL),
-('group.purchase.cost', '20', NULL),
+('events.category.count', 'Set the events category count number', 'client'),
+('events.expiry.minutes', 'Set the events expiry in minutes', 'client'),
+('free.month.hc.registration', 'Set free month HC registration as true or false', 'club'),
+('fuck.aaron', 'true', 'Fuck aaron'),
+('group.default.badge', 'Set the group default badge', 'group'),
+('group.purchase.cost', 'Set the group purchase cost', 'group'),
 ('groups.ids.permission.addcredits', '', NULL),
 ('groups.ids.permission.ban', '', NULL),
 ('groups.ids.permission.bot', '', NULL),
@@ -316,17 +316,17 @@ INSERT INTO `settings_desc` (`setting`, `description`, `category`) VALUES
 ('groups.ids.permission.unacceptable', '', NULL),
 ('groups.ids.permission.unban', '', NULL),
 ('groups.ids.permission.unmute', '', NULL),
-('guide.completion.minutes', '0', NULL),
-('guide.search.timeout.minutes', '5', NULL),
-('guides.group.id', 'Set the ID of Habbo Guides group', 'server'),
-('habbo.experts.group.id', 'Set the ID of Habbo eXperts group', 'server'),
-('happy.hour.weekday.end', '18:00:00', NULL),
-('happy.hour.weekday.start', '17:00:00', NULL),
-('happy.hour.weekend.end', '13:00:00', NULL),
-('happy.hour.weekend.start', '12:00:00', NULL),
+('guide.completion.minutes', 'Set the Habbo Guide completion in minutes', 'group'),
+('guide.search.timeout.minutes', 'Set the Habbo Guide search timeout in minutes', 'group'),
+('guides.group.id', 'Set the ID of Habbo Guides group', 'group'),
+('habbo.experts.group.id', 'Set the ID of Habbo eXperts group', 'group'),
+('happy.hour.weekday.end', 'Set when Happy Hour weekday end (\'H:i:s\' format)', 'server'),
+('happy.hour.weekday.start', 'Set when Happy Hour weekday start (\'H:i:s\' format)', 'server'),
+('happy.hour.weekend.end', 'Set when Happy Hour weekend end (\'H:i:s\' format)', 'server'),
+('happy.hour.weekend.start', 'Set when Happy Hour weekend start (\'H:i:s\' format)', 'server'),
 ('hk.new.style.enabled', 'Set if new style (scaled UI) of HK is enabled or not as true or false', 'housekeeping'),
 ('hk.trusted.person.enabled', 'Set if the Trusted Person system is enbladed or not as true or false', 'housekeeping'),
-('hobba.form.lang', 'Set the lenguage of the Hobba application form, like "ES", "EN" or "BR", for exmaple', 'site'),
+('hobba.form.lang', 'Set the lenguage of the Hobba application form, like \"ES\", \"EN\" or \"BR\", for exmaple', 'site'),
 ('homepage.template.file', 'Set the homepage template file', 'site'),
 ('hot.groups.community.limit', 'Set the hot groups community limit number', 'site'),
 ('hot.groups.limit', 'Set the hot groups limit number', 'site'),
@@ -353,11 +353,11 @@ INSERT INTO `settings_desc` (`setting`, `description`, `category`) VALUES
 ('loader.mus.port', 'Set the MUS port of all clients', 'host'),
 ('maintenance', 'Set maintenance status as true or false', 'maintenance'),
 ('max.connections.per.ip', 'Set the max connections per IP', 'server'),
-('max.tags.groups', 'Set the max number of tags groups', 'server'),
+('max.tags.groups', 'Set the max number of tags groups', 'group'),
 ('max.tags.users', 'Set the max number of tags users', 'server'),
 ('messenger.enable.official.update.speed', 'Set the messenger official update speed status as true or false', 'client'),
-('messenger.max.friends.club', 'Set the number of the messenger max friends for Habbo Club member', 'client'),
-('messenger.max.friends.nonclub', 'Set the number of the messenger max friends for non Habbo Club member', 'client'),
+('messenger.max.friends.club', 'Set the number of the messenger max friends for Habbo Club member', 'club'),
+('messenger.max.friends.nonclub', 'Set the number of the messenger max friends for non Habbo Club member', 'club'),
 ('navigator.hide.empty.public.categories', 'Set the navigator hide empty public categories status as true or false', 'client'),
 ('navigator.show.hidden.rooms', 'Set the navigator show hidden rooms status as true or false', 'client'),
 ('normalise.input.strings', 'Normalise input strings', 'miscellaneous'),
@@ -377,18 +377,18 @@ INSERT INTO `settings_desc` (`setting`, `description`, `category`) VALUES
 ('rcon.room.unacceptable.desc', 'Set the default description for Unacceptable room', 'housekeeping'),
 ('rcon.room.unacceptable.name', 'Set the default name for Unacceptable room', 'housekeeping'),
 ('rcon.superban.message', 'Set the default reason for Remote Superban', 'housekeeping'),
-('regenerate.map.enabled', 'true', NULL),
-('regenerate.map.interval', '1', NULL),
+('regenerate.map.enabled', 'Set regenerate map status as true or false', 'games'),
+('regenerate.map.interval', 'Set the regenerate map interval in seconds', 'games'),
 ('registration.disabled', 'Set registration status as true or false', 'site'),
-('reset.sso.after.login', 'true', NULL),
+('reset.sso.after.login', 'Set reset SSO after login status as true or false', 'server'),
 ('reward.credits.loser.range', '0-4', NULL),
 ('reward.credits.winner.range', '10-20', NULL),
-('roller.tick.default', '2000', NULL),
-('room.ads', 'true', NULL),
-('room.dispose.timer.enabled', 'true', NULL),
-('room.dispose.timer.seconds', '30', NULL),
+('roller.tick.default', 'Set the default speed of rollers furni', 'client'),
+('room.ads', 'Set room ads status as true or false', 'client'),
+('room.dispose.timer.enabled', 'Set room dispose timer status as true or false', 'client'),
+('room.dispose.timer.seconds', 'Set the room dispose timer in seconds', 'client'),
 ('room.intersitial.ads', 'Set room intersitial ads status as true or false', 'client'),
-('seasonal.items', 'false', NULL),
+('seasonal.items', 'Set if seasonal items are enabled or not in the catalogue', 'catalogue'),
 ('shutdown.minutes', 'Set the shutdown time in minutes', 'client'),
 ('site.housekeeping', 'Set the URL of Housekeeping', 'hotel'),
 ('site.imaging.endpoint', 'Set the URL of the imaging endpoint', 'hotel'),
@@ -575,7 +575,7 @@ UPDATE `settings` SET
   `category` =
     CASE
       WHEN `setting` = 'afk.timer.seconds' THEN 'client'
-      WHEN `setting` = 'alerts.gift.message' THEN NULL
+      WHEN `setting` = 'alerts.gift.message' THEN 'site'
       WHEN `setting` = 'april.fools' THEN 'miscellaneous'
       WHEN `setting` = 'battleball.create.game.enabled' THEN 'games'
       WHEN `setting` = 'battleball.game.lifetime.seconds' THEN 'games'
@@ -590,19 +590,19 @@ UPDATE `settings` SET
       WHEN `setting` = 'catalogue.frontpage.input.3' THEN NULL
       WHEN `setting` = 'catalogue.frontpage.input.4' THEN NULL
       WHEN `setting` = 'chat.spam.count' THEN 'client'
-      WHEN `setting` = 'childline.group.id' THEN 'server'
-      WHEN `setting` = 'club.gift.interval' THEN NULL
-      WHEN `setting` = 'club.gift.present.label' THEN NULL
-      WHEN `setting` = 'club.gift.timeunit' THEN NULL
+      WHEN `setting` = 'childline.group.id' THEN 'group'
+      WHEN `setting` = 'club.gift.interval' THEN 'club'
+      WHEN `setting` = 'club.gift.present.label' THEN 'club'
+      WHEN `setting` = 'club.gift.timeunit' THEN 'club'
       WHEN `setting` = 'collectables.page' THEN 'catalogue'
       WHEN `setting` = 'credits.scheduler.amount' THEN 'coins'
       WHEN `setting` = 'credits.scheduler.interval' THEN 'coins'
       WHEN `setting` = 'credits.scheduler.timeunit' THEN 'coins'
       WHEN `setting` = 'daily.credits.amount' THEN 'coins'
       WHEN `setting` = 'daily.credits.wait.time' THEN 'coins'
-      WHEN `setting` = 'delete.chatlogs.after.x.age' THEN NULL
-      WHEN `setting` = 'delete.iplogs.after.x.age' THEN NULL
-      WHEN `setting` = 'delete.tradelogs.after.x.age' THEN NULL
+      WHEN `setting` = 'delete.chatlogs.after.x.age' THEN 'server'
+      WHEN `setting` = 'delete.iplogs.after.x.age' THEN 'server'
+      WHEN `setting` = 'delete.tradelogs.after.x.age' THEN 'server'
       WHEN `setting` = 'discussions.per.page' THEN 'site'
       WHEN `setting` = 'discussions.replies.per.page' THEN 'site'
       WHEN `setting` = 'email.smtp.enable' THEN 'email'
@@ -614,12 +614,12 @@ UPDATE `settings` SET
       WHEN `setting` = 'email.smtp.port' THEN 'email'
       WHEN `setting` = 'email.static.content.path' THEN 'email'
       WHEN `setting` = 'enforce.strict.packet.policy' THEN 'miscellaneous'
-      WHEN `setting` = 'events.category.count' THEN NULL
-      WHEN `setting` = 'events.expiry.minutes' THEN NULL
-      WHEN `setting` = 'free.month.hc.registration' THEN NULL
-      WHEN `setting` = 'fuck.aaron' THEN NULL
-      WHEN `setting` = 'group.default.badge' THEN NULL
-      WHEN `setting` = 'group.purchase.cost' THEN NULL
+      WHEN `setting` = 'events.category.count' THEN 'client'
+      WHEN `setting` = 'events.expiry.minutes' THEN 'client'
+      WHEN `setting` = 'free.month.hc.registration' THEN 'club'
+      WHEN `setting` = 'fuck.aaron' THEN 'miscellaneous'
+      WHEN `setting` = 'group.default.badge' THEN 'group'
+      WHEN `setting` = 'group.purchase.cost' THEN 'group'
       WHEN `setting` = 'groups.ids.permission.addcredits' THEN NULL
       WHEN `setting` = 'groups.ids.permission.ban' THEN NULL
       WHEN `setting` = 'groups.ids.permission.bot' THEN NULL
@@ -649,14 +649,14 @@ UPDATE `settings` SET
       WHEN `setting` = 'groups.ids.permission.unacceptable' THEN NULL
       WHEN `setting` = 'groups.ids.permission.unban' THEN NULL
       WHEN `setting` = 'groups.ids.permission.unmute' THEN NULL
-      WHEN `setting` = 'guide.completion.minutes' THEN NULL
-      WHEN `setting` = 'guide.search.timeout.minutes' THEN NULL
-      WHEN `setting` = 'guides.group.id' THEN 'server'
-      WHEN `setting` = 'habbo.experts.group.id' THEN 'server'
-      WHEN `setting` = 'happy.hour.weekday.end' THEN NULL
-      WHEN `setting` = 'happy.hour.weekday.start' THEN NULL
-      WHEN `setting` = 'happy.hour.weekend.end' THEN NULL
-      WHEN `setting` = 'happy.hour.weekend.start' THEN NULL
+      WHEN `setting` = 'guide.completion.minutes' THEN 'group'
+      WHEN `setting` = 'guide.search.timeout.minutes' THEN 'group'
+      WHEN `setting` = 'guides.group.id' THEN 'group'
+      WHEN `setting` = 'habbo.experts.group.id' THEN 'group'
+      WHEN `setting` = 'happy.hour.weekday.end' THEN 'server'
+      WHEN `setting` = 'happy.hour.weekday.start' THEN 'server'
+      WHEN `setting` = 'happy.hour.weekend.end' THEN 'server'
+      WHEN `setting` = 'happy.hour.weekend.start' THEN 'server'
       WHEN `setting` = 'hk.new.style.enabled' THEN 'housekeeping'
       WHEN `setting` = 'hk.trusted.person.enabled' THEN 'housekeeping'	  
 	  WHEN `setting` = 'hobba.form.lang' THEN 'site'
@@ -686,11 +686,11 @@ UPDATE `settings` SET
       WHEN `setting` = 'loader.mus.port' THEN 'host'
       WHEN `setting` = 'maintenance' THEN 'maintenance'
       WHEN `setting` = 'max.connections.per.ip' THEN 'server'
-      WHEN `setting` = 'max.tags.groups' THEN 'server'
+      WHEN `setting` = 'max.tags.groups' THEN 'group'
       WHEN `setting` = 'max.tags.users' THEN 'server'
       WHEN `setting` = 'messenger.enable.official.update.speed' THEN 'client'
-      WHEN `setting` = 'messenger.max.friends.club' THEN 'client'
-      WHEN `setting` = 'messenger.max.friends.nonclub' THEN 'client'
+      WHEN `setting` = 'messenger.max.friends.club' THEN 'club'
+      WHEN `setting` = 'messenger.max.friends.nonclub' THEN 'club'
       WHEN `setting` = 'navigator.hide.empty.public.categories' THEN 'client'
       WHEN `setting` = 'navigator.show.hidden.rooms' THEN 'client'
       WHEN `setting` = 'normalise.input.strings' THEN 'miscellaneous'
@@ -710,18 +710,18 @@ UPDATE `settings` SET
       WHEN `setting` = 'rcon.room.unacceptable.desc' THEN 'housekeeping'
       WHEN `setting` = 'rcon.room.unacceptable.name' THEN 'housekeeping'
       WHEN `setting` = 'rcon.superban.message' THEN 'housekeeping'
-      WHEN `setting` = 'regenerate.map.enabled' THEN NULL
-      WHEN `setting` = 'regenerate.map.interval' THEN NULL
+      WHEN `setting` = 'regenerate.map.enabled' THEN 'games'
+      WHEN `setting` = 'regenerate.map.interval' THEN 'games'
       WHEN `setting` = 'registration.disabled' THEN 'site'
-      WHEN `setting` = 'reset.sso.after.login' THEN NULL
+      WHEN `setting` = 'reset.sso.after.login' THEN 'server'
       WHEN `setting` = 'reward.credits.loser.range' THEN NULL
       WHEN `setting` = 'reward.credits.winner.range' THEN NULL
-      WHEN `setting` = 'roller.tick.default' THEN NULL
-      WHEN `setting` = 'room.ads' THEN NULL
-      WHEN `setting` = 'room.dispose.timer.enabled' THEN NULL
-      WHEN `setting` = 'room.dispose.timer.seconds' THEN NULL
+      WHEN `setting` = 'roller.tick.default' THEN 'client'
+      WHEN `setting` = 'room.ads' THEN 'client'
+      WHEN `setting` = 'room.dispose.timer.enabled' THEN 'client'
+      WHEN `setting` = 'room.dispose.timer.seconds' THEN 'client'
       WHEN `setting` = 'room.intersitial.ads' THEN 'client'
-      WHEN `setting` = 'seasonal.items' THEN NULL
+      WHEN `setting` = 'seasonal.items' THEN 'catalogue'
       WHEN `setting` = 'shutdown.minutes' THEN 'client'
       WHEN `setting` = 'site.housekeeping' THEN 'hotel'
       WHEN `setting` = 'site.imaging.endpoint' THEN 'hotel'
