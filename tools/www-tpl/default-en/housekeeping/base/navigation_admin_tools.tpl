@@ -89,6 +89,9 @@
 			{% if housekeepingManager.hasPermission(playerDetails.getRank(), 'user/edit') %}
 			<text><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/mass_unban" class="subnav-link">Mass unban</a></text>
 			{% endif %}
+			{% if housekeepingManager.hasPermission(playerDetails.getRank(), 'bans') %}
+			<text><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/users/restore" class="subnav-link">{{ site.siteName }} restore tool</a></text>
+			{% endif %}				
 			{% if housekeepingManager.hasPermission(playerDetails.getRank(), 'user/edit') %}
 			<text><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/cfh_logs" class="subnav-link">CFH action log</a></text>
 			{% endif %}

@@ -11465,3 +11465,80 @@ a.list-group-item-danger.active:hover, a.list-group-item-danger.active:focus {
 	width: 400px;
 	overflow-y: scroll;
 }
+
+.restore__mass {
+	display: flex;
+	flex-direction: column;
+}
+
+.restore__mass textarea {
+	margin-left: 25px;
+	width: 300px;
+	margin-bottom: 0.5rem;
+	height: 175px;
+	overflow-y: scroll;
+}
+
+.restore__one {
+	margin-left: 25px;
+	display: flex;
+	flex-direction: column;
+	width: 450px;
+}
+
+.restore__one input {
+	width: 290px;
+}
+
+/*.restore__one__username, .restore__one__useremail {
+	display: flex;
+	justify-content: space-between;
+	margin-bottom: 5px;
+}*/
+
+.restore__one div {
+	display: flex;
+	justify-content: space-between;
+	margin-bottom: 5px;
+}
+
+.restore__mail {
+	margin-left: 25px;
+	display: flex;
+	flex-direction: column;
+	width: fit-content;
+}
+
+.restore__mail__box {
+	display: flex;
+	align-items: flex-start;
+}
+
+.restore__mail__subject {
+	display: flex;
+	justify-content: space-between;
+	margin-bottom: 5px;
+	flex-direction: column;
+	padding-right: 15px;
+}
+
+.resotre__mail__message {
+	display: flex;
+	justify-content: space-between;
+	margin-bottom: 5px;
+	flex-direction: column;
+}
+
+.resotre__mail__message input {
+	width: 330px;
+	margin-bottom: 5px
+}
+
+.resotre__mail__message textarea {
+	width: 380px;
+	margin-bottom: 0.5rem;
+	height: 200px;
+	overflow-y: scroll;
+}
+
+
