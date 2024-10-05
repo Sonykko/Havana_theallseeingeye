@@ -129,4 +129,17 @@ public class EmailUtil {
     public static boolean isAlreadyTradePass(int userId, String email) {
         return EmailDao.hasUserTradePass(userId, email);
     }
+
+    public static String renderRestoreAccount(String message) {
+        var tpl = new TwigTemplate(null);
+        tpl.start("account/email/housekeeping_restore");
+        tpl.set("message", message);
+        try {
+            return tpl.renderHTML();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
 }

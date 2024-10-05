@@ -350,6 +350,7 @@ public class Routes {
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/users/search", HousekeepingUsersController::search);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/users/create", HousekeepingUsersController::create);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/users/edit", HousekeepingUsersController::edit);
+        RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/users/restore", HousekeepingRestoreController::restore);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/room_chatlogs", HousekeepingChatLogsController::roomchatlogs);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/rooms/search", HousekeepingRoomsController::search);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/rooms/edit", HousekeepingRoomsController::editRoom);
