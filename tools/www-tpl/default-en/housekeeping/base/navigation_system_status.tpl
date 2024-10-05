@@ -9,7 +9,7 @@
 			{% endif %}
 			{% if (housekeepingManager.hasPermission(playerDetails.getRank(), 'configuration')) or (playerDetails.isTrustedPerson()) and (gameConfig.getBoolean('hk.trusted.person.enabled')) %}
 			<text><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/system_status/configurations?settings=housekeeping" class="subnav-link">Housekeeping settings</a></text>
-			{% endif %}					
+			{% endif %}				
       </div>
     </div>
 {% endif %}
@@ -22,7 +22,7 @@
 			{% endif %}
 			{% if (housekeepingManager.hasPermission(playerDetails.getRank(), 'configuration')) or (playerDetails.isTrustedPerson()) and (gameConfig.getBoolean('hk.trusted.person.enabled')) %}
 			<text><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/system_status/configurations?settings=hotel" class="subnav-link">Hotel settings</a></text>
-			{% endif %}	
+			{% endif %}		
 			{% if (housekeepingManager.hasPermission(playerDetails.getRank(), 'configuration')) or (playerDetails.isTrustedPerson()) and (gameConfig.getBoolean('hk.trusted.person.enabled')) %}
 			<text><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/system_status/configurations?settings=maintenance" class="subnav-link">Maintenance settings</a></text>
 			{% endif %}
@@ -57,6 +57,12 @@
       <div class="list-group list-group-flush" style="padding-left: 2px;">
 			{% if (housekeepingManager.hasPermission(playerDetails.getRank(), 'configuration')) or (playerDetails.isTrustedPerson()) and (gameConfig.getBoolean('hk.trusted.person.enabled')) %}
 			<text><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/system_status/configurations?settings=server" class="subnav-link">General server settings</a></text>
+			{% endif %}
+			{% if (housekeepingManager.hasPermission(playerDetails.getRank(), 'configuration')) or (playerDetails.isTrustedPerson()) and (gameConfig.getBoolean('hk.trusted.person.enabled')) %}
+			<text><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/system_status/configurations?settings=club" class="subnav-link">HC settings</a></text>
+			{% endif %}
+			{% if (housekeepingManager.hasPermission(playerDetails.getRank(), 'configuration')) or (playerDetails.isTrustedPerson()) and (gameConfig.getBoolean('hk.trusted.person.enabled')) %}
+			<text><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/system_status/configurations?settings=group" class="subnav-link">Group settings</a></text>
 			{% endif %}
 			{% if (housekeepingManager.hasPermission(playerDetails.getRank(), 'configuration')) or (playerDetails.isTrustedPerson()) and (gameConfig.getBoolean('hk.trusted.person.enabled')) %}
 			<text><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/system_status/configurations?settings=host" class="subnav-link">Host settings</a></text>
