@@ -26,6 +26,7 @@ This is a project to recreate the supossed "Hobbanet" or theallseeingeye Habbo H
   - Remote mass alert
   - Remote mass ban
   - Remote mass unban
+  - Habbo restore tool
   - User search & information tool
   - Current furniture
   - Room admin (private rooms)
