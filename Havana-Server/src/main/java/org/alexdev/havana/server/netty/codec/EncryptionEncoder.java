@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.math.BigInteger;
+import java.nio.charset.Charset;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -32,10 +33,13 @@ public class EncryptionEncoder extends MessageToMessageEncoder<ByteBuf> {
         Player player = ctx.channel().attr(Player.PLAYER_KEY).get();
 
         player.getNetwork().setRx(NettyPlayerNetwork.iterateRandom(
-            player.getNetwork().getRx()
+                player.getNetwork().getRx()
         ));
 
-        String tOriginalMsg = buffer.toString(StringUtil.getCharset());
+        byte[] tOriginalMsgBytes = new byte[buffer.readableBytes()];
+        buffer.readBytes(tOriginalMsgBytes);
+
+        String tOriginalMsg = new String(tOriginalMsgBytes);
 
         String tHeader;
         String tMsg;
@@ -53,8 +57,8 @@ public class EncryptionEncoder extends MessageToMessageEncoder<ByteBuf> {
 
         var tEncryptedMsg = Unpooled.buffer();
 
-        tEncryptedMsg.writeBytes(tHeader.getBytes(StringUtil.getCharset()));
-        tEncryptedMsg.writeBytes(tMsg.getBytes(StringUtil.getCharset()));
+        tEncryptedMsg.writeBytes(tHeader.getBytes());
+        tEncryptedMsg.writeBytes(tMsg.getBytes());
 
         out.add(tEncryptedMsg);
     }
