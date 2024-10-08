@@ -56,7 +56,7 @@ public class HousekeepingConfigController {
             }
 
             SettingsDao.updateSettings(postValues.entrySet());
-            HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Ha actualizado las configuraciones de System status. URL: " + client.request().uri(), client.getIpAddress());
+            HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Updated settings of System status. URL: " + client.request().uri(), client.getIpAddress());
 
             // Reload config
             // GameConfiguration.getInstance(new WebSettingsConfigWriter());
