@@ -65,7 +65,6 @@ public class HousekeepingRanksController {
             }
 
             String rankName = String.valueOf(PlayerRank.getRankForId(rankId));
-            //String checkName = HousekeepingPlayerDao.CheckDBName(user);
             var playerDetailsRank = PlayerDao.getDetails(user);
 
             if (playerDetailsRank == null) {
@@ -80,6 +79,39 @@ public class HousekeepingRanksController {
                 client.session().set("alertMessage", "The user " + user + " already has the rank ID " + rankId + " (" + rankName + ")");
                 client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/give_rank");
                 return;
+            }
+
+            List<Map<String, Object>> allRanks = HousekeepingPlayerDao.getAllRanks();
+
+            String currentBadge = "";
+            int currentRankId = playerDetailsRank.getRank().getRankId();
+
+            for (Map<String, Object> rankDetails : allRanks) {
+                int rId = (int) rankDetails.get("id");
+                if (rId == currentRankId) {
+                    currentBadge = (String) rankDetails.get("badge");
+                    break;
+                }
+            }
+
+            String newBadge = "";
+            for (Map<String, Object> rankDetails : allRanks) {
+                int rId = (int) rankDetails.get("id");
+                if (rId == rankId) {
+                    newBadge = (String) rankDetails.get("badge");
+                    break;
+                }
+            }
+
+            if (currentBadge != null && !currentBadge.isEmpty()) {
+                String finalCurrentBadge = currentBadge;
+                String finalNewBadge = newBadge;
+                RconUtil.sendCommand(RconHeader.MOD_GIVE_BADGE, new HashMap<>() {{
+                    put("user", user);
+                    put("removeBadge", finalCurrentBadge);
+                    put("badge", finalNewBadge);
+
+                }});
             }
 
             HousekeepingPlayerDao.setRank(user, rankId);
