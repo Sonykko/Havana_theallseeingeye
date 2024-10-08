@@ -77,6 +77,21 @@ CREATE TABLE `cms_banners` (
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `housekeeping_commands_rcon`
+--
+
+CREATE TABLE `housekeeping_commands_rcon` (
+  `id` int(11) NOT NULL,
+  `user` varchar(255) DEFAULT NULL,
+  `argument_1` varchar(255) DEFAULT NULL,
+  `argument_2` varchar(255) DEFAULT NULL,
+  `type` varchar(255) DEFAULT NULL,
+  `timestamp` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `housekeeping_rcon_logs`
 --
 
@@ -447,6 +462,12 @@ ALTER TABLE `cms_banners`
 --
 ALTER TABLE `hobbas_forms`
   ADD PRIMARY KEY (`id`);
+  
+--
+-- Indices de la tabla `housekeeping_commands_rcon`
+--
+ALTER TABLE `housekeeping_commands_rcon`
+  ADD PRIMARY KEY (`id`);  
 
 --
 -- Indices de la tabla `housekeeping_rcon_logs`
@@ -519,6 +540,13 @@ COMMIT;
 --
 ALTER TABLE `hobbas_forms`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+COMMIT;
+
+--
+-- AUTO_INCREMENT de la tabla `housekeeping_commands_rcon`
+--
+ALTER TABLE `housekeeping_commands_rcon`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 COMMIT;
 
 --
