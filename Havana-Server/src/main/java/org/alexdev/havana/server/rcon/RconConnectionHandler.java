@@ -8,6 +8,7 @@ import org.alexdev.havana.game.GameScheduler;
 import org.alexdev.havana.game.achievements.AchievementManager;
 import org.alexdev.havana.game.achievements.AchievementType;
 import org.alexdev.havana.game.ads.AdManager;
+import org.alexdev.havana.game.badges.Badge;
 import org.alexdev.havana.game.catalogue.CatalogueManager;
 import org.alexdev.havana.game.fuserights.Fuseright;
 import org.alexdev.havana.game.groups.GroupMember;
@@ -249,6 +250,47 @@ public class RconConnectionHandler extends ChannelInboundHandlerAdapter {
                     if (roomLock) {
                         roomKick.getData().setAccessType(1);
                         RoomDao.save(roomKick);
+                    }
+                    break;
+                case MOD_GIVE_BADGE:
+                    String user = message.getValues().get("user");
+                    String badge = message.getValues().get("badge");
+                    String removeBadge = message.getValues().get("removeBadge");
+
+                    PlayerDetails targetUserDetails = PlayerDao.getDetails(user);
+
+                    Player targetUser = PlayerManager.getInstance().getPlayerByName(user);
+
+                    if (targetUserDetails == null) {
+                        return;
+                    }
+
+                    if (targetUser == null) {
+                        List<Badge> userBadges = BadgeDao.getBadges(targetUserDetails.getId());
+
+                        boolean hasRemoveBadge = userBadges.stream()
+                                .anyMatch(b -> b.getBadgeCode().equalsIgnoreCase(removeBadge));
+
+                        boolean alreadyHasBadge = userBadges.stream()
+                                .anyMatch(b -> b.getBadgeCode().equalsIgnoreCase(badge));
+
+                        if (removeBadge.length() > 0 && hasRemoveBadge) {
+                            BadgeDao.removeBadge(targetUserDetails.getId(), removeBadge);
+                        }
+
+                        if (badge.length() > 0 && !alreadyHasBadge) {
+                            BadgeDao.newBadge(targetUserDetails.getId(), badge);
+                        }
+                    } else {
+                        if (badge.length() > 0) {
+                            targetUser.getBadgeManager().tryAddBadge(badge, removeBadge, 0);
+                        }
+
+                        if (removeBadge.length() > 0) {
+                            targetUser.getBadgeManager().removeBadge(removeBadge);
+                        }
+
+                        targetUser.getBadgeManager().refreshBadges();
                     }
                     break;
                 case MOD_STICKIE_DELETE:

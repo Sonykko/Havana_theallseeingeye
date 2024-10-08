@@ -338,6 +338,7 @@ public class Routes {
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/api/cfh.block", HousekeepingCommandsController::cfhBlock);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/api/cfh.follow", HousekeepingCommandsController::cfhFollow);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/api/room.kick", HousekeepingCommandsController::roomKick);
+        RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/api/give.badge", HousekeepingCommandsController::giveBadge);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/api/groups/show_badge_editor", HousekeepingGroupsController::showBadgeEditor);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/api/groups/update_group_badge", HousekeepingGroupsController::updateGroupBadge);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/transaction/lookup", HousekeepingTransactionsController::search);
@@ -361,6 +362,7 @@ public class Routes {
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/mass_unban", HousekeepingRCONController::massUnbanUserRCON);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/vouchers", HousekeepingCoinsController::vouchers);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/wordfilter", HousekeepingWordfilterController::wordfilter);
+        RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/give_badge", HousekeepingRCONController::giveBadge);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/hobbas/check", HousekeepingHobbasController::hobbas_check);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/hobbas/applications", HousekeepingHobbasController::hobbas_applications);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/give_rank", HousekeepingRanksController::giveRank);
