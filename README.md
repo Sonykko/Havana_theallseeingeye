@@ -39,6 +39,7 @@ This is a project to recreate the supossed "Hobbanet" or theallseeingeye Habbo H
   - Group admin (badge editor included)
   - Hobba applications
   - Check Hobba applicant tool
+  - Remote give badge (badge manager)
   - Rank manager
   - Trusted person admin
   - Stickie viewer
