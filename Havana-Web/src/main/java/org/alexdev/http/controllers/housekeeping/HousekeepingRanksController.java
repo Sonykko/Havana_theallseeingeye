@@ -46,8 +46,6 @@ public class HousekeepingRanksController {
             boolean sendAlert = client.post().getBoolean("sendAlert");
             int rankId = 0;
 
-
-
             if (StringUtils.isNumeric(rank)) {
                 rankId = Integer.parseInt(rank);
             }
@@ -55,49 +53,52 @@ public class HousekeepingRanksController {
             if (user.equalsIgnoreCase(String.valueOf(playerDetails.getName()))) {
                 client.session().set("alertColour", "warning");
                 client.session().set("alertMessage", "You can not change the rank yourself");
-
                 client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/give_rank");
-
                 return;
             }
 
-            if (user.length() > 0 && rankId > 0 && rankId < 8) {
-                String rankName = String.valueOf(PlayerRank.getRankForId(rankId));
-                String checkName = HousekeepingPlayerDao.CheckDBName(user);
-
-                if (!checkName.equalsIgnoreCase(user)) {
-                    client.session().set("alertColour", "danger");
-                    client.session().set("alertMessage", "The user does not exist");
-                } else {
-                    var playerDetailsRank = PlayerDao.getDetails(user);
-
-                    if (playerDetailsRank.getRank().getRankId() == rankId) {
-                        client.session().set("alertColour", "warning");
-                        client.session().set("alertMessage", "The user " + user + " already has the rank ID " + rankId + " (" + rankName + ")");
-                    } else {
-                        HousekeepingPlayerDao.setRank(user, rankId);
-                        HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Set the rank ID " + rankId + " (" + rankName + ") to user " + user + ". URL: " + client.request().uri(), client.getIpAddress());
-
-                        client.session().set("alertColour", "success");
-                        client.session().set("alertMessage", "Successfully set the rank ID " + rankId + " (" + rankName + ") to the user " + user);
-
-                        client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/give_rank");
-
-                        if (sendAlert) {
-                            String message = GameConfiguration.getInstance().getString("rcon.give.rank.message");
-                            String finalMessage = StringUtils.replace(message, "%rank%", rankName);
-
-                            RconUtil.sendCommand(RconHeader.MOD_ALERT_USER, new HashMap<>() {{
-                                put("receiver", user);
-                                put("message", finalMessage);
-
-                            }});
-                        }
-                    }
-                }
-            } else {
+            if (user.isEmpty() || rankId < 1 || rankId > 8) {
                 client.session().set("alertColour", "danger");
                 client.session().set("alertMessage", "Please enter a valid username or rank");
+                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/give_rank");
+                return;
+            }
+
+            String rankName = String.valueOf(PlayerRank.getRankForId(rankId));
+            //String checkName = HousekeepingPlayerDao.CheckDBName(user);
+            var playerDetailsRank = PlayerDao.getDetails(user);
+
+            if (playerDetailsRank == null) {
+                client.session().set("alertColour", "danger");
+                client.session().set("alertMessage", "The user does not exist");
+                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/give_rank");
+                return;
+            }
+
+            if (playerDetailsRank.getRank().getRankId() == rankId) {
+                client.session().set("alertColour", "warning");
+                client.session().set("alertMessage", "The user " + user + " already has the rank ID " + rankId + " (" + rankName + ")");
+                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/give_rank");
+                return;
+            }
+
+            HousekeepingPlayerDao.setRank(user, rankId);
+            HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Set the rank ID " + rankId + " (" + rankName + ") to user " + user + ". URL: " + client.request().uri(), client.getIpAddress());
+
+            client.session().set("alertColour", "success");
+            client.session().set("alertMessage", "Successfully set the rank ID " + rankId + " (" + rankName + ") to the user " + user);
+
+            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/give_rank");
+
+            if (sendAlert) {
+                String message = GameConfiguration.getInstance().getString("rcon.give.rank.message");
+                String finalMessage = StringUtils.replace(message, "%rank%", rankName);
+
+                RconUtil.sendCommand(RconHeader.MOD_ALERT_USER, new HashMap<>() {{
+                    put("receiver", user);
+                    put("message", finalMessage);
+
+                }});
             }
         }
 
@@ -109,30 +110,33 @@ public class HousekeepingRanksController {
 
             int rankIdInt = 0;
 
-            if (StringUtils.isNumeric(rankId) ) {
+            if (StringUtils.isNumeric(rankId)) {
                 rankIdInt = Integer.parseInt(rankId);
             }
 
-            if (rankIdInt > 0 && rankIdInt < 9) {
-                String rankNameVars = String.valueOf(PlayerRank.getRankForId(rankIdInt));
-
-                if (rankName.length() > 0 && rankBadge.length() > 0 && rankDescription.length() > 0) {
-                    HousekeepingPlayerDao.setRankTextVars(rankIdInt, rankName, rankBadge, rankDescription);
-                    HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Updated the variables for rank ID " + rankIdInt + ". URL: " + client.request().uri(), client.getIpAddress());
-
-
-                    client.session().set("alertColour", "success");
-                    client.session().set("alertMessage", "Successfully update the texts variables for rank ID " + rankIdInt + " (" + rankNameVars + ")");
-
-                    client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/give_rank");
-                } else {
-                    client.session().set("alertColour", "danger");
-                    client.session().set("alertMessage", "Please fill all the texts variables for rank ID " + rankIdInt + " (" + rankNameVars + ")");
-                }
-            } else {
+            if (rankIdInt < 1 || rankIdInt > 8) {
                 client.session().set("alertColour", "danger");
                 client.session().set("alertMessage", "Please enter a valid rank ID in the staff texts variables");
+                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/give_rank");
+                return;
             }
+
+            String rankNameVars = String.valueOf(PlayerRank.getRankForId(rankIdInt));
+
+            if (rankName.isEmpty() || rankBadge.isEmpty() || rankDescription.isEmpty()) {
+                client.session().set("alertColour", "danger");
+                client.session().set("alertMessage", "Please fill all the texts variables for rank ID " + rankIdInt + " (" + rankNameVars + ")");
+                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/give_rank");
+                return;
+            }
+
+            HousekeepingPlayerDao.setRankTextVars(rankIdInt, rankName, rankBadge, rankDescription);
+            HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Updated the variables for rank ID " + rankIdInt + ". URL: " + client.request().uri(), client.getIpAddress());
+
+            client.session().set("alertColour", "success");
+            client.session().set("alertMessage", "Successfully update the texts variables for rank ID " + rankIdInt + " (" + rankNameVars + ")");
+
+            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/give_rank");
         }
 
         List<Map<String, Object>> allStaffsNames = HousekeepingPlayerDao.getAllStaffsNames();
