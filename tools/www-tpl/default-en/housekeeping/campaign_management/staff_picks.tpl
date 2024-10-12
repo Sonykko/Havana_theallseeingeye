@@ -25,14 +25,6 @@
 				<label>Pick ID</label>
 				<input type="text" name="IdSave" class="form-control" id="IdSave" placeholder="Enter here the pick ID..." value="{{ staffPickEdit.pickId }}" />
 			</div>
-			<!--<div class="form-group">
-				<label>Pick ID</label>
-				<input type="text" name="typeSave" class="form-control" id="typeSave" placeholder="Enter here the pick type..." value="{{ EditStaffPick.type }}" />
-			</div>
-			<div class="form-group">
-				<label>Is Picked?</label>
-				<input type="text" name="isPicked" class="form-control" id="isPicked" placeholder="Enter here if it are Staff Pick..." value="{{ EditStaffPick.isPicked }}" />
-			</div>-->
 			<div class="form-group">
 				<label>Pick type</label>
 				<select name="typeSave" id="typeSave" class="form-control">
@@ -68,6 +60,7 @@
 		</form>
           <h2 class="mt-4">Edit Staff picks</h2>
 		  <p>The Staff Picks list is seen below.</p>
+		  {% if StaffPicksList|length > 0 %}
           <div class="table-responsive">
             <table class="table table-striped">
               <thead>
@@ -77,8 +70,7 @@
                   <th>Name</th>
                   <th>Description</th>
                   <th>Owner</th>
-				  <th>Is Picked</th>
-				  <th>Action</th>
+				  <th></th>
                 </tr>
               </thead>
               <tbody>
@@ -90,7 +82,6 @@
 				  <td>{{ staffPick.groupName }}{{ staffPick.roomName }}</td>                 
 				  <td>{{ staffPick.groupDescription }}{{ staffPick.roomDescription }}</td>                 
 				  <td>{{ staffPick.groupOwner }}{{ staffPick.roomOwner }}</td>                 			 
-				  <td>{% if staffPick.isPicked == 1 %}Yes{% else %}No{% endif %}</td>
 				  <td>
 					<a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/campaign_management/staff_picks?edit={{ staffPick.ID }}&type={{ staffPick.type }}" style="color:black;"><button type="button">Edit</button></a>
 					<a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/campaign_management/staff_picks?delete={{ staffPick.ID }}&type={{ staffPick.type }}" style="color:black;"><button type="button">Delete</button></a>
@@ -102,6 +93,9 @@
               </tbody>
             </table>
       </div>
+	  {% else %}
+	  <p>No Staff Picks found to display.</p>
+	  {% endif %}	  
 	  {% endif %}
     </div>
   </div>

@@ -1,5 +1,6 @@
 package org.alexdev.havana.game.room;
 
+import org.alexdev.havana.dao.mysql.RoomDao;
 import org.alexdev.havana.dao.mysql.TagDao;
 import org.alexdev.havana.game.games.Game;
 import org.alexdev.havana.game.games.GameManager;
@@ -426,5 +427,9 @@ public class RoomData {
 
     public void setLegacyLock(boolean b) {
         this.legacyLock = b;
+    }
+
+    public String getDescriptionPublicRoom() {
+        return RoomDao.getDescriptionPublicRoom(this.getId());
     }
 }
