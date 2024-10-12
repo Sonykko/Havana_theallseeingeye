@@ -507,6 +507,65 @@ public class RoomDao {
         return chatHistoryList;
     }
 
+    public static List<Room> getStaffPickRooms() {
+        List<Room> rooms = new ArrayList<>();
+
+        Connection sqlConnection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+
+        try {
+            sqlConnection = Storage.getStorage().getConnection();
+            preparedStatement = Storage.getStorage().prepare("SELECT * FROM cms_recommended WHERE type = 'room' AND is_staff_pick = 1 ORDER BY recommended_id", sqlConnection);
+            resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                int recommendedId = resultSet.getInt("recommended_id");
+
+                Room room = getRoomById(recommendedId);
+
+                rooms.add(room);
+            }
+
+        } catch (Exception e) {
+            Storage.logError(e);
+        } finally {
+            Storage.closeSilently(resultSet);
+            Storage.closeSilently(preparedStatement);
+            Storage.closeSilently(sqlConnection);
+        }
+
+        return rooms;
+    }
+
+    public static String getDescriptionPublicRoom(int roomId) {
+        String description = null;
+
+        Connection sqlConnection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+
+        try {
+            sqlConnection = Storage.getStorage().getConnection();
+            preparedStatement = Storage.getStorage().prepare("SELECT * FROM navigator_styles WHERE room_id = ?", sqlConnection);
+            preparedStatement.setInt(1, roomId);
+            resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                description = resultSet.getString("description");
+            }
+
+        } catch (Exception e) {
+            Storage.logError(e);
+        } finally {
+            Storage.closeSilently(resultSet);
+            Storage.closeSilently(preparedStatement);
+            Storage.closeSilently(sqlConnection);
+        }
+
+        return description;
+    }
+
     /**
      * Fill room data
      *
