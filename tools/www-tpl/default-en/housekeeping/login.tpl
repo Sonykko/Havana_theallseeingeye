@@ -27,7 +27,7 @@
 					<div class="box">
 						<form class="form-signin login-box" action="/ase/housekeeping/es/login" method="post">
 							<label for="inputUsername" class="sr-only">Username</label>Username:
-							<input type="text" name="hkusername" id="inputUsername" class="form-control" value="Guest">
+							<input type="text" name="hkusername" id="inputUsername" class="form-control">
 							<label for="inputPassword" class="sr-only">Password</label>Password:
 							<input type="password" name="hkpassword" id="inputPassword" class="form-control">
 							<button type="submit">Log in</button>				

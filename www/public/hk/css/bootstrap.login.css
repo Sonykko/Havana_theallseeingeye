@@ -441,7 +441,8 @@ h3, .h3 {
 
 h4, .h4 {
   /*font-size: 1.3125rem;*/
-  font-size: 22px;
+  /*font-size: 22px;*/
+  font-size: 26px;
 }
 
 h5, .h5 {
@@ -2066,8 +2067,8 @@ pre code {
 .form-control {
   display: block;
   width: 100%;
-  height: calc(1.5em + 0.75rem + 2px);
-  padding: 0.375rem 0.75rem;
+  /*height: calc(1.5em + 0.75rem + 2px);
+  padding: 0.375rem 0.75rem;*/
   font-size: 0.875rem;
   font-weight: 400;
   line-height: 1.5;
@@ -2094,14 +2095,14 @@ pre code {
   border: 0;
 }
 
-.form-control:focus {
+/*.form-control:focus {
   color: #555;
   background-color: #fff;
   border-color: #61c6ed;
   outline: 0;
   -webkit-box-shadow: 0 0 0 0.2rem rgba(21, 140, 186, 0.25);
           box-shadow: 0 0 0 0.2rem rgba(21, 140, 186, 0.25);
-}
+}*/
 
 .form-control::-webkit-input-placeholder {
   color: #999;
