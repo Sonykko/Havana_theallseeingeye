@@ -45,13 +45,14 @@ This is a project to recreate the supossed "Hobbanet" or theallseeingeye Habbo H
   - Stickie viewer
 - Campaign management
   - Ads banners tool
-  - Staff picks tool (missing rooms)
+  - Staff picks tool (including rooms)
   - Recommended groups tool
   - Hot campaigns tool
   - Create catalogue pages
   - Manage catalogue pages
 - theallseeingeye - Hobbanet design
 - Website
+  - Staff Picks - groups & rooms
   - Habbo Hobba application form
 - Support for Dual Flash/Shockwave connection for RELEASE39-22643-22891-200911110035_07c3a2a30713fd5bea8a8caf07e33438.
 
