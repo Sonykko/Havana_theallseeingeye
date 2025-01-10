@@ -1,7 +1,11 @@
 ![](https://i.imgur.com/Et9Elti.png)
 # Information
 
-This is a project to recreate the supossed "Hobbanet" or theallseeingeye Habbo Housekeeping. Developed by Sonykko.
+Havana_theallseeingeye is a project to recreate the original "Hobbanet" or theallseeingeye Habbo Housekeeping created by Sulake. Almost all design and features of this Housekeeping it's a pixel perfect clone and reverse engineered from theallseeingeye.
+
+This project is for educational and development purposes only.
+
+Developed by Sonykko.
 
 # Features
 
