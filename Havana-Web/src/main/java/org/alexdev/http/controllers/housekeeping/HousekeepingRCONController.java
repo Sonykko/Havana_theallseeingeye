@@ -55,13 +55,15 @@ public class HousekeepingRCONController {
             String message = client.post().getString("message");
             boolean showSender = client.post().getBoolean("showSender");
 
-            if (message != null && !message.isEmpty()) {
-                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/api/massalert?user=" + sender + "&ha=" + message + "&showSender=" + showSender);
-                return;
-            } else {
+            if (message == null || message.isEmpty()) {
                 client.session().set("alertColour", "danger");
                 client.session().set("alertMessage", "Please enter a valid Hotel Alert message");
+                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/mass_alert");
+                return;
             }
+
+            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/api/massalert?user=" + sender + "&ha=" + message + "&showSender=" + showSender);
+            return;
         }
 
         tpl.set("housekeepingManager", HousekeepingManager.getInstance());
@@ -116,20 +118,24 @@ public class HousekeepingRCONController {
             String customMessage = client.post().getString("customMessage");
             String message = customMessage != null && !customMessage.isEmpty() ? customMessage : commonMessage;
 
-            if (user != null && !user.isEmpty() && message != null && !message.isEmpty()) {
-                String checkName = HousekeepingPlayerDao.CheckDBName(user);
-
-                if (!checkName.equalsIgnoreCase(user)) {
-                    client.session().set("alertColour", "danger");
-                    client.session().set("alertMessage", "The user does not exist");
-                } else {
-                    client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/api/alert?user=" + user + "&message=" + message);
-                    return;
-                }
-            } else {
+            if (user == null || user.isEmpty() || message == null || message.isEmpty()) {
                 client.session().set("alertColour", "danger");
                 client.session().set("alertMessage", "Please fill and enter all valid values");
+                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/alert");
+                return;
             }
+
+            var playerAlertDetails = PlayerDao.getDetails(user);
+
+            if (playerAlertDetails == null) {
+                client.session().set("alertColour", "danger");
+                client.session().set("alertMessage", "The user does not exist");
+                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/alert");
+                return;
+            }
+
+            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/api/alert?user=" + user + "&message=" + message);
+            return;
         }
 
         //Template tpl = client.template("housekeeping/dashboard");
@@ -148,7 +154,7 @@ public class HousekeepingRCONController {
         client.session().delete("alertMessage");
     }
 
-    public static void banKickUserRCON(WebConnection client) { // Añadir BOLEAN para mostrar todos los chats chatlogs de manera predifinida o buscar por nombre, id o dueño o etc...
+    public static void banKickUserRCON(WebConnection client) {
         if (!client.session().getBoolean(SessionUtil.LOGGED_IN_HOUSKEEPING)) {
             client.redirect("/" + Routes.HOUSEKEEPING_DEFAULT_PATH);
             return;
@@ -177,30 +183,72 @@ public class HousekeepingRCONController {
             String customMessage = client.post().getString("customMessage");
             String alertMessage = customMessage != null && !customMessage.isEmpty() ? customMessage : commonMessage;
 
-            if (username != null && !username.isEmpty()) {
-                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/api/kick?user=" + username + "&alertMessage=" + alertMessage);
-                return;
-            } else {
+            if (username == null || username.isEmpty()) {
                 client.session().set("alertColour", "danger");
                 client.session().set("alertMessage", "Please enter a valid username");
+                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/bans_kick");
+                return;
             }
-        } else if ("ban".equals(action)) {
+
+            var playerKickDetails = PlayerDao.getDetails(username);
+
+            if (playerKickDetails == null) {
+                client.session().set("alertColour", "danger");
+                client.session().set("alertMessage", "The user does not exists.");
+                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/bans_kicks");
+                return;
+            }
+
+            if (!playerKickDetails.isOnline()) {
+                client.session().set("alertColour", "warning");
+                client.session().set("alertMessage", "Can't kick the user "+ playerKickDetails.getName() + " cause it's not online");
+                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/users/mod_tool?username=" + playerKickDetails.getName());
+                return;
+            }
+
+            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/api/kick?user=" + username + "&alertMessage=" + alertMessage);
+            return;
+        }
+
+        if ("ban".equals(action)) {
             String username = client.session().getString("badguy");
             String commonMessage = client.post().getString("commonMessage");
             String customMessage = client.post().getString("customMessage");
             String alertMessage = customMessage != null && !customMessage.isEmpty() ? customMessage : commonMessage;
+            String defaultMessage = GameConfiguration.getInstance().getString("rcon.superban.message");
+            String finalMessage = customMessage.isEmpty() && commonMessage.isEmpty() ? defaultMessage : alertMessage;
             String notes = client.post().getString("notes");
             int banSeconds = client.post().getInt("banSeconds");
             boolean doBanMachine = client.post().getBoolean("doBanMachine");
             boolean doBanIP = client.post().getBoolean("doBanIP");
 
-            if (username != null && !username.isEmpty()) {
-                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/api/ban?username=" + username + "&alertMessage=" + alertMessage + "&notes=" + notes + "&banSeconds=" + banSeconds + "&doBanMachine=" + doBanMachine + "&doBanIP=" + doBanIP);
-                return;
-            } else {
+            if (username == null || username.isEmpty()) {
                 client.session().set("alertColour", "danger");
                 client.session().set("alertMessage", "Please enter a valid username");
+                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/bans_kicks");
+                return;
             }
+
+            var playerBanDetails = PlayerDao.getDetails(username);
+
+            if (playerBanDetails == null) {
+                client.session().set("alertColour", "danger");
+                client.session().set("alertMessage", "The user does not exists.");
+                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/bans_kicks");
+                return;
+            }
+
+            var banDetails = playerBanDetails.isBanned();
+
+            if (banDetails != null) {
+                client.session().set("alertColour", "danger");
+                client.session().set("alertMessage", "The user has already a active ban: \"" + banDetails.getLeft() + "\".");
+                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/users/mod_tool?username=" + username);
+                return;
+            }
+
+            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/api/ban?username=" + username + "&alertMessage=" + finalMessage + "&notes=" + notes + "&banSeconds=" + banSeconds + "&doBanMachine=" + doBanMachine + "&doBanIP=" + doBanIP);
+            return;
         }
 
         if (badguy == null || badguy.isEmpty() || badguy.isBlank()) {
@@ -250,33 +298,39 @@ public class HousekeepingRCONController {
             String customMessage = client.post().getString("customMessage");
             String alertMessage = customMessage != null && !customMessage.isEmpty() ? customMessage : commonMessage;
 
-            if (usernames != null && !usernames.isEmpty()) {
-                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/api/mass_kick?users=" + usernames + "&alertMessage=" +  alertMessage);
-                return;
-            } else {
+            if (usernames == null || usernames.isEmpty()) {
                 client.session().set("alertColour", "danger");
                 client.session().set("alertMessage", "Please enter a valid usernames");
+                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/mass_ban");
+                return;
             }
-        } else if ("massBan".equals(action)) {
-            if (client.post().contains("userNames") && client.post().contains("alertMessage")) {
-                List<String> usernames = client.post().getArray("userNames");
-                usernames = usernames.stream().map(s -> replaceLineBreaks(s)).collect(Collectors.toList());
-                String commonMessage = client.post().getString("commonMessage");
-                String customMessage = client.post().getString("customMessage");
-                String alertMessage = customMessage != null && !customMessage.isEmpty() ? customMessage : commonMessage;
-                String notes = client.post().getString("notes");
-                int banSeconds = client.post().getInt("banSeconds");
-                boolean doBanMachine = client.post().getBoolean("doBanMachine");
-                boolean doBanIP = client.post().getBoolean("doBanIP");
 
-                if (usernames != null && !usernames.isEmpty()) {
-                    client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/api/mass_ban?usernames=" + usernames + "&alertMessage=" + alertMessage + "&notes=" + notes + "&banSeconds=" + banSeconds + "&doBanMachine=" + doBanMachine + "&doBanIP=" + doBanIP);
-                    return;
-                } else {
-                    client.session().set("alertColour", "danger");
-                    client.session().set("alertMessage", "Please enter a valid usernames");
-                }
+            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/api/mass_kick?users=" + usernames + "&alertMessage=" +  alertMessage);
+            return;
+        }
+
+        if ("massBan".equals(action)) {
+            List<String> usernames = client.post().getArray("userNames");
+            usernames = usernames.stream().map(s -> replaceLineBreaks(s)).collect(Collectors.toList());
+            String commonMessage = client.post().getString("commonMessage");
+            String customMessage = client.post().getString("customMessage");
+            String alertMessage = customMessage != null && !customMessage.isEmpty() ? customMessage : commonMessage;
+            String defaultMessage = GameConfiguration.getInstance().getString("rcon.superban.message");
+            String finalMessage = customMessage.isEmpty() && commonMessage.isEmpty() ? defaultMessage : alertMessage;
+            String notes = client.post().getString("notes");
+            int banSeconds = client.post().getInt("banSeconds");
+            boolean doBanMachine = client.post().getBoolean("doBanMachine");
+            boolean doBanIP = client.post().getBoolean("doBanIP");
+
+            if (usernames == null || usernames.isEmpty()) {
+                client.session().set("alertColour", "danger");
+                client.session().set("alertMessage", "Please enter a valid usernames");
+                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/mass_ban");
+                return;
             }
+
+            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/api/mass_ban?usernames=" + usernames + "&alertMessage=" + finalMessage + "&notes=" + notes + "&banSeconds=" + banSeconds + "&doBanMachine=" + doBanMachine + "&doBanIP=" + doBanIP);
+            return;
         }
 
         tpl.set("housekeepingManager", HousekeepingManager.getInstance());
@@ -309,18 +363,18 @@ public class HousekeepingRCONController {
         String action = client.post().getString("action");
 
         if ("massUnban".equals(action)) {
-            if (client.post().contains("userNames")) {
-                List<String> usernames = client.post().getArray("userNames");
-                usernames = usernames.stream().map(s -> replaceLineBreaks(s)).collect(Collectors.toList());
+            List<String> usernames = client.post().getArray("userNames");
+            usernames = usernames.stream().map(s -> replaceLineBreaks(s)).collect(Collectors.toList());
 
-                if (usernames != null && !usernames.isEmpty()) {
-                    client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/api/mass_unban?usernames=" + usernames);
-                    return;
-                } else {
-                    client.session().set("alertColour", "danger");
-                    client.session().set("alertMessage", "Please enter a valid usernames");
-                }
+            if (usernames == null || usernames.isEmpty()) {
+                client.session().set("alertColour", "danger");
+                client.session().set("alertMessage", "Please enter a valid usernames");
+                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/mass_unban");
+                return;
             }
+
+            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/api/mass_unban?usernames=" + usernames);
+            return;
         }
 
         tpl.set("housekeepingManager", HousekeepingManager.getInstance());
