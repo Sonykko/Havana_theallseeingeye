@@ -2,6 +2,7 @@ package org.alexdev.http.controllers.site;
 
 import org.alexdev.duckhttpd.server.connection.WebConnection;
 import org.alexdev.duckhttpd.template.Template;
+import org.alexdev.havana.dao.mysql.MessengerDao;
 import org.alexdev.havana.dao.mysql.PlayerDao;
 import org.alexdev.havana.dao.mysql.PlayerStatisticsDao;
 import org.alexdev.havana.game.messenger.Messenger;
@@ -9,12 +10,14 @@ import org.alexdev.havana.game.messenger.MessengerUser;
 import org.alexdev.havana.game.player.PlayerDetails;
 import org.alexdev.havana.game.player.statistics.PlayerStatistic;
 import org.alexdev.havana.game.wordfilter.WordfilterManager;
+import org.alexdev.havana.server.rcon.messages.RconHeader;
 import org.alexdev.havana.util.DateUtil;
 import org.alexdev.havana.util.StringUtil;
 import org.alexdev.http.dao.MinimailDao;
 import org.alexdev.http.game.minimail.MinimailMessage;
 import org.alexdev.http.util.BBCode;
 import org.alexdev.http.util.HtmlUtil;
+import org.alexdev.http.util.RconUtil;
 import org.alexdev.http.util.XSSUtil;
 import org.apache.commons.lang3.StringUtils;
 
@@ -30,11 +33,11 @@ public class MinimailController {
         }
 
         var template = webConnection.template("habblet/minimail/minimail_messages");
-        appendMessages(webConnection, template, false, false, false, false, false, false);
+        appendMessages(webConnection, template, false, false, false, false, false, false, false);
         template.render();
     }
 
-    public static void appendMessages(WebConnection webConnection, Template template, boolean isPageLoad, boolean messageSent, boolean messageDeleted, boolean messageUndeleted, boolean trashEmptied, boolean isMuted) {
+    public static void appendMessages(WebConnection webConnection, Template template, boolean isPageLoad, boolean messageSent, boolean messageDeleted, boolean messageUndeleted, boolean trashEmptied, boolean isMuted, boolean messageReported) {
         XSSUtil.clear(webConnection);
 
         String label = webConnection.post().getString("label");
@@ -103,7 +106,7 @@ public class MinimailController {
 
             entireMessageList = MinimailDao.getMessagesConversation(userId, conversationId);
         }
-        
+
         if (unreadOnly) {
             entireMessageList.removeIf(MinimailMessage::isRead);
         }
@@ -183,6 +186,8 @@ public class MinimailController {
                 webConnection.headers().put("X-JSON", "{\"message\":\"Message undeleted\",\"totalMessages\":" + entireMessageList.size() + "}");
             } else if (trashEmptied) {
                 webConnection.headers().put("X-JSON", "{\"message\":\"The trash has been emptied. Good Job!\",\"totalMessages\":" + entireMessageList.size() + "}");
+            } else if (messageReported) {
+                webConnection.headers().put("X-JSON", "{\"message\":\"Message reported sucessfully, and friend removed.\",\"totalMessages\":" + entireMessageList.size() + "}");
             } else {
                 webConnection.headers().put("X-JSON", "{\"totalMessages\":" + entireMessageList.size() + "}");
             }
@@ -256,8 +261,8 @@ public class MinimailController {
                     }
 
                     if (WordfilterManager.filterSentence(message).equals(message)) {
-                        minimailMessageList.add(new MinimailMessage(-1, webConnection.session().getInt("user.id"), toId, webConnection.session().getInt("user.id"), false, subject, message, 0, 0, false));
-                        minimailMessageList.add(new MinimailMessage(-1, toId, toId, webConnection.session().getInt("user.id"), false, subject, message, 0, 0, false));
+                        minimailMessageList.add(new MinimailMessage(-1, webConnection.session().getInt("user.id"), toId, webConnection.session().getInt("user.id"), false, subject, message, 0, 0, false, false));
+                        minimailMessageList.add(new MinimailMessage(-1, toId, toId, webConnection.session().getInt("user.id"), false, subject, message, 0, 0, false, false));
                     }
 
                 }
@@ -278,8 +283,8 @@ public class MinimailController {
                     MinimailDao.updateMessage(minimailMessage);
 
                     if (WordfilterManager.filterSentence(message).equals(message)) {
-                        minimailMessageList.add(new MinimailMessage(-1, webConnection.session().getInt("user.id"), minimailMessage.getSenderId(), webConnection.session().getInt("user.id"), false, "Re: " + minimailMessage.getSubject(), message, 0, minimailMessage.getConversationId(), false));
-                        minimailMessageList.add(new MinimailMessage(-1, minimailMessage.getSenderId(), minimailMessage.getSenderId(), webConnection.session().getInt("user.id"), false, "Re: " + minimailMessage.getSubject(), message, 0, minimailMessage.getConversationId(), false));
+                        minimailMessageList.add(new MinimailMessage(-1, webConnection.session().getInt("user.id"), minimailMessage.getSenderId(), webConnection.session().getInt("user.id"), false, "Re: " + minimailMessage.getSubject(), message, 0, minimailMessage.getConversationId(), false, false));
+                        minimailMessageList.add(new MinimailMessage(-1, minimailMessage.getSenderId(), minimailMessage.getSenderId(), webConnection.session().getInt("user.id"), false, "Re: " + minimailMessage.getSubject(), message, 0, minimailMessage.getConversationId(), false, false));
                     }
                 }
             }
@@ -287,7 +292,7 @@ public class MinimailController {
             MinimailDao.createMessages(minimailMessageList);
         }
 
-        appendMessages(webConnection, template, false, true, false, false, false, isMuted);
+        appendMessages(webConnection, template, false, true, false, false, false, isMuted, false);
         template.render();
     }
 
@@ -386,7 +391,7 @@ public class MinimailController {
         }
 
         var template = webConnection.template("habblet/minimail/minimail_messages");
-        appendMessages(webConnection, template, false, false, true, false, false, false);
+        appendMessages(webConnection, template, false, false, true, false, false, false, false);
         template.render();
     }
 
@@ -422,7 +427,7 @@ public class MinimailController {
         MinimailDao.updateMessage(minimailMessage);
 
         var template = webConnection.template("habblet/minimail/minimail_messages");
-        appendMessages(webConnection, template, false, false, false, true, false, false);
+        appendMessages(webConnection, template, false, false, false, true, false, false, false);
         template.render();
     }
 
@@ -436,7 +441,100 @@ public class MinimailController {
         MinimailDao.emptyTrash(userId);
 
         var template = webConnection.template("habblet/minimail/minimail_messages");
-        appendMessages(webConnection, template, false, false, false, false, true, false);
+        appendMessages(webConnection, template, false, false, false, false, true, false, false);
+        template.render();
+    }
+
+    public static void confirmReport(WebConnection webConnection) {
+        if (!webConnection.session().getBoolean("authenticated")) {
+            webConnection.send("");
+            return;
+        }
+
+        int userId = webConnection.session().getInt("user.id");
+
+        int messageId = 0;
+
+        try {
+            messageId = webConnection.post().getInt("messageId");
+        } catch (Exception ex) {
+            webConnection.send("");
+            return;
+        }
+
+        if (!(messageId > 0)) {
+            webConnection.send("");
+            return;
+        }
+
+        MinimailMessage minimailMessage = MinimailDao.getMessage(messageId, userId);
+
+        if (minimailMessage == null) {
+            webConnection.send("");
+            return;
+        }
+
+        String subject = minimailMessage.getSubject();
+        int friendId = minimailMessage.getSenderId();
+
+        boolean selfReport = false;
+
+        if (friendId == userId) {
+            selfReport = true;
+        }
+
+        var friend = PlayerDao.getDetails(friendId).getName();
+
+        var template = webConnection.template("habblet/minimail/minimail_confirmReport");
+        template.set("subject", subject);
+        template.set("friend", friend);
+        template.set("selfReport", selfReport);
+        template.render();
+    }
+
+    public static void reportMessage(WebConnection webConnection) {
+        if (!webConnection.session().getBoolean("authenticated")) {
+            webConnection.send("");
+            return;
+        }
+
+        int userId = webConnection.session().getInt("user.id");
+
+        int messageId = 0;
+
+        try {
+            messageId = webConnection.post().getInt("messageId");
+        } catch (Exception ex) {
+            webConnection.send("");
+            return;
+        }
+
+        if (!(messageId > 0)) {
+            webConnection.send("");
+            return;
+        }
+
+        MinimailMessage minimailMessage = MinimailDao.getMessage(messageId, userId);
+
+        if (minimailMessage == null) {
+            webConnection.send("");
+            return;
+        }
+
+        MinimailDao.reportMessage(minimailMessage);
+        MinimailDao.deleteMessage(minimailMessage);
+
+        var author = minimailMessage.getAuthor().getId();
+        var receiver = minimailMessage.getTarget().getId();
+
+        MessengerDao.removeFriend(author, receiver);
+
+        RconUtil.sendCommand(RconHeader.REFRESH_MESSENGER_CATEGORIES, new HashMap<>() {{
+            put("userId", receiver);
+        }});
+
+        var template = webConnection.template("habblet/minimail/minimail_messages");
+        appendMessages(webConnection, template, false, false, false, false, false, false, true);
         template.render();
     }
 }

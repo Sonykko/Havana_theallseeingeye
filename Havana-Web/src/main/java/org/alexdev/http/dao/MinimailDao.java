@@ -248,9 +248,27 @@ public class MinimailDao {
         return messages;
     }
 
+    public static void reportMessage(MinimailMessage minimailMessage) {
+        Connection sqlConnection = null;
+        PreparedStatement preparedStatement = null;
+
+        try {
+            sqlConnection = Storage.getStorage().getConnection();
+            preparedStatement = Storage.getStorage().prepare("UPDATE cms_minimail SET is_reported = 1 WHERE id = ? AND target_id = ?", sqlConnection);
+            preparedStatement.setInt(1, minimailMessage.getId());
+            preparedStatement.setInt(2, minimailMessage.getTargetId());
+            preparedStatement.execute();
+        } catch (Exception ex) {
+            Storage.logError(ex);
+        } finally {
+            Storage.closeSilently(preparedStatement);
+            Storage.closeSilently(sqlConnection);
+        }
+    }
+
     private static MinimailMessage fill(ResultSet resultSet) throws SQLException {
         return new MinimailMessage(resultSet.getInt("id"), resultSet.getInt("target_id"), resultSet.getInt("to_id"), resultSet.getInt("sender_id"),
                 resultSet.getBoolean("is_read"), resultSet.getString("subject"), resultSet.getString("message"), resultSet.getTime("date_sent").getTime() / 1000L,
-                resultSet.getInt("conversation_id"), resultSet.getBoolean("is_trash"));
+                resultSet.getInt("conversation_id"), resultSet.getBoolean("is_trash"), resultSet.getBoolean("is_reported"));
     }
 }

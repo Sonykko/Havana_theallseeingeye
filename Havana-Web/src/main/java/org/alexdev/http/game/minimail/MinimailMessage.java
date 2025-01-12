@@ -19,8 +19,9 @@ public class MinimailMessage {
     private boolean isTrash;
     private PlayerDetails target;
     private PlayerDetails author;
+    private boolean isReported;
 
-    public MinimailMessage(int id, int targetId, int toId, int senderId, boolean isRead, String subject, String message, long dateSent, int conversationId, boolean isTrash) {
+    public MinimailMessage(int id, int targetId, int toId, int senderId, boolean isRead, String subject, String message, long dateSent, int conversationId, boolean isTrash, boolean isReported) {
         this.id = id;
         this.targetId = targetId;
         this.toId = toId;
@@ -31,6 +32,7 @@ public class MinimailMessage {
         this.dateSent = dateSent;
         this.conversationId = conversationId;
         this.isTrash = isTrash;
+        this.isReported = isReported;
     }
 
     public int getId() {
@@ -135,5 +137,9 @@ public class MinimailMessage {
 
     public void setAuthor(PlayerDetails author) {
         this.author = author;
+    }
+
+    public boolean isReported() {
+        return isReported;
     }
 }
