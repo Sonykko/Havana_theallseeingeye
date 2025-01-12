@@ -190,7 +190,7 @@ public class AccountController {
         template.set("staffPickGroups", Watchdog.STAFF_PICK_GROUPS);
 
         FriendsFeed.createFriendsOnline(webConnection, template);
-        MinimailController.appendMessages(webConnection, template, true, false, false, false, false, false);
+        MinimailController.appendMessages(webConnection, template, true, false, false, false, false, false, false);
 
         var pendingDetails = GroupMemberDao.getPendingMembers(playerDetails.getId());
         template.set("pendingMembers", pendingDetails.getKey());

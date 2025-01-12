@@ -139,7 +139,7 @@ public class ProxyHabblet {
 
         Template template = webConnection.template("habblet/minimail");
         webConnection.session().set("minimailLabel", "inbox");
-        MinimailController.appendMessages(webConnection, template, true, false, false, false, false, false);
+        MinimailController.appendMessages(webConnection, template, true, false, false, false, false, false, false);
         template.set("minimailClient", true);
         template.render();
     }
