@@ -97,34 +97,40 @@ public class HousekeepingCommandsController {
         List<String> usernames = splitUsernames(users);
 
         for (String username : usernames) {
+            String redirect =  client.get().getString("redirect");
+            if (redirect.isEmpty()) {
+                redirect = "mass_ban";
+            }
+
             var playerDetails = PlayerDao.getDetails(username);
 
-            if (playerDetails != null) {
-                RconUtil.sendCommand(RconHeader.DISCONNECT_USER, new HashMap<>() {{
-                    put("userId", playerDetails.getId());
-                }});
-
-                int banningId = client.session().getInt("user.id");
-                var banningPlayerDetails = PlayerDao.getDetails(banningId);
-                String alertMessage = client.get().getString("alertMessage");
-                String notes = client.get().getString("notes");
-                int banSeconds = client.get().getInt("banSeconds");
-                boolean doBanMachine = client.get().getBoolean("doBanMachine");
-                boolean doBanIP = client.get().getBoolean("doBanIP");
-
-                //ModerationDao.addLog(ModerationActionType.ALERT_USER, banningPlayerDetails.getId(), playerDetails.getId(), "Banned for breaking the HabboWay", "");
-                client.send(ModeratorBanUserAction.ban(banningPlayerDetails, alertMessage, notes, playerDetails.getName(), banSeconds, doBanMachine, doBanIP));
-
-                client.session().set("alertColour", "success");
-                client.session().set("alertMessage", "The user " + username + " has been banned.");
-            } else {
+            if (playerDetails == null) {
                 client.session().set("alertColour", "danger");
                 client.session().set("alertMessage", "The user " + username + " does not exist.");
+                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/" + redirect);
+                return;
             }
-        }
 
-        // Redirect to the bans and kicks page
-        client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/bans_kicks");
+            RconUtil.sendCommand(RconHeader.DISCONNECT_USER, new HashMap<>() {{
+                put("userId", playerDetails.getId());
+            }});
+
+            int banningId = client.session().getInt("user.id");
+            var banningPlayerDetails = PlayerDao.getDetails(banningId);
+            String alertMessage = client.get().getString("alertMessage");
+            String notes = client.get().getString("notes");
+            int banSeconds = client.get().getInt("banSeconds");
+            boolean doBanMachine = client.get().getBoolean("doBanMachine");
+            boolean doBanIP = client.get().getBoolean("doBanIP");
+
+            //ModerationDao.addLog(ModerationActionType.ALERT_USER, banningPlayerDetails.getId(), playerDetails.getId(), "Banned for breaking the HabboWay", "");
+            client.send(ModeratorBanUserAction.ban(banningPlayerDetails, alertMessage, notes, playerDetails.getName(), banSeconds, doBanMachine, doBanIP));
+
+            client.session().set("alertColour", "success");
+            client.session().set("alertMessage", "The user " + username + " has been banned.");
+            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/" + redirect);
+            return;
+        }
     }
 
     public static void massUnbanuser(WebConnection client) {
