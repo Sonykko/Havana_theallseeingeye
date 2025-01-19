@@ -47,6 +47,7 @@ Developed by Sonykko.
   - Rank manager
   - Trusted person admin
   - Stickie viewer
+  - MiniMail Reports
 - Campaign management
   - Ads banners tool
   - Staff picks tool (including rooms)
