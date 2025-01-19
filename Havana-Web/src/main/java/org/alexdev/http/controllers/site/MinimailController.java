@@ -524,8 +524,8 @@ public class MinimailController {
         MinimailDao.reportMessage(minimailMessage);
         MinimailDao.deleteMessage(minimailMessage);
 
-        var author = minimailMessage.getAuthor().getId();
-        var receiver = minimailMessage.getTarget().getId();
+        var author = minimailMessage.getSenderId();
+        var receiver = minimailMessage.getTargetId();
 
         MessengerDao.removeFriend(author, receiver);
 
