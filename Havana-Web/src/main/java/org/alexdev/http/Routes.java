@@ -296,6 +296,8 @@ public class Routes {
         RouteManager.addRoute("/minimail/deleteMessage", MinimailController::deleteMessage);
         RouteManager.addRoute("/minimail/undeleteMessage", MinimailController::undeleteMessage);
         RouteManager.addRoute("/minimail/emptyTrash", MinimailController::emptyTrash);
+        RouteManager.addRoute("/minimail/confirmReport", MinimailController::confirmReport);
+        RouteManager.addRoute("/minimail/report", MinimailController::reportMessage);
 
         // Quick menu
         RouteManager.addRoute("/quickmenu/groups", QuickmenuController::groups);

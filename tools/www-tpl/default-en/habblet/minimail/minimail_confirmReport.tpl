@@ -4,7 +4,7 @@
 </ul>
 
 <p>
-<a href="#" class="new-button cancel-report"><b>Cancelar</b><i></i></a>
+<a href="#" class="new-button cancel-report"><b>Cancel</b><i></i></a>
 </p>
 {% else %}
 <p>
