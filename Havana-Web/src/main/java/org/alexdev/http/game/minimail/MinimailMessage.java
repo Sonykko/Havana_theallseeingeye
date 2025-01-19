@@ -1,5 +1,6 @@
 package org.alexdev.http.game.minimail;
 
+import org.alexdev.havana.dao.mysql.PlayerDao;
 import org.alexdev.havana.game.player.PlayerDetails;
 import org.alexdev.havana.game.wordfilter.WordfilterManager;
 import org.alexdev.havana.util.DateUtil;
@@ -141,5 +142,13 @@ public class MinimailMessage {
 
     public boolean isReported() {
         return isReported;
+    }
+
+    public String getAuthorName() {
+        return PlayerDao.getName(getSenderId());
+    }
+
+    public String getTargetName() {
+        return PlayerDao.getName(getTargetId());
     }
 }

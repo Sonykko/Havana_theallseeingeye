@@ -128,10 +128,21 @@
 
 {% if housekeepingManager.hasPermission(playerDetails.getRank(), 'bans') %}	
 	<div class="subnav-box">
- <div class="subnav-header">Group management tools</div>
+ <div class="subnav-header">Content moderation</div>
       <div class="list-group list-group-flush" style="padding-left: 2px;">        
 			{% if housekeepingManager.hasPermission(playerDetails.getRank(), 'bans') %}
 			<text><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/group_admin" class="subnav-link">Group admin</a></text>
+			{% endif %}	
+      </div>
+    </div>
+{% endif %}
+
+{% if housekeepingManager.hasPermission(playerDetails.getRank(), 'bans') %}	
+	<div class="subnav-box">
+ <div class="subnav-header">MiniMail</div>
+      <div class="list-group list-group-flush" style="padding-left: 2px;">        
+			{% if housekeepingManager.hasPermission(playerDetails.getRank(), 'bans') %}
+			<text><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/minimail_reports" class="subnav-link">MiniMail Reports</a></text>
 			{% endif %}	
       </div>
     </div>
