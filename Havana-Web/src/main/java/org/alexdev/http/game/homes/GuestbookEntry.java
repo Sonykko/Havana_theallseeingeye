@@ -13,7 +13,7 @@ public class GuestbookEntry {
     private final int homeId;
     private final int groupId;
     private final long creationDate;
-    private final String message;
+    private String message;
 
     public GuestbookEntry(int id, int userId, int homeId, int groupId, String message, long creationDate) {
         this.id = id;
@@ -50,5 +50,9 @@ public class GuestbookEntry {
 
     public String getMessage() {
         return BBCode.format(HtmlUtil.escape(BBCode.normalise(WordfilterManager.filterSentence(this.message))), false);
+    }
+
+    public void setMessage(String message) {
+        this.message = WordfilterManager.filterSentence(message);
     }
 }
