@@ -149,6 +149,24 @@ public class GuestbookDao {
         return entries;
     }
 
+    public static void saveEntry(GuestbookEntry guestbookEntry) {
+        Connection sqlConnection = null;
+        PreparedStatement preparedStatement = null;
+
+        try {
+            sqlConnection = Storage.getStorage().getConnection();
+            preparedStatement = Storage.getStorage().prepare("UPDATE cms_guestbook_entries SET message = ? WHERE id = ?", sqlConnection);
+            preparedStatement.setString(1, guestbookEntry.getMessage());
+            preparedStatement.setInt(2, guestbookEntry.getId());
+            preparedStatement.execute();
+        } catch (Exception e) {
+            Storage.logError(e);
+        } finally {
+            Storage.closeSilently(preparedStatement);
+            Storage.closeSilently(sqlConnection);
+        }
+    }
+
     private static GuestbookEntry fill(ResultSet resultSet) throws SQLException {
         return new GuestbookEntry(resultSet.getInt("id"), resultSet.getInt("user_id"), resultSet.getInt("home_id"), resultSet.getInt("group_id"),
                 resultSet.getString("message"), resultSet.getTime("created_at").getTime() / 1000L);
