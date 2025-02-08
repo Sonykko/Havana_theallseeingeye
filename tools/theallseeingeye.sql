@@ -77,6 +77,21 @@ CREATE TABLE `cms_banners` (
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `cms_content_reports`
+--
+
+CREATE TABLE `cms_content_reports` (
+  `id` int(11) NOT NULL,
+  `type` varchar(255) NOT NULL DEFAULT 'not_provided',
+  `object_id` int(11) NOT NULL DEFAULT 0,
+  `message` varchar(255) NOT NULL DEFAULT 'not_provided',
+  `is_moderated` int(11) NOT NULL DEFAULT 0,
+  `timestamp` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `housekeeping_commands_rcon`
 --
 
@@ -373,6 +388,7 @@ INSERT INTO `settings_desc` (`setting`, `description`, `category`) VALUES
 ('messenger.enable.official.update.speed', 'Set the messenger official update speed status as true or false', 'client'),
 ('messenger.max.friends.club', 'Set the number of the messenger max friends for Habbo Club member', 'club'),
 ('messenger.max.friends.nonclub', 'Set the number of the messenger max friends for non Habbo Club member', 'club'),
+('mod.localizations.lang', 'Set the lenguage of the mod localizations, like "ES", "EN" or "BR"', 'site'),
 ('navigator.hide.empty.public.categories', 'Set the navigator hide empty public categories status as true or false', 'client'),
 ('navigator.show.hidden.rooms', 'Set the navigator show hidden rooms status as true or false', 'client'),
 ('normalise.input.strings', 'Normalise input strings', 'miscellaneous'),
@@ -458,6 +474,12 @@ ALTER TABLE `cms_banners`
   ADD PRIMARY KEY (`id`);  
   
 --
+-- Indices de la tabla `cms_content_reports`
+--
+ALTER TABLE `cms_content_reports`
+  ADD PRIMARY KEY (`id`);
+  
+--
 -- Indices de la tabla `hobbas_forms`
 --
 ALTER TABLE `hobbas_forms`
@@ -533,6 +555,13 @@ ALTER TABLE `cfh_logs`
 --
 ALTER TABLE `cms_banners`
   MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+COMMIT;
+
+--
+-- AUTO_INCREMENT de la tabla `cms_content_reports`
+--
+ALTER TABLE `cms_content_reports`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 COMMIT;
 
 --
@@ -722,6 +751,7 @@ UPDATE `settings` SET
       WHEN `setting` = 'messenger.enable.official.update.speed' THEN 'client'
       WHEN `setting` = 'messenger.max.friends.club' THEN 'club'
       WHEN `setting` = 'messenger.max.friends.nonclub' THEN 'club'
+      WHEN `setting` = 'mod.localizations.lang' THEN 'site'
       WHEN `setting` = 'navigator.hide.empty.public.categories' THEN 'client'
       WHEN `setting` = 'navigator.show.hidden.rooms' THEN 'client'
       WHEN `setting` = 'normalise.input.strings' THEN 'miscellaneous'
