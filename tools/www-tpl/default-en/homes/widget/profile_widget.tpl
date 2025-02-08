@@ -56,7 +56,7 @@ Event.observe("widget-{{ sticker.getId() }}-edit", "click", function(e) { openEd
 		<div class="profile-motto">
 		{{ user.motto }}						<img id="motto-{{ user.getId() }}-report" class="report-button report-m"
 			alt="report"
-			src="{{ site.staticContentPath }}/web-gallery/images/myhabbo/buttons/report_button.gif"
+			src="{{ site.sitePath }}/web-gallery/images/myhabbo/buttons/report_button.gif"
 			style="display: none;" />
 				<div class="clear"></div>
 	</div>

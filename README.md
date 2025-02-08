@@ -48,6 +48,12 @@ Developed by Sonykko.
   - Trusted person admin
   - Stickie viewer
   - MiniMail Reports
+  - Habbo Name Reports
+  - Motto Name Reports
+  - Guestbook Reports
+  - Group Name Reports
+  - Group Description Reports
+  - Discussion Post Reports
 - Campaign management
   - Ads banners tool
   - Staff picks tool (including rooms)
@@ -60,6 +66,12 @@ Developed by Sonykko.
   - Staff Picks - groups & rooms
   - Habbo Hobba application form
   - MiniMail report system
+  - Habbo Name report system
+  - Motto Name report system
+  - Guestbook report system
+  - Group Name report system
+  - Group Description report system
+  - Discussion Post report system
 - Support for Dual Flash/Shockwave connection for RELEASE39-22643-22891-200911110035_07c3a2a30713fd5bea8a8caf07e33438.
 
 # Screenshots
