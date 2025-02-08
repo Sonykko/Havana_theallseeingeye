@@ -48,6 +48,12 @@ Developed by Sonykko.
   - Trusted person admin
   - Stickie viewer
   - MiniMail Reports
+  - Habbo Name Reports
+  - Motto Name Reports
+  - Guestbook Reports
+  - Group Name Reports
+  - Group Description Reports
+  - Discussion Post Reports
 - Campaign management
   - Ads banners tool
   - Staff picks tool (including rooms)
@@ -60,6 +66,13 @@ Developed by Sonykko.
   - Staff Picks - groups & rooms
   - Habbo Hobba application form
   - MiniMail report system
+  -   - Habbo Name report system
+  - Motto Name report system
+  - Guestbook report system
+  - Group Name report system
+  - Group Description report system
+  - Discussion Post report system
+
 # Screenshots
 
 ![image](https://i.imgur.com/CVrMF0x.png)
