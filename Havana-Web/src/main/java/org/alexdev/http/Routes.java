@@ -159,6 +159,8 @@ public class Routes {
         RouteManager.addRoute("/habblet/ajax/clear_hand", ProxyHabblet::clearhand);
         RouteManager.addRoute("/habblet/ajax/token_generate", ProxyHabblet::token_generate);
         RouteManager.addRoute("/habblet/ajax/preview_news_article", HousekeepingNewsController::preview_news_article);
+        RouteManager.addRoute("/mod/localizations", ContentModerationController::mod_localizations);
+        RouteManager.addRoute("/mod/add_*_report", ContentModerationController::add_report);
 
         // Groups
         RouteManager.addRoute("/groups/*/id", GroupController::viewGroup);

@@ -98,6 +98,7 @@ public class WebSettingsConfigWriter implements ConfigWriter {
         config.put("rcon.give.rank.message", "Se ha actualizado tu rango a %rank%");
 
         config.put("hobba.form.lang", "ES");
+        config.put("mod.localizations.lang", "ES");
 
         config.put("hk.new.style.enabled", "true");
         config.put("hk.trusted.person.enabled", "false");
