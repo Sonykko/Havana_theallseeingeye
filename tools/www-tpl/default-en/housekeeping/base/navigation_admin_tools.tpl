@@ -138,6 +138,9 @@
 			{% endif %}	
 			{% if housekeepingManager.hasPermission(playerDetails.getRank(), 'bans') %}
 			<text><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/groupdesc_reports_list" class="subnav-link">Group Description Reports</a></text>
+			{% endif %}	
+			{% if housekeepingManager.hasPermission(playerDetails.getRank(), 'bans') %}
+			<text><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/discussionpost_reports_list" class="subnav-link">Discussion Post Reports</a></text>
 			{% endif %}			
       </div>
     </div>

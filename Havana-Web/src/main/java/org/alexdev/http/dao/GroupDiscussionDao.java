@@ -621,6 +621,64 @@ public class GroupDiscussionDao {
         }
     }
 
+    public static int getDiscussionId(int replyId) {
+        int id = 0;
+
+        Connection sqlConnection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+
+        try {
+            sqlConnection = Storage.getStorage().getConnection();
+            preparedStatement = Storage.getStorage().prepare("SELECT thread_id FROM cms_forum_replies WHERE id = ? LIMIT 1", sqlConnection);
+            preparedStatement.setInt(1, replyId);
+            preparedStatement.executeUpdate();
+            resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                id = resultSet.getInt("thread_id");
+            }
+
+        } catch (Exception e) {
+            Storage.logError(e);
+        } finally {
+            Storage.closeSilently(preparedStatement);
+            Storage.closeSilently(sqlConnection);
+            Storage.closeSilently(resultSet);
+        }
+
+        return id;
+    }
+
+    public static int getReplyUserId(int discussionId) {
+        int id = 0;
+
+        Connection sqlConnection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+
+        try {
+            sqlConnection = Storage.getStorage().getConnection();
+            preparedStatement = Storage.getStorage().prepare("SELECT poster_id FROM cms_forum_replies WHERE id = ? LIMIT 1", sqlConnection);
+            preparedStatement.setInt(1, discussionId);
+            preparedStatement.executeUpdate();
+            resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                id = resultSet.getInt("poster_id");
+            }
+
+        } catch (Exception e) {
+            Storage.logError(e);
+        } finally {
+            Storage.closeSilently(preparedStatement);
+            Storage.closeSilently(sqlConnection);
+            Storage.closeSilently(resultSet);
+        }
+
+        return id;
+    }
+
     public static DiscussionTopic fill(ResultSet resultSet) throws SQLException {
         return new DiscussionTopic(resultSet.getInt("id"), resultSet.getInt("group_id"),
                 resultSet.getString("topic_title"),
