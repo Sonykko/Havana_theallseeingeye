@@ -59,6 +59,11 @@ public class HousekeepingCommandsController {
             client.send("");
         }
 
+        String redirect =  client.get().getString("redirect");
+        if (redirect.isEmpty()) {
+            redirect = "bans_kicks";
+        }
+
         var playerDetails = PlayerDao.getDetails(client.get().getString("username"));
 
         if (playerDetails != null) {
@@ -76,7 +81,7 @@ public class HousekeepingCommandsController {
 
             //ModerationDao.addLog(ModerationActionType.ALERT_USER, player.getDetails().getId(), playerDetails.getId(), "Banned for breaking the HabboWay", "");
             client.send(ModeratorBanUserAction.ban(banningPlayerDetails, alertMessage, notes, playerDetails.getName(), banSeconds, doBanMachine, doBanIP));
-            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/bans_kicks");
+            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/" + redirect);
 
             client.session().set("alertColour", "success");
             client.session().set("alertMessage", "The user " + banningPlayerDetails + " has been banned.");
