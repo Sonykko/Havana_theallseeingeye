@@ -6,7 +6,6 @@ import org.alexdev.havana.dao.mysql.GroupDao;
 import org.alexdev.havana.dao.mysql.PlayerDao;
 import org.alexdev.havana.game.groups.Group;
 import org.alexdev.havana.game.player.PlayerDetails;
-import org.alexdev.havana.util.config.GameConfiguration;
 import org.alexdev.http.Routes;
 import org.alexdev.http.dao.WidgetDao;
 import org.alexdev.http.dao.housekeeping.HousekeepingContentModerationDao;
@@ -14,6 +13,7 @@ import org.alexdev.http.dao.housekeeping.HousekeepingLogsDao;
 import org.alexdev.http.game.housekeeping.HousekeepingManager;
 import org.alexdev.http.util.GroupUtil;
 import org.alexdev.http.util.SessionUtil;
+import org.alexdev.http.util.housekeeping.ContentModerationUtil;
 import org.apache.commons.lang.StringUtils;
 
 import java.util.ArrayList;
@@ -43,26 +43,15 @@ public class HousekeepingGroupDescReportsController {
         boolean showResults = false;
         int totalReportsSearch = 0;
         String searchCriteria = "";
+        String typeReport = "groupdesc";
 
         if (client.post().contains("latest")) {
-            List<Map<String, Object>> latestReports = HousekeepingContentModerationDao.searchContentReports(20, "groupdesc");
+            List<Map<String, Object>> reportsWithDetails = ContentModerationUtil.getLatestReports(20, typeReport);
 
-            List<Map<String, Object>> reportsWithGroupDesc = new ArrayList<>();
-
-            for (Map<String, Object> report : latestReports) {
-                int objectId = (int) report.get("objectId");
-                var groupWidget = WidgetDao.getWidget(objectId).getGroupId();
-                String groupDesc = GroupDao.getGroup(groupWidget).getDescription();
-
-                report.put("groupDesc", groupDesc);
-
-                reportsWithGroupDesc.add(report);
-            }
-
-            tpl.set("latestReports", reportsWithGroupDesc);
+            tpl.set("latestReports", reportsWithDetails);
             showResults = true;
-            totalReportsSearch = reportsWithGroupDesc.size();
-            searchCriteria = "latest";
+            totalReportsSearch = reportsWithDetails.size();
+            searchCriteria = ContentModerationUtil.getSearchCriteria("latest");
         }
 
         if (client.post().contains("searchQuery")) {
@@ -88,23 +77,12 @@ public class HousekeepingGroupDescReportsController {
             }
 
             if (criteriaInt == 0) {
-                List<Map<String, Object>> latestReports = HousekeepingContentModerationDao.searchContentReports(showMaxInt, "groupdesc");
-                List<Map<String, Object>> reportsWithGroupDesc = new ArrayList<>();
+                List<Map<String, Object>> reportsWithDetails = ContentModerationUtil.getLatestReports(showMaxInt, typeReport);
 
-                for (Map<String, Object> report : latestReports) {
-                    int objectId = (int) report.get("objectId");
-                    var groupWidget = WidgetDao.getWidget(objectId).getGroupId();
-                    String groupDesc = GroupDao.getGroup(groupWidget).getDescription();
-
-                    report.put("groupDesc", groupDesc);
-
-                    reportsWithGroupDesc.add(report);
-                }
-
-                tpl.set("latestReports", reportsWithGroupDesc);
+                tpl.set("latestReports", reportsWithDetails);
                 showResults = true;
-                totalReportsSearch = reportsWithGroupDesc.size();
-                searchCriteria = "new";
+                totalReportsSearch = reportsWithDetails.size();
+                searchCriteria = ContentModerationUtil.getSearchCriteria("new");
             }
 
             if (criteriaInt == 1) {
@@ -130,7 +108,7 @@ public class HousekeepingGroupDescReportsController {
                         .map(Group::getId)
                         .collect(Collectors.toSet());
 
-                List<Map<String, Object>> latestReports = HousekeepingContentModerationDao.searchContentReports(showMaxInt, "groupdesc");
+                List<Map<String, Object>> latestReports = HousekeepingContentModerationDao.searchContentReports(showMaxInt, typeReport);
 
                 List<Map<String, Object>> filteredReports = latestReports.stream()
                         .filter(report -> groupIds.contains(WidgetDao.getWidget((int) report.get("objectId")).getGroupId()))
@@ -151,12 +129,12 @@ public class HousekeepingGroupDescReportsController {
                 tpl.set("latestReports", filteredReportsWithGroupDesc);
                 showResults = true;
                 totalReportsSearch = filteredReportsWithGroupDesc.size();
-                searchCriteria = "reported " + GameConfiguration.getInstance().getString("site.name").toLowerCase();
+                searchCriteria = ContentModerationUtil.getSearchCriteria("reported habbo");
             }
         }
 
         String objectIdsParam = client.post().getString("objectIds");
-        String reportIdsParam = client.post().getString("reportIds"); // <-- Nuevo parámetro
+        String reportIdsParam = client.post().getString("reportIds");
         String replacementText = client.post().getString("replacementText");
         String action = client.post().getString("action");
 
@@ -200,7 +178,7 @@ public class HousekeepingGroupDescReportsController {
                 GroupUtil.refreshGroup(objectId);
 
                 HousekeepingContentModerationDao.setAsModerated(reportId);
-                HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Moderated groupdesc content reports with the id's: " + reportIdsParam + ". URL: " + client.request().uri(), client.getIpAddress());
+                HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Moderated " + typeReport + " content reports with the id's: " + reportIdsParam + ". URL: " + client.request().uri(), client.getIpAddress());
 
                 client.session().set("alertColour", "success");
                 client.session().set("alertMessage", "Group description reports moderated successfully.");
@@ -213,7 +191,7 @@ public class HousekeepingGroupDescReportsController {
         tpl.set("pageName", "Group Description Reports");
         tpl.set("showResults", showResults);
         tpl.set("totalReportsSearch", totalReportsSearch);
-        tpl.set("totalReports", HousekeepingContentModerationDao.countReports("groupdesc"));
+        tpl.set("totalReports", HousekeepingContentModerationDao.countReports(typeReport));
         tpl.set("searchCriteria", searchCriteria);
         tpl.render();
 

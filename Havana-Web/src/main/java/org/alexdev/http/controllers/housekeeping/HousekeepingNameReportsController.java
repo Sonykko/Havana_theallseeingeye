@@ -10,9 +10,9 @@ import org.alexdev.http.dao.housekeeping.HousekeepingContentModerationDao;
 import org.alexdev.http.dao.housekeeping.HousekeepingLogsDao;
 import org.alexdev.http.game.housekeeping.HousekeepingManager;
 import org.alexdev.http.util.SessionUtil;
+import org.alexdev.http.util.housekeeping.ContentModerationUtil;
 import org.apache.commons.lang.StringUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -38,25 +38,15 @@ public class HousekeepingNameReportsController {
         boolean showResults = false;
         int totalReportsSearch = 0;
         String searchCriteria = "";
+        String typeReport = "name";
 
         if (client.post().contains("latest")) {
-            List<Map<String, Object>> latestReports = HousekeepingContentModerationDao.searchContentReports(20, "name");
+            List<Map<String, Object>> reportsWithDetails = ContentModerationUtil.getLatestReports(20, typeReport);
 
-            List<Map<String, Object>> reportsWithNames = new ArrayList<>();
-
-            for (Map<String, Object> report : latestReports) {
-                int objectId = (int) report.get("objectId");
-                String name = PlayerDao.getName(objectId);
-
-                report.put("name", name);
-
-                reportsWithNames.add(report);
-            }
-
-            tpl.set("latestReports", reportsWithNames);
+            tpl.set("latestReports", reportsWithDetails);
             showResults = true;
-            totalReportsSearch = reportsWithNames.size();
-            searchCriteria = "latest";
+            totalReportsSearch = reportsWithDetails.size();
+            searchCriteria = ContentModerationUtil.getSearchCriteria("latest");
         }
 
         if (client.post().contains("searchQuery")) {
@@ -82,22 +72,12 @@ public class HousekeepingNameReportsController {
             }
 
             if (criteriaInt == 0) {
-                List<Map<String, Object>> latestReports = HousekeepingContentModerationDao.searchContentReports(showMaxInt, "name");
-                List<Map<String, Object>> reportsWithNames = new ArrayList<>();
+                List<Map<String, Object>> reportsWithDetails = ContentModerationUtil.getLatestReports(showMaxInt, typeReport);
 
-                for (Map<String, Object> report : latestReports) {
-                    int objectId = (int) report.get("objectId");
-                    var name = PlayerDao.getName(objectId);
-
-                    report.put("name", name);
-
-                    reportsWithNames.add(report);
-                }
-
-                tpl.set("latestReports", reportsWithNames);
+                tpl.set("latestReports", reportsWithDetails);
                 showResults = true;
-                totalReportsSearch = reportsWithNames.size();
-                searchCriteria = "new";
+                totalReportsSearch = reportsWithDetails.size();
+                searchCriteria = ContentModerationUtil.getSearchCriteria("new");
             }
 
             if (criteriaInt == 1) {
@@ -117,7 +97,7 @@ public class HousekeepingNameReportsController {
                     return;
                 }
 
-                List<Map<String, Object>> latestReports = HousekeepingContentModerationDao.searchContentReports(showMaxInt, "name");
+                List<Map<String, Object>> latestReports = HousekeepingContentModerationDao.searchContentReports(showMaxInt, typeReport);
 
                 List<Map<String, Object>> filteredReports = latestReports.stream()
                         .filter(report -> {
@@ -139,12 +119,12 @@ public class HousekeepingNameReportsController {
                 tpl.set("latestReports", filteredReports);
                 showResults = true;
                 totalReportsSearch = filteredReports.size();
-                searchCriteria = "reported " + GameConfiguration.getInstance().getString("site.name").toLowerCase();
+                searchCriteria = ContentModerationUtil.getSearchCriteria("reported habbo");
             }
         }
 
         String objectIdsParam = client.post().getString("objectIds");
-        String reportIdsParam = client.post().getString("reportIds"); // <-- Nuevo parámetro
+        String reportIdsParam = client.post().getString("reportIds");
         String action = client.post().getString("action");
 
         if (action.equals("process")) {
@@ -184,7 +164,7 @@ public class HousekeepingNameReportsController {
                 String finalMessage = replacementText.isEmpty() ? defaultMessage : replacementText;
 
                 HousekeepingContentModerationDao.setAsModerated(reportId);
-                HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Moderated name content reports with the id's: " + reportIdsParam + ". URL: " + client.request().uri(), client.getIpAddress());
+                HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Moderated " + typeReport + " content reports with the id's: " + reportIdsParam + ". URL: " + client.request().uri(), client.getIpAddress());
 
                 client.session().set("alertColour", "success");
                 client.session().set("alertMessage", "Name reports moderated successfully.");
@@ -197,7 +177,7 @@ public class HousekeepingNameReportsController {
         tpl.set("pageName", GameConfiguration.getInstance().getString("site.name") + " Name Reports");
         tpl.set("showResults", showResults);
         tpl.set("totalReportsSearch", totalReportsSearch);
-        tpl.set("totalReports", HousekeepingContentModerationDao.countReports("name"));
+        tpl.set("totalReports", HousekeepingContentModerationDao.countReports(typeReport));
         tpl.set("searchCriteria", searchCriteria);
         tpl.render();
 
