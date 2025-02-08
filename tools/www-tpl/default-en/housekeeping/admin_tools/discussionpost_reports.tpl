@@ -116,7 +116,7 @@
 				<button type="submit" id="process">Process</button>
 			</form>	
 			<br/>
-			<p><b>Note:</b> when you click "Process", Groups whose checkbox has been checked name will be changed. Other reports are ignored and deleted from database.</p>
+			<p><b>Note:</b> when you click "Process", Discussion posts whose checkbox has been checked reply will be changed. Other reports are ignored and deleted from database.</p>
 		</div>				
 		{% endif %}	
       </div>
