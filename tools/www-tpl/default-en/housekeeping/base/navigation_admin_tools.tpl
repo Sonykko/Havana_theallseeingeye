@@ -134,6 +134,12 @@
 			<text><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/group_admin" class="subnav-link">Group admin</a></text>
 			{% endif %}	
 			{% if housekeepingManager.hasPermission(playerDetails.getRank(), 'bans') %}
+			<text><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/name_reports_list" class="subnav-link">Habbo Name Reports</a></text>
+			{% endif %}	
+			{% if housekeepingManager.hasPermission(playerDetails.getRank(), 'bans') %}
+			<text><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/motto_reports_list" class="subnav-link">Habbo Motto Reports</a></text>
+			{% endif %}			
+			{% if housekeepingManager.hasPermission(playerDetails.getRank(), 'bans') %}
 			<text><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/groupname_reports_list" class="subnav-link">Group Name Reports</a></text>
 			{% endif %}	
 			{% if housekeepingManager.hasPermission(playerDetails.getRank(), 'bans') %}
