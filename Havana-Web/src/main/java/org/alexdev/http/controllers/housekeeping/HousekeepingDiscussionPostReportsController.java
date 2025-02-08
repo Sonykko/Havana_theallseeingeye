@@ -5,13 +5,13 @@ import org.alexdev.duckhttpd.template.Template;
 import org.alexdev.havana.dao.mysql.PlayerDao;
 import org.alexdev.havana.game.groups.Group;
 import org.alexdev.havana.game.player.PlayerDetails;
-import org.alexdev.havana.util.config.GameConfiguration;
 import org.alexdev.http.Routes;
 import org.alexdev.http.dao.GroupDiscussionDao;
 import org.alexdev.http.dao.housekeeping.HousekeepingContentModerationDao;
 import org.alexdev.http.dao.housekeeping.HousekeepingLogsDao;
 import org.alexdev.http.game.housekeeping.HousekeepingManager;
 import org.alexdev.http.util.SessionUtil;
+import org.alexdev.http.util.housekeeping.ContentModerationUtil;
 import org.apache.commons.lang.StringUtils;
 
 import java.util.ArrayList;
@@ -40,28 +40,15 @@ public class HousekeepingDiscussionPostReportsController {
         boolean showResults = false;
         int totalReportsSearch = 0;
         String searchCriteria = "";
+        String typeReport = "discussionpost";
 
         if (client.post().contains("latest")) {
-            List<Map<String, Object>> latestReports = HousekeepingContentModerationDao.searchContentReports(20, "discussionpost");
+            List<Map<String, Object>> reportsWithDetails = ContentModerationUtil.getLatestReports(20, typeReport);
 
-            List<Map<String, Object>> reportsWithDiscussionPostMessage = new ArrayList<>();
-
-            for (Map<String, Object> report : latestReports) {
-                int objectId = (int) report.get("objectId");
-                int discussionId = GroupDiscussionDao.getDiscussionId(objectId);
-                int userId = GroupDiscussionDao.getReplyUserId(discussionId);
-                var discussionPostMessage = GroupDiscussionDao.getReply(discussionId, objectId, userId);
-                String postMessage = discussionPostMessage.getMessage();
-
-                report.put("postMessage", postMessage);
-
-                reportsWithDiscussionPostMessage.add(report);
-            }
-
-            tpl.set("latestReports", reportsWithDiscussionPostMessage);
+            tpl.set("latestReports", reportsWithDetails);
             showResults = true;
-            totalReportsSearch = reportsWithDiscussionPostMessage.size();
-            searchCriteria = "latest";
+            totalReportsSearch = reportsWithDetails.size();
+            searchCriteria = ContentModerationUtil.getSearchCriteria("latest");
         }
 
         if (client.post().contains("searchQuery")) {
@@ -87,25 +74,12 @@ public class HousekeepingDiscussionPostReportsController {
             }
 
             if (criteriaInt == 0) {
-                List<Map<String, Object>> latestReports = HousekeepingContentModerationDao.searchContentReports(showMaxInt, "discussionpost");
-                List<Map<String, Object>> reportsWithDiscussionPostMessage = new ArrayList<>();
+                List<Map<String, Object>> reportsWithDetails = ContentModerationUtil.getLatestReports(showMaxInt, typeReport);
 
-                for (Map<String, Object> report : latestReports) {
-                    int objectId = (int) report.get("objectId");
-                    int discussionId = GroupDiscussionDao.getDiscussionId(objectId);
-                    int userId = GroupDiscussionDao.getReplyUserId(discussionId);
-                    var discussionPostMessage = GroupDiscussionDao.getReply(discussionId, objectId, userId);
-                    String postMessage = discussionPostMessage.getMessage();
-
-                    report.put("postMessage", postMessage);
-
-                    reportsWithDiscussionPostMessage.add(report);
-                }
-
-                tpl.set("latestReports", reportsWithDiscussionPostMessage);
+                tpl.set("latestReports", reportsWithDetails);
                 showResults = true;
-                totalReportsSearch = reportsWithDiscussionPostMessage.size();
-                searchCriteria = "new";
+                totalReportsSearch = reportsWithDetails.size();
+                searchCriteria = ContentModerationUtil.getSearchCriteria("new");
             }
 
             if (criteriaInt == 1) {
@@ -125,7 +99,7 @@ public class HousekeepingDiscussionPostReportsController {
                     return;
                 }
 
-                List<Map<String, Object>> latestReports = HousekeepingContentModerationDao.searchContentReports(showMaxInt, "guestbook");
+                List<Map<String, Object>> latestReports = HousekeepingContentModerationDao.searchContentReports(showMaxInt, typeReport);
 
                 List<Map<String, Object>> filteredReports = latestReports.stream()
                         .filter(report -> {
@@ -155,7 +129,7 @@ public class HousekeepingDiscussionPostReportsController {
                 tpl.set("latestReports", filteredReportsWithDiscussionPostMessage);
                 showResults = true;
                 totalReportsSearch = filteredReportsWithDiscussionPostMessage.size();
-                searchCriteria = "reported " + GameConfiguration.getInstance().getString("site.name").toLowerCase();
+                searchCriteria = ContentModerationUtil.getSearchCriteria("reported habbo");
             }
         }
 
@@ -213,7 +187,7 @@ public class HousekeepingDiscussionPostReportsController {
                 }
 
                 HousekeepingContentModerationDao.setAsModerated(reportId);
-                HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Moderated discussionpost content reports with the id's: " + reportIdsParam + ". URL: " + client.request().uri(), client.getIpAddress());
+                HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Moderated " + typeReport + " content reports with the id's: " + reportIdsParam + ". URL: " + client.request().uri(), client.getIpAddress());
 
                 client.session().set("alertColour", "success");
                 client.session().set("alertMessage", "Discussion post reports moderated successfully.");
@@ -226,7 +200,7 @@ public class HousekeepingDiscussionPostReportsController {
         tpl.set("pageName", "Discussion Post Reports");
         tpl.set("showResults", showResults);
         tpl.set("totalReportsSearch", totalReportsSearch);
-        tpl.set("totalReports", HousekeepingContentModerationDao.countReports("discussionpost"));
+        tpl.set("totalReports", HousekeepingContentModerationDao.countReports(typeReport));
         tpl.set("searchCriteria", searchCriteria);
         tpl.render();
 

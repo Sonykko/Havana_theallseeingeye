@@ -4,13 +4,13 @@ import org.alexdev.duckhttpd.server.connection.WebConnection;
 import org.alexdev.duckhttpd.template.Template;
 import org.alexdev.havana.dao.mysql.PlayerDao;
 import org.alexdev.havana.game.player.PlayerDetails;
-import org.alexdev.havana.util.config.GameConfiguration;
 import org.alexdev.http.Routes;
 import org.alexdev.http.dao.GuestbookDao;
 import org.alexdev.http.dao.housekeeping.HousekeepingContentModerationDao;
 import org.alexdev.http.dao.housekeeping.HousekeepingLogsDao;
 import org.alexdev.http.game.housekeeping.HousekeepingManager;
 import org.alexdev.http.util.SessionUtil;
+import org.alexdev.http.util.housekeeping.ContentModerationUtil;
 import org.apache.commons.lang.StringUtils;
 
 import java.util.ArrayList;
@@ -39,25 +39,15 @@ public class HousekeepingGuestbookReportsController {
         boolean showResults = false;
         int totalReportsSearch = 0;
         String searchCriteria = "";
+        String typeReport = "guestbook";
 
         if (client.post().contains("latest")) {
-            List<Map<String, Object>> latestReports = HousekeepingContentModerationDao.searchContentReports(20, "guestbook");
-            List<Map<String, Object>> reportsWithGuestbookEntries = new ArrayList<>();
+            List<Map<String, Object>> reportsWithDetails = ContentModerationUtil.getLatestReports(20, typeReport);
 
-            for (Map<String, Object> report : latestReports) {
-                int objectId = (int) report.get("objectId");
-                var entry = GuestbookDao.getEntry(objectId);
-                String entryMessage = entry.getMessage();
-
-                report.put("guestbookEntry", entryMessage);
-
-                reportsWithGuestbookEntries.add(report);
-            }
-
-            tpl.set("latestReports", reportsWithGuestbookEntries);
+            tpl.set("latestReports", reportsWithDetails);
             showResults = true;
-            totalReportsSearch = reportsWithGuestbookEntries.size();
-            searchCriteria = "latest";
+            totalReportsSearch = reportsWithDetails.size();
+            searchCriteria = ContentModerationUtil.getSearchCriteria("latest");
         }
 
         if (client.post().contains("searchQuery")) {
@@ -83,23 +73,12 @@ public class HousekeepingGuestbookReportsController {
             }
 
             if (criteriaInt == 0) {
-                List<Map<String, Object>> latestReports = HousekeepingContentModerationDao.searchContentReports(showMaxInt, "guestbook");
-                List<Map<String, Object>> reportsWithGuestbookEntries = new ArrayList<>();
+                List<Map<String, Object>> reportsWithDetails = ContentModerationUtil.getLatestReports(showMaxInt, typeReport);
 
-                for (Map<String, Object> report : latestReports) {
-                    int objectId = (int) report.get("objectId");
-                    var entry = GuestbookDao.getEntry(objectId);
-                    String entryMessage = entry.getMessage();
-
-                    report.put("guestbookEntry", entryMessage);
-
-                    reportsWithGuestbookEntries.add(report);
-                }
-
-                tpl.set("latestReports", reportsWithGuestbookEntries);
+                tpl.set("latestReports", reportsWithDetails);
                 showResults = true;
-                totalReportsSearch = reportsWithGuestbookEntries.size();
-                searchCriteria = "new";
+                totalReportsSearch = reportsWithDetails.size();
+                searchCriteria = ContentModerationUtil.getSearchCriteria("new");
             }
 
             if (criteriaInt == 1) {
@@ -119,7 +98,7 @@ public class HousekeepingGuestbookReportsController {
                     return;
                 }
 
-                List<Map<String, Object>> latestReports = HousekeepingContentModerationDao.searchContentReports(showMaxInt, "guestbook");
+                List<Map<String, Object>> latestReports = HousekeepingContentModerationDao.searchContentReports(showMaxInt, typeReport);
 
                 List<Map<String, Object>> filteredReports = latestReports.stream()
                         .filter(report -> {
@@ -145,7 +124,7 @@ public class HousekeepingGuestbookReportsController {
                 tpl.set("latestReports", filteredReportsWithGuestbookEntries);
                 showResults = true;
                 totalReportsSearch = filteredReportsWithGuestbookEntries.size();
-                searchCriteria = "reported " + GameConfiguration.getInstance().getString("site.name").toLowerCase();
+                searchCriteria = ContentModerationUtil.getSearchCriteria("reported habbo");
             }
         }
 
@@ -196,7 +175,7 @@ public class HousekeepingGuestbookReportsController {
                 }
 
                 HousekeepingContentModerationDao.setAsModerated(reportId);
-                HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Moderated guestbook content reports with the id's: " + reportIdsParam + ". URL: " + client.request().uri(), client.getIpAddress());
+                HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Moderated " + typeReport + " content reports with the id's: " + reportIdsParam + ". URL: " + client.request().uri(), client.getIpAddress());
 
                 client.session().set("alertColour", "success");
                 client.session().set("alertMessage", "Guestbook reports moderated successfully.");
@@ -209,7 +188,7 @@ public class HousekeepingGuestbookReportsController {
         tpl.set("pageName", "Guestbook Reports");
         tpl.set("showResults", showResults);
         tpl.set("totalReportsSearch", totalReportsSearch);
-        tpl.set("totalReports", HousekeepingContentModerationDao.countReports("guestbook"));
+        tpl.set("totalReports", HousekeepingContentModerationDao.countReports(typeReport));
         tpl.set("searchCriteria", searchCriteria);
         tpl.render();
 
