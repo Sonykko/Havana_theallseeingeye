@@ -49,7 +49,7 @@ Developed by Sonykko.
   - Stickie viewer
   - MiniMail Reports
   - Habbo Name Reports
-  - Motto Name Reports
+  - Habbo Motto Reports
   - Guestbook Reports
   - Group Name Reports
   - Group Description Reports
@@ -67,7 +67,7 @@ Developed by Sonykko.
   - Habbo Hobba application form
   - MiniMail report system
   - Habbo Name report system
-  - Motto Name report system
+  - Habbo Motto report system
   - Guestbook report system
   - Group Name report system
   - Group Description report system
