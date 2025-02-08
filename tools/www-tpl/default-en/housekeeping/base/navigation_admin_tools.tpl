@@ -135,7 +135,10 @@
 			{% endif %}	
 			{% if housekeepingManager.hasPermission(playerDetails.getRank(), 'bans') %}
 			<text><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/groupname_reports_list" class="subnav-link">Group Name Reports</a></text>
-			{% endif %}				
+			{% endif %}	
+			{% if housekeepingManager.hasPermission(playerDetails.getRank(), 'bans') %}
+			<text><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/groupdesc_reports_list" class="subnav-link">Group Description Reports</a></text>
+			{% endif %}			
       </div>
     </div>
 {% endif %}
