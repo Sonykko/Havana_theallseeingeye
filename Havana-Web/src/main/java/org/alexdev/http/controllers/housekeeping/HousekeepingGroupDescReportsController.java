@@ -8,6 +8,7 @@ import org.alexdev.havana.game.groups.Group;
 import org.alexdev.havana.game.player.PlayerDetails;
 import org.alexdev.havana.util.config.GameConfiguration;
 import org.alexdev.http.Routes;
+import org.alexdev.http.dao.WidgetDao;
 import org.alexdev.http.dao.housekeeping.HousekeepingContentModerationDao;
 import org.alexdev.http.dao.housekeeping.HousekeepingLogsDao;
 import org.alexdev.http.game.housekeeping.HousekeepingManager;
@@ -21,14 +22,14 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class HousekeepingGroupNameController {
-    public static void groupname_reports(WebConnection client) {
+public class HousekeepingGroupDescReportsController {
+    public static void groupdesc_reports(WebConnection client) {
         if (!client.session().getBoolean(SessionUtil.LOGGED_IN_HOUSKEEPING)) {
             client.redirect("/" + Routes.HOUSEKEEPING_DEFAULT_PATH);
             return;
         }
 
-        Template tpl = client.template("housekeeping/admin_tools/groupname_reports");
+        Template tpl = client.template("housekeeping/admin_tools/groupdesc_reports");
         tpl.set("housekeepingManager", HousekeepingManager.getInstance());
 
         PlayerDetails playerDetails = (PlayerDetails) tpl.get("playerDetails");
@@ -44,22 +45,23 @@ public class HousekeepingGroupNameController {
         String searchCriteria = "";
 
         if (client.post().contains("latest")) {
-            List<Map<String, Object>> latestReports = HousekeepingContentModerationDao.searchContentReports(20, "groupname");
+            List<Map<String, Object>> latestReports = HousekeepingContentModerationDao.searchContentReports(20, "groupdesc");
 
-            List<Map<String, Object>> reportsWithGroupNames = new ArrayList<>();
+            List<Map<String, Object>> reportsWithGroupDesc = new ArrayList<>();
 
             for (Map<String, Object> report : latestReports) {
                 int objectId = (int) report.get("objectId");
-                String groupName = GroupDao.getGroupName(objectId);
+                var groupWidget = WidgetDao.getWidget(objectId).getGroupId();
+                String groupDesc = GroupDao.getGroup(groupWidget).getDescription();
 
-                report.put("groupName", groupName);
+                report.put("groupDesc", groupDesc);
 
-                reportsWithGroupNames.add(report);
+                reportsWithGroupDesc.add(report);
             }
 
-            tpl.set("latestReports", reportsWithGroupNames);
+            tpl.set("latestReports", reportsWithGroupDesc);
             showResults = true;
-            totalReportsSearch = reportsWithGroupNames.size();
+            totalReportsSearch = reportsWithGroupDesc.size();
             searchCriteria = "latest";
         }
 
@@ -71,7 +73,7 @@ public class HousekeepingGroupNameController {
             if (!StringUtils.isNumeric(criteria) || (!criteria.equals("1") && !criteria.equals("0")) || !StringUtils.isNumeric(showMax)) {
                 client.session().set("alertColour", "danger");
                 client.session().set("alertMessage", "Please enter a valid criteria or show max value.");
-                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/groupname_reports_list");
+                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/groupdesc_reports_list");
                 return;
             }
 
@@ -81,26 +83,27 @@ public class HousekeepingGroupNameController {
             if (showMaxInt < 1 || showMaxInt > 20) {
                 client.session().set("alertColour", "danger");
                 client.session().set("alertMessage", "Please enter a valid show max value.");
-                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/groupname_reports_list");
+                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/groupdesc_reports_list");
                 return;
             }
 
             if (criteriaInt == 0) {
-                List<Map<String, Object>> latestReports = HousekeepingContentModerationDao.searchContentReports(showMaxInt, "groupname");
-                List<Map<String, Object>> reportsWithGroupNames = new ArrayList<>();
+                List<Map<String, Object>> latestReports = HousekeepingContentModerationDao.searchContentReports(showMaxInt, "groupdesc");
+                List<Map<String, Object>> reportsWithGroupDesc = new ArrayList<>();
 
                 for (Map<String, Object> report : latestReports) {
                     int objectId = (int) report.get("objectId");
-                    String groupName = GroupDao.getGroupName(objectId);
+                    var groupWidget = WidgetDao.getWidget(objectId).getGroupId();
+                    String groupDesc = GroupDao.getGroup(groupWidget).getDescription();
 
-                    report.put("groupName", groupName);
+                    report.put("groupDesc", groupDesc);
 
-                    reportsWithGroupNames.add(report);
+                    reportsWithGroupDesc.add(report);
                 }
 
-                tpl.set("latestReports", reportsWithGroupNames);
+                tpl.set("latestReports", reportsWithGroupDesc);
                 showResults = true;
-                totalReportsSearch = reportsWithGroupNames.size();
+                totalReportsSearch = reportsWithGroupDesc.size();
                 searchCriteria = "new";
             }
 
@@ -108,7 +111,7 @@ public class HousekeepingGroupNameController {
                 if (reportedUser == null) {
                     client.session().set("alertColour", "danger");
                     client.session().set("alertMessage", "Please provided a valid reported username.");
-                    client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/groupname_reports_list");
+                    client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/groupdesc_reports_list");
                     return;
                 }
 
@@ -117,7 +120,7 @@ public class HousekeepingGroupNameController {
                 if (reportedDetails == null) {
                     client.session().set("alertColour", "danger");
                     client.session().set("alertMessage", "The reported does not exist.");
-                    client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/groupname_reports_list");
+                    client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/groupdesc_reports_list");
                     return;
                 }
 
@@ -127,26 +130,27 @@ public class HousekeepingGroupNameController {
                         .map(Group::getId)
                         .collect(Collectors.toSet());
 
-                List<Map<String, Object>> latestReports = HousekeepingContentModerationDao.searchContentReports(showMaxInt, "groupname");
+                List<Map<String, Object>> latestReports = HousekeepingContentModerationDao.searchContentReports(showMaxInt, "groupdesc");
 
                 List<Map<String, Object>> filteredReports = latestReports.stream()
-                        .filter(report -> groupIds.contains((int) report.get("objectId")))
+                        .filter(report -> groupIds.contains(WidgetDao.getWidget((int) report.get("objectId")).getGroupId()))
                         .collect(Collectors.toList());
 
-                List<Map<String, Object>> filteredReportsWithGroupNames = new ArrayList<>();
+                List<Map<String, Object>> filteredReportsWithGroupDesc = new ArrayList<>();
 
                 for (Map<String, Object> report : filteredReports) {
                     int objectId = (int) report.get("objectId");
-                    String groupName = GroupDao.getGroupName(objectId);
+                    var groupWidget = WidgetDao.getWidget(objectId).getGroupId();
+                    String groupDesc = GroupDao.getGroup(groupWidget).getDescription();
 
-                    report.put("groupName", groupName);
+                    report.put("groupDesc", groupDesc);
 
-                    filteredReportsWithGroupNames.add(report);
+                    filteredReportsWithGroupDesc.add(report);
                 }
 
-                tpl.set("latestReports", filteredReportsWithGroupNames);
+                tpl.set("latestReports", filteredReportsWithGroupDesc);
                 showResults = true;
-                totalReportsSearch = filteredReportsWithGroupNames.size();
+                totalReportsSearch = filteredReportsWithGroupDesc.size();
                 searchCriteria = "reported " + GameConfiguration.getInstance().getString("site.name").toLowerCase();
             }
         }
@@ -181,7 +185,8 @@ public class HousekeepingGroupNameController {
                 int objectId = Integer.parseInt(objectIdsArray[i].trim());
                 int reportId = Integer.parseInt(reportIdsArray[i].trim());
 
-                var groupReported = GroupDao.getGroup(objectId);
+                var groupWidget = WidgetDao.getWidget(objectId).getGroupId();
+                var groupReported = GroupDao.getGroup(groupWidget);
 
                 if (groupReported == null) {
                     client.session().set("alertColour", "danger");
@@ -190,25 +195,25 @@ public class HousekeepingGroupNameController {
                     return;
                 }
 
-                groupReported.setName(replacementText);
+                groupReported.setDescription(replacementText);
                 groupReported.save();
                 GroupUtil.refreshGroup(objectId);
 
                 HousekeepingContentModerationDao.setAsModerated(reportId);
-                HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Moderated groupname content reports with the id's: " + reportIdsParam + ". URL: " + client.request().uri(), client.getIpAddress());
+                HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Moderated groupdesc content reports with the id's: " + reportIdsParam + ". URL: " + client.request().uri(), client.getIpAddress());
 
                 client.session().set("alertColour", "success");
-                client.session().set("alertMessage", "Group name reports moderated successfully.");
+                client.session().set("alertMessage", "Group description reports moderated successfully.");
                 client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/groupname_reports_list");
                 return;
             }
         }
 
         tpl.set("housekeepingManager", HousekeepingManager.getInstance());
-        tpl.set("pageName", "Group Name Reports");
+        tpl.set("pageName", "Group Description Reports");
         tpl.set("showResults", showResults);
         tpl.set("totalReportsSearch", totalReportsSearch);
-        tpl.set("totalReports", HousekeepingContentModerationDao.countReports("groupname"));
+        tpl.set("totalReports", HousekeepingContentModerationDao.countReports("groupdesc"));
         tpl.set("searchCriteria", searchCriteria);
         tpl.render();
 

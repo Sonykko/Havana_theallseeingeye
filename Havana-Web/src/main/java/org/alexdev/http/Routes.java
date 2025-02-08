@@ -375,7 +375,8 @@ public class Routes {
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/room_kick", HousekeepingRCONController::roomKickRCON);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/group_admin", HousekeepingGroupsController::group_admin);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/minimail_reports", HousekeepingMiniMailController::minimail_reports);
-        RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/groupname_reports_list", HousekeepingGroupNameController::groupname_reports);
+        RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/groupname_reports_list", HousekeepingGroupNameReportsController::groupname_reports);
+        RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/groupdesc_reports_list", HousekeepingGroupDescReportsController::groupdesc_reports);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/chatlog.action", HousekeepingChatLogsController::userchatlogs);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/users/imitate/*", HousekeepingUsersController::imitate);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/campaign_management/infobus_polls", HousekeepingInfobusController::polls);
