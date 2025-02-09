@@ -52,7 +52,7 @@
 		"btnReportText" : "Report"
 	},
 
- "{{ site.siteName }}movie" : { 
+ "habbomovie" : {
 		"title" : "Report movie",
 		"message" : "Is this movie offensive or inappropriate?",
 		"btnCancelText" : "Cancel",
