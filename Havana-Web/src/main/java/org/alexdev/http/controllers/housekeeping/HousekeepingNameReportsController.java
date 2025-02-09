@@ -13,6 +13,7 @@ import org.alexdev.http.util.SessionUtil;
 import org.alexdev.http.util.housekeeping.ContentModerationUtil;
 import org.apache.commons.lang.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -103,9 +104,14 @@ public class HousekeepingNameReportsController {
                         .filter(report -> {
                             int objectId = (int) report.get("objectId");
                             String username = PlayerDao.getName(objectId);
+                            if (username == null){
+                                username = "";
+                            }
                             return username.equals(reportedUser);
                         })
                         .collect(Collectors.toList());
+
+                List<Map<String, Object>> updatedReports = new ArrayList<>();
 
                 for (Map<String, Object> report : filteredReports) {
                     int objectId = (int) report.get("objectId");
@@ -113,12 +119,12 @@ public class HousekeepingNameReportsController {
 
                     report.put("name", name);
 
-                    filteredReports.add(report);
+                    updatedReports.add(report);
                 }
 
-                tpl.set("latestReports", filteredReports);
+                tpl.set("latestReports", updatedReports);
                 showResults = true;
-                totalReportsSearch = filteredReports.size();
+                totalReportsSearch = updatedReports.size();
                 searchCriteria = ContentModerationUtil.getSearchCriteria("reported habbo");
             }
         }
@@ -185,3 +191,4 @@ public class HousekeepingNameReportsController {
         client.session().delete("alertMessage");
     }
 }
+
