@@ -108,6 +108,9 @@ public class HousekeepingDiscussionPostReportsController {
                             int userId = GroupDiscussionDao.getReplyUserId(discussionId);
                             var discussionPostMessage = GroupDiscussionDao.getReply(discussionId, objectId, userId);
                             String entryAuthor = discussionPostMessage.getUsername();
+                            if (entryAuthor == null) {
+                                entryAuthor = "";
+                            }
                             return entryAuthor.equals(reportedUser);
                         })
                         .collect(Collectors.toList());
