@@ -3,7 +3,9 @@ package org.alexdev.http.controllers.housekeeping;
 import org.alexdev.duckhttpd.server.connection.WebConnection;
 import org.alexdev.duckhttpd.template.Template;
 import org.alexdev.havana.dao.mysql.PlayerDao;
+import org.alexdev.havana.dao.mysql.RoomDao;
 import org.alexdev.havana.game.player.PlayerDetails;
+import org.alexdev.havana.game.room.Room;
 import org.alexdev.havana.util.config.GameConfiguration;
 import org.alexdev.http.Routes;
 import org.alexdev.http.dao.housekeeping.HousekeepingCommandsDao;
@@ -134,6 +136,13 @@ public class HousekeepingRCONController {
                 return;
             }
 
+            if (!playerAlertDetails.isOnline()) {
+                client.session().set("alertColour", "warning");
+                client.session().set("alertMessage", "Can't kick the user "+ playerAlertDetails.getName() + " cause it's not online");
+                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/alert");
+                return;
+            }
+
             client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/api/alert?user=" + user + "&message=" + message);
             return;
         }
@@ -179,9 +188,11 @@ public class HousekeepingRCONController {
 
         if ("kick".equals(action)) {
             String username = client.session().getString("badguy");
-            String commonMessage = GameConfiguration.getInstance().getString("rcon.kick.message");
+            String commonMessage = client.post().getString("commonMessage");
             String customMessage = client.post().getString("customMessage");
             String alertMessage = customMessage != null && !customMessage.isEmpty() ? customMessage : commonMessage;
+            String defaultMessage = GameConfiguration.getInstance().getString("rcon.kick.message");
+            String finalMessage = customMessage.isEmpty() && commonMessage.isEmpty() ? defaultMessage : alertMessage;
 
             if (username == null || username.isEmpty()) {
                 client.session().set("alertColour", "danger");
@@ -206,7 +217,7 @@ public class HousekeepingRCONController {
                 return;
             }
 
-            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/api/kick?user=" + username + "&alertMessage=" + alertMessage);
+            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/api/kick?user=" + username + "&alertMessage=" + finalMessage);
             return;
         }
 
@@ -294,9 +305,11 @@ public class HousekeepingRCONController {
             List<String> usernames = client.post().getArray("userNames");
             usernames = usernames.stream().map(s -> replaceLineBreaks(s)).collect(Collectors.toList());
 
-            String commonMessage = GameConfiguration.getInstance().getString("rcon.kick.message");
+            String commonMessage = client.post().getString("commonMessage");
             String customMessage = client.post().getString("customMessage");
             String alertMessage = customMessage != null && !customMessage.isEmpty() ? customMessage : commonMessage;
+            String defaultMessage = GameConfiguration.getInstance().getString("rcon.kick.message");
+            String finalMessage = customMessage.isEmpty() && commonMessage.isEmpty() ? defaultMessage : alertMessage;
 
             if (usernames == null || usernames.isEmpty()) {
                 client.session().set("alertColour", "danger");
@@ -305,7 +318,7 @@ public class HousekeepingRCONController {
                 return;
             }
 
-            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/api/mass_kick?users=" + usernames + "&alertMessage=" +  alertMessage);
+            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/api/mass_kick?users=" + usernames + "&alertMessage=" +  finalMessage);
             return;
         }
 
@@ -420,38 +433,58 @@ public class HousekeepingRCONController {
         }
 
         String action = client.post().getString("action");
-        String finalMessage = "";
 
         if (client.post().queries().size() > 0) {
             String roomId = client.post().getString("roomId");
-            String defaultMessage = GameConfiguration.getInstance().getString("rcon.kick.message");
             String commonMessage = client.post().getString("commonMessage");
             String customMessage = client.post().getString("customMessage");
-            String message = customMessage != null && !customMessage.isEmpty() ? customMessage : commonMessage;
+            String alertMessage = customMessage != null && !customMessage.isEmpty() ? customMessage : commonMessage;
+            String defaultMessage = GameConfiguration.getInstance().getString("rcon.kick.message");
+            String finalMessage = customMessage.isEmpty() && commonMessage.isEmpty() ? defaultMessage : alertMessage;
             boolean unacceptable = client.post().getBoolean("unacceptable");
             boolean roomLock = client.post().getBoolean("roomLock");
 
-            if (roomId != null && !roomId.isEmpty() && StringUtils.isNumeric(roomId)) {
-                String actionType = null;
-
-                if ("roomKick".equals(action)) {
-                    actionType = "kick";
-                } else if ("roomAlert".equals(action)) {
-                    actionType = "alert";
-                }
-
-                if (("alert".equals(actionType)) && message.isEmpty()) {
-                    client.session().set("alertColour", "danger");
-                    client.session().set("alertMessage", "Please enter a valid message");
-                } else if (actionType != null) {
-                    finalMessage = !message.isEmpty() ? message : defaultMessage;
-                    client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/api/room.kick?roomId=" + roomId + "&alertRoomKick=" + finalMessage + "&action=" + actionType + "&unacceptable=" + unacceptable + "&roomLock=" + roomLock);
-                    return;
-                }
-            } else {
+            if (roomId.length() > 19 || roomId.isEmpty() || !StringUtils.isNumeric(roomId)) {
                 client.session().set("alertColour", "danger");
                 client.session().set("alertMessage", "Please enter a valid room ID");
+                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/room_kick");
+                return;
             }
+
+            long roomIdInt = Long.parseLong(roomId);
+
+            Room room = RoomDao.getRoomById((int) roomIdInt);
+
+            if (room == null) {
+                client.session().set("alertColour", "danger");
+                client.session().set("alertMessage", "The room not exist");
+                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/room_kick");
+                return;
+            }
+
+            if (room.isPublicRoom()) {
+                unacceptable = false;
+                roomLock = false;
+            }
+
+            String actionType = null;
+
+            if ("roomKick".equals(action)) {
+                actionType = "kick";
+            } else if ("roomAlert".equals(action)) {
+                actionType = "alert";
+            }
+
+            if (actionType.equals("alert") && finalMessage.equals(defaultMessage)) {
+                client.session().set("alertColour", "danger");
+                client.session().set("alertMessage", "Please enter a valid alert message");
+                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/room_kick");
+                return;
+            }
+
+            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/api/room.kick?roomId=" + roomId + "&alertRoomKick=" + finalMessage + "&action=" + actionType + "&unacceptable=" + unacceptable + "&roomLock=" + roomLock);
+            return;
+
         }
 
         tpl.set("housekeepingManager", HousekeepingManager.getInstance());
