@@ -13,6 +13,7 @@ import org.alexdev.http.dao.housekeeping.HousekeepingPlayerDao;
 import org.alexdev.http.game.housekeeping.HousekeepingManager;
 import org.alexdev.http.util.RconUtil;
 import org.alexdev.http.util.SessionUtil;
+import org.alexdev.http.util.housekeeping.MessageEncoderUtil;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
@@ -125,10 +126,11 @@ public class HousekeepingRanksController {
             if (sendAlert) {
                 String message = GameConfiguration.getInstance().getString("rcon.give.rank.message");
                 String finalMessage = StringUtils.replace(message, "%rank%", rankName);
+                String messageEncoded = MessageEncoderUtil.encodeMessage(finalMessage);
 
                 RconUtil.sendCommand(RconHeader.MOD_ALERT_USER, new HashMap<>() {{
                     put("receiver", user);
-                    put("message", finalMessage);
+                    put("message", messageEncoded);
 
                 }});
             }

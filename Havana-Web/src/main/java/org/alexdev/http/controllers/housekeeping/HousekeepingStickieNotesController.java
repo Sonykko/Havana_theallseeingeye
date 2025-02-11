@@ -14,6 +14,7 @@ import org.alexdev.http.dao.housekeeping.HousekeepingStickieNotesDao;
 import org.alexdev.http.game.housekeeping.HousekeepingManager;
 import org.alexdev.http.util.RconUtil;
 import org.alexdev.http.util.SessionUtil;
+import org.alexdev.http.util.housekeeping.MessageEncoderUtil;
 import org.apache.commons.lang.StringUtils;
 
 import java.util.HashMap;
@@ -43,6 +44,7 @@ public class HousekeepingStickieNotesController {
 
         String defaultStickieMessage = GameConfiguration.getInstance().getString("rcon.delete.stickie.message");
         String stickieText = "FFFF33" + defaultStickieMessage;
+        String stickieTextEncoded = MessageEncoderUtil.encodeMessage(stickieText);
 
         boolean showResults = false;
 
@@ -131,7 +133,7 @@ public class HousekeepingStickieNotesController {
                     try {
                         RconUtil.sendCommand(RconHeader.MOD_STICKIE_DELETE, new HashMap<>() {{
                             put("stickieId", stickieId);
-                            put("stickieText", stickieText);
+                            put("stickieText", stickieTextEncoded);
                             put("deleteStickie", false);
                         }});
                     } catch (Exception e) {
@@ -158,7 +160,7 @@ public class HousekeepingStickieNotesController {
                     try {
                         RconUtil.sendCommand(RconHeader.MOD_STICKIE_DELETE, new HashMap<>() {{
                             put("stickieId", stickieId);
-                            put("stickieText", stickieText);
+                            put("stickieText", stickieTextEncoded);
                             put("deleteStickie", true);
                         }});
                     } catch (Exception e) {
@@ -196,7 +198,7 @@ public class HousekeepingStickieNotesController {
                     try {
                         RconUtil.sendCommand(RconHeader.MOD_STICKIE_DELETE, new HashMap<>() {{
                             put("stickieId", stickieId);
-                            put("stickieText", stickieText);
+                            put("stickieText", stickieTextEncoded);
                             put("deleteStickie", true);
                         }});
                     } catch (Exception e) {
