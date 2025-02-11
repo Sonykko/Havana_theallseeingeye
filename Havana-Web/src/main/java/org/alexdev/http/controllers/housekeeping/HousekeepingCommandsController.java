@@ -14,6 +14,7 @@ import org.alexdev.http.dao.housekeeping.HousekeepingRCONCommandsDao;
 import org.alexdev.http.game.housekeeping.HousekeepingManager;
 import org.alexdev.http.util.RconUtil;
 import org.alexdev.http.util.SessionUtil;
+import org.alexdev.http.util.housekeeping.MessageEncoderUtil;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -181,6 +182,7 @@ public class HousekeepingCommandsController {
         }
 
         String message = client.get().getString("alertMessage");
+        String messageEncoded = MessageEncoderUtil.encodeMessage(message);
 
         Map<String, String> params = client.get().getValues();
         String users = params.get("users");
@@ -191,7 +193,7 @@ public class HousekeepingCommandsController {
             try {
                 RconUtil.sendCommand(RconHeader.MOD_KICK_USER, new HashMap<>() {{
                     put("receiver", username);
-                    put("message", message);
+                    put("message", messageEncoded);
 
                 }});
 
@@ -230,17 +232,19 @@ public class HousekeepingCommandsController {
             return;
         }
 
+        String message = client.get().getString("ha");
+        String messageEncoded = MessageEncoderUtil.encodeMessage(message);
+        boolean showSender = client.get().getBoolean("showSender");
+        String moderator = client.get().getString("user");
+
         try {
 
             RconUtil.sendCommand(RconHeader.HOTEL_ALERT, new HashMap<>() {{
-                put("sender", client.get().getString("user"));
-                put("message", client.get().getString("ha"));
-                put("showSender", client.get().getBoolean("showSender"));
+                put("sender", moderator);
+                put("message", messageEncoded);
+                put("showSender", showSender);
 
             }});
-
-            String moderator = client.get().getString("user");
-            String message = client.get().getString("ha");
 
             boolean dbInsertSuccess = HousekeepingCommandsDao.insertRconLog("HOTEL_ALERT", null, moderator, message);
 
@@ -276,11 +280,12 @@ public class HousekeepingCommandsController {
         String user = client.get().getString("user");
         String moderator = playerDetails.getName();
         String message = client.get().getString("alertMessage");
+        String messageEncoded = MessageEncoderUtil.encodeMessage(message);
 
         try {
             RconUtil.sendCommand(RconHeader.MOD_KICK_USER, new HashMap<>() {{
                 put("receiver", user);
-                put("message", message);
+                put("message", messageEncoded);
 
             }});
 
@@ -315,16 +320,18 @@ public class HousekeepingCommandsController {
             return;
         }
 
+        String user = client.get().getString("user");
+        String message = client.get().getString("message");
+        String messageEncoded = MessageEncoderUtil.encodeMessage(message);
+
         try {
             RconUtil.sendCommand(RconHeader.MOD_ALERT_USER, new HashMap<>() {{
-                put("receiver", client.get().getString("user"));
-                put("message", client.get().getString("message"));
+                put("receiver", user);
+                put("message", messageEncoded);
 
             }});
 
-            String user = client.get().getString("user");
             String moderator = playerDetails.getName();
-            String message = client.get().getString("message");
 
             boolean dbInsertSuccess = HousekeepingCommandsDao.insertRconLog("REMOTE_ALERT", user, moderator, message);
 
@@ -388,10 +395,14 @@ public class HousekeepingCommandsController {
             return;
         }
 
+        String cryIdReply = client.get().getString("cryIdReply");
+        String message = client.get().getString("messageReply");
+        String messageEncoded = MessageEncoderUtil.encodeMessage(message);
+
         try {
             RconUtil.sendCommand(RconHeader.CFH_REPLY, new HashMap<>() {{
-                put("cryIdReply", client.get().getString("cryIdReply"));
-                put("messageReply", client.get().getString("messageReply"));
+                put("cryIdReply", cryIdReply);
+                put("messageReply", messageEncoded);
                 put("moderatorReply", playerDetails.getName());
 
             }});
@@ -500,6 +511,7 @@ public class HousekeepingCommandsController {
         String moderator = playerDetails.getName();
         String roomKick = client.get().getString("roomId");
         String message = client.get().getString("alertRoomKick");
+        String messageEncoded = MessageEncoderUtil.encodeMessage(message);
         String action = client.get().getString("action");
         boolean unacceptable = client.get().getBoolean("unacceptable");
         String unacceptableValue = GameConfiguration.getInstance().getString("rcon.room.unacceptable.name");
@@ -512,7 +524,7 @@ public class HousekeepingCommandsController {
             RconUtil.sendCommand(RconHeader.MOD_ROOM_KICK, new HashMap<>() {{
                 //put("moderatorRoomKick", moderator);
                 put("roomId", roomKick);
-                put("alertRoomKick", message);
+                put("alertRoomKick", messageEncoded);
                 put("action", action);
                 put("unacceptable", unacceptable);
                 put("unacceptableValue", unacceptableValue);

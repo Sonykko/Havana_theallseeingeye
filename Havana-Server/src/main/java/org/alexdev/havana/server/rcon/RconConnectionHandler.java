@@ -37,8 +37,10 @@ import org.alexdev.havana.messages.outgoing.rooms.groups.GROUP_BADGES;
 import org.alexdev.havana.messages.outgoing.rooms.groups.GROUP_MEMBERSHIP_UPDATE;
 import org.alexdev.havana.messages.outgoing.user.currencies.CREDIT_BALANCE;
 import org.alexdev.havana.server.rcon.messages.RconMessage;
+import org.alexdev.havana.util.StringUtil;
 import org.alexdev.havana.util.config.GameConfiguration;
 import org.alexdev.havana.util.config.writer.GameConfigWriter;
+import org.alexdev.havana.util.housekeeping.MessageDecoderUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -126,7 +128,7 @@ public class RconConnectionHandler extends ChannelInboundHandlerAdapter {
                 case CFH_REPLY:
                     Player moderatorReply = PlayerManager.getInstance().getPlayerByName(message.getValues().get("moderatorReply"));
 
-                    if (moderatorReply ==  null) {
+                    if (moderatorReply == null) {
                         return;
                     }
 
@@ -138,7 +140,8 @@ public class RconConnectionHandler extends ChannelInboundHandlerAdapter {
 
                     CallForHelp cfh = CallForHelpManager.getInstance().getCall(callIdReply);
 
-                    String messageReply = message.getValues().get("messageReply");
+                    String messageReplyEncoded = message.getValues().get("messageReply");
+                    String messageReplyDecoded = MessageDecoderUtil.decodeMessage(messageReplyEncoded);
 
                     if (cfh == null) {
                         return;
@@ -150,9 +153,9 @@ public class RconConnectionHandler extends ChannelInboundHandlerAdapter {
                         return;
                     }
 
-                    CFHDao.updateReplyType(cfh, "REPLY", messageReply);
+                    CFHDao.updateReplyType(cfh, "REPLY", messageReplyDecoded);
 
-                    caller.send(new CRY_REPLY(messageReply));
+                    caller.send(new CRY_REPLY(messageReplyDecoded));
                     CallForHelpManager.getInstance().deleteCall(cfh);
                     break;
                 case CFH_BLOCK:
@@ -207,15 +210,16 @@ public class RconConnectionHandler extends ChannelInboundHandlerAdapter {
                     CallForHelpManager.getInstance().deleteCall(cfhFollow);
                     break;
                 case MOD_ROOM_KICK:
-                    //Player moderatorRoomKick = PlayerManager.getInstance().getPlayerByName(message.getValues().get("moderatorRoomKick"));
                     int roomId = Integer.parseInt(message.getValues().get("roomId"));
                     Room roomKick = RoomManager.getInstance().getRoomById(roomId);
-                    String alertRoomKick = message.getValues().get("alertRoomKick");
+                    String messageRoomKickEncoded = message.getValues().get("alertRoomKick");
+                    String messageRomKickDecoded = MessageDecoderUtil.decodeMessage(messageRoomKickEncoded);
                     String actionRoomKick = message.getValues().get("action");
                     boolean unacceptable = Boolean.parseBoolean(message.getValues().get("unacceptable"));
                     String unacceptableValue = message.getValues().get("unacceptableValue");
                     String unacceptableDescValue = message.getValues().get("unacceptableDescValue");
                     boolean roomLock = Boolean.parseBoolean(message.getValues().get("roomLock"));
+
 
                     if (roomKick == null) {
                         return;
@@ -234,7 +238,7 @@ public class RconConnectionHandler extends ChannelInboundHandlerAdapter {
                             //target.send(new HOTEL_VIEW());
                         }
 
-                        target.send(new MODERATOR_ALERT(alertRoomKick));
+                        target.send(new MODERATOR_ALERT(messageRomKickDecoded));
                     }
 
                     if (unacceptable) {
@@ -295,14 +299,15 @@ public class RconConnectionHandler extends ChannelInboundHandlerAdapter {
                     break;
                 case MOD_STICKIE_DELETE:
                     int stickieId = Integer.parseInt(message.getValues().get("stickieId"));
-                    String stickieText = message.getValues().get("stickieText");
+                    String stickieTextEncoded = message.getValues().get("stickieText");
+                    String stickieTextDecoded = MessageDecoderUtil.decodeMessage(stickieTextEncoded);
                     boolean deleteStickie = Boolean.parseBoolean(message.getValues().get("deleteStickie"));
 
                     if (stickieId <= 0) {
                         return;
                     }
 
-                    if (stickieText == null) {
+                    if (stickieTextDecoded == null) {
                         return;
                     }
 
@@ -310,13 +315,14 @@ public class RconConnectionHandler extends ChannelInboundHandlerAdapter {
                         return;
                     }
 
-                    ItemManager.getInstance().resolveItem(stickieId).setCustomData(stickieText);
+                    ItemManager.getInstance().resolveItem(stickieId).setCustomData(stickieTextDecoded);
                     ItemManager.getInstance().resolveItem(stickieId).updateStatus();
-                    ItemDao.stickieNoteModerateText(stickieText, stickieId);
+                    ItemDao.stickieNoteModerateText(stickieTextDecoded, stickieId);
                     ItemManager.reset();
 
                     if (deleteStickie) {
                         Room roomStickie = ItemManager.getInstance().resolveItem(stickieId).getRoom();
+
                         Item stickieItem = ItemManager.getInstance().resolveItem(stickieId);
                         List<Player> playersStickie = PlayerManager.getInstance().getPlayers();
 
@@ -353,31 +359,34 @@ public class RconConnectionHandler extends ChannelInboundHandlerAdapter {
                     break;
                 case MOD_ALERT_USER:
                     Player playerAlert = PlayerManager.getInstance().getPlayerByName(message.getValues().get("receiver"));
-                    String alertMessageUser = message.getValues().get("message");
+                    String messageAlertUserEncoded = message.getValues().get("message");
+                    String messageAlertUserDecoded = MessageDecoderUtil.decodeMessage(messageAlertUserEncoded);;
 
                     if (playerAlert != null) {
-                        playerAlert.send(new MODERATOR_ALERT(alertMessageUser));
+                        playerAlert.send(new MODERATOR_ALERT(messageAlertUserDecoded));
                     }
                     break;
                 case MOD_KICK_USER:
                     Player target = PlayerManager.getInstance().getPlayerByName(message.getValues().get("receiver"));
-                    String alertMessage = message.getValues().get("message");
+                    String messageKickUserEncoded = message.getValues().get("message");
+                    String messageKickUserDecoded = MessageDecoderUtil.decodeMessage(messageKickUserEncoded);
 
                     if (target != null) {
                         if (target.getRoomUser().getRoom() != null) {
                             target.getRoomUser().kick(true, true);
                             //target.send(new HOTEL_VIEW());
-                            target.send(new MODERATOR_ALERT(alertMessage));
+                            target.send(new MODERATOR_ALERT(messageKickUserDecoded));
                         }
                     }
                     break;
                 case HOTEL_ALERT:
                     String messageSender = message.getValues().get("sender");
-                    String hotelAlert = message.getValues().get("message");
+                    String messageHotelAlertEncoded = message.getValues().get("message");
+                    String messageHotelAlertDecoded = MessageDecoderUtil.decodeMessage(messageHotelAlertEncoded);;
                     boolean showSender = Boolean.parseBoolean(message.getValues().get("showSender"));
 
                     StringBuilder alert = new StringBuilder();
-                    alert.append(hotelAlert).append("<br>");
+                    alert.append(messageHotelAlertDecoded).append("<br>");
 
                     if (showSender) {
                         alert.append("<br>");
@@ -385,6 +394,7 @@ public class RconConnectionHandler extends ChannelInboundHandlerAdapter {
                     }
 
                     for (Player player : PlayerManager.getInstance().getPlayers()) {
+                        alert = new StringBuilder(StringUtil.replaceAlertMessage(alert.toString(), player));
                         player.send(new ALERT(alert.toString()));
                     }
                     break;
