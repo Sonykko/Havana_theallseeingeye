@@ -1,11 +1,14 @@
 package org.alexdev.havana.game.moderation.actions;
 
 import org.alexdev.havana.dao.mysql.ModerationDao;
+import org.alexdev.havana.game.events.Event;
+import org.alexdev.havana.game.events.EventsManager;
 import org.alexdev.havana.game.fuserights.Fuseright;
 import org.alexdev.havana.game.moderation.ModerationAction;
 import org.alexdev.havana.game.moderation.ModerationActionType;
 import org.alexdev.havana.game.player.Player;
 import org.alexdev.havana.game.room.Room;
+import org.alexdev.havana.messages.outgoing.events.ROOMEEVENT_INFO;
 import org.alexdev.havana.messages.outgoing.moderation.MODERATOR_ALERT;
 import org.alexdev.havana.messages.outgoing.rooms.user.HOTEL_VIEW;
 import org.alexdev.havana.server.netty.streams.NettyRequest;
@@ -22,6 +25,8 @@ public class ModeratorRoomKickAction implements ModerationAction {
         List<Player> players = player.getRoomUser().getRoom().getEntityManager().getPlayers();
 
         for (Player target : players) {
+            target.send(new MODERATOR_ALERT(alertMessage));
+
             // Don't kick other moderators
             if (target.hasFuse(Fuseright.ROOM_KICK)) {
                 continue;
@@ -30,10 +35,22 @@ public class ModeratorRoomKickAction implements ModerationAction {
             target.getRoomUser().kick(false, true);
 
             target.send(new HOTEL_VIEW());
-            target.send(new MODERATOR_ALERT(alertMessage));
         }
 
 
         ModerationDao.addLog(ModerationActionType.ROOM_KICK, player.getDetails().getId(), -1, alertMessage, notes);
+
+        if (!EventsManager.getInstance().hasEvent(room.getId())) {
+            return;
+        }
+
+        Event event =  EventsManager.getInstance().getEventByRoomId(room.getId());
+
+        if (event == null) {
+            return;
+        }
+
+        EventsManager.getInstance().removeEvent(event);
+        room.send(new ROOMEEVENT_INFO(null));
     }
 }
