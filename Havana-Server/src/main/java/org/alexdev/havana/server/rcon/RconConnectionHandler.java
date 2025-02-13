@@ -10,6 +10,8 @@ import org.alexdev.havana.game.achievements.AchievementType;
 import org.alexdev.havana.game.ads.AdManager;
 import org.alexdev.havana.game.badges.Badge;
 import org.alexdev.havana.game.catalogue.CatalogueManager;
+import org.alexdev.havana.game.events.Event;
+import org.alexdev.havana.game.events.EventsManager;
 import org.alexdev.havana.game.fuserights.Fuseright;
 import org.alexdev.havana.game.groups.GroupMember;
 import org.alexdev.havana.game.infobus.InfobusManager;
@@ -29,6 +31,7 @@ import org.alexdev.havana.game.wordfilter.WordfilterManager;
 import org.alexdev.havana.log.Log;
 import org.alexdev.havana.messages.incoming.catalogue.GET_CATALOG_INDEX;
 import org.alexdev.havana.messages.outgoing.alerts.ALERT;
+import org.alexdev.havana.messages.outgoing.events.ROOMEEVENT_INFO;
 import org.alexdev.havana.messages.outgoing.handshake.RIGHTS;
 import org.alexdev.havana.messages.outgoing.moderation.CRY_REPLY;
 import org.alexdev.havana.messages.outgoing.moderation.MODERATOR_ALERT;
@@ -225,9 +228,22 @@ public class RconConnectionHandler extends ChannelInboundHandlerAdapter {
                         return;
                     }
 
+                    if (roomLock) {
+                        roomKick.getData().setAccessType(1);
+                        RoomDao.save(roomKick);
+                    }
+
+                    if (unacceptable) {
+                        roomKick.getData().setName(unacceptableValue);
+                        roomKick.getData().setDescription(unacceptableDescValue);
+                        RoomDao.save(roomKick);
+                    }
+
                     List<Player> players = RoomManager.getInstance().getRoomById(roomId).getEntityManager().getPlayers();
 
                     for (Player target : players) {
+                        target.send(new MODERATOR_ALERT(messageRomKickDecoded));
+
                         // Don't kick other moderators
                         if (target.hasFuse(Fuseright.ROOM_KICK)) {
                             continue;
@@ -236,24 +252,20 @@ public class RconConnectionHandler extends ChannelInboundHandlerAdapter {
                         if (actionRoomKick.equals("kick")) {
                             target.getRoomUser().kick(true, true);
                             //target.send(new HOTEL_VIEW());
+
+                            if (!EventsManager.getInstance().hasEvent(roomKick.getId())) {
+                                return;
+                            }
+
+                            Event event =  EventsManager.getInstance().getEventByRoomId(roomKick.getId());
+
+                            if (event == null) {
+                                return;
+                            }
+
+                            EventsManager.getInstance().removeEvent(event);
+                            roomKick.send(new ROOMEEVENT_INFO(null));
                         }
-
-                        target.send(new MODERATOR_ALERT(messageRomKickDecoded));
-                    }
-
-                    if (unacceptable) {
-                        if (unacceptableValue == null || unacceptableDescValue == null) {
-                            return;
-                        }
-
-                        roomKick.getData().setName(unacceptableValue);
-                        roomKick.getData().setDescription(unacceptableDescValue);
-                        RoomDao.save(roomKick);
-                    }
-
-                    if (roomLock) {
-                        roomKick.getData().setAccessType(1);
-                        RoomDao.save(roomKick);
                     }
                     break;
                 case MOD_GIVE_BADGE:
