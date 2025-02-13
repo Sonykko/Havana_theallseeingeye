@@ -138,7 +138,7 @@ public class HousekeepingRCONController {
 
             if (!playerAlertDetails.isOnline()) {
                 client.session().set("alertColour", "warning");
-                client.session().set("alertMessage", "Can't kick the user "+ playerAlertDetails.getName() + " cause it's not online");
+                client.session().set("alertMessage", "Can't alert the user "+ playerAlertDetails.getName() + " cause it's not online");
                 client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/alert");
                 return;
             }
