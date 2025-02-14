@@ -82,7 +82,7 @@ Developed by Sonykko.
 
 ![image](https://i.imgur.com/BMNleoU.png)
 
-![image](https://i.imgur.com/8IWhvCD.gif)
+![image](https://i.imgur.com/12lUtG1.gif)
 
 ### (theallseeingeye with new r39 dual client support)
 
