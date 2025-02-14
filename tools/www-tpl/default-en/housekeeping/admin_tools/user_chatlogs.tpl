@@ -6,24 +6,6 @@
           <h2 class="mt-4">User Chatlogs</h2>
 		  <p>Here can see the recently chatlogs in rooms and messenger console or conversations with friends from given user.</p>
 		  {% include "housekeeping/base/alert.tpl" %}
-<!--
-<form method="post" onsubmit="return update();">
-	<div class="form-group">
-        <label for="chatId">Only User ID</label>
-        <input type="text" name="chatId" class="form-control" id="chatId" placeholder="Enter here User ID and leave blank the rest for see all chatlogs of the given user">
-    </div>
-    <div class="form-group">
-        <label for="chatId">User ID 1</label>
-        <input type="text" name="id1" class="form-control" id="chatId1" placeholder="Enter User ID 1 for search messenger chatlogs with the User ID 2">
-    </div>
-    <div class="form-group">
-        <label for="chatId">User ID 2</label>
-        <input type="text" name="id2" class="form-control" id="chatId2" placeholder="Enter User ID 2">
-    </div>
-    <button type="submit">Search User Chatlogs</button>
-</form>
--->
-
 <form class="table-responsive col-md-4" method="post" onsubmit="return update();">
 <label for="groupSelector">Search Type</label>
 <select id="groupSelector" class="form-control">
@@ -74,19 +56,10 @@
     });
 </script>
 
-<br>
-
-<!-- Opcional: Agregar enlaces para buscar por URL -->
-<!--<a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/chatlog.action?chatId=1">View Chatlogs for User 1</a>
-<a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/chatlog.action?chatId=2">View Chatlogs for User 2</a>
-chatlog.url=https://theallseeingeye.sulake.com/ase/habbo/es/housekeeping/extra/hobba/chatlog.action?chatId=-->
-
-<!-- Mostrar los resultados de la búsqueda aquí -->
 {% if userChatlogs|length > 0 %}
-    <h5>Search Results</h5>
-    <!-- Renderizar los resultados de la búsqueda aquí -->
+	<hr/>
+    <p style="font-size: 16px;"><b>Search Results</b></p>
     <table class="table table-striped">
-        <!-- Encabezados de la tabla aquí -->
         <thead>
             <tr>
 				  <th>Created Date</th>
@@ -96,7 +69,6 @@ chatlog.url=https://theallseeingeye.sulake.com/ase/habbo/es/housekeeping/extra/h
 				  <th>Type</th>
                 </tr>
         </thead>
-        <!-- Cuerpo de la tabla aquí -->
         <tbody>
     {% for chatlog in userChatlogs %}
         <tr>
