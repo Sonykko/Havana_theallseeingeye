@@ -81,7 +81,7 @@
 		{% endfor %}
 		{% else %}
 		<p>Here you can search a catalogue page.</p>
-		<form class="table-responsive col-md-4" method="post">
+		<form class="table-responsive col-md-4"method="post">
 			<div class="form-group">
 				<label for="field">Field</label>
 				<select name="searchField" class="form-control" id="field">
@@ -109,9 +109,9 @@
 			</div>
 			<button type="submit">Perform Search</button>
 		</form>
-		<br>
 		{% if searchPages|length > 0 %}
-		<h5>Search Results</h5>
+		  <hr/>
+		  <p style="font-size:16px;"><b>Search results</b></p>
           <div class="table-responsive">
             <table class="table table-striped">
               <thead>
@@ -159,6 +159,11 @@
             </table>
           </div>
 		{% endif %}
+		{% if noResults %}
+		<hr/>
+		<p style="font-size:16px;"><b>Search results</b></p>
+		<p><i>No results found.</i></p>
+		{% endif %}		
           <h3 class="mt-4">Edit catalogue pages</h3>
 		  <p>The catalogue pages list is seen below.</p>
 		  	<div class="pagination-buttons-box">
@@ -171,6 +176,7 @@
 				<a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/campaign_management/catalogue/pages?page={{ ourNextPage }}"><button type="button">Go back</button></a>
 			{% endif %}
 			</div>
+		  {% if pages|length > 0 %}
           <div class="table-responsive">
             <table class="table table-striped">
               <thead>
@@ -217,7 +223,10 @@
 			   {% endfor %}
               </tbody>
             </table>
-      </div>
+		  </div>
+		  {% else %}
+		  <p><i>Nothing found to display.</i></p>
+		  {% endif %} 
 	  {% endif %}
     </div>
   </div>

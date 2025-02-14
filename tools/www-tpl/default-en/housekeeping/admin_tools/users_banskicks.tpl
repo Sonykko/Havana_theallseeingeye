@@ -28,7 +28,8 @@
 		</form>
 		<br>
 		{% if players|length > 0 %}
-		<h2 class="mt-4">Search Results</h2>
+		<hr/>
+		<p style="font-size:16px;"><b>Search results</b></p>
           <div class="table-responsive">
             <table class="table table-striped">
               <thead>
@@ -64,7 +65,12 @@
               </tbody>
             </table>
           </div>
-		{% endif %}			
+		{% endif %}	
+		{% if noResults %}
+		<hr/>
+		<p style="font-size:16px;"><b>Search results</b></p>
+		<p><i>No results found.</i></p>
+		{% endif %}		
 			<h3 class="mt-4">View bans</h3>
 		<p>Manage all currently active bans on the hotel</p>
 			<div class="pagination-buttons-box">
@@ -77,6 +83,7 @@
 				<a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/bans_kicks?pageBan={{ ourNextPageBan }}&sortBan={{ sortByBan }}"><button type="button">Go back</button></a>
 			{% endif %}
 			</div>
+		  {% if bans|length > 0 %}
 		  <div class="table-responsive">
 		    <form method="post">
             <table class="table table-striped">
@@ -134,9 +141,11 @@
             </table>
 		</form>
       </div>
+	  {% else %}
+	  <p><i>Nothing found to display.</i></p>
+	  {% endif %} 
 	  <h3 class="mt-4">View kicks</h3>
 		  <p>Here can see the most recent logs of Kicks created via RCON.</p>
-			<div class="pagination-buttons-box">
 			<div class="pagination-buttons-box">
 			{% if nextremoteKickLogs|length > 0 %}
 				{% set ourNextPageKick = pageKick + 1 %}
@@ -147,6 +156,7 @@
 				<a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/bans_kicks?pageKick={{ ourNextPageKick }}&sort={{ kickSortBy }}"><button type="button">Go back</button></a>
 			{% endif %}
 			</div>
+		  {% if remoteKickLogs %}
           <div class="table-responsive">
             <table class="table table-striped">
               <thead>
@@ -173,6 +183,9 @@
               </tbody>
             </table>
       </div>
+	  {% else %}
+	  <p><i>Nothing found to display.</i></p>
+	  {% endif %} 	  
     </div>
   </div>
   <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"></script>

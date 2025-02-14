@@ -33,7 +33,8 @@
     </form>
     <br>
     {% if searchChatlogs|length > 0 %}
-    <h5>Search Results</h5>
+	<hr/>
+	<p style="font-size:16px;"><b>Search results</b></p>
     <div class="table-responsive">
         <table class="table table-striped">
             <thead>
@@ -60,11 +61,16 @@
             </tbody>
         </table>
     </div>
+	{% if noResults %}
+	<hr/>
+	<p style="font-size:16px;"><b>Search results</b></p>
+	<p><i>No results found.</i></p>
+	{% endif %} 	
     {% endif %}
 		
           <h2 class="mt-4">Room Chatlogs</h2>
 		  <p>The recently chatlogs in rooms list is seen below.</p>
-
+			<div class="pagination-buttons-box">
 			{% if nextChatlogs|length > 0 %}
 				{% set ourNextPage = page + 1 %}
 				<a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/room_chatlogs?page={{ ourNextPage }}&sort={{ sortBy }}"><button type="button">Next Page</button></a>
@@ -73,13 +79,12 @@
 				{% set ourNextPage = page - 1 %}
 				<a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/room_chatlogs?page={{ ourNextPage }}&sort={{ sortBy }}"><button type="button">Go back</button></a>
 			{% endif %}
-			<br><br>
 			</div>
+		  {% if chatlogs|length > 0 %}
           <div class="table-responsive">
             <table class="table table-striped">
               <thead>
-                <tr>
-                  <!--<th>ID</th>-->                				  
+                <tr>                				  
 				  <th><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/room_chatlogs?page={{ page }}&sort=timestamp">Created Date</a></th>				  
 				  <th>User</th>
 				  <th>Message</th>
@@ -90,7 +95,6 @@
 			    {% set num = 1 %}
 				{% for chatlog in chatlogs %}
                 <tr>
-                  <!--<td>{{ chatlog.id }}</td>--> 
 				  <td>{{ (chatlog.timestamp * 1000)| date("HH:mm d/MM/yyyy") }}</td>				  				  
 				  <td><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/chatlog.action?chatId={{ chatlog.userId }}" style="color:black;"><b>{{ chatlog.username }}</b></a></td>
 				  <td>{{ chatlog.message }}</td>
@@ -100,7 +104,10 @@
 			   {% endfor %}
               </tbody>
             </table>
-      </div>
+		  </div>
+		  {% else %}
+		  <p><i>Nothing found to display.</i></p>
+		  {% endif %} 
     </div>
   </div>
   <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"></script>

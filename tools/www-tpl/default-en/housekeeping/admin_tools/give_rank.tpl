@@ -35,14 +35,19 @@
 		  <hr />
 		  <p><b>Staff team list</b></p>
 		  <p>This list allows you to see information of Staff team.</p>
+		  {% if staffDetailsList|length > 0 %}
 		  <div style="display: flex;flex-direction:column;">
                 {% for staff in staffDetailsList %}
                     <text>{{ staff.name }} - {{ staff.rankName }} (id: {{ staff.rankId }})</text>
                 {% endfor %}	
 		  </div>
+		  {% else %}
+		  <p><i>Nothing found to display.</i></p>
+		  {% endif %} 
 		  <hr />
 		  <p><b>Staff texts variables</b></p>
 		  <p>This tool allows you to set the texts variables information of Staff ranks.</p>
+		{% if allRanks|length > 0 %}
 		<div class="table-responsive">
 				<table class="table table-striped">
 					<thead>
@@ -70,7 +75,10 @@
 						{% endfor %}
 					</tbody>
 				</table>
-			</div>		  
+			</div>
+		  {% else %}
+		  <p><i>Nothing found to display.</i></p>
+		  {% endif %} 
       </div>
     </div>
   </div>

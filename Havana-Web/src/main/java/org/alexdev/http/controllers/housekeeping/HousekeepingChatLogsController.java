@@ -73,6 +73,10 @@ public class HousekeepingChatLogsController {
                 chatLogs = new ArrayList<>();
             }
 
+            if (!(chatLogs.size() > 0)) {
+                tpl.set("noResults", true);
+            }
+
             tpl.set("searchChatlogs", chatLogs);
             tpl.render();
         }

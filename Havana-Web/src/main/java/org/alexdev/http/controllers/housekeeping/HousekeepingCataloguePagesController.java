@@ -74,6 +74,10 @@ public class HousekeepingCataloguePagesController {
                 searchPages = new ArrayList<>();
             }
 
+            if (!(searchPages.size() > 0)) {
+                tpl.set("noResults", true);
+            }
+
             tpl.set("searchPages", searchPages);
             tpl.render();
         }

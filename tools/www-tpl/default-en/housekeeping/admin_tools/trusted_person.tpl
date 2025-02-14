@@ -7,7 +7,7 @@
     <p>With this tool you can set or revoke a trusted person for a given user.</p>
 	{% include "housekeeping/base/alert.tpl" %}
     <form class="table-responsive col-md-4" method="post">
-        <div class="form-group">
+       <div class="form-group">
             <label for="userName">{{ site.siteName }} name</label>
             <input type="text" name="userName" class="form-control" id="userName" placeholder="Enter here the {{ site.siteName }} name..." value="" />
         </div>
@@ -40,6 +40,7 @@
         <a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/trusted_person?page={{ ourNextPage }}"><button type="button">Go back</button></a>
     {% endif %}
 	</div>
+	{% if players|length > 0 %}
     <div class="table-responsive">
         <table class="table table-striped">
             <thead>
@@ -62,6 +63,9 @@
             </tbody>
         </table>
     </div>	
+	{% else %}
+	<p><i>Nothing found to display.</i></p>
+	{% endif %} 
 
     <h2 class="mt-4">View Trusted Person logs</h2>
     <p>Here you can see the most recent logs of Trusted Persons tool log.</p>
@@ -75,6 +79,7 @@
         <a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/trusted_person?page={{ ourNextPage }}"><button type="button">Go back</button></a>
     {% endif %}
 	</div>
+	{% if trustedPersons|length > 0 %}
     <div class="table-responsive">
         <table class="table table-striped">
             <thead>
@@ -103,5 +108,8 @@
             </tbody>
         </table>
     </div>
+	{% else %}
+	<p><i>Nothing found to display.</i></p>
+	{% endif %} 
 </body>
 </html>

@@ -52,7 +52,7 @@
 								</td>
 								<td><input type="text" name="groupRoom" value="{{ group.getRoomId() }}" /></td>
 								<td style="text-wrap: nowrap;">
-									<img src="{{ site.habboImagingPath }}/habbo-imaging/badge/{{ group.getBadge() }}.gif" class="badge-preview" /> - <a href="#" class="edit-badge" data-id="{{ group.getId }}" data-toggle="modal" data-target="#badgeEditorModal">Edit</a>
+									<img src="{{ site.sitePath }}/habbo-imaging/badge/{{ group.getBadge() }}.gif" class="badge-preview" /> - <a href="#" class="edit-badge" data-id="{{ group.getId }}" data-toggle="modal" data-target="#badgeEditorModal">Edit</a>
 								</td>
 								<td><input type="text" name="groupAlias" value="{{ group.getAlias() }}" /></td>
 								<td>	
@@ -87,7 +87,8 @@
 				{% set ourNextPage = page - 1 %}
 				<a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/group_admin?page={{ ourNextPage }}"><button type="button">Go back</button></a>
 			{% endif %}
-			</div>			
+			</div>	
+		{% if allGroupDetails|length > 0 %}
 		<div class="table-responsive">
 				<table class="table table-striped">
 					<thead>
@@ -120,7 +121,7 @@
 								</td>
 								<td><input type="text" name="groupRoom" value="{{ group.getRoomId() }}" /></td>
 								<td style="text-wrap: nowrap;">
-									<img src="{{ site.habboImagingPath }}/habbo-imaging/badge/{{ group.getBadge() }}.gif" class="badge-preview" /> - <a href="#" class="edit-badge" data-id="{{ group.getId }}" data-toggle="modal" data-target="#badgeEditorModal">Edit</a>
+									<img src="{{ site.sitePath }}/habbo-imaging/badge/{{ group.getBadge() }}.gif" class="badge-preview" /> - <a href="#" class="edit-badge" data-id="{{ group.getId }}" data-toggle="modal" data-target="#badgeEditorModal">Edit</a>
 								</td>
 								<td><input type="text" name="groupAlias" value="{{ group.getAlias() }}" /></td>
 								<td>	
@@ -138,7 +139,10 @@
 						{% endfor %}
 					</tbody>
 				</table>
-			</div>		  
+		</div>		
+		{% else %}
+		<p><i>Nothing found to display.</i></p>
+		{% endif %} 		
       </div>
     </div>
   </div>

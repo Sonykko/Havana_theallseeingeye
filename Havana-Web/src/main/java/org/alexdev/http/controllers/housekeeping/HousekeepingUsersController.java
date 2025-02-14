@@ -114,6 +114,10 @@ public class HousekeepingUsersController {
                 players = new ArrayList<>();
             }
 
+            if (!(players.size() > 0)) {
+                tpl.set("noResults", true);
+            }
+
             tpl.set("players", players);
         }
 
@@ -348,6 +352,10 @@ public class HousekeepingUsersController {
                 players = HousekeepingPlayerDao.search(type, field, input);
             } else {
                 players = new ArrayList<>();
+            }
+
+            if (!(players.size() > 0)) {
+                tpl.set("noResults", true);
             }
 
             tpl.set("players", players);
