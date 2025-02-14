@@ -15,7 +15,7 @@
 				<a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/cfh_logs?page={{ ourNextPage }}&sort={{ sortBy }}"><button type="button">Go back</button></a>
 			{% endif %}
 			</div>
-		  {% if cflogs|length > 0 %}
+		  {% if cfhlogs|length > 0 %}
           <div class="table-responsive">
             <table class="table table-striped">
               <thead>
