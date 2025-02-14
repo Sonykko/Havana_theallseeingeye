@@ -51,6 +51,7 @@
 				<a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/room_kick?page={{ ourNextPage }}&sort={{ sortBy }}"><button type="button">Go back</button></a>
 			{% endif %}
 			</div>
+		  {% if remoteRoomKickLogs|length > 0 %}	
           <div class="table-responsive">
             <table class="table table-striped">
               <thead>
@@ -79,7 +80,10 @@
 			   {% endfor %}
               </tbody>
             </table>
-      </div>
+		  </div>
+		  {% else %}
+		  <p><i>Nothing found to display.</i></p>
+		  {% endif %} 	  
     </div>
   </div>
   <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"></script>

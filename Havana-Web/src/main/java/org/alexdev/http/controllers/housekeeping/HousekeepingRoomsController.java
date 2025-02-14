@@ -76,6 +76,10 @@ public class HousekeepingRoomsController {
                 roomsAdmin = new ArrayList<>();
             }
 
+            if (!(roomsAdmin.size() > 0)) {
+                tpl.set("noResults", true);
+            }
+
             tpl.set("roomsAdmin", roomsAdmin);
         }
 

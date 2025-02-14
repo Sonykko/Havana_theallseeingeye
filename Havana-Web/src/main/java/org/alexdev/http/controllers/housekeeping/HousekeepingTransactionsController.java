@@ -38,11 +38,15 @@ public class HousekeepingTransactionsController {
             if (client.post().getValues().size() > 0) {
                 var transactions = TransactionDao.getTransactionsPastMonth(client.post().getString("searchQuery"), true);
                 tpl.set("transactions", transactions);
+            } else {
+                tpl.set("noResults", true);
             }
 
             if (client.get().getValues().size() > 0) {
                 var transactions = TransactionDao.getTransactionsPastMonth(client.get().getString("searchQuery"), true);
                 tpl.set("transactions", transactions);
+            } else {
+                tpl.set("noResults", true);
             }
         } catch (Exception ex) {
 
@@ -72,8 +76,15 @@ public class HousekeepingTransactionsController {
             return;
         }
 
-        var transactions = TransactionDao.getTransactionByItem(StringUtils.isNumeric(client.get().getString("id")) ? client.get().getInt("id") : 0);
-        tpl.set("transactions", transactions);
+        try {
+            var transactions = TransactionDao.getTransactionByItem(StringUtils.isNumeric(client.get().getString("id")) ? client.get().getInt("id") : 0);
+
+            if (!(transactions.size() > 0)) {
+                tpl.set("noResults", true);
+            }
+        } catch (Exception e) {
+
+        }
 
         tpl.set("pageName", "Transaction Lookup");
         tpl.render();

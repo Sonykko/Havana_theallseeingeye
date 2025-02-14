@@ -65,6 +65,7 @@
 				<a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/wordfilter?page={{ ourNextPage }}&sort={{ sortBy }}"><button type="button">Go back</button></a>
 			{% endif %}
 		</div>
+		  {% if Words|length > 0 %}
           <div class="table-responsive">
             <table class="table table-striped">
               <thead>
@@ -94,7 +95,10 @@
 			   {% endfor %}
               </tbody>
             </table>
-      </div>
+		  </div>
+		  {% else %}
+		  <p><i>Nothing found to display.</i></p>
+		  {% endif %} 
 	  {% endif %}
     </div>
   </div>

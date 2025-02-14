@@ -24,6 +24,7 @@
 				<a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/statistics/newest_players?page={{ ourNextPage }}{{ zeroCoinsValue }}&sort={{ sortBy }}"><button type="button">Go back</button></a>
 			{% endif %}
 			</div>
+		  {% if players|length > 0 %}
           <div class="table-responsive">
             <table class="table table-striped">
               <thead>
@@ -32,34 +33,37 @@
                   <th>Name</th>
 				  <th>Email</th>
 				  <th>Look</th>
-        <th>Motto</th>
-        <th>Credits</th>
-        <th>Pixels</th>
-		<th><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/statistics/newest_players?page={{ page }}{{ zeroCoinsValue }}&sort=created_at">Date joined</a></th>
-        <th><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/statistics/newest_players?page={{ page }}{{ zeroCoinsValue }}&sort=last_online">Last online</a></th>
-                </tr>
-              </thead>
-              <tbody>
-			    {% set num = 1 %}
-				{% for player in players %}
-                <tr>
-                  <td>{{ player.id }}</td>
-                  <td>{{ player.name }}</td>
-				  <td>{{ player.email }}</td>
-				  <td><img src="{{ site.habboImagingPath }}/habbo-imaging/avatarimage?figure={{ player.figure }}&size=s"></td>
+				  <th>Motto</th>
+				  <th>Credits</th>
+				  <th>Pixels</th>
+				  <th><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/statistics/newest_players?page={{ page }}{{ zeroCoinsValue }}&sort=created_at">Date joined</a></th>
+				  <th><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/statistics/newest_players?page={{ page }}{{ zeroCoinsValue }}&sort=last_online">Last online</a></th>
+				</tr>
+			   </thead>
+			 <tbody>
+			  {% set num = 1 %}
+		   	  {% for player in players %}
+				<tr>
+				  <td>{{ player.id }}</td>
+				  <td>{{ player.name }}</td>
+			 	  <td>{{ player.email }}</td>
+				  <td><img src="{{ site.sitePath }}/habbo-imaging/avatarimage?figure={{ player.figure }}&size=s"></td>
 				  {% autoescape 'html' %}
-                  <td>{{ player.motto }}</td>
+				  <td>{{ player.motto }}</td>
 				  {% endautoescape %}
-                  <td>{{ player.credits }}</td>
-                  <td>{{ player.pixels }}</td>
+				  <td>{{ player.credits }}</td>
+				  <td>{{ player.pixels }}</td>
 				  <td>{{ player.formatJoinDate("dd-MM-yyyy HH:mm:ss") }}</td>
 				  <td>{{ player.formatLastOnline("dd-MM-yyyy HH:mm:ss") }}</td>
-                </tr>
+				</tr>
 			   {% set num = num + 1 %}
 			   {% endfor %}
-              </tbody>
-            </table>
-      </div>
+			  </tbody>
+			</table>
+		  </div>
+		  {% else %}
+		  <p><i>Nothing found to display.</i></p>
+		  {% endif %} 
     </div>
   </div>
   <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"></script>

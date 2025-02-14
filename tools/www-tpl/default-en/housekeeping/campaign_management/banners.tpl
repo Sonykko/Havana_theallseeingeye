@@ -79,6 +79,7 @@
 		</form>
           <h2 class="mt-4">Edit ads banners</h2>
 		  <p>The Ads banners list is seen below.</p>
+		  {% if Banners|length > 0 %}
           <div class="table-responsive">
             <table class="table table-striped">
               <thead>
@@ -114,7 +115,10 @@
 			   {% endfor %}
               </tbody>
             </table>
-      </div>
+		  </div>
+		  {% else %}
+		  <p><i>Nothing found to display.</i></p>
+		  {% endif %} 
 	  {% endif %}
     </div>
   </div>

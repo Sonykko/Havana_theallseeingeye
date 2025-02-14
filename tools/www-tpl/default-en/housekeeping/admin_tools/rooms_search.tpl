@@ -35,7 +35,8 @@
 		</form>
 		<br>
 		{% if roomsAdmin|length > 0 %}
-		<h5>Search Results</h5>
+		<hr/>
+		<p style="font-size:16px;"><b>Search results</b></p>
           <div class="table-responsive">
             <table class="table table-striped">
               <thead>
@@ -65,6 +66,11 @@
             </table>
           </div>
 		{% endif %}
+		{% if noResults %}
+		<hr/>
+		<p style="font-size:16px;"><b>Search results</b></p>
+		<p><i>No results found.</i></p>
+		{% endif %}	
       </div>
     </div>
   </div>

@@ -5,7 +5,8 @@
 	{% include "housekeeping/base/navigation_campaign_management.tpl" %}
     <h2 class="mt-4">Posted Articles</h2>
 		{% include "housekeeping/base/alert.tpl" %}
-		<p>This includes the most recent articles posted on the site, you may edit or delete them if you wish.</p>			
+		<p>This includes the most recent articles posted on the site, you may edit or delete them if you wish.</p>	
+		  {% if articles|length > 0 %}
           <div class="table-responsive">
             <table class="table table-striped">
               <thead>
@@ -34,7 +35,10 @@
 			   {% endfor %}
               </tbody>
             </table>
-      </div>
+		  </div>
+		  {% else %}
+		  <p><i>Nothing found to display.</i></p>
+		  {% endif %} 
     </div>
   </div>
   <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"></script>

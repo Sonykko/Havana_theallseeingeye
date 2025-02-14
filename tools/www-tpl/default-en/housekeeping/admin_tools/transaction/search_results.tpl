@@ -1,5 +1,6 @@
 {% if transactions|length > 0 %}
-		<h5>Search Results</h5>
+		<hr/>
+		<p style="font-size:16px;"><b>Search results</b></p>
           <div class="table-responsive">
             <table class="table table-striped">
               <thead>
@@ -17,7 +18,7 @@
 			    {% set num = 1 %}
 				{% for transaction in transactions %}
                 <tr>
-                  <td><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/transaction/track_item?id={{ transaction.getItemId() }}">Track this item</a></td>
+                  <td><a href="https://theallseeingeye.habbo.pro/{{ site.housekeepingPath }}/admin_tools/transaction/track_item?id={{ transaction.getItemId() }}">Track this item</a></td>
 				  <td>{{ transaction.getItemId() }}</td>
 				  <td>{{ transaction.description }}</td>
                   <td>{{ transaction.costCoins }}</td>
@@ -30,4 +31,9 @@
               </tbody>
             </table>
           </div>
-		{% endif %}
+{% endif %}
+{% if noResults %}
+		<hr/>
+		<p style="font-size:16px;"><b>Search results</b></p>
+		<p><i>No results found.</i></p>
+{% endif %}	

@@ -77,6 +77,10 @@ public class HousekeepingBansController {
                 players = new ArrayList<>();
             }
 
+            if (!(players.size() > 0)) {
+                tpl.set("noResults", true);
+            }
+
             tpl.set("players", players);
         }
 

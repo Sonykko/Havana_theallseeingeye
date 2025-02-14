@@ -13,7 +13,6 @@
 			</div>
 			<button type="submit">Perform Search</button>
 		</form>
-		<br>
 		{% include "housekeeping/admin_tools/transaction/search_results.tpl" %}
       </div>
     </div>

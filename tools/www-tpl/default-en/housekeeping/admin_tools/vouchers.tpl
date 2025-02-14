@@ -41,6 +41,7 @@
 		</form>
           <h2 class="mt-4">Voucher codes list</h2>
 		  <p>The Voucher codes list is seen below.</p>
+		  {% if Vouchers|length > 0 %}
           <div class="table-responsive">
             <table class="table table-striped">
               <thead>
@@ -69,7 +70,10 @@
 			   {% endfor %}
               </tbody>
             </table>
-      </div>
+		  </div>
+		  {% else %}
+		  <p><i>Nothing found to display.</i></p>
+		  {% endif %} 
     </div>
   </div>
   <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"></script>

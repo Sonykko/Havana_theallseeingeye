@@ -6,6 +6,7 @@
      <h2 class="mt-4">Edit Room Badges</h2>
 		{% include "housekeeping/base/alert.tpl" %}
 		<p>Edit all the room badges that are given when entering the room.</p>	
+		  {% if roomBadges.entrySet()|length > 0 %}
           <div class="table-responsive">
 		    <form method="post">
             <table class="table table-striped">
@@ -48,8 +49,11 @@
 			<div class="form-group"> 
 				<button type="submit">Save Badges</button>
 			</div>
-		</form>
-      </div>
+			</form>
+		  </div>
+		  {% else %}
+		  <p><i>Nothing found to display.</i></p>
+		  {% endif %} 
     </div>
   </div>
   <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"></script>

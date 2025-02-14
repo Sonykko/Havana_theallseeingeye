@@ -15,7 +15,10 @@
 		</p>
 		<p>
 			<a href="/{{ site.housekeepingPath }}/campaign_management/infobus_polls/close_event" class="btn btn-warning">End Event</a>
-		</p>			
+		</p>	
+          <h2 class="mt-4">Manage Infobus Polls</h2>
+		  <p>The recently Infobus Polls list is seen below.</p>
+		  {% if infobusPolls|length > 0 %}
           <div class="table-responsive">
             <table class="table table-striped">
               <thead>
@@ -47,7 +50,10 @@
 			   {% endfor %}
               </tbody>
             </table>
-		</div>
+		  </div>
+		  {% else %}
+		  <p><i>Nothing found to display.</i></p>
+		  {% endif %} 
     </div>
   </div>
   <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"></script>

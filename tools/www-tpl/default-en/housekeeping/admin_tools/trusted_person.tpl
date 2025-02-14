@@ -40,6 +40,7 @@
         <a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/trusted_person?page={{ ourNextPage }}"><button type="button">Go back</button></a>
     {% endif %}
 	</div>
+	{% if players|length > 0 %}
     <div class="table-responsive">
         <table class="table table-striped">
             <thead>
@@ -62,6 +63,9 @@
             </tbody>
         </table>
     </div>	
+	{% else %}
+	<p><i>Nothing found to display.</i></p>
+	{% endif %} 
 
     <h2 class="mt-4">View Trusted Person logs</h2>
     <p>Here you can see the most recent logs of Trusted Persons tool log.</p>
@@ -75,6 +79,7 @@
         <a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/trusted_person?page={{ ourNextPage }}"><button type="button">Go back</button></a>
     {% endif %}
 	</div>
+	{% if trustedPersons|length > 0 %}
     <div class="table-responsive">
         <table class="table table-striped">
             <thead>
@@ -103,5 +108,8 @@
             </tbody>
         </table>
     </div>
+	{% else %}
+	<p><i>Nothing found to display.</i></p>
+	{% endif %} 
 </body>
 </html>

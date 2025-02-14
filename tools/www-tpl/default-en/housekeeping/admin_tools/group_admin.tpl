@@ -87,7 +87,8 @@
 				{% set ourNextPage = page - 1 %}
 				<a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/group_admin?page={{ ourNextPage }}"><button type="button">Go back</button></a>
 			{% endif %}
-			</div>			
+			</div>	
+		{% if allGroupDetails|length > 0 %}
 		<div class="table-responsive">
 				<table class="table table-striped">
 					<thead>
@@ -138,7 +139,10 @@
 						{% endfor %}
 					</tbody>
 				</table>
-			</div>		  
+		</div>		
+		{% else %}
+		<p><i>Nothing found to display.</i></p>
+		{% endif %} 		
       </div>
     </div>
   </div>

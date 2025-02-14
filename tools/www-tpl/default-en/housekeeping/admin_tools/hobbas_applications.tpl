@@ -16,6 +16,7 @@
         <a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/hobbas?page={{ ourNextPage }}"><button type="button">Go back</button></a>
     {% endif %}
 	</div>
+	{% if hobbasFormLogs|length > 0 %}
     <div class="table-responsive">
         <table class="table table-striped">
             <thead>
@@ -55,5 +56,8 @@
             </tbody>
         </table>
     </div>
+	{% else %}
+	<p><i>Nothing found to display.</i></p>
+	{% endif %} 
 </body>
 </html>
