@@ -295,7 +295,13 @@ public class RoomData {
     }
 
     public void setVisitorsNow(int visitorsNow) {
-        this.visitorsNow = visitorsNow;
+        int petsInRoom = 0;
+
+        if (this.room.getEntityManager().getPlayers().size() > 0 && GameConfiguration.getInstance().getBoolean("room.visitors.count.pets.enabled")) {
+            petsInRoom = RoomDao.countPetsForRoom(this.room.getId());
+        }
+
+        this.visitorsNow = visitorsNow + petsInRoom;
     }
 
     public int getVisitorsMax() {
