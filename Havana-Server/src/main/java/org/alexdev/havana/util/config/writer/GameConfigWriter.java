@@ -139,6 +139,8 @@ public class GameConfigWriter implements ConfigWriter {
 
         config.put("messenger.enable.official.update.speed", "false");
 
+        config.put("room.visitors.count.pets.enabled", "true");
+
         for (var set : CommandManager.getCommands()) {
             if (set.getValue().getPlayerRank().getRankId() > 1) {
                 config.put("groups.ids.permission." + set.getKey()[0], "");

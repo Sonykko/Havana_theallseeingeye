@@ -566,6 +566,35 @@ public class RoomDao {
         return description;
     }
 
+    public static int countPetsForRoom(int roomId) {
+        int count = 0;
+        Connection sqlConnection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+
+        try {
+            sqlConnection = Storage.getStorage().getConnection();
+
+            preparedStatement = Storage.getStorage().prepare("SELECT COUNT(*) FROM items WHERE definition_id IN (154,564,565) AND room_id = ?", sqlConnection);
+            preparedStatement.setInt(1, roomId);
+
+            resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                count = resultSet.getInt(1);
+            }
+
+        } catch (Exception e) {
+            Storage.logError(e);
+        } finally {
+            Storage.closeSilently(resultSet);
+            Storage.closeSilently(preparedStatement);
+            Storage.closeSilently(sqlConnection);
+        }
+
+        return count;
+    }
+
     /**
      * Fill room data
      *
