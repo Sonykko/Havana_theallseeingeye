@@ -419,6 +419,7 @@ INSERT INTO `settings_desc` (`setting`, `description`, `category`) VALUES
 ('room.dispose.timer.enabled', 'Set room dispose timer status as true or false', 'client'),
 ('room.dispose.timer.seconds', 'Set the room dispose timer in seconds', 'client'),
 ('room.intersitial.ads', 'Set room intersitial ads status as true or false', 'client'),
+('room.visitors.count.pets.enabled', 'Set if the pets counts or not in the room visitors count', 'client'),
 ('seasonal.items', 'Set if seasonal items are enabled or not in the catalogue', 'catalogue'),
 ('shutdown.minutes', 'Set the shutdown time in minutes', 'client'),
 ('site.housekeeping', 'Set the URL of Housekeeping', 'hotel'),
@@ -782,6 +783,7 @@ UPDATE `settings` SET
       WHEN `setting` = 'room.dispose.timer.enabled' THEN 'client'
       WHEN `setting` = 'room.dispose.timer.seconds' THEN 'client'
       WHEN `setting` = 'room.intersitial.ads' THEN 'client'
+      WHEN `setting` = 'room.visitors.count.pets.enabled' THEN 'client'
       WHEN `setting` = 'seasonal.items' THEN 'catalogue'
       WHEN `setting` = 'shutdown.minutes' THEN 'client'
       WHEN `setting` = 'site.housekeeping' THEN 'hotel'
