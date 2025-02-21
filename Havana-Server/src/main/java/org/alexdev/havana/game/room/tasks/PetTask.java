@@ -12,6 +12,7 @@ import org.alexdev.havana.game.room.enums.StatusType;
 import org.alexdev.havana.messages.outgoing.rooms.user.CHAT_MESSAGE;
 import org.alexdev.havana.util.DateUtil;
 import org.alexdev.havana.util.StringUtil;
+import org.alexdev.havana.util.config.GameConfiguration;
 import org.apache.commons.lang.StringUtils;
 
 import java.util.List;
@@ -90,7 +91,7 @@ public class PetTask extends TickTask {
     }
 
     public void walk() {
-        Position availableTile = this.room.getMapping().getRandomWalkableBound(pet, false);
+        Position availableTile = this.room.getMapping().getRandomWalkableBound(pet, GameConfiguration.getInstance().getBoolean("pets.door.walking.allow"));
 
         if (availableTile != null) {
             pet.getRoomUser().walkTo(availableTile.getX(), availableTile.getY());
