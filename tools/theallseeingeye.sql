@@ -392,6 +392,7 @@ INSERT INTO `settings_desc` (`setting`, `description`, `category`) VALUES
 ('navigator.hide.empty.public.categories', 'Set the navigator hide empty public categories status as true or false', 'client'),
 ('navigator.show.hidden.rooms', 'Set the navigator show hidden rooms status as true or false', 'client'),
 ('normalise.input.strings', 'Normalise input strings', 'miscellaneous'),
+('pets.door.walking.allow', 'Set if the pets can walk or not in door tile', 'client'),
 ('pixels.max.tries.single.room.instance', 'Set the pixels max tries single room instance', 'coins'),
 ('pixels.received.interval', 'Set the pixels received interval', 'coins'),
 ('pixels.received.timeunit', 'Set the pixels received timeunit', 'coins'),
@@ -756,6 +757,7 @@ UPDATE `settings` SET
       WHEN `setting` = 'navigator.hide.empty.public.categories' THEN 'client'
       WHEN `setting` = 'navigator.show.hidden.rooms' THEN 'client'
       WHEN `setting` = 'normalise.input.strings' THEN 'miscellaneous'
+      WHEN `setting` = 'pets.door.walking.allow' THEN 'client'
       WHEN `setting` = 'pixels.max.tries.single.room.instance' THEN 'coins'
       WHEN `setting` = 'pixels.received.interval' THEN 'coins'
       WHEN `setting` = 'pixels.received.timeunit' THEN 'coins'
