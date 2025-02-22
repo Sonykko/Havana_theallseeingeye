@@ -2,6 +2,7 @@ package org.alexdev.http.controllers.housekeeping;
 
 import org.alexdev.duckhttpd.server.connection.WebConnection;
 import org.alexdev.duckhttpd.template.Template;
+import org.alexdev.havana.dao.mysql.RoomDao;
 import org.alexdev.havana.game.player.PlayerDetails;
 import org.alexdev.havana.game.room.Room;
 import org.alexdev.havana.server.rcon.messages.RconHeader;
@@ -127,13 +128,17 @@ public class HousekeepingRoomsController {
             return;
         }
 
+        Room room = RoomDao.getRoomById(roomId);
+
         List<Room> RoomAdmin = HousekeepingRoomDao.getRoom1(roomId);
 
         tpl.set("RoomAdminData", RoomAdmin);
 
-        if (RoomAdmin == null) {
+        if (room == null) {
             client.session().set("alertColour", "danger");
             client.session().set("alertMessage", "The room does not exist");
+            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/rooms/search");
+            return;
         } else {
             if (client.post().queries().size() > 0 && !client.session().contains("alertMessages")) {
                 try {
@@ -141,23 +146,26 @@ public class HousekeepingRoomsController {
                     String name = client.post().getString("name");
                     String description = client.post().getString("description");
                     int accesstype = client.post().getInt("accesstype");
-                    String password = "";
-                    if (accesstype == 2) {
-                        password = client.post().getString("password");
-                    }
-                    boolean showOwnerName = client.post().getBoolean("showOwnerName");
-                    int showOwner = showOwnerName ? 0 : 1;
+                    String password = client.post().getString("password");
+                    String finalPassword = password.isEmpty() ? "" : password;
+                    boolean showOwnerName = client.post().contains("showOwnerName");
 
-                    HousekeepingRoomDao.updateRoom(roomId, category, name, description, accesstype, password, showOwner);
+                    RconUtil.sendCommand(RconHeader.REFRESH_PRIVATE_ROOM, new HashMap<>() {{
+                        put("room", room.getId());
+                        put("category", category);
+                        put("name", name);
+                        put("description", description);
+                        put("accesstype", accesstype);
+                        put("password", finalPassword);
+                        put("showOwnerName", showOwnerName);
+                    }});
+
                     HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Edited Private Room with the ID " + roomId + ". URL: " + client.request().uri(), client.getIpAddress());
 
-                    client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/rooms/search");
+                    client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/rooms/edit?id=" + roomId);
 
                     client.session().set("alertColour", "success");
                     client.session().set("alertMessage", "The room has been successfully saved");
-
-                    RconUtil.sendCommand(RconHeader.REFRESH_NAVIGATOR, new HashMap<>());
-
                     return;
                 } catch (NumberFormatException e) {
                     client.session().set("alertColour", "danger");

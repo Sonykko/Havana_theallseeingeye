@@ -134,37 +134,6 @@ public class HousekeepingRoomDao {
         return rooms;
     }
 
-    public static void updateRoom(int roomId, int category, String name, String description, int accesstype, String password, int showOwner) {
-        Connection sqlConnection = null;
-        PreparedStatement preparedStatement = null;
-
-        try {
-            sqlConnection = Storage.getStorage().getConnection();
-            preparedStatement = sqlConnection.prepareStatement("UPDATE rooms SET category = ?, name = ?, description = ?, accesstype = ?, password = ?, showname = ? WHERE id = ?");
-            preparedStatement.setInt(1, category);
-            preparedStatement.setString(2, name);
-            preparedStatement.setString(3, description);
-            preparedStatement.setInt(4, accesstype);
-            preparedStatement.setString(5, password);
-            preparedStatement.setInt(6, showOwner);
-            preparedStatement.setInt(7, roomId);
-
-            int rowsUpdated = preparedStatement.executeUpdate();
-
-            if (rowsUpdated > 0) {
-                // Éxito: El registro se marcó como "Picked Up"
-            } else {
-                // Error: El registro no se actualizó, maneja el error apropiadamente
-            }
-        } catch (Exception e) {
-            // Maneja los errores adecuadamente
-            Storage.logError(e);
-        } finally {
-            Storage.closeSilently(preparedStatement);
-            Storage.closeSilently(sqlConnection);
-        }
-    }
-
     public static List<Map<String, Object>> getAllPrivateRoomsCat() {
         List<Map<String, Object>> roomCats = new ArrayList<>();
 
