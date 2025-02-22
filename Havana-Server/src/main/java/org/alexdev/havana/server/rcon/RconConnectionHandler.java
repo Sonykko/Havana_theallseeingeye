@@ -366,6 +366,29 @@ public class RconConnectionHandler extends ChannelInboundHandlerAdapter {
                     NavigatorManager.getInstance().reset();
                     NavigatorManager.reset();
                     break;
+                case REFRESH_PRIVATE_ROOM:
+                    int roomEditId = Integer.parseInt(message.getValues().get("room"));
+                    int category = Integer.parseInt(message.getValues().get("category"));
+                    String name = message.getValues().get("name");
+                    String description = message.getValues().get("description");
+                    int accesstype = Integer.parseInt(message.getValues().get("accesstype"));
+                    String password = message.getValues().get("password");
+                    boolean showOwnerName = Boolean.parseBoolean(message.getValues().get("showOwnerName"));
+
+
+                    var roomEdit = RoomDao.getRoomById(roomEditId);
+
+                    roomEdit.getData().setCategoryId(category);
+                    roomEdit.getData().setName(name);
+                    roomEdit.getData().setDescription(description);
+                    roomEdit.getData().setAccessType(accesstype);
+                    roomEdit.getData().setPassword(password);
+                    roomEdit.getData().setShowOwnerName(showOwnerName);
+                    RoomDao.save(roomEdit);
+
+                    NavigatorManager.getInstance().reset();
+                    NavigatorManager.reset();
+                    break;
                 case REFRESH_WORDFILTER:
                     WordfilterManager.reset();
                     break;
