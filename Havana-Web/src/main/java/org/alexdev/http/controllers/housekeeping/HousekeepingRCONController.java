@@ -10,7 +10,6 @@ import org.alexdev.havana.util.config.GameConfiguration;
 import org.alexdev.http.Routes;
 import org.alexdev.http.dao.housekeeping.HousekeepingCommandsDao;
 import org.alexdev.http.dao.housekeeping.HousekeepingLogsDao;
-import org.alexdev.http.dao.housekeeping.HousekeepingPlayerDao;
 import org.alexdev.http.dao.housekeeping.HousekeepingRCONCommandsDao;
 import org.alexdev.http.game.housekeeping.HousekeepingManager;
 import org.alexdev.http.util.SessionUtil;
@@ -210,6 +209,13 @@ public class HousekeepingRCONController {
                 return;
             }
 
+            if (playerKickDetails.getId() == playerDetails.getId()) {
+                client.session().set("alertColour", "danger");
+                client.session().set("alertMessage", "Can't kick yourself.");
+                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/bans_kicks");
+                return;
+            }
+
             if (!playerKickDetails.isOnline()) {
                 client.session().set("alertColour", "warning");
                 client.session().set("alertMessage", "Can't kick the user "+ playerKickDetails.getName() + " cause it's not online");
@@ -217,7 +223,7 @@ public class HousekeepingRCONController {
                 return;
             }
 
-            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/api/kick?user=" + username + "&alertMessage=" + finalMessage);
+            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/api/kick?user=" + playerKickDetails.getName() + "&alertMessage=" + finalMessage);
             return;
         }
 
@@ -249,6 +255,13 @@ public class HousekeepingRCONController {
                 return;
             }
 
+            if (playerBanDetails.getId() == playerDetails.getId()) {
+                client.session().set("alertColour", "warning");
+                client.session().set("alertMessage", "Can't ban yourself.");
+                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/bans_kicks");
+                return;
+            }
+
             var banDetails = playerBanDetails.isBanned();
 
             if (banDetails != null) {
@@ -258,7 +271,7 @@ public class HousekeepingRCONController {
                 return;
             }
 
-            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/api/ban?username=" + username + "&alertMessage=" + finalMessage + "&notes=" + notes + "&banSeconds=" + banSeconds + "&doBanMachine=" + doBanMachine + "&doBanIP=" + doBanIP);
+            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/api/ban?username=" + playerBanDetails.getName() + "&alertMessage=" + finalMessage + "&notes=" + notes + "&banSeconds=" + banSeconds + "&doBanMachine=" + doBanMachine + "&doBanIP=" + doBanIP);
             return;
         }
 

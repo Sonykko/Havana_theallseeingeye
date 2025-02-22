@@ -4,6 +4,7 @@ import org.alexdev.duckhttpd.server.connection.WebConnection;
 import org.alexdev.havana.dao.mysql.PlayerDao;
 import org.alexdev.havana.game.moderation.actions.ModeratorBanUserAction;
 import org.alexdev.havana.game.player.PlayerDetails;
+import org.alexdev.havana.game.player.PlayerManager;
 import org.alexdev.havana.server.rcon.messages.RconHeader;
 import org.alexdev.havana.util.config.GameConfiguration;
 import org.alexdev.http.Routes;
@@ -38,13 +39,18 @@ public class HousekeepingCommandsController {
         var playerDetails = PlayerDao.getDetails(client.get().getString("username"));
 
         if (playerDetails != null) {
-            RconUtil.sendCommand(RconHeader.DISCONNECT_USER, new HashMap<>() {{
-                put("userId", playerDetails.getId());
-            }});
-
             int banningId = client.session().getInt("user.id");
             var banningPlayerDetails = PlayerDao.getDetails(banningId);
             String message = GameConfiguration.getInstance().getString("rcon.superban.message");
+
+            if (playerDetails.getId() == banningPlayerDetails.getId()) {
+                client.send("Can't superban yourself.");
+                return;
+            }
+
+            RconUtil.sendCommand(RconHeader.DISCONNECT_USER, new HashMap<>() {{
+                put("userId", playerDetails.getId());
+            }});
 
             //ModerationDao.addLog(ModerationActionType.ALERT_USER, player.getDetails().getId(), playerDetails.getId(), "Banned for breaking the HabboWay", "");
             client.send(ModeratorBanUserAction.ban(banningPlayerDetails, message, "", playerDetails.getName(), 999999999, true, true));
@@ -68,10 +74,6 @@ public class HousekeepingCommandsController {
         var playerDetails = PlayerDao.getDetails(client.get().getString("username"));
 
         if (playerDetails != null) {
-            RconUtil.sendCommand(RconHeader.DISCONNECT_USER, new HashMap<>() {{
-                put("userId", playerDetails.getId());
-            }});
-
             int banningId = client.session().getInt("user.id");
             var banningPlayerDetails = PlayerDao.getDetails(banningId);
             String alertMessage = client.get().getString("alertMessage");
@@ -80,10 +82,19 @@ public class HousekeepingCommandsController {
             boolean doBanMachine = client.get().getBoolean("doBanMachine");
             boolean doBanIP = client.get().getBoolean("doBanIP");
 
+            if (playerDetails.getId() == banningPlayerDetails.getId()) {
+                client.send("Can't ban yourself.");
+                return;
+            }
+
+            RconUtil.sendCommand(RconHeader.DISCONNECT_USER, new HashMap<>() {{
+                put("userId", playerDetails.getId());
+            }});
+
             //ModerationDao.addLog(ModerationActionType.ALERT_USER, player.getDetails().getId(), playerDetails.getId(), "Banned for breaking the HabboWay", "");
             client.send(ModeratorBanUserAction.ban(banningPlayerDetails, alertMessage, notes, playerDetails.getName(), banSeconds, doBanMachine, doBanIP));
-            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/" + redirect);
 
+            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/" + redirect);
             client.session().set("alertColour", "success");
             client.session().set("alertMessage", "The user " + banningPlayerDetails + " has been banned.");
             return;
@@ -97,6 +108,9 @@ public class HousekeepingCommandsController {
         if (!client.session().getBoolean(SessionUtil.LOGGED_IN_HOUSKEEPING)) {
             client.send("");
         }
+
+        int banningId1 = client.session().getInt("user.id");
+        PlayerDetails staffDetails = PlayerManager.getInstance().getPlayerData(banningId1);
 
         Map<String, String> params = client.get().getValues();
         String users = params.get("usernames");
@@ -113,6 +127,13 @@ public class HousekeepingCommandsController {
             if (playerDetails == null) {
                 client.session().set("alertColour", "danger");
                 client.session().set("alertMessage", "The user " + username + " does not exist.");
+                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/" + redirect);
+                return;
+            }
+
+            if (playerDetails.getId() == staffDetails.getId()) {
+                client.session().set("alertColour", "warning");
+                client.session().set("alertMessage", "Can't mass ban yourself.");
                 client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/" + redirect);
                 return;
             }
@@ -145,6 +166,9 @@ public class HousekeepingCommandsController {
             client.send("");
         }
 
+        int banningId = client.session().getInt("user.id");
+        PlayerDetails staffDetails = PlayerManager.getInstance().getPlayerData(banningId);
+
         Map<String, String> params = client.get().getValues();
         String users = params.get("usernames");
         List<String> usernames = splitUsernames(users);
@@ -152,19 +176,22 @@ public class HousekeepingCommandsController {
         for (String username : usernames) {
             var playerDetails = PlayerDao.getDetails(username);
 
-            if (playerDetails != null) {
-                HousekeepingPlayerDao.unbanUser(playerDetails.getId());
-
-                client.session().set("alertColour", "success");
-                client.session().set("alertMessage", "The user " + username + " has been unbanned.");
-            } else {
+            if (playerDetails == null) {
                 client.session().set("alertColour", "danger");
                 client.session().set("alertMessage", "The user " + username + " does not exist.");
+                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/mass_unban");
+                return;
             }
-        }
 
-        // Redirect to the bans and kicks page
-        client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/mass_unban");
+            HousekeepingPlayerDao.unbanUser(playerDetails.getId());
+
+            HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", staffDetails.getId(), staffDetails.getName(), "Ha desbaneado al " + GameConfiguration.getInstance().getString("site.name") + " '" + username + " (id: " + playerDetails.getId() + ")'. URL: " + client.request().uri(), client.getIpAddress());
+
+            client.session().set("alertColour", "success");
+            client.session().set("alertMessage", "The user " + username + " has been unbanned.");
+            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/mass_unban");
+            return;
+        }
     }
 
     public static void massKickuser(WebConnection client) {
@@ -190,6 +217,15 @@ public class HousekeepingCommandsController {
         List<String> usernames = splitUsernames(users);
 
         for (String username : usernames) {
+            var playerMassKickDetails = PlayerDao.getDetails(username);
+
+            if (playerDetails.getId() == playerMassKickDetails.getId()) {
+                client.session().set("alertColour", "warning");
+                client.session().set("alertMessage", "Can't mass kick yourself.");
+                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/mass_ban");
+                return;
+            }
+
             try {
                 RconUtil.sendCommand(RconHeader.MOD_KICK_USER, new HashMap<>() {{
                     put("receiver", username);
@@ -281,6 +317,22 @@ public class HousekeepingCommandsController {
         String moderator = playerDetails.getName();
         String message = client.get().getString("alertMessage");
         String messageEncoded = MessageEncoderUtil.encodeMessage(message);
+
+        var playerKickDetails = PlayerDao.getDetails(user);
+
+        if (playerKickDetails == null) {
+            client.session().set("alertColour", "danger");
+            client.session().set("alertMessage", "The user " + user + " does not exist.");
+            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/bans_kicks");
+            return;
+        }
+
+        if (playerKickDetails.getId() == playerDetails.getId()) {
+            client.session().set("alertColour", "warning");
+            client.session().set("alertMessage", "Can't kick yourself.");
+            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/bans_kicks");
+            return;
+        }
 
         try {
             RconUtil.sendCommand(RconHeader.MOD_KICK_USER, new HashMap<>() {{
