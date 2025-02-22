@@ -18,7 +18,7 @@
 			    {% set num = 1 %}
 				{% for transaction in transactions %}
                 <tr>
-                  <td><a href="https://theallseeingeye.habbo.pro/{{ site.housekeepingPath }}/admin_tools/transaction/track_item?id={{ transaction.getItemId() }}">Track this item</a></td>
+                  <td><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/transaction/track_item?id={{ transaction.getItemId() }}">Track this item</a></td>
 				  <td>{{ transaction.getItemId() }}</td>
 				  <td>{{ transaction.description }}</td>
                   <td>{{ transaction.costCoins }}</td>
