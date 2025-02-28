@@ -12,7 +12,6 @@ import org.alexdev.http.util.SessionUtil;
 import org.apache.commons.lang.StringUtils;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -43,7 +42,7 @@ public class HousekeepingHobbasController {
             String userName = client.post().getString("userName");
             String userID = client.post().getString("userID");
 
-            if (userName.isEmpty() && userID.isEmpty()) {
+            if (userName.isEmpty() && userID.isEmpty() || !userName.isEmpty() && !userID.isEmpty()) {
                 client.session().set("alertColour", "danger");
                 client.session().set("alertMessage", "Please enter a valid user name or ID");
                 client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/hobbas/check");
@@ -66,13 +65,12 @@ public class HousekeepingHobbasController {
 
             String identifier = userDetails.getName() + " (" + userDetails.getId() + ")";
             Map<String, String> checkResults = HousekeepingHobbasDao.checkHabboDetails(userDetails.getName());
-
             hasReasons = true;
             reasons = new ArrayList<>(checkResults.values());
+
             client.session().set("alertColour", "success");
             client.session().set("alertMessage", "<div style=\"color:black\"><b>Checking " + identifier + "</b></div>");
 
-            // Verificar si hay claves con _RED o valores con danger
             boolean containsRedKey = false;
             boolean containsDangerValue = false;
 
