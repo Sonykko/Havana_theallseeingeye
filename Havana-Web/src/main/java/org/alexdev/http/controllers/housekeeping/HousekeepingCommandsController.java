@@ -96,7 +96,7 @@ public class HousekeepingCommandsController {
 
             client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/" + redirect);
             client.session().set("alertColour", "success");
-            client.session().set("alertMessage", "The user " + banningPlayerDetails + " has been banned.");
+            client.session().set("alertMessage", "The user " + playerDetails.getName() + " has been banned.");
             return;
         }
 
@@ -154,7 +154,7 @@ public class HousekeepingCommandsController {
             client.send(ModeratorBanUserAction.ban(banningPlayerDetails, alertMessage, notes, playerDetails.getName(), banSeconds, doBanMachine, doBanIP));
 
             client.session().set("alertColour", "success");
-            client.session().set("alertMessage", "The user " + username + " has been banned.");
+            client.session().set("alertMessage", "The users " + users + " has been banned.");
             client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/" + redirect);
             return;
         }
@@ -188,7 +188,7 @@ public class HousekeepingCommandsController {
             HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", staffDetails.getId(), staffDetails.getName(), "Ha desbaneado al " + GameConfiguration.getInstance().getString("site.name") + " '" + username + " (id: " + playerDetails.getId() + ")'. URL: " + client.request().uri(), client.getIpAddress());
 
             client.session().set("alertColour", "success");
-            client.session().set("alertMessage", "The user " + username + " has been unbanned.");
+            client.session().set("alertMessage", "The users " + users + " has been unbanned.");
             client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/mass_unban");
             return;
         }
