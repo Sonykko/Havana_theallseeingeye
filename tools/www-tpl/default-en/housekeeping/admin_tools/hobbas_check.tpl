@@ -17,9 +17,9 @@
             <label for="userID" style="font-weight: normal!important;margin-bottom: 0!important">User ID</label>
             <input type="text" name="userID" class="" id="userID" placeholder="" value="" />
         </div>
-        <button type="submit">Search</button>
+        <button type="submit" name="action" value="check">Search</button>
     </form>
-	
+
     {% if hasReasons %}
 	<hr>
 	{% include "housekeeping/base/alert.tpl" %}
@@ -28,8 +28,9 @@
             {% endfor %}
 		{{ finalMessage }}
 	{% else %}
+	<br/>
 	{% include "housekeeping/base/alert.tpl" %}
 	{{ finalMessage }}
-    {% endif %}		
+    {% endif %}
 </body>
 </html>

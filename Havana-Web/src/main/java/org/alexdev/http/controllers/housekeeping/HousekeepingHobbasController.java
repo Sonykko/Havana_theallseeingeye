@@ -2,6 +2,7 @@ package org.alexdev.http.controllers.housekeeping;
 
 import org.alexdev.duckhttpd.server.connection.WebConnection;
 import org.alexdev.duckhttpd.template.Template;
+import org.alexdev.havana.dao.mysql.PlayerDao;
 import org.alexdev.havana.game.player.PlayerDetails;
 import org.alexdev.http.Routes;
 import org.alexdev.http.dao.housekeeping.HousekeepingHobbasDao;
@@ -36,51 +37,61 @@ public class HousekeepingHobbasController {
         String finalMessage = "";
         boolean hasReasons = false;
         List<String> reasons = null;
+        String action = client.post().getString("action");
 
-        if (client.post().contains("userName") || client.post().contains("userID")) {
+        if ("check".equals(action)) {
             String userName = client.post().getString("userName");
             String userID = client.post().getString("userID");
 
-            Map<String, String> checkResults = new HashMap<>();
-            String identifier = "";
-            if (userName != null && !userName.isEmpty() && !StringUtils.isNumeric(userName)) {
-                checkResults = HousekeepingHobbasDao.checkHabboDetails(userName); // Usar userName en lugar de userID
-                identifier = " (Name: " + userName + ")";
-            } else if (userID != null && !userID.isEmpty() && StringUtils.isNumeric(userID)) {
-                checkResults = HousekeepingHobbasDao.checkHabboDetails(userID);
-                identifier = " (ID: " + userID + ")";
-            } else {
+            if (userName.isEmpty() && userID.isEmpty()) {
                 client.session().set("alertColour", "danger");
-                client.session().set("alertMessage", "Please enter a valid user name or user ID");
+                client.session().set("alertMessage", "Please enter a valid user name or ID");
+                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/hobbas/check");
+                return;
             }
 
-            if (!checkResults.isEmpty()) {
-                hasReasons = true;
-                reasons = new ArrayList<>(checkResults.values());
-                client.session().set("alertColour", "success");
-                client.session().set("alertMessage", "<div style=\"color:black\"><b>Checking " + identifier + "</b></div>");
+            PlayerDetails userDetails;
+            if (StringUtils.isNumeric(userID) && userName.isEmpty()) {
+                userDetails = PlayerDao.getDetails(Integer.parseInt(userID));
+            } else {
+                userDetails = PlayerDao.getDetails(userName);
+            }
 
-                // Verificar si hay claves con _RED o valores con danger
-                boolean containsRedKey = false;
-                boolean containsDangerValue = false;
+            if (userDetails == null) {
+                client.session().set("alertColour", "danger");
+                client.session().set("alertMessage", "The user does not exist");
+                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/hobbas/check");
+                return;
+            }
 
-                for (Map.Entry<String, String> entry : checkResults.entrySet()) {
-                    String key = entry.getKey();
-                    String value = entry.getValue();
+            String identifier = userDetails.getName() + " (" + userDetails.getId() + ")";
+            Map<String, String> checkResults = HousekeepingHobbasDao.checkHabboDetails(userDetails.getName());
 
-                    if (key.contains("_RED")) {
-                        containsRedKey = true;
-                    }
-                    if (value.contains("danger")) {
-                        containsDangerValue = true;
-                    }
+            hasReasons = true;
+            reasons = new ArrayList<>(checkResults.values());
+            client.session().set("alertColour", "success");
+            client.session().set("alertMessage", "<div style=\"color:black\"><b>Checking " + identifier + "</b></div>");
+
+            // Verificar si hay claves con _RED o valores con danger
+            boolean containsRedKey = false;
+            boolean containsDangerValue = false;
+
+            for (Map.Entry<String, String> entry : checkResults.entrySet()) {
+                String key = entry.getKey();
+                String value = entry.getValue();
+
+                if (key.contains("_RED")) {
+                    containsRedKey = true;
                 }
-
-                if (containsRedKey || containsDangerValue) {
-                    finalMessage = "<b>The user is not qualified to become a Hobba.</b>";
-                } else {
-                    finalMessage = "<b>The user is qualified to become a Hobba.</b>";
+                if (value.contains("danger")) {
+                    containsDangerValue = true;
                 }
+            }
+
+            if (containsRedKey || containsDangerValue) {
+                finalMessage = "<b>The user is not qualified to become a Hobba.</b>";
+            } else {
+                finalMessage = "<b>The user is qualified to become a Hobba.</b>";
             }
         }
 
@@ -120,20 +131,20 @@ public class HousekeepingHobbasController {
             String logId = client.post().getString("logId");
 
             if (StringUtils.isNumeric(logId) && Integer.parseInt(logId) > 0) {
-                HousekeepingHobbasDao.updateApplication(Integer.parseInt(logId));
-
-                client.session().set("alertColour", "success");
-                client.session().set("alertMessage", "The Hobba application has been picked up");
-
-                HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Has picked up the Hobba application with the ID: " + logId + ". URL: " + client.request().uri(), client.getIpAddress());
-
-                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/hobbas/applications");
-            } else {
                 client.session().set("alertColour", "danger");
                 client.session().set("alertMessage", "Please enter a valid Hobba application form ID");
-
-                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/hobbas/applications");
+                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/hobbas/applications");
+                return;
             }
+
+            HousekeepingHobbasDao.updateApplication(Integer.parseInt(logId));
+
+            HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Has picked up the Hobba application with the ID: " + logId + ". URL: " + client.request().uri(), client.getIpAddress());
+
+            client.session().set("alertColour", "success");
+            client.session().set("alertMessage", "The Hobba application has been picked up");
+            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/hobbas/applications");
+            return;
         }
 
         tpl.set("pageName", "Hobba applications");
