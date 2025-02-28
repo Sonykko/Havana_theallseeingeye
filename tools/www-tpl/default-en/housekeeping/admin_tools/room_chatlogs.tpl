@@ -61,12 +61,12 @@
             </tbody>
         </table>
     </div>
+    {% endif %}	
 	{% if noResults %}
 	<hr/>
 	<p style="font-size:16px;"><b>Search results</b></p>
 	<p><i>No results found.</i></p>
-	{% endif %} 	
-    {% endif %}
+	{% endif %}
 		
           <h2 class="mt-4">Room Chatlogs</h2>
 		  <p>The recently chatlogs in rooms list is seen below.</p>
