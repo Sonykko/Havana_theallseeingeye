@@ -32,11 +32,6 @@ public class HousekeepingBansController {
             return;
         }
 
-        //tpl.set("bans", BanDao.getActiveBans());
-        //tpl.render();
-
-        // Delete alert after it's been rendered
-        client.session().delete("alertMessage");
         if (!HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "bans")) {
             client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/permissions");
             HousekeepingLogsDao.logHousekeepingAction("BAD_PERMISSIONS", playerDetails.getId(), playerDetails.getName(), "URL: " + client.request().uri(), client.getIpAddress());
@@ -54,9 +49,6 @@ public class HousekeepingBansController {
                 client.session().set("alertColour", "danger");
                 client.session().set("alertMessage", "You need to enter all fields");
                 tpl.render();
-
-                // Delete alert after it's been rendered
-                client.session().delete("alertMessage");
                 return;
             }
 
