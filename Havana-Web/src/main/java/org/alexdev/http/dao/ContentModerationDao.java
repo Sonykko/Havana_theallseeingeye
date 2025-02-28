@@ -16,15 +16,17 @@ public class ContentModerationDao {
         try {
             sqlConnection = Storage.getStorage().getConnection();
 
+            String message = "Has been reported the item " + type + " with the ID: " + objectId + ".";
             long unixTimestamp = System.currentTimeMillis() / 1000;
             Date date = new Date(unixTimestamp * 1000);
             SimpleDateFormat sdf = new SimpleDateFormat("HH:mm d/MM/yyyy");
             String formattedDate = sdf.format(date);
 
-            preparedStatement = Storage.getStorage().prepare("INSERT INTO cms_content_reports (type, object_id, message, timestamp) VALUES (?, ?, 'Has been reported the item " + type + " with the ID: " + objectId + ".', ?)", sqlConnection);
+            preparedStatement = Storage.getStorage().prepare("INSERT INTO cms_content_reports (type, object_id, message, timestamp) VALUES (?, ?, ?, ?)", sqlConnection);
             preparedStatement.setString(1, type);
             preparedStatement.setInt(2, objectId);
-            preparedStatement.setString(3, formattedDate);
+            preparedStatement.setString(3, message);
+            preparedStatement.setString(4, formattedDate);
             preparedStatement.execute();
         } catch (Exception e) {
             Storage.logError(e);
