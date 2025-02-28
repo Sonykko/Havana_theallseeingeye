@@ -60,7 +60,7 @@ public class HousekeepingHobbasDao {
         return HobbaFormsList;
     }
 
-    public static Map<String, String> checkHabboDetails(String user) {
+    public static Map<String, String> checkHabboDetails(int userId) {
         Map<String, String> results = new HashMap<>();
         Connection sqlConnection = null;
         PreparedStatement preparedStatement = null;
@@ -69,28 +69,10 @@ public class HousekeepingHobbasDao {
         try {
             sqlConnection = Storage.getStorage().getConnection();
 
-            // Si el input es un userName, buscar el userID
-            if (!isNumeric(user)) {
-                String queryUserID = "SELECT id FROM users WHERE username = ?";
-                preparedStatement = Storage.getStorage().prepare(queryUserID, sqlConnection);
-                preparedStatement.setString(1, user);
-                resultSet = preparedStatement.executeQuery();
-
-                if (resultSet.next()) {
-                    user = resultSet.getString("id");
-                } else {
-                    results.put("UserNotFound_RED", "<text class=\"alert alert-danger\">Can't find the user.</text>");
-                    return results; // No se encontró el usuario
-                }
-
-                Storage.closeSilently(resultSet);
-                Storage.closeSilently(preparedStatement);
-            }
-
             // Obtener el username basado en el userID
             String queryUsername = "SELECT username FROM users WHERE id = ?";
             preparedStatement = Storage.getStorage().prepare(queryUsername, sqlConnection);
-            preparedStatement.setString(1, user);
+            preparedStatement.setInt(1, userId);
             resultSet = preparedStatement.executeQuery();
 
             String username = null;
@@ -107,7 +89,7 @@ public class HousekeepingHobbasDao {
             // Comprobar si el usuario ya es Hobba
             String queryRank = "SELECT rank, created_at FROM users WHERE id = ?";
             preparedStatement = Storage.getStorage().prepare(queryRank, sqlConnection);
-            preparedStatement.setString(1, user);
+            preparedStatement.setInt(1, userId);
             resultSet = preparedStatement.executeQuery();
 
             if (resultSet.next()) {
@@ -153,7 +135,7 @@ public class HousekeepingHobbasDao {
             // Buscar en users_bans por el userID (banned_value)
             String queryBans = "SELECT COUNT(*) AS count FROM users_bans WHERE banned_value = ?";
             preparedStatement = Storage.getStorage().prepare(queryBans, sqlConnection);
-            preparedStatement.setString(1, user);
+            preparedStatement.setInt(1, userId);
             resultSet = preparedStatement.executeQuery();
 
             if (resultSet.next() && resultSet.getInt("count") > 3) {
@@ -169,7 +151,7 @@ public class HousekeepingHobbasDao {
             // Comprobar cantidad de salas
             String queryRooms = "SELECT COUNT(*) AS count FROM rooms WHERE owner_id = ?";
             preparedStatement = Storage.getStorage().prepare(queryRooms, sqlConnection);
-            preparedStatement.setString(1, user);
+            preparedStatement.setInt(1, userId);
             resultSet = preparedStatement.executeQuery();
 
             if (resultSet.next() && resultSet.getInt("count") < 2) {
@@ -184,7 +166,7 @@ public class HousekeepingHobbasDao {
             // Comprobar cantidad de amigos
             String queryBuddies = "SELECT COUNT(*) AS count FROM messenger_friends WHERE to_id = ?";
             preparedStatement = Storage.getStorage().prepare(queryBuddies, sqlConnection);
-            preparedStatement.setString(1, user);
+            preparedStatement.setInt(1, userId);
             resultSet = preparedStatement.executeQuery();
 
             if (resultSet.next() && resultSet.getInt("count") < 2) {
@@ -199,7 +181,7 @@ public class HousekeepingHobbasDao {
             // Comprobar la antigüedad del personaje
             String queryCharacterAge = "SELECT TIMESTAMPDIFF(DAY, created_at, NOW()) AS age FROM users WHERE id = ?";
             preparedStatement = Storage.getStorage().prepare(queryCharacterAge, sqlConnection);
-            preparedStatement.setString(1, user);
+            preparedStatement.setInt(1, userId);
             resultSet = preparedStatement.executeQuery();
 
             if (resultSet.next() && resultSet.getInt("age") < 18) {

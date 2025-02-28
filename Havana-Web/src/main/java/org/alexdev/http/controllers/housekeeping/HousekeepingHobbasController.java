@@ -64,7 +64,7 @@ public class HousekeepingHobbasController {
             }
 
             String identifier = userDetails.getName() + " (" + userDetails.getId() + ")";
-            Map<String, String> checkResults = HousekeepingHobbasDao.checkHabboDetails(userDetails.getName());
+            Map<String, String> checkResults = HousekeepingHobbasDao.checkHabboDetails(userDetails.getId());
             hasReasons = true;
             reasons = new ArrayList<>(checkResults.values());
 
