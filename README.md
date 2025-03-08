@@ -9,7 +9,7 @@ Developed by Sonykko.
 
 # Features
 
-- Housekeeping
+### Housekeeping
   - Login/Session
     - Save and show last login IP from HK
     - Save and show last login time from HK
@@ -64,7 +64,8 @@ Developed by Sonykko.
     - Create catalogue pages
     - Manage catalogue pages
   - theallseeingeye - Hobbanet design
-- Website
+
+### Website
   - Ads banners
   - Staff Picks - groups & rooms
   - Hot Campaigns
@@ -76,7 +77,8 @@ Developed by Sonykko.
   - Group Name report system
   - Group Description report system
   - Discussion Post report system
-- Client
+
+### Client
   - Support for Dual Flash/Shockwave connection for RELEASE39-22643-22891-200911110035_07c3a2a30713fd5bea8a8caf07e33438.
   - Mod Tools
     - Room kick
