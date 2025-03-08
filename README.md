@@ -9,60 +9,61 @@ Developed by Sonykko.
 
 # Features
 
-- Login/Session
-  - Save and show last login IP from HK
-  - Save and show last login time from HK
-  - Housekeeping all Staff activity log system
-  - Trusted Person system
-- System status
-  - Re-organized all config settings
-  - Trusted Person access
-- Statistics
-  - Suspicious Staff logs
-  - Housekeeping logs
-  - Housekeeping login logs
-- Admin tools
-  - Remote alerting
-  - Remote baning and kicking
-  - Remote superban (original feature)
-  - Remote room alerting & kicking
-  - User action log
-  - Remote Calls for help admin
-  - Remote mass alert
-  - Remote mass ban
-  - Remote mass unban
-  - Habbo restore tool
-  - User search & information tool
-  - Current furniture
-  - Room admin (private rooms)
-  - Room action log
-  - CFH action log
-  - User edit (original feature)
-  - User create (original feature)
-  - Wordfilter tool
-  - Voucher codes tool
-  - Group admin (badge editor included)
-  - Hobba applications
-  - Check Hobba applicant tool
-  - Remote give badge (badge manager)
-  - Rank manager
-  - Trusted person admin
-  - Stickie viewer
-  - MiniMail Reports
-  - Habbo Name Reports
-  - Habbo Motto Reports
-  - Guestbook Reports
-  - Group Name Reports
-  - Group Description Reports
-  - Discussion Post Reports
-- Campaign management
-  - Ads banners tool
-  - Staff picks tool (including rooms)
-  - Recommended groups tool
-  - Hot campaigns tool
-  - Create catalogue pages
-  - Manage catalogue pages
-- theallseeingeye - Hobbanet design
+- Housekeeping
+  - Login/Session
+    - Save and show last login IP from HK
+    - Save and show last login time from HK
+    - Housekeeping all Staff activity log system
+    - Trusted Person system
+  - System status
+    - Re-organized all config settings
+    - Trusted Person access
+  - Statistics
+    - Suspicious Staff logs
+    - Housekeeping logs
+    - Housekeeping login logs
+  - Admin tools
+    - Remote alerting
+    - Remote baning and kicking
+    - Remote superban (original feature)
+    - Remote room alerting & kicking
+    - User action log
+    - Remote Calls for help admin
+    - Remote mass alert
+    - Remote mass ban
+    - Remote mass unban
+    - Habbo restore tool
+    - User search & information tool
+    - Current furniture
+    - Room admin (private rooms)
+    - Room action log
+    - CFH action log
+    - User edit (original feature)
+    - User create (original feature)
+    - Wordfilter tool
+    - Voucher codes tool
+    - Group admin (badge editor included)
+    - Hobba applications
+    - Check Hobba applicant tool
+    - Remote give badge (badge manager)
+    - Rank manager
+    - Trusted person admin
+    - Stickie viewer
+    - MiniMail Reports
+    - Habbo Name Reports
+    - Habbo Motto Reports
+    - Guestbook Reports
+    - Group Name Reports
+    - Group Description Reports
+    - Discussion Post Reports
+  - Campaign management
+    - Ads banners tool
+    - Staff picks tool (including rooms)
+    - Recommended groups tool
+    - Hot campaigns tool
+    - Create catalogue pages
+    - Manage catalogue pages
+  - theallseeingeye - Hobbanet design
 - Website
   - Ads banners
   - Staff Picks - groups & rooms
