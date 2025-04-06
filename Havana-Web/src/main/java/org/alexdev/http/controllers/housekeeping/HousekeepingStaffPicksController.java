@@ -40,168 +40,17 @@ public class HousekeepingStaffPicksController {
         String type = "";
 
         if (client.post().contains("create") && client.post().contains("type")) {
-            String create = client.post().getString("create");
-
-            if (StringUtils.isEmpty(create) || !StringUtils.isNumeric(create)) {
-                client.session().set("alertColour", "danger");
-                client.session().set("alertMessage", "Please enter a valid Pick ID");
-                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/campaign_management/staff_picks");
-                return;
-            }
-
-            pickId = client.post().getInt("create");
-            type = client.post().getString("type");
-
-            if (!type.equals("GROUP") && !type.equals("ROOM")) {
-                client.session().set("alertColour", "danger");
-                client.session().set("alertMessage", "Please enter a valid type");
-                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/campaign_management/staff_picks");
-                return;
-            }
-
-            Group group = GroupDao.getGroup((int) pickId);
-            Room room = RoomDao.getRoomById((int) pickId);
-
-            if (group == null && room == null) {
-                client.session().set("alertColour", "danger");
-                client.session().set("alertMessage", "The Pick ID does not exist");
-                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/campaign_management/staff_picks");
-                return;
-            }
-
-            List<Map<String, Object>> checkPickReco = HousekeepingPromotionDao.EditPickReco((int) pickId, type, 1);
-            if (!checkPickReco.isEmpty()) {
-                client.session().set("alertColour", "danger");
-                client.session().set("alertMessage", "The Pick ID already exists");
-                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/campaign_management/staff_picks");
-                return;
-            }
-
-            HousekeepingPromotionDao.createPickReco((int) pickId, type, 1);
-            HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Created Staff Pick with the ID " + pickId + " of type " + type + ". URL: " + client.request().uri(), client.getIpAddress());
-
-            client.session().set("alertColour", "success");
-            client.session().set("alertMessage", "The Staff Pick has been successfully created");
-            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/campaign_management/staff_picks");
+            createStaffPick(client, playerDetails);
             return;
         }
 
         if (client.get().contains("delete")) {
-            String delete = client.get().getString("delete");
-
-            if (StringUtils.isEmpty(delete) || !StringUtils.isNumeric(delete)) {
-                client.session().set("alertColour", "danger");
-                client.session().set("alertMessage", "Please enter a valid Pick ID");
-                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/campaign_management/staff_picks");
-                return;
-            }
-
-            pickId = client.get().getInt("delete");
-            type = client.get().getString("type");
-
-            if (!type.equals("GROUP") && !type.equals("ROOM")) {
-                client.session().set("alertColour", "danger");
-                client.session().set("alertMessage", "Please enter a valid type");
-                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/campaign_management/staff_picks");
-                return;
-            }
-
-            Group group = GroupDao.getGroup((int) pickId);
-            Room room = RoomDao.getRoomById((int) pickId);
-
-            if (group == null && room == null) {
-                client.session().set("alertColour", "danger");
-                client.session().set("alertMessage", "The Pick ID does not exist");
-                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/campaign_management/staff_picks");
-                return;
-            }
-
-            List<Map<String, Object>> checkPickReco = HousekeepingPromotionDao.EditPickReco((int) pickId, type, 1);
-            if (checkPickReco.isEmpty()) {
-                client.session().set("alertColour", "danger");
-                client.session().set("alertMessage", "The Pick ID does not exist in records");
-                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/campaign_management/staff_picks");
-                return;
-            }
-
-            HousekeepingPromotionDao.deletePickReco((int) pickId, type, 1);
-            HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Deleted Staff Pick with the ID " + pickId + " of type " + type + ". URL: " + client.request().uri(), client.getIpAddress());
-
-            client.session().set("alertColour", "success");
-            client.session().set("alertMessage", "The Staff Pick has been successfully deleted");
-            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/campaign_management/staff_picks");
+            deleteStaffPick(client, playerDetails);
             return;
         }
 
         if (client.get().contains("edit")) {
-            String edit = client.get().getString("edit");
-
-            if (StringUtils.isEmpty(edit) || !StringUtils.isNumeric(edit)) {
-                client.session().set("alertColour", "danger");
-                client.session().set("alertMessage", "Please enter a valid Pick ID");
-                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/campaign_management/staff_picks");
-                return;
-            }
-
-            pickId = client.get().getInt("edit");
-            type = client.get().getString("type");
-
-            Group groupEdit = GroupDao.getGroup((int) pickId);
-            Room roomEdit = RoomDao.getRoomById((int) pickId);
-            List<Map<String, Object>> checkStaffPick = HousekeepingPromotionDao.EditPickReco((int) pickId, type, 1);
-
-            if (groupEdit == null && roomEdit == null || checkStaffPick.isEmpty()) {
-                client.session().set("alertColour", "danger");
-                client.session().set("alertMessage", "The Pick ID not exists");
-                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/campaign_management/staff_picks");
-                return;
-            }
-
-            if (!type.equals("GROUP") && !type.equals("ROOM")) {
-                client.session().set("alertColour", "danger");
-                client.session().set("alertMessage", "Please enter a valid type");
-                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/campaign_management/staff_picks");
-                return;
-            }
-
-            List<Map<String, Object>> staffPicksListRoomGroupEdit = HousekeepingPromotionDao.EditPickReco((int) pickId, type, 1);
-
-            for (Map<String, Object> staffPickEdit : staffPicksListRoomGroupEdit) {
-                int pickIdRoomGroup = (int) staffPickEdit.get("ID");
-                String typeRoomGroup = (String) staffPickEdit.get("type");
-
-                if ("ROOM".equals(typeRoomGroup)) {
-                    Room room = RoomDao.getRoomById(pickIdRoomGroup);
-
-                    staffPickEdit.put("name", room.getData().getName());
-                    if (room.getData().getOwnerId() == 0) {
-                        staffPickEdit.put("description", RoomDao.getDescriptionPublicRoom(room.getData().getId()));
-                    } else {
-                        staffPickEdit.put("description", room.getData().getDescription());
-                    }
-                    staffPickEdit.put("owner", room.getData().getOwnerName());
-                    staffPickEdit.put("id", room.getData().getId());
-                    staffPickEdit.put("pickId", pickIdRoomGroup);
-                    staffPickEdit.put("type", typeRoomGroup);
-                }
-
-                if ("GROUP".equals(typeRoomGroup)) {
-                    Group group = GroupDao.getGroup(pickIdRoomGroup);
-
-                    staffPickEdit.put("name", group.getName());
-                    staffPickEdit.put("description", group.getDescription());
-                    staffPickEdit.put("owner", PlayerDao.getDetails(group.getOwnerId()).getName());
-                    staffPickEdit.put("id", group.getId());
-                    staffPickEdit.put("pickId", pickIdRoomGroup);
-                    staffPickEdit.put("type", typeRoomGroup);
-                }
-
-
-                tpl.set("editingPick", true);
-                tpl.set("EditStaffPick", staffPicksListRoomGroupEdit);
-                client.session().set("editSession", pickId);
-                client.session().set("typeSession", type);
-            }
+            editStaffPick(client, tpl);
         } else {
             tpl.set("editingPick", false);
             client.session().set("editSession", pickId);
@@ -209,66 +58,9 @@ public class HousekeepingStaffPicksController {
         }
 
         if (client.post().getString("sid").equals("7")) {
-            String save = client.post().getString("IdSave");
-
-            if (StringUtils.isEmpty(save) || !StringUtils.isNumeric(save)) {
-                client.session().set("alertColour", "danger");
-                client.session().set("alertMessage", "Please enter a valid Pick ID");
-                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/campaign_management/staff_picks");
-
-                return;
-            }
-            pickId = client.session().getInt("editSession");
-            type = client.session().getString("typeSession");
-
-            String pickIdSave = client.post().getString("IdSave");
-            String typeSave = client.post().getString("typeSave");
-            int isPickedSave = client.post().getInt("isPickedSave");
-
-            if (!type.equals("GROUP") && !type.equals("ROOM") || !typeSave.equals("GROUP") && !typeSave.equals("ROOM")) {
-                client.session().set("alertColour", "danger");
-                client.session().set("alertMessage", "Please enter a valid type");
-                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/campaign_management/staff_picks?edit=" + pickId + "&type=" + type);
-                return;
-            }
-
-            Group group = GroupDao.getGroup((int) pickId);
-            Room room = RoomDao.getRoomById((int) pickId);
-            Group groupSave = GroupDao.getGroup((int) pickId);
-            Room roomSave = RoomDao.getRoomById((int) pickId);
-
-            if (group == null && room == null || groupSave == null && roomSave == null) {
-                client.session().set("alertColour", "danger");
-                client.session().set("alertMessage", "The Pick ID not exists in records");
-                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/campaign_management/staff_picks");
-                return;
-            }
-
-            if (isPickedSave == 0 && !typeSave.equals("GROUP")) {
-                client.session().set("alertColour", "danger");
-                client.session().set("alertMessage", "Can't set as Recommended group a room");
-                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/campaign_management/staff_picks?edit=" + pickId + "&type=" + type);
-                return;
-            }
-
-            List<Map<String, Object>> checkPickReco = HousekeepingPromotionDao.EditPickReco((int) pickId, type, 1);
-            if (checkPickReco.isEmpty()) {
-                client.session().set("alertColour", "danger");
-                client.session().set("alertMessage", "The Pick ID does not exist in records");
-                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/campaign_management/staff_picks");
-                return;
-            }
-
-            HousekeepingPromotionDao.SavePickReco(pickIdSave, typeSave, isPickedSave, (int) pickId, type, 1);
-            HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Edited Staff Pick with the ID " + pickId + " (before), " + pickIdSave + "(after). URL: " + client.request().uri(), client.getIpAddress());
-
-            client.session().set("alertColour", "success");
-            client.session().set("alertMessage", "The Staff Pick has been successfully saved");
-            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/campaign_management/staff_picks");
-
+            saveStaffPick(client, playerDetails);
             return;
         }
-
 
         List<Map<String, Object>> staffPicksListRoomGroup = HousekeepingPromotionDao.getAllPickReco(1);
 
@@ -307,8 +99,6 @@ public class HousekeepingStaffPicksController {
             }
         }
 
-        tpl.set("housekeepingManager", HousekeepingManager.getInstance());
-
         tpl.set("pageName", "Staff Picks");
         tpl.set("StaffPicksList", staffPicksListRoomGroup);
         tpl.set("pickId", pickId);
@@ -316,5 +106,244 @@ public class HousekeepingStaffPicksController {
         tpl.render();
 
         client.session().delete("alertMessage");
+    }
+
+    private static String getStaffPicksPath() {
+        return "/" + Routes.HOUSEKEEPING_PATH + "/campaign_management/staff_picks";
+    }
+
+    public static void createStaffPick (WebConnection client, PlayerDetails playerDetails) {
+        String create = client.post().getString("create");
+
+        if (StringUtils.isEmpty(create) || !StringUtils.isNumeric(create)) {
+            client.session().set("alertColour", "danger");
+            client.session().set("alertMessage", "Please enter a valid Pick ID");
+            client.redirect(getStaffPicksPath());
+            return;
+        }
+
+        long pickId = 0;
+        String type = "";
+
+        pickId = client.post().getInt("create");
+        type = client.post().getString("type");
+
+        if (!type.equals("GROUP") && !type.equals("ROOM")) {
+            client.session().set("alertColour", "danger");
+            client.session().set("alertMessage", "Please enter a valid type");
+            client.redirect(getStaffPicksPath());
+            return;
+        }
+
+        Group group = GroupDao.getGroup((int) pickId);
+        Room room = RoomDao.getRoomById((int) pickId);
+
+        if (group == null && room == null) {
+            client.session().set("alertColour", "danger");
+            client.session().set("alertMessage", "The Pick ID does not exist");
+            client.redirect(getStaffPicksPath());
+            return;
+        }
+
+        List<Map<String, Object>> checkPickReco = HousekeepingPromotionDao.EditPickReco((int) pickId, type, 1);
+        if (!checkPickReco.isEmpty()) {
+            client.session().set("alertColour", "danger");
+            client.session().set("alertMessage", "The Pick ID already exists");
+            client.redirect(getStaffPicksPath());
+            return;
+        }
+
+        HousekeepingPromotionDao.createPickReco((int) pickId, type, 1);
+        HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Created Staff Pick with the ID " + pickId + " of type " + type + ". URL: " + client.request().uri(), client.getIpAddress());
+
+        client.session().set("alertColour", "success");
+        client.session().set("alertMessage", "The Staff Pick has been successfully created");
+        client.redirect(getStaffPicksPath());
+    }
+
+    public static void deleteStaffPick (WebConnection client, PlayerDetails playerDetails) {
+        String delete = client.get().getString("delete");
+
+        if (StringUtils.isEmpty(delete) || !StringUtils.isNumeric(delete)) {
+            client.session().set("alertColour", "danger");
+            client.session().set("alertMessage", "Please enter a valid Pick ID");
+            client.redirect(getStaffPicksPath());
+            return;
+        }
+
+        long pickId = 0;
+        String type = "";
+
+        pickId = client.get().getInt("delete");
+        type = client.get().getString("type");
+
+        if (!type.equals("GROUP") && !type.equals("ROOM")) {
+            client.session().set("alertColour", "danger");
+            client.session().set("alertMessage", "Please enter a valid type");
+            client.redirect(getStaffPicksPath());
+            return;
+        }
+
+        Group group = GroupDao.getGroup((int) pickId);
+        Room room = RoomDao.getRoomById((int) pickId);
+
+        if (group == null && room == null) {
+            client.session().set("alertColour", "danger");
+            client.session().set("alertMessage", "The Pick ID does not exist");
+            client.redirect(getStaffPicksPath());
+            return;
+        }
+
+        List<Map<String, Object>> checkPickReco = HousekeepingPromotionDao.EditPickReco((int) pickId, type, 1);
+        if (checkPickReco.isEmpty()) {
+            client.session().set("alertColour", "danger");
+            client.session().set("alertMessage", "The Pick ID does not exist in records");
+            client.redirect(getStaffPicksPath());
+            return;
+        }
+
+        HousekeepingPromotionDao.deletePickReco((int) pickId, type, 1);
+        HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Deleted Staff Pick with the ID " + pickId + " of type " + type + ". URL: " + client.request().uri(), client.getIpAddress());
+
+        client.session().set("alertColour", "success");
+        client.session().set("alertMessage", "The Staff Pick has been successfully deleted");
+        client.redirect(getStaffPicksPath());
+    }
+
+    public static void editStaffPick (WebConnection client, Template tpl) {
+        String edit = client.get().getString("edit");
+
+        if (StringUtils.isEmpty(edit) || !StringUtils.isNumeric(edit)) {
+            client.session().set("alertColour", "danger");
+            client.session().set("alertMessage", "Please enter a valid Pick ID");
+            client.redirect(getStaffPicksPath());
+            return;
+        }
+
+        long pickId = 0;
+        String type = "";
+
+        pickId = client.get().getInt("edit");
+        type = client.get().getString("type");
+
+        Group groupEdit = GroupDao.getGroup((int) pickId);
+        Room roomEdit = RoomDao.getRoomById((int) pickId);
+        List<Map<String, Object>> checkStaffPick = HousekeepingPromotionDao.EditPickReco((int) pickId, type, 1);
+
+        if (groupEdit == null && roomEdit == null || checkStaffPick.isEmpty()) {
+            client.session().set("alertColour", "danger");
+            client.session().set("alertMessage", "The Pick ID not exists");
+            client.redirect(getStaffPicksPath());
+            return;
+        }
+
+        if (!type.equals("GROUP") && !type.equals("ROOM")) {
+            client.session().set("alertColour", "danger");
+            client.session().set("alertMessage", "Please enter a valid type");
+            client.redirect(getStaffPicksPath());
+            return;
+        }
+
+        List<Map<String, Object>> staffPicksListRoomGroupEdit = HousekeepingPromotionDao.EditPickReco((int) pickId, type, 1);
+
+        for (Map<String, Object> staffPickEdit : staffPicksListRoomGroupEdit) {
+            int pickIdRoomGroup = (int) staffPickEdit.get("ID");
+            String typeRoomGroup = (String) staffPickEdit.get("type");
+
+            if ("ROOM".equals(typeRoomGroup)) {
+                Room room = RoomDao.getRoomById(pickIdRoomGroup);
+
+                staffPickEdit.put("name", room.getData().getName());
+                if (room.getData().getOwnerId() == 0) {
+                    staffPickEdit.put("description", RoomDao.getDescriptionPublicRoom(room.getData().getId()));
+                } else {
+                    staffPickEdit.put("description", room.getData().getDescription());
+                }
+                staffPickEdit.put("owner", room.getData().getOwnerName());
+                staffPickEdit.put("id", room.getData().getId());
+                staffPickEdit.put("pickId", pickIdRoomGroup);
+                staffPickEdit.put("type", typeRoomGroup);
+            }
+
+            if ("GROUP".equals(typeRoomGroup)) {
+                Group group = GroupDao.getGroup(pickIdRoomGroup);
+
+                staffPickEdit.put("name", group.getName());
+                staffPickEdit.put("description", group.getDescription());
+                staffPickEdit.put("owner", PlayerDao.getDetails(group.getOwnerId()).getName());
+                staffPickEdit.put("id", group.getId());
+                staffPickEdit.put("pickId", pickIdRoomGroup);
+                staffPickEdit.put("type", typeRoomGroup);
+            }
+
+
+            tpl.set("editingPick", true);
+            tpl.set("EditStaffPick", staffPicksListRoomGroupEdit);
+            client.session().set("editSession", pickId);
+            client.session().set("typeSession", type);
+        }
+    }
+
+    public static void saveStaffPick (WebConnection client, PlayerDetails playerDetails) {
+        String save = client.post().getString("IdSave");
+
+        if (StringUtils.isEmpty(save) || !StringUtils.isNumeric(save)) {
+            client.session().set("alertColour", "danger");
+            client.session().set("alertMessage", "Please enter a valid Pick ID");
+            client.redirect(getStaffPicksPath());
+
+            return;
+        }
+
+        long pickId = 0;
+        String type = "";
+
+        pickId = client.session().getInt("editSession");
+        type = client.session().getString("typeSession");
+
+        String pickIdSave = client.post().getString("IdSave");
+        String typeSave = client.post().getString("typeSave");
+        int isPickedSave = client.post().getInt("isPickedSave");
+
+        if (!type.equals("GROUP") && !type.equals("ROOM") || !typeSave.equals("GROUP") && !typeSave.equals("ROOM")) {
+            client.session().set("alertColour", "danger");
+            client.session().set("alertMessage", "Please enter a valid type");
+            client.redirect(getStaffPicksPath() + "?edit=" + pickId + "&type=" + type);
+            return;
+        }
+
+        Group group = GroupDao.getGroup((int) pickId);
+        Room room = RoomDao.getRoomById((int) pickId);
+        Group groupSave = GroupDao.getGroup((int) pickId);
+        Room roomSave = RoomDao.getRoomById((int) pickId);
+
+        if (group == null && room == null || groupSave == null && roomSave == null) {
+            client.session().set("alertColour", "danger");
+            client.session().set("alertMessage", "The Pick ID not exists in records");
+            client.redirect(getStaffPicksPath());
+            return;
+        }
+
+        if (isPickedSave == 0 && !typeSave.equals("GROUP")) {
+            client.session().set("alertColour", "danger");
+            client.session().set("alertMessage", "Can't set as Recommended group a room");
+            client.redirect(getStaffPicksPath() + "?edit=" + pickId + "&type=" + type);
+            return;
+        }
+
+        List<Map<String, Object>> checkPickReco = HousekeepingPromotionDao.EditPickReco((int) pickId, type, 1);
+        if (checkPickReco.isEmpty()) {
+            client.session().set("alertColour", "danger");
+            client.session().set("alertMessage", "The Pick ID does not exist in records");
+            client.redirect(getStaffPicksPath());
+            return;
+        }
+
+        HousekeepingPromotionDao.SavePickReco(pickIdSave, typeSave, isPickedSave, (int) pickId, type, 1);
+        HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Edited Staff Pick with the ID " + pickId + " (before), " + pickIdSave + "(after). URL: " + client.request().uri(), client.getIpAddress());
+
+        client.session().set("alertColour", "success");
+        client.session().set("alertMessage", "The Staff Pick has been successfully saved");
+        client.redirect(getStaffPicksPath());
     }
 }
