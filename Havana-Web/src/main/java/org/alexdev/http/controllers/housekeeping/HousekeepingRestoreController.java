@@ -41,107 +41,12 @@ public class HousekeepingRestoreController {
         String event = client.post().getString("event");
 
         if (event.equals("mass")) {
-            String mass = client.post().getString("massRestore");
-            String subject = client.post().getString("subject");
-            String message = client.post().getString("message");
-
-            if (!GameConfiguration.getInstance().getBoolean("email.smtp.enable")) {
-                client.session().set("alertColour", "danger");
-                client.session().set("alertMessage", "Error restoring the account cause SMTP service is disabled");
-                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/users/restore");
-                return;
-            }
-
-            String[] usernames = mass.split("\\r?\\n");
-
-            for (String userName : usernames) {
-                userName = userName.trim();
-
-                var restoreDetails = PlayerDao.getDetails(userName);
-
-                if (restoreDetails == null) {
-                    client.session().set("alertColour", "danger");
-                    client.session().set("alertMessage", "The user does not exist.");
-                    client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/users/restore");
-                    return;
-                }
-
-                if (StringUtils.isEmpty(subject) || StringUtils.isEmpty(message) || !StringUtils.contains(message, "%password%")) {
-                    client.session().set("alertColour", "danger");
-                    client.session().set("alertMessage", "Please enter a valid subject or message.");
-                    client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/users/restore");
-                    return;
-                }
-
-                String newPassword = generateRandomPassword();
-                String messagePassword = StringUtils.replace(message, "%password%", newPassword);
-                messagePassword = StringUtils.replace(messagePassword, "\n", "<br>");
-
-                EmailUtil.send(client, restoreDetails.getEmail(), subject, EmailUtil.renderRestoreAccount(messagePassword));
-
-                PlayerDao.setPassword(restoreDetails.getId(), PlayerManager.getInstance().createPassword(newPassword));
-
-                client.session().set("alertColour", "success");
-                client.session().set("alertMessage", "User " + restoreDetails.getName() + ", new pass: " + newPassword);
-
-                HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Restored the user " + restoreDetails.getName() + ". URL: " + client.request().uri(), client.getIpAddress());
-            }
-
-            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/users/restore");
+            massRestore(client, playerDetails);
             return;
         }
 
         if (event.equals("one")) {
-            String userName = client.post().getString("userName");
-            String newUserEmail = client.post().getString("newUserEmail");
-            String subject = client.post().getString("subject");
-            String message = client.post().getString("message");
-
-            if (!GameConfiguration.getInstance().getBoolean("email.smtp.enable")) {
-                client.session().set("alertColour", "danger");
-                client.session().set("alertMessage", "Error restoring the account cause SMTP service is disabled");
-                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/users/restore");
-                return;
-            }
-
-            var restoreDetails = PlayerDao.getDetails(userName);
-
-            if (restoreDetails == null) {
-                client.session().set("alertColour", "danger");
-                client.session().set("alertMessage", "The user does not exist.");
-                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/users/restore");
-                return;
-            }
-
-            if (!newUserEmail.matches("^[a-z0-9_.-]+@([a-z0-9]+([-]+[a-z0-9]+)*\\.)+[a-z]{2,7}$")) {
-                client.session().set("alertColour", "danger");
-                client.session().set("alertMessage", "Please enter a valid email.");
-                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/users/restore");
-                return;
-            }
-
-            if (StringUtils.isEmpty(subject) || StringUtils.isEmpty(message) || !StringUtils.contains(message, "%password%")) {
-                client.session().set("alertColour", "danger");
-                client.session().set("alertMessage", "Please enter a valid subject or message.");
-                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/users/restore");
-                return;
-            }
-
-            String newPassword = generateRandomPassword();
-            String messagePassword = StringUtils.replace(message, "%password%", newPassword);
-            messagePassword = StringUtils.replace(messagePassword, "\n", "<br>");
-
-            EmailUtil.send(client, newUserEmail, subject, EmailUtil.renderRestoreAccount(messagePassword));
-
-            PlayerDao.setPassword(restoreDetails.getId(), PlayerManager.getInstance().createPassword(newPassword));
-            PlayerDao.setEmail(restoreDetails.getId(), newUserEmail);
-
-            client.session().set("alertColour", "success");
-            client.session().set("alertMessage", "User " + restoreDetails.getName() + ", email: " + newUserEmail + ", new pass: " + newPassword);
-
-            HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Restored the user " + restoreDetails.getName() + ". URL: " + client.request().uri(), client.getIpAddress());
-
-            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/users/restore");
+            oneRestore(client, playerDetails);
             return;
         }
 
@@ -151,6 +56,113 @@ public class HousekeepingRestoreController {
 
         // Delete alert after it's been rendered
         client.session().delete("alertMessage");
+    }
+
+    private static String getRestorePath() {
+        return "/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/users/restore";
+    }
+
+    public static void massRestore (WebConnection client, PlayerDetails playerDetails) {
+        String mass = client.post().getString("massRestore");
+        String subject = client.post().getString("subject");
+        String message = client.post().getString("message");
+
+        if (!GameConfiguration.getInstance().getBoolean("email.smtp.enable")) {
+            client.session().set("alertColour", "danger");
+            client.session().set("alertMessage", "Error restoring the account cause SMTP service is disabled");
+            client.redirect(getRestorePath());
+            return;
+        }
+
+        String[] usernames = mass.split("\\r?\\n");
+
+        for (String userName : usernames) {
+            userName = userName.trim();
+
+            var restoreDetails = PlayerDao.getDetails(userName);
+
+            if (restoreDetails == null) {
+                client.session().set("alertColour", "danger");
+                client.session().set("alertMessage", "The user does not exist.");
+                client.redirect(getRestorePath());
+                return;
+            }
+
+            if (StringUtils.isEmpty(subject) || StringUtils.isEmpty(message) || !StringUtils.contains(message, "%password%")) {
+                client.session().set("alertColour", "danger");
+                client.session().set("alertMessage", "Please enter a valid subject or message.");
+                client.redirect(getRestorePath());
+                return;
+            }
+
+            String newPassword = generateRandomPassword();
+            String messagePassword = StringUtils.replace(message, "%password%", newPassword);
+            messagePassword = StringUtils.replace(messagePassword, "\n", "<br>");
+
+            EmailUtil.send(client, restoreDetails.getEmail(), subject, EmailUtil.renderRestoreAccount(messagePassword));
+
+            PlayerDao.setPassword(restoreDetails.getId(), PlayerManager.getInstance().createPassword(newPassword));
+
+            client.session().set("alertColour", "success");
+            client.session().set("alertMessage", "User " + restoreDetails.getName() + ", new pass: " + newPassword);
+
+            HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Restored the user " + restoreDetails.getName() + ". URL: " + client.request().uri(), client.getIpAddress());
+        }
+
+        client.redirect(getRestorePath());
+    }
+
+    public static void oneRestore (WebConnection client, PlayerDetails playerDetails) {
+        String userName = client.post().getString("userName");
+        String newUserEmail = client.post().getString("newUserEmail");
+        String subject = client.post().getString("subject");
+        String message = client.post().getString("message");
+
+        if (!GameConfiguration.getInstance().getBoolean("email.smtp.enable")) {
+            client.session().set("alertColour", "danger");
+            client.session().set("alertMessage", "Error restoring the account cause SMTP service is disabled");
+            client.redirect(getRestorePath());
+            return;
+        }
+
+        var restoreDetails = PlayerDao.getDetails(userName);
+
+        if (restoreDetails == null) {
+            client.session().set("alertColour", "danger");
+            client.session().set("alertMessage", "The user does not exist.");
+            client.redirect(getRestorePath());
+            return;
+        }
+
+        if (!newUserEmail.matches("^[a-z0-9_.-]+@([a-z0-9]+([-]+[a-z0-9]+)*\\.)+[a-z]{2,7}$")) {
+            client.session().set("alertColour", "danger");
+            client.session().set("alertMessage", "Please enter a valid email.");
+            client.redirect(getRestorePath());
+            return;
+        }
+
+        if (StringUtils.isEmpty(subject) || StringUtils.isEmpty(message) || !StringUtils.contains(message, "%password%")) {
+            client.session().set("alertColour", "danger");
+            client.session().set("alertMessage", "Please enter a valid subject or message.");
+            client.redirect(getRestorePath());
+            return;
+        }
+
+        String newPassword = generateRandomPassword();
+        String messagePassword = StringUtils.replace(message, "%password%", newPassword);
+        messagePassword = StringUtils.replace(messagePassword, "\n", "<br>");
+
+        EmailUtil.send(client, newUserEmail, subject, EmailUtil.renderRestoreAccount(messagePassword));
+
+        PlayerDao.setPassword(restoreDetails.getId(), PlayerManager.getInstance().createPassword(newPassword));
+        PlayerDao.setEmail(restoreDetails.getId(), newUserEmail);
+
+        client.session().set("alertColour", "success");
+        client.session().set("alertMessage", "User " + restoreDetails.getName() + ", email: " + newUserEmail + ", new pass: " + newPassword);
+
+        HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Restored the user " + restoreDetails.getName() + ". URL: " + client.request().uri(), client.getIpAddress());
+
+        client.redirect(getRestorePath());
     }
 
     private static String generateRandomPassword() {
