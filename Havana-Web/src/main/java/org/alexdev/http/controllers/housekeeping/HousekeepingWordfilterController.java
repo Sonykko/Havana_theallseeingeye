@@ -35,77 +35,12 @@ public class HousekeepingWordfilterController {
         }
 
         if (client.post().contains("addword")) {
-            String addword = client.post().getString("addword");
-            String isBannable = client.post().getString("isBannable");
-            String isFilterable = client.post().getString("isFilterable");
-
-            if (addword.isEmpty()) {
-                client.session().set("alertColour", "danger");
-                client.session().set("alertMessage", "Please enter a valid word");
-                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/wordfilter");
-                return;
-            }
-
-            boolean wordExists = HousekeepingWordfilterDao.CheckWord(addword);
-
-            if (wordExists) {
-                client.session().set("alertColour", "danger");
-                client.session().set("alertMessage", "The word already exists");
-                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/wordfilter");
-                return;
-            }
-
-            if (!isBannable.equals("0") && !isBannable.equals("1") || !isFilterable.equals("0") && !isFilterable.equals("1")) {
-                client.session().set("alertColour", "danger");
-                client.session().set("alertMessage", "Enter a valid bannable or filtrable value");
-                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/wordfilter");
-                return;
-            }
-
-            int isBannableInt = client.post().getInt("isBannable");
-            int isFilterableInt = client.post().getInt("isFilterable");
-
-            HousekeepingWordfilterDao.createWord(addword, isBannableInt, isFilterableInt);
-            HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Added the word " + addword + " to Wordfilter. URL: " + client.request().uri(), client.getIpAddress());
-
-            RconUtil.sendCommand(RconHeader.REFRESH_WORDFILTER, new HashMap<>() {{
-            }});
-
-            client.session().set("alertColour", "success");
-            client.session().set("alertMessage", "The word has been successfully added to wordfilter list");
-            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/wordfilter");
+            addWord(client, playerDetails);
             return;
         }
 
         if (client.get().contains("delete")) {
-            String wordId = client.get().getString("delete");
-
-            if (!StringUtils.isNumeric(wordId)) {
-                client.session().set("alertColour", "danger");
-                client.session().set("alertMessage", "Please enter a valid word ID");
-                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/wordfilter");
-                return;
-            }
-
-            int wordIdInt = Integer.parseInt(wordId);
-            List<Map<String, Object>> checkWord = HousekeepingWordfilterDao.editWord(wordIdInt);
-
-            if (checkWord.isEmpty()) {
-                client.session().set("alertColour", "danger");
-                client.session().set("alertMessage", "The word ID not exists");
-                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/wordfilter");
-                return;
-            }
-
-            HousekeepingWordfilterDao.deleteWord(wordIdInt);
-            HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Deleted word with the ID " + wordId + " of Wordfilter. URL: " + client.request().uri(), client.getIpAddress());
-
-            RconUtil.sendCommand(RconHeader.REFRESH_WORDFILTER, new HashMap<>() {{
-            }});
-
-            client.session().set("alertColour", "success");
-            client.session().set("alertMessage", "The word has been successfully deleted from Wordfilter");
-            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/wordfilter");
+            deleteWord(client, playerDetails);
             return;
         }
 
@@ -117,59 +52,7 @@ public class HousekeepingWordfilterController {
         }
 
         if (client.post().contains("saveWord")) {
-            String saveWord = client.post().getString("saveWord");
-            String isBannable = client.post().getString("isBannable");
-            String isFilterable = client.post().getString("isFilterable");
-
-            if (!StringUtils.isNumeric(client.get().getString("edit"))) {
-                client.session().set("alertColour", "danger");
-                client.session().set("alertMessage", "Please enter a valid word ID");
-                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/wordfilter");
-                return;
-            }
-
-            int wordId = client.get().getInt("edit");
-
-            if (client.post().getString("saveWord").isEmpty()) {
-                client.session().set("alertColour", "danger");
-                client.session().set("alertMessage", "Please enter a valid word");
-                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/wordfilter?edit=" + wordId);
-                return;
-            }
-
-            if (!isBannable.equals("0") && !isBannable.equals("1") || !isFilterable.equals("0") && !isFilterable.equals("1")) {
-                client.session().set("alertColour", "danger");
-                client.session().set("alertMessage", "Enter a valid bannable or filtrable value");
-                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/wordfilter");
-                return;
-            }
-
-            int isBannableInt = client.post().getInt("isBannable");
-            int isFilterableInt = client.post().getInt("isFilterable");
-
-            List<Map<String, Object>> wordEdit = HousekeepingWordfilterDao.editWord(wordId);
-            String currentWord = wordEdit.get(0).get("wordFilter").toString();
-
-            if (!saveWord.equalsIgnoreCase(currentWord)) {
-                boolean wordExists = HousekeepingWordfilterDao.CheckWord(saveWord);
-
-                if (wordExists) {
-                    client.session().set("alertColour", "danger");
-                    client.session().set("alertMessage", "The word already exists");
-                    client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/wordfilter?edit=" + wordId);
-                    return;
-                }
-            }
-
-            HousekeepingWordfilterDao.saveWord(saveWord, isBannableInt, isFilterableInt, wordId);
-            HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Edited the word " + saveWord + " of Wordfilter. URL: " + client.request().uri(), client.getIpAddress());
-
-            RconUtil.sendCommand(RconHeader.REFRESH_WORDFILTER, new HashMap<>() {{
-            }});
-
-            client.session().set("alertColour", "success");
-            client.session().set("alertMessage", "The word has been successfully saved");
-            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/wordfilter");
+            saveWord(client, playerDetails);
             return;
         }
 
@@ -202,5 +85,138 @@ public class HousekeepingWordfilterController {
         tpl.render();
 
         client.session().delete("alertMessage");
+    }
+
+    private static String getWordfilterPath() {
+        return "/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/wordfilter";
+    }
+
+    public static void addWord (WebConnection client, PlayerDetails playerDetails){
+        String addword = client.post().getString("addword");
+        String isBannable = client.post().getString("isBannable");
+        String isFilterable = client.post().getString("isFilterable");
+
+        if (addword.isEmpty()) {
+            client.session().set("alertColour", "danger");
+            client.session().set("alertMessage", "Please enter a valid word");
+            client.redirect(getWordfilterPath());
+            return;
+        }
+
+        boolean wordExists = HousekeepingWordfilterDao.CheckWord(addword);
+
+        if (wordExists) {
+            client.session().set("alertColour", "danger");
+            client.session().set("alertMessage", "The word already exists");
+            client.redirect(getWordfilterPath());
+            return;
+        }
+
+        if (!isBannable.equals("0") && !isBannable.equals("1") || !isFilterable.equals("0") && !isFilterable.equals("1")) {
+            client.session().set("alertColour", "danger");
+            client.session().set("alertMessage", "Enter a valid bannable or filtrable value");
+            client.redirect(getWordfilterPath());
+            return;
+        }
+
+        int isBannableInt = client.post().getInt("isBannable");
+        int isFilterableInt = client.post().getInt("isFilterable");
+
+        HousekeepingWordfilterDao.createWord(addword, isBannableInt, isFilterableInt);
+        HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Added the word " + addword + " to Wordfilter. URL: " + client.request().uri(), client.getIpAddress());
+
+        RconUtil.sendCommand(RconHeader.REFRESH_WORDFILTER, new HashMap<>() {{
+        }});
+
+        client.session().set("alertColour", "success");
+        client.session().set("alertMessage", "The word has been successfully added to wordfilter list");
+        client.redirect(getWordfilterPath());
+    }
+
+    public static void deleteWord (WebConnection client, PlayerDetails playerDetails) {
+        String wordId = client.get().getString("delete");
+
+        if (!StringUtils.isNumeric(wordId)) {
+            client.session().set("alertColour", "danger");
+            client.session().set("alertMessage", "Please enter a valid word ID");
+            client.redirect(getWordfilterPath());
+            return;
+        }
+
+        int wordIdInt = Integer.parseInt(wordId);
+        List<Map<String, Object>> checkWord = HousekeepingWordfilterDao.editWord(wordIdInt);
+
+        if (checkWord.isEmpty()) {
+            client.session().set("alertColour", "danger");
+            client.session().set("alertMessage", "The word ID not exists");
+            client.redirect(getWordfilterPath());
+            return;
+        }
+
+        HousekeepingWordfilterDao.deleteWord(wordIdInt);
+        HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Deleted word with the ID " + wordId + " of Wordfilter. URL: " + client.request().uri(), client.getIpAddress());
+
+        RconUtil.sendCommand(RconHeader.REFRESH_WORDFILTER, new HashMap<>() {{
+        }});
+
+        client.session().set("alertColour", "success");
+        client.session().set("alertMessage", "The word has been successfully deleted from Wordfilter");
+        client.redirect(getWordfilterPath());
+    }
+
+    public static void saveWord (WebConnection client, PlayerDetails playerDetails) {
+        String saveWord = client.post().getString("saveWord");
+        String isBannable = client.post().getString("isBannable");
+        String isFilterable = client.post().getString("isFilterable");
+
+        if (!StringUtils.isNumeric(client.get().getString("edit"))) {
+            client.session().set("alertColour", "danger");
+            client.session().set("alertMessage", "Please enter a valid word ID");
+            client.redirect(getWordfilterPath());
+            return;
+        }
+
+        int wordId = client.get().getInt("edit");
+
+        if (client.post().getString("saveWord").isEmpty()) {
+            client.session().set("alertColour", "danger");
+            client.session().set("alertMessage", "Please enter a valid word");
+            client.redirect(getWordfilterPath() + "?edit=" + wordId);
+            return;
+        }
+
+        if (!isBannable.equals("0") && !isBannable.equals("1") || !isFilterable.equals("0") && !isFilterable.equals("1")) {
+            client.session().set("alertColour", "danger");
+            client.session().set("alertMessage", "Enter a valid bannable or filtrable value");
+            client.redirect(getWordfilterPath());
+            return;
+        }
+
+        int isBannableInt = client.post().getInt("isBannable");
+        int isFilterableInt = client.post().getInt("isFilterable");
+
+        List<Map<String, Object>> wordEdit = HousekeepingWordfilterDao.editWord(wordId);
+        String currentWord = wordEdit.get(0).get("wordFilter").toString();
+
+        if (!saveWord.equalsIgnoreCase(currentWord)) {
+            boolean wordExists = HousekeepingWordfilterDao.CheckWord(saveWord);
+
+            if (wordExists) {
+                client.session().set("alertColour", "danger");
+                client.session().set("alertMessage", "The word already exists");
+                client.redirect(getWordfilterPath() + "?edit=" + wordId);
+                return;
+            }
+        }
+
+        HousekeepingWordfilterDao.saveWord(saveWord, isBannableInt, isFilterableInt, wordId);
+        HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Edited the word " + saveWord + " of Wordfilter. URL: " + client.request().uri(), client.getIpAddress());
+
+        RconUtil.sendCommand(RconHeader.REFRESH_WORDFILTER, new HashMap<>() {{
+        }});
+
+        client.session().set("alertColour", "success");
+        client.session().set("alertMessage", "The word has been successfully saved");
+        client.redirect(getWordfilterPath());
     }
 }
