@@ -96,57 +96,14 @@ public class HousekeepingMiniMailController {
         boolean onlyDelete = client.post().getBoolean("onlyDelete");
 
         if (onlyArchive || onlyDelete) {
-            String messagesIdsString = client.post().getString("messagesId");
-            if (messagesIdsString != null && !messagesIdsString.isEmpty()) {
-                String[] messagesId = messagesIdsString.split(",");
-                for (String messageId : messagesId) {
-                    HousekeepingMiniMailDao.archiveReportedMessage(Integer.parseInt(messageId));
-                    HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Archived and deleted MiniMail message (id: " + messageId + "). URL: " + client.request().uri(), client.getIpAddress());
-
-                }
-            }
-
-            client.session().set("alertColour", "success");
-            client.session().set("alertMessage", "The MiniMail messages has been successfully Moderated.");
-            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/minimail_reports");
+            archiveMiniMailReport(client, playerDetails);
             return;
         }
 
         String action = client.post().getString("action");
 
         if ("massBan".equals(action)) {
-            if (client.post().contains("userNames")) {
-                List<String> usernames = client.post().getArray("userNames");
-                usernames = usernames.stream().map(s -> replaceLineBreaks(s)).collect(Collectors.toList());
-                String commonMessage = client.post().getString("commonMessage");
-                String customMessage = client.post().getString("customMessage");
-                String alertMessage = customMessage != null && !customMessage.isEmpty() ? customMessage : commonMessage;
-                String defaultMessage = GameConfiguration.getInstance().getString("rcon.superban.message");
-                String finalMessage = customMessage.isEmpty() && commonMessage.isEmpty() ? defaultMessage : alertMessage;
-                String notes = client.post().getString("notes");
-                int banSeconds = client.post().getInt("banSeconds");
-                boolean doBanMachine = client.post().getBoolean("doBanMachine");
-                boolean doBanIP = client.post().getBoolean("doBanIP");
-
-                if (usernames == null || usernames.isEmpty()) {
-                    client.session().set("alertColour", "danger");
-                    client.session().set("alertMessage", "Please enter a valid usernames");
-                    client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/minimail_reports");
-                    return;
-                }
-
-                String messagesIdsString = client.post().getString("messagesId");
-                if (messagesIdsString != null && !messagesIdsString.isEmpty()) {
-                    String[] messagesId = messagesIdsString.split(",");
-                    for (String messageId : messagesId) {
-                        HousekeepingMiniMailDao.archiveReportedMessage(Integer.parseInt(messageId));
-                        HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Archived and deleted MiniMail message (id: " + messageId + "). URL: " + client.request().uri(), client.getIpAddress());
-                    }
-                }
-
-                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/api/mass_ban?usernames=" + usernames + "&alertMessage=" + finalMessage + "&notes=" + notes + "&banSeconds=" + banSeconds + "&doBanMachine=" + doBanMachine + "&doBanIP=" + doBanIP + "&redirect=minimail_reports");
-                return;
-            }
+            massBanMiniMailReported(client, playerDetails);
         }
 
         tpl.set("housekeepingManager", HousekeepingManager.getInstance());
@@ -158,5 +115,54 @@ public class HousekeepingMiniMailController {
 
         // Delete alert after it's been rendered
         client.session().delete("alertMessage");
+    }
+
+    public static void archiveMiniMailReport (WebConnection client, PlayerDetails playerDetails) {
+        String messagesIdsString = client.post().getString("messagesId");
+        if (messagesIdsString != null && !messagesIdsString.isEmpty()) {
+            String[] messagesId = messagesIdsString.split(",");
+            for (String messageId : messagesId) {
+                HousekeepingMiniMailDao.archiveReportedMessage(Integer.parseInt(messageId));
+                HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Archived and deleted MiniMail message (id: " + messageId + "). URL: " + client.request().uri(), client.getIpAddress());
+            }
+        }
+
+        client.session().set("alertColour", "success");
+        client.session().set("alertMessage", "The MiniMail messages has been successfully Moderated.");
+        client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/minimail_reports");
+    }
+
+    public static void massBanMiniMailReported (WebConnection client, PlayerDetails playerDetails) {
+        if (client.post().contains("userNames")) {
+            List<String> usernames = client.post().getArray("userNames");
+            usernames = usernames.stream().map(s -> replaceLineBreaks(s)).collect(Collectors.toList());
+            String commonMessage = client.post().getString("commonMessage");
+            String customMessage = client.post().getString("customMessage");
+            String alertMessage = customMessage != null && !customMessage.isEmpty() ? customMessage : commonMessage;
+            String defaultMessage = GameConfiguration.getInstance().getString("rcon.superban.message");
+            String finalMessage = customMessage.isEmpty() && commonMessage.isEmpty() ? defaultMessage : alertMessage;
+            String notes = client.post().getString("notes");
+            int banSeconds = client.post().getInt("banSeconds");
+            boolean doBanMachine = client.post().getBoolean("doBanMachine");
+            boolean doBanIP = client.post().getBoolean("doBanIP");
+
+            if (usernames == null || usernames.isEmpty()) {
+                client.session().set("alertColour", "danger");
+                client.session().set("alertMessage", "Please enter a valid usernames");
+                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/minimail_reports");
+                return;
+            }
+
+            String messagesIdsString = client.post().getString("messagesId");
+            if (messagesIdsString != null && !messagesIdsString.isEmpty()) {
+                String[] messagesId = messagesIdsString.split(",");
+                for (String messageId : messagesId) {
+                    HousekeepingMiniMailDao.archiveReportedMessage(Integer.parseInt(messageId));
+                    HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Archived and deleted MiniMail message (id: " + messageId + "). URL: " + client.request().uri(), client.getIpAddress());
+                }
+            }
+
+            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/api/mass_ban?usernames=" + usernames + "&alertMessage=" + finalMessage + "&notes=" + notes + "&banSeconds=" + banSeconds + "&doBanMachine=" + doBanMachine + "&doBanIP=" + doBanIP + "&redirect=minimail_reports");
+        }
     }
 }
