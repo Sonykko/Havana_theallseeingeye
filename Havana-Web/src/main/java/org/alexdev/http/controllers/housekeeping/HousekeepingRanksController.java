@@ -42,135 +42,13 @@ public class HousekeepingRanksController {
         String action = client.post().getString("action");
 
         if ("giveRank".equals(action)) {
-            String user = client.post().getString("user");
-            String rank = client.post().getString("rankId");
-            boolean sendAlert = client.post().getBoolean("sendAlert");
-            int rankId = 0;
-
-            if (StringUtils.isNumeric(rank)) {
-                rankId = Integer.parseInt(rank);
-            }
-
-            if (user.equalsIgnoreCase(String.valueOf(playerDetails.getName()))) {
-                client.session().set("alertColour", "warning");
-                client.session().set("alertMessage", "You can not change the rank yourself");
-                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/give_rank");
-                return;
-            }
-
-            if (user.isEmpty() || rankId < 1 || rankId > 8) {
-                client.session().set("alertColour", "danger");
-                client.session().set("alertMessage", "Please enter a valid username or rank");
-                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/give_rank");
-                return;
-            }
-
-            String rankName = String.valueOf(PlayerRank.getRankForId(rankId));
-            var playerDetailsRank = PlayerDao.getDetails(user);
-
-            if (playerDetailsRank == null) {
-                client.session().set("alertColour", "danger");
-                client.session().set("alertMessage", "The user does not exist");
-                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/give_rank");
-                return;
-            }
-
-            if (playerDetailsRank.getRank().getRankId() == rankId) {
-                client.session().set("alertColour", "warning");
-                client.session().set("alertMessage", "The user " + user + " already has the rank ID " + rankId + " (" + rankName + ")");
-                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/give_rank");
-                return;
-            }
-
-            List<Map<String, Object>> allRanks = HousekeepingPlayerDao.getAllRanks();
-
-            String currentBadge = "";
-            int currentRankId = playerDetailsRank.getRank().getRankId();
-
-            for (Map<String, Object> rankDetails : allRanks) {
-                int rId = (int) rankDetails.get("id");
-                if (rId == currentRankId) {
-                    currentBadge = (String) rankDetails.get("badge");
-                    break;
-                }
-            }
-
-            String newBadge = "";
-            for (Map<String, Object> rankDetails : allRanks) {
-                int rId = (int) rankDetails.get("id");
-                if (rId == rankId) {
-                    newBadge = (String) rankDetails.get("badge");
-                    break;
-                }
-            }
-
-            if (currentBadge != null && !currentBadge.isEmpty()) {
-                String finalCurrentBadge = currentBadge;
-                String finalNewBadge = newBadge;
-                RconUtil.sendCommand(RconHeader.MOD_GIVE_BADGE, new HashMap<>() {{
-                    put("user", user);
-                    put("removeBadge", finalCurrentBadge);
-                    put("badge", finalNewBadge);
-
-                }});
-            }
-
-            HousekeepingPlayerDao.setRank(user, rankId);
-            HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Set the rank ID " + rankId + " (" + rankName + ") to user " + user + ". URL: " + client.request().uri(), client.getIpAddress());
-
-            client.session().set("alertColour", "success");
-            client.session().set("alertMessage", "Successfully set the rank ID " + rankId + " (" + rankName + ") to the user " + user);
-
-            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/give_rank");
-
-            if (sendAlert) {
-                String message = GameConfiguration.getInstance().getString("rcon.give.rank.message");
-                String finalMessage = StringUtils.replace(message, "%rank%", rankName);
-                String messageEncoded = MessageEncoderUtil.encodeMessage(finalMessage);
-
-                RconUtil.sendCommand(RconHeader.MOD_ALERT_USER, new HashMap<>() {{
-                    put("receiver", user);
-                    put("message", messageEncoded);
-
-                }});
-            }
+            giveRankToUser(client, playerDetails);
+            return;
         }
 
         if ("staffVars".equals(action)) {
-            String rankId = client.post().getString("rankIdVars");
-            String rankName = client.post().getString("rankNameVars");
-            String rankBadge = client.post().getString("rankBadgeVars");
-            String rankDescription = client.post().getString("rankDescVars");
-
-            int rankIdInt = 0;
-
-            if (StringUtils.isNumeric(rankId)) {
-                rankIdInt = Integer.parseInt(rankId);
-            }
-
-            if (rankIdInt < 1 || rankIdInt > 8) {
-                client.session().set("alertColour", "danger");
-                client.session().set("alertMessage", "Please enter a valid rank ID in the staff texts variables");
-                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/give_rank");
-                return;
-            }
-
-            String rankNameVars = String.valueOf(PlayerRank.getRankForId(rankIdInt));
-
-            if (rankName.isEmpty() || rankBadge.isEmpty() || rankDescription.isEmpty()) {
-                client.session().set("alertColour", "danger");
-                client.session().set("alertMessage", "Please fill all the texts variables for rank ID " + rankIdInt + " (" + rankNameVars + ")");
-                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/give_rank");
-                return;
-            }
-
-            HousekeepingPlayerDao.setRankTextVars(rankIdInt, rankName, rankBadge, rankDescription);
-            HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Updated the variables for rank ID " + rankIdInt + ". URL: " + client.request().uri(), client.getIpAddress());
-
-            client.session().set("alertColour", "success");
-            client.session().set("alertMessage", "Successfully update the texts variables for rank ID " + rankIdInt + " (" + rankNameVars + ")");
-
-            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/give_rank");
+            editStaffVars(client, playerDetails);
+            return;
         }
 
         List<Map<String, Object>> allStaffsNames = HousekeepingPlayerDao.getAllStaffsNames();
@@ -196,5 +74,141 @@ public class HousekeepingRanksController {
         tpl.render();
 
         client.session().delete("alertMessage");
+    }
+
+    private static String getGiveRankPath() {
+        return "/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/give_rank";
+    }
+
+    public static void giveRankToUser (WebConnection client, PlayerDetails playerDetails) {
+        String user = client.post().getString("user");
+        String rank = client.post().getString("rankId");
+        boolean sendAlert = client.post().getBoolean("sendAlert");
+        int rankId = 0;
+
+        if (StringUtils.isNumeric(rank)) {
+            rankId = Integer.parseInt(rank);
+        }
+
+        if (user.equalsIgnoreCase(String.valueOf(playerDetails.getName()))) {
+            client.session().set("alertColour", "warning");
+            client.session().set("alertMessage", "You can not change the rank yourself");
+            client.redirect(getGiveRankPath());
+            return;
+        }
+
+        if (user.isEmpty() || rankId < 1 || rankId > 8) {
+            client.session().set("alertColour", "danger");
+            client.session().set("alertMessage", "Please enter a valid username or rank");
+            client.redirect(getGiveRankPath());
+            return;
+        }
+
+        String rankName = String.valueOf(PlayerRank.getRankForId(rankId));
+        var playerDetailsRank = PlayerDao.getDetails(user);
+
+        if (playerDetailsRank == null) {
+            client.session().set("alertColour", "danger");
+            client.session().set("alertMessage", "The user does not exist");
+            client.redirect(getGiveRankPath());
+            return;
+        }
+
+        if (playerDetailsRank.getRank().getRankId() == rankId) {
+            client.session().set("alertColour", "warning");
+            client.session().set("alertMessage", "The user " + user + " already has the rank ID " + rankId + " (" + rankName + ")");
+            client.redirect(getGiveRankPath());
+            return;
+        }
+
+        List<Map<String, Object>> allRanks = HousekeepingPlayerDao.getAllRanks();
+
+        String currentBadge = "";
+        int currentRankId = playerDetailsRank.getRank().getRankId();
+
+        for (Map<String, Object> rankDetails : allRanks) {
+            int rId = (int) rankDetails.get("id");
+            if (rId == currentRankId) {
+                currentBadge = (String) rankDetails.get("badge");
+                break;
+            }
+        }
+
+        String newBadge = "";
+        for (Map<String, Object> rankDetails : allRanks) {
+            int rId = (int) rankDetails.get("id");
+            if (rId == rankId) {
+                newBadge = (String) rankDetails.get("badge");
+                break;
+            }
+        }
+
+        if (currentBadge != null && !currentBadge.isEmpty()) {
+            String finalCurrentBadge = currentBadge;
+            String finalNewBadge = newBadge;
+            RconUtil.sendCommand(RconHeader.MOD_GIVE_BADGE, new HashMap<>() {{
+                put("user", user);
+                put("removeBadge", finalCurrentBadge);
+                put("badge", finalNewBadge);
+
+            }});
+        }
+
+        HousekeepingPlayerDao.setRank(user, rankId);
+        HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Set the rank ID " + rankId + " (" + rankName + ") to user " + user + ". URL: " + client.request().uri(), client.getIpAddress());
+
+        client.session().set("alertColour", "success");
+        client.session().set("alertMessage", "Successfully set the rank ID " + rankId + " (" + rankName + ") to the user " + user);
+
+        client.redirect(getGiveRankPath());
+
+        if (sendAlert) {
+            String message = GameConfiguration.getInstance().getString("rcon.give.rank.message");
+            String finalMessage = StringUtils.replace(message, "%rank%", rankName);
+            String messageEncoded = MessageEncoderUtil.encodeMessage(finalMessage);
+
+            RconUtil.sendCommand(RconHeader.MOD_ALERT_USER, new HashMap<>() {{
+                put("receiver", user);
+                put("message", messageEncoded);
+
+            }});
+        }
+    }
+
+    public static void editStaffVars (WebConnection client, PlayerDetails playerDetails) {
+        String rankId = client.post().getString("rankIdVars");
+        String rankName = client.post().getString("rankNameVars");
+        String rankBadge = client.post().getString("rankBadgeVars");
+        String rankDescription = client.post().getString("rankDescVars");
+
+        int rankIdInt = 0;
+
+        if (StringUtils.isNumeric(rankId)) {
+            rankIdInt = Integer.parseInt(rankId);
+        }
+
+        if (rankIdInt < 1 || rankIdInt > 8) {
+            client.session().set("alertColour", "danger");
+            client.session().set("alertMessage", "Please enter a valid rank ID in the staff texts variables");
+            client.redirect(getGiveRankPath());
+            return;
+        }
+
+        String rankNameVars = String.valueOf(PlayerRank.getRankForId(rankIdInt));
+
+        if (rankName.isEmpty() || rankBadge.isEmpty() || rankDescription.isEmpty()) {
+            client.session().set("alertColour", "danger");
+            client.session().set("alertMessage", "Please fill all the texts variables for rank ID " + rankIdInt + " (" + rankNameVars + ")");
+            client.redirect(getGiveRankPath());
+            return;
+        }
+
+        HousekeepingPlayerDao.setRankTextVars(rankIdInt, rankName, rankBadge, rankDescription);
+        HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Updated the variables for rank ID " + rankIdInt + ". URL: " + client.request().uri(), client.getIpAddress());
+
+        client.session().set("alertColour", "success");
+        client.session().set("alertMessage", "Successfully update the texts variables for rank ID " + rankIdInt + " (" + rankNameVars + ")");
+
+        client.redirect(getGiveRankPath());
     }
 }
