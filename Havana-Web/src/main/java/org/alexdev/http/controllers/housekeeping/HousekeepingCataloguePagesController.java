@@ -37,137 +37,29 @@ public class HousekeepingCataloguePagesController {
         }
 
         if (client.post().queries().size() > 0 && client.post().contains("searchField")) {
-            String[] fieldCheck = new String[]{"searchField", "searchQuery", "searchType" };
-
-            for (String field : fieldCheck) {
-                if (client.post().contains(field) && client.post().getString(field).length() > 0) {
-                    continue;
-                }
-
-                client.session().set("alertColour", "danger");
-                client.session().set("alertMessage", "You need to enter all fields");
-                tpl.render();
-
-                // Delete alert after it's been rendered
-                client.session().delete("alertMessage");
-                return;
-            }
-
-            String field = client.post().getString("searchField");
-            String input = client.post().getString("searchQuery");
-            String type = client.post().getString("searchType");
-
-            List<String> whitelistColumns = new ArrayList<>();
-            whitelistColumns.add("id");
-            whitelistColumns.add("parent_id");
-            whitelistColumns.add("min_role");
-            whitelistColumns.add("name");
-            whitelistColumns.add("layout");
-            whitelistColumns.add("images");
-            whitelistColumns.add("texts");
-
-            List<Map<String, Object>> searchPages = null;
-
-            if (whitelistColumns.contains(field)) {
-                searchPages = HousekeepingCatalogueDao.searchCataloguePage(type, field, input);
-            } else {
-                searchPages = new ArrayList<>();
-            }
-
-            if (!(searchPages.size() > 0)) {
-                tpl.set("noResults", true);
-            }
-
-            tpl.set("searchPages", searchPages);
-            tpl.render();
+            searchPage(client, tpl);
+            return;
         }
 
         if (client.get().contains("delete")) {
-            int pageId = client.get().getInt("delete");
-
-            if (StringUtils.isNumeric(client.get().getString("delete")) && client.get().getInt("delete") > 1) {
-                HousekeepingCatalogueDao.deletePage(pageId);
-                HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Deleted Catalogue page with the ID " + pageId + ". URL: " + client.request().uri(), client.getIpAddress());
-
-                client.session().set("alertColour", "success");
-                client.session().set("alertMessage", "The catalogue page has been successfully deleted");
-                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/campaign_management/catalogue/pages");
-
-                return;
-            }
-
-            client.session().set("alertColour", "danger");
-            client.session().set("alertMessage", "Please enter a valid catalogue page ID");
+            deletePage(client, playerDetails);
+            return;
         }
 
         if (client.get().contains("edit")) {
-            tpl.set("pageEdit", HousekeepingCatalogueDao.getCataloguePages("edit", client.get().getInt("edit"), 0));
-            tpl.set("isPageEdit", true);
+            editPage(client, tpl);
         } else {
             tpl.set("isPageEdit", false);
         }
 
         if (client.post().contains("editId")) {
-            int editId = client.post().getInt("editId");
-            int editParentId = client.post().getInt("editParentId");
-            int editOrderId = client.post().getInt("editOrderId");
-            int editMinRank = client.post().getInt("editMinRank");
-            int editIsNavigatable = client.post().getInt("editIsNavigatable");
-            int editIsHCOnly = client.post().getInt("editIsHCOnly");
-            String editName = client.post().getString("editName");
-            int editIcon = client.post().getInt("editIcon");
-            int editColour = client.post().getInt("editColour");
-            String editLayout = client.post().getString("editLayout");
-            String editImages = client.post().getString("editImages");
-            String editTexts = client.post().getString("editTexts");
-
-            int originalPageId = client.get().getInt("edit");
-
-            if (StringUtils.isNumeric(client.post().getString("editId")) && editId > 0 &&
-                    StringUtils.isNumeric(client.post().getString("editOrderId")) &&
-                    StringUtils.isNumeric(client.post().getString("editMinRank")) &&
-                    StringUtils.isNumeric(client.post().getString("editIsNavigatable")) &&
-                    StringUtils.isNumeric(client.post().getString("editIsHCOnly")) &&
-                    StringUtils.isNumeric(client.post().getString("editIcon")) &&
-                    StringUtils.isNumeric(client.post().getString("editColour")) &&
-                    editTexts.startsWith("[") && editTexts.endsWith("]") &&
-                    editImages.startsWith("[") && editImages.endsWith("]")) {
-
-                HousekeepingCatalogueDao.updatePage(editId, editParentId, editOrderId, editMinRank, editIsNavigatable, editIsHCOnly, editName, editIcon, editColour, editLayout, editImages, editTexts, originalPageId);
-                HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Edited Catalogue page with the ID " + editId + "(id original: " + originalPageId + "). URL: " + client.request().uri(), client.getIpAddress());
-
-                client.session().set("alertColour", "success");
-                client.session().set("alertMessage", "The catalogue page has been successfully saved and updated");
-                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/campaign_management/catalogue/pages?edit=" + editId );
-
-                RconUtil.sendCommand(RconHeader.REFRESH_CATALOGUE_PAGES, new HashMap<>());
-
-                return;
-            }
-
-            client.session().set("alertColour", "danger");
-            client.session().set("alertMessage", "Please enter a valid catalogue values");
+            savePage(client, playerDetails);
+            return;
         }
 
         if (client.get().contains("copy")) {
-
-            int pageId = client.get().getInt("copy");
-
-            if (StringUtils.isNumeric(client.get().getString("copy")) && client.get().getInt("copy") > 0) {
-                HousekeepingCatalogueDao.copyPage(pageId);
-                HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Copied Catalogue page with the ID " + pageId + ". URL: " + client.request().uri(), client.getIpAddress());
-
-                client.session().set("alertColour", "success");
-                client.session().set("alertMessage", "The catalogue page has been successfully copied, saved and updated");
-                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/campaign_management/catalogue/pages");
-
-                RconUtil.sendCommand(RconHeader.REFRESH_CATALOGUE_PAGES, new HashMap<>());
-
-                return;
-            }
-
-            client.session().set("alertColour", "danger");
-            client.session().set("alertMessage", "Please enter a valid catalogue page ID");
+            copyPage(client, playerDetails);
+            return;
         }
 
         int currentPage = 0;
@@ -188,6 +80,147 @@ public class HousekeepingCataloguePagesController {
         client.session().delete("alertMessage");
     }
 
+    public static void refreshCataloguePages() {
+        RconUtil.sendCommand(RconHeader.REFRESH_CATALOGUE_PAGES, new HashMap<>());
+    }
+
+    private static String getManagePagesPath() {
+        return "/" + Routes.HOUSEKEEPING_PATH + "/campaign_management/catalogue/pages";
+    }
+
+    public static void searchPage (WebConnection client, Template tpl) {
+        String[] fieldCheck = new String[]{"searchField", "searchQuery", "searchType" };
+
+        for (String field : fieldCheck) {
+            if (client.post().contains(field) && client.post().getString(field).length() > 0) {
+                continue;
+            }
+
+            client.session().set("alertColour", "danger");
+            client.session().set("alertMessage", "You need to enter all fields");
+            tpl.render();
+
+            // Delete alert after it's been rendered
+            client.session().delete("alertMessage");
+            return;
+        }
+
+        String field = client.post().getString("searchField");
+        String input = client.post().getString("searchQuery");
+        String type = client.post().getString("searchType");
+
+        List<String> whitelistColumns = new ArrayList<>();
+        whitelistColumns.add("id");
+        whitelistColumns.add("parent_id");
+        whitelistColumns.add("min_role");
+        whitelistColumns.add("name");
+        whitelistColumns.add("layout");
+        whitelistColumns.add("images");
+        whitelistColumns.add("texts");
+
+        List<Map<String, Object>> searchPages = null;
+
+        if (whitelistColumns.contains(field)) {
+            searchPages = HousekeepingCatalogueDao.searchCataloguePage(type, field, input);
+        } else {
+            searchPages = new ArrayList<>();
+        }
+
+        if (!(searchPages.size() > 0)) {
+            tpl.set("noResults", true);
+        }
+
+        tpl.set("searchPages", searchPages);
+        tpl.render();
+    }
+
+    public static void deletePage (WebConnection client, PlayerDetails playerDetails) {
+        int pageId = client.get().getInt("delete");
+
+        if (!StringUtils.isNumeric(client.get().getString("delete")) && client.get().getInt("delete") < 1) {
+            client.session().set("alertColour", "danger");
+            client.session().set("alertMessage", "Please enter a valid catalogue page ID");
+            client.redirect(getManagePagesPath());
+            return;
+        }
+
+        HousekeepingCatalogueDao.deletePage(pageId);
+        HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Deleted Catalogue page with the ID " + pageId + ". URL: " + client.request().uri(), client.getIpAddress());
+
+        client.session().set("alertColour", "success");
+        client.session().set("alertMessage", "The catalogue page has been successfully deleted");
+        client.redirect(getManagePagesPath());
+
+        refreshCataloguePages();
+    }
+
+    public static void editPage (WebConnection client, Template tpl) {
+        tpl.set("pageEdit", HousekeepingCatalogueDao.getCataloguePages("edit", client.get().getInt("edit"), 0));
+        tpl.set("isPageEdit", true);
+    }
+
+    public static void savePage (WebConnection client, PlayerDetails playerDetails) {
+        int editId = client.post().getInt("editId");
+        int editParentId = client.post().getInt("editParentId");
+        int editOrderId = client.post().getInt("editOrderId");
+        int editMinRank = client.post().getInt("editMinRank");
+        int editIsNavigatable = client.post().getInt("editIsNavigatable");
+        int editIsHCOnly = client.post().getInt("editIsHCOnly");
+        String editName = client.post().getString("editName");
+        int editIcon = client.post().getInt("editIcon");
+        int editColour = client.post().getInt("editColour");
+        String editLayout = client.post().getString("editLayout");
+        String editImages = client.post().getString("editImages");
+        String editTexts = client.post().getString("editTexts");
+
+        int originalPageId = client.get().getInt("edit");
+
+        if (!StringUtils.isNumeric(client.post().getString("editId")) && editId < 0 ||
+                !StringUtils.isNumeric(client.post().getString("editOrderId")) ||
+                !StringUtils.isNumeric(client.post().getString("editMinRank")) ||
+                !StringUtils.isNumeric(client.post().getString("editIsNavigatable")) ||
+                !StringUtils.isNumeric(client.post().getString("editIsHCOnly")) ||
+                !StringUtils.isNumeric(client.post().getString("editIcon")) ||
+                !StringUtils.isNumeric(client.post().getString("editColour")) ||
+                !editTexts.startsWith("[") && !editTexts.endsWith("]") ||
+                !editImages.startsWith("[") && !editImages.endsWith("]")) {
+
+            client.session().set("alertColour", "danger");
+            client.session().set("alertMessage", "Please enter a valid catalogue values");
+            client.redirect(getManagePagesPath() + "?edit=" + editId);
+            return;
+        }
+
+        HousekeepingCatalogueDao.updatePage(editId, editParentId, editOrderId, editMinRank, editIsNavigatable, editIsHCOnly, editName, editIcon, editColour, editLayout, editImages, editTexts, originalPageId);
+        HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Edited Catalogue page with the ID " + editId + "(id original: " + originalPageId + "). URL: " + client.request().uri(), client.getIpAddress());
+
+        client.session().set("alertColour", "success");
+        client.session().set("alertMessage", "The catalogue page has been successfully saved and updated");
+        client.redirect(getManagePagesPath() + "?edit=" + editId);
+
+        refreshCataloguePages();
+    }
+
+    public static void copyPage (WebConnection client, PlayerDetails playerDetails) {
+        int pageId = client.get().getInt("copy");
+
+        if (!StringUtils.isNumeric(client.get().getString("copy")) && client.get().getInt("copy") < 0) {
+            client.session().set("alertColour", "danger");
+            client.session().set("alertMessage", "Please enter a valid catalogue page ID");
+            client.redirect(getManagePagesPath());
+            return;
+        }
+
+        HousekeepingCatalogueDao.copyPage(pageId);
+        HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Copied Catalogue page with the ID " + pageId + ". URL: " + client.request().uri(), client.getIpAddress());
+
+        client.session().set("alertColour", "success");
+        client.session().set("alertMessage", "The catalogue page has been successfully copied, saved and updated");
+        client.redirect(getManagePagesPath());
+
+        refreshCataloguePages();
+    }
+
     public static void pagesCreate (WebConnection client) {
         if (!client.session().getBoolean(SessionUtil.LOGGED_IN_HOUSKEEPING)) {
             client.redirect("/" + Routes.HOUSEKEEPING_DEFAULT_PATH);
@@ -206,41 +239,8 @@ public class HousekeepingCataloguePagesController {
         }
 
         if (client.post().contains("createParentId")) {
-            String createParentId = client.post().getString("createParentId");
-            String createOrderId = client.post().getString("createOrderId");
-            String createMinRank = client.post().getString("createMinRank");
-            String createIsNavigatable = client.post().getString("createIsNavigatable");
-            String createIsHCOnly = client.post().getString("createIsHCOnly");
-            String createName = client.post().getString("createName");
-            String createIcon = client.post().getString("createIcon");
-            String createColour = client.post().getString("createColour");
-            String createLayout = client.post().getString("createLayout");
-            String createImages = client.post().getString("createImages");
-            String createTexts = client.post().getString("createTexts");
-
-            if (StringUtils.isNumeric(client.post().getString("createOrderId")) &&
-                    StringUtils.isNumeric(client.post().getString("createMinRank")) &&
-                    StringUtils.isNumeric(client.post().getString("createIsNavigatable")) &&
-                    StringUtils.isNumeric(client.post().getString("createIsHCOnly")) &&
-                    StringUtils.isNumeric(client.post().getString("createIcon")) &&
-                    StringUtils.isNumeric(client.post().getString("createColour")) &&
-                    createTexts.startsWith("[") && createTexts.endsWith("]") &&
-                    createImages.startsWith("[") && createImages.endsWith("]")) {
-
-                HousekeepingCatalogueDao.createCataloguePage(createParentId, createOrderId, createMinRank, createIsNavigatable, createIsHCOnly, createName, createIcon, createColour, createLayout, createImages, createTexts);
-                HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Created Catalogue page with the name " + createName + ". URL: " + client.request().uri(), client.getIpAddress());
-
-                client.session().set("alertColour", "success");
-                client.session().set("alertMessage", "The catalogue page has been successfully created and updated");
-                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/campaign_management/catalogue/pages/create");
-
-                RconUtil.sendCommand(RconHeader.REFRESH_CATALOGUE_PAGES, new HashMap<>());
-
-                return;
-            }
-
-            client.session().set("alertColour", "danger");
-            client.session().set("alertMessage", "Please enter a valid catalogue values");
+            createPage(client, playerDetails);
+            return;
         }
 
         tpl.set("pageName", "Create catalogue pages");
@@ -249,5 +249,47 @@ public class HousekeepingCataloguePagesController {
         tpl.render();
 
         client.session().delete("alertMessage");
+    }
+
+    private static String getCreatePagesPath() {
+        return "/" + Routes.HOUSEKEEPING_PATH + "/campaign_management/catalogue/pages/create";
+    }
+
+    public static void createPage (WebConnection client, PlayerDetails playerDetails) {
+        String createParentId = client.post().getString("createParentId");
+        String createOrderId = client.post().getString("createOrderId");
+        String createMinRank = client.post().getString("createMinRank");
+        String createIsNavigatable = client.post().getString("createIsNavigatable");
+        String createIsHCOnly = client.post().getString("createIsHCOnly");
+        String createName = client.post().getString("createName");
+        String createIcon = client.post().getString("createIcon");
+        String createColour = client.post().getString("createColour");
+        String createLayout = client.post().getString("createLayout");
+        String createImages = client.post().getString("createImages");
+        String createTexts = client.post().getString("createTexts");
+
+        if (!StringUtils.isNumeric(client.post().getString("createOrderId")) ||
+                !StringUtils.isNumeric(client.post().getString("createMinRank")) ||
+                !StringUtils.isNumeric(client.post().getString("createIsNavigatable")) ||
+                !StringUtils.isNumeric(client.post().getString("createIsHCOnly")) ||
+                !StringUtils.isNumeric(client.post().getString("createIcon")) ||
+                !StringUtils.isNumeric(client.post().getString("createColour")) ||
+                !createTexts.startsWith("[") && !createTexts.endsWith("]") ||
+                !createImages.startsWith("[") && !createImages.endsWith("]")) {
+
+            client.session().set("alertColour", "danger");
+            client.session().set("alertMessage", "Please enter a valid catalogue values");
+            client.redirect(getCreatePagesPath());
+            return;
+        }
+
+        HousekeepingCatalogueDao.createCataloguePage(createParentId, createOrderId, createMinRank, createIsNavigatable, createIsHCOnly, createName, createIcon, createColour, createLayout, createImages, createTexts);
+        HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Created Catalogue page with the name " + createName + ". URL: " + client.request().uri(), client.getIpAddress());
+
+        client.session().set("alertColour", "success");
+        client.session().set("alertMessage", "The catalogue page has been successfully created and updated");
+        client.redirect(getCreatePagesPath());
+
+        refreshCataloguePages();
     }
 }
