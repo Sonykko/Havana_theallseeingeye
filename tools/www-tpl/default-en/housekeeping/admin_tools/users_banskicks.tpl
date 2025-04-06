@@ -156,7 +156,7 @@
 				<a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/bans_kicks?pageKick={{ ourNextPageKick }}&sort={{ kickSortBy }}"><button type="button">Go back</button></a>
 			{% endif %}
 			</div>
-		  {% if remoteKickLogs %}
+		  {% if remoteKickLogs|length > 0 %}
           <div class="table-responsive">
             <table class="table table-striped">
               <thead>
