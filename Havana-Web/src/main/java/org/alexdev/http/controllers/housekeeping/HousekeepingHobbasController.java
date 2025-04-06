@@ -33,73 +33,83 @@ public class HousekeepingHobbasController {
             return;
         }
 
-        String finalMessage = "";
-        boolean hasReasons = false;
-        List<String> reasons = null;
         String action = client.post().getString("action");
 
         if ("check".equals(action)) {
-            String userName = client.post().getString("userName");
-            String userID = client.post().getString("userID");
+            checkUserForBeHobba(client, tpl);
+        }
 
-            if (userName.isEmpty() && userID.isEmpty() || !userName.isEmpty() && !userID.isEmpty()) {
-                client.session().set("alertColour", "danger");
-                client.session().set("alertMessage", "Please enter a valid user name or ID");
-                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/hobbas/check");
-                return;
+        tpl.set("pageName", "Check Hobba applicant");
+        tpl.render();
+
+        client.session().delete("alertMessage");
+    }
+
+    private static String getHobbaCheckPath() {
+        return "/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/hobbas/check";
+    }
+
+    public static void checkUserForBeHobba (WebConnection client, Template tpl) {
+        String finalMessage = "";
+        boolean hasReasons = false;
+        List<String> reasons = null;
+
+        String userName = client.post().getString("userName");
+        String userID = client.post().getString("userID");
+
+        if (userName.isEmpty() && userID.isEmpty() || !userName.isEmpty() && !userID.isEmpty()) {
+            client.session().set("alertColour", "danger");
+            client.session().set("alertMessage", "Please enter a valid user name or ID");
+            client.redirect(getHobbaCheckPath());
+            return;
+        }
+
+        PlayerDetails userDetails;
+        if (StringUtils.isNumeric(userID) && userName.isEmpty()) {
+            userDetails = PlayerDao.getDetails(Integer.parseInt(userID));
+        } else {
+            userDetails = PlayerDao.getDetails(userName);
+        }
+
+        if (userDetails == null) {
+            client.session().set("alertColour", "danger");
+            client.session().set("alertMessage", "The user does not exist");
+            client.redirect(getHobbaCheckPath());
+            return;
+        }
+
+        String identifier = userDetails.getName() + " (" + userDetails.getId() + ")";
+        Map<String, String> checkResults = HousekeepingHobbasDao.checkHabboDetails(userDetails.getId());
+        hasReasons = true;
+        reasons = new ArrayList<>(checkResults.values());
+
+        client.session().set("alertColour", "success");
+        client.session().set("alertMessage", "<div style=\"color:black\"><b>Checking " + identifier + "</b></div>");
+
+        boolean containsRedKey = false;
+        boolean containsDangerValue = false;
+
+        for (Map.Entry<String, String> entry : checkResults.entrySet()) {
+            String key = entry.getKey();
+            String value = entry.getValue();
+
+            if (key.contains("_RED")) {
+                containsRedKey = true;
             }
-
-            PlayerDetails userDetails;
-            if (StringUtils.isNumeric(userID) && userName.isEmpty()) {
-                userDetails = PlayerDao.getDetails(Integer.parseInt(userID));
-            } else {
-                userDetails = PlayerDao.getDetails(userName);
+            if (value.contains("danger")) {
+                containsDangerValue = true;
             }
+        }
 
-            if (userDetails == null) {
-                client.session().set("alertColour", "danger");
-                client.session().set("alertMessage", "The user does not exist");
-                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/hobbas/check");
-                return;
-            }
-
-            String identifier = userDetails.getName() + " (" + userDetails.getId() + ")";
-            Map<String, String> checkResults = HousekeepingHobbasDao.checkHabboDetails(userDetails.getId());
-            hasReasons = true;
-            reasons = new ArrayList<>(checkResults.values());
-
-            client.session().set("alertColour", "success");
-            client.session().set("alertMessage", "<div style=\"color:black\"><b>Checking " + identifier + "</b></div>");
-
-            boolean containsRedKey = false;
-            boolean containsDangerValue = false;
-
-            for (Map.Entry<String, String> entry : checkResults.entrySet()) {
-                String key = entry.getKey();
-                String value = entry.getValue();
-
-                if (key.contains("_RED")) {
-                    containsRedKey = true;
-                }
-                if (value.contains("danger")) {
-                    containsDangerValue = true;
-                }
-            }
-
-            if (containsRedKey || containsDangerValue) {
-                finalMessage = "<b>The user is not qualified to become a Hobba.</b>";
-            } else {
-                finalMessage = "<b>The user is qualified to become a Hobba.</b>";
-            }
+        if (containsRedKey || containsDangerValue) {
+            finalMessage = "<b>The user is not qualified to become a Hobba.</b>";
+        } else {
+            finalMessage = "<b>The user is qualified to become a Hobba.</b>";
         }
 
         tpl.set("finalMessage", finalMessage);
         tpl.set("hasReasons", hasReasons);
         tpl.set("reasons", reasons);
-        tpl.set("pageName", "Check Hobba applicant");
-        tpl.render();
-
-        client.session().delete("alertMessage");
     }
 
     public static void hobbas_applications(WebConnection client) {
@@ -126,22 +136,7 @@ public class HousekeepingHobbasController {
         }
 
         if (client.post().contains("logId")) {
-            String logId = client.post().getString("logId");
-
-            if (StringUtils.isNumeric(logId) && Integer.parseInt(logId) > 0) {
-                client.session().set("alertColour", "danger");
-                client.session().set("alertMessage", "Please enter a valid Hobba application form ID");
-                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/hobbas/applications");
-                return;
-            }
-
-            HousekeepingHobbasDao.updateApplication(Integer.parseInt(logId));
-
-            HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Has picked up the Hobba application with the ID: " + logId + ". URL: " + client.request().uri(), client.getIpAddress());
-
-            client.session().set("alertColour", "success");
-            client.session().set("alertMessage", "The Hobba application has been picked up");
-            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/hobbas/applications");
+            pickUpHobbaForm(client, playerDetails);
             return;
         }
 
@@ -153,5 +148,28 @@ public class HousekeepingHobbasController {
         tpl.render();
 
         client.session().delete("alertMessage");
+    }
+
+    private static String getHobbaApplicationsPath() {
+        return "/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/hobbas/applications";
+    }
+
+    public static void pickUpHobbaForm (WebConnection client, PlayerDetails playerDetails) {
+        String logId = client.post().getString("logId");
+
+        if (!StringUtils.isNumeric(logId) && Integer.parseInt(logId) < 0) {
+            client.session().set("alertColour", "danger");
+            client.session().set("alertMessage", "Please enter a valid Hobba application form ID");
+            client.redirect(getHobbaApplicationsPath());
+            return;
+        }
+
+        HousekeepingHobbasDao.updateApplication(Integer.parseInt(logId));
+
+        HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Has picked up the Hobba application with the ID: " + logId + ". URL: " + client.request().uri(), client.getIpAddress());
+
+        client.session().set("alertColour", "success");
+        client.session().set("alertMessage", "The Hobba application has been picked up");
+        client.redirect(getHobbaApplicationsPath());
     }
 }
