@@ -32,69 +32,75 @@ public class HousekeepingCoinsController {
             return;
         }
 
-        String credits = "";
-        String expiryDate = "";
-
         if (client.post().contains("voucherCode")) {
-            String voucherCode = client.post().getString("voucherCode");
-            String item = client.post().getString("item");
-            if (StringUtils.isNumeric(client.post().getString("credits")) && client.post().getInt("credits") > 0) {
-                credits = client.post().getString("credits");
-            } else {
-                credits = "0";
-            }
-            if (!client.post().getString("expiryDate").isEmpty()) {
-                expiryDate = client.post().getString("expiryDate");
-            } else {
-                expiryDate = null;
-            }
-            String isSingleUseStrg = client.post().getString("isSingleUse");
-            String allowNewUsersStrg = client.post().getString("allowNewUsers");
-
-            if (voucherCode.isEmpty() || item.isEmpty() && credits.equals("0")) {
-                client.session().set("alertColour", "danger");
-                client.session().set("alertMessage", "Please enter a valid Voucher or sale code or amount of credits");
-                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/vouchers");
-                return;
-            }
-
-            if (!isSingleUseStrg.equals("0") && !isSingleUseStrg.equals("1") || !allowNewUsersStrg.equals("0") && !allowNewUsersStrg.equals("1")) {
-                client.session().set("alertColour", "danger");
-                client.session().set("alertMessage", "Please enter a valid value for single use or allow new users");
-                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/vouchers");
-                return;
-            }
-
-            int isSingleUse = Integer.parseInt(isSingleUseStrg);
-            int allowNewUsers = Integer.parseInt(allowNewUsersStrg);
-
-            List<Map<String, Object>> checkVoucherCode = HousekeepingCoinsDao.getVoucherByCode(voucherCode);
-            if (!checkVoucherCode.isEmpty()) {
-                client.session().set("alertColour", "danger");
-                client.session().set("alertMessage", "The Voucher code already exists");
-                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/vouchers");
-                return;
-            }
-
-            String type = StringUtils.isEmpty(item) ? "" : "voucherItem";
-
-            HousekeepingCoinsDao.createVoucher(voucherCode, credits, expiryDate, isSingleUse, allowNewUsers, item, type);
-            HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Created the voucher code " + voucherCode + " with a value of " + credits + " credits. URL: " + client.request().uri(), client.getIpAddress());
-
-            client.session().set("alertColour", "success");
-            client.session().set("alertMessage", "The Voucher code has been successfully created");
-            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/vouchers");
+            createVoucher(client, playerDetails);
             return;
         }
 
         tpl.set("pageName", "Vouchers codes");
         tpl.set("Vouchers", HousekeepingCoinsDao.getAllVouchers());
         tpl.set("voucherRandom", generateRandomCode());
-        tpl.set("credits", credits);
-        tpl.set("expiryDate", expiryDate);
         tpl.render();
 
         client.session().delete("alertMessage");
+    }
+
+    private static String getVouchersPath() {
+        return "/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/vouchers";
+    }
+
+    public static void createVoucher (WebConnection client, PlayerDetails playerDetails) {
+        String credits = "";
+        String expiryDate = "";
+
+        String voucherCode = client.post().getString("voucherCode");
+        String item = client.post().getString("item");
+        if (StringUtils.isNumeric(client.post().getString("credits")) && client.post().getInt("credits") > 0) {
+            credits = client.post().getString("credits");
+        } else {
+            credits = "0";
+        }
+        if (!client.post().getString("expiryDate").isEmpty()) {
+            expiryDate = client.post().getString("expiryDate");
+        } else {
+            expiryDate = null;
+        }
+        String isSingleUseStrg = client.post().getString("isSingleUse");
+        String allowNewUsersStrg = client.post().getString("allowNewUsers");
+
+        if (voucherCode.isEmpty() || item.isEmpty() && credits.equals("0")) {
+            client.session().set("alertColour", "danger");
+            client.session().set("alertMessage", "Please enter a valid Voucher or sale code or amount of credits");
+            client.redirect(getVouchersPath());
+            return;
+        }
+
+        if (!isSingleUseStrg.equals("0") && !isSingleUseStrg.equals("1") || !allowNewUsersStrg.equals("0") && !allowNewUsersStrg.equals("1")) {
+            client.session().set("alertColour", "danger");
+            client.session().set("alertMessage", "Please enter a valid value for single use or allow new users");
+            client.redirect(getVouchersPath());
+            return;
+        }
+
+        int isSingleUse = Integer.parseInt(isSingleUseStrg);
+        int allowNewUsers = Integer.parseInt(allowNewUsersStrg);
+
+        List<Map<String, Object>> checkVoucherCode = HousekeepingCoinsDao.getVoucherByCode(voucherCode);
+        if (!checkVoucherCode.isEmpty()) {
+            client.session().set("alertColour", "danger");
+            client.session().set("alertMessage", "The Voucher code already exists");
+            client.redirect(getVouchersPath());
+            return;
+        }
+
+        String type = StringUtils.isEmpty(item) ? "" : "voucherItem";
+
+        HousekeepingCoinsDao.createVoucher(voucherCode, credits, expiryDate, isSingleUse, allowNewUsers, item, type);
+        HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Created the voucher code " + voucherCode + " with a value of " + credits + " credits. URL: " + client.request().uri(), client.getIpAddress());
+
+        client.session().set("alertColour", "success");
+        client.session().set("alertMessage", "The Voucher code has been successfully created");
+        client.redirect(getVouchersPath());
     }
 
     private static String generateRandomCode() {
