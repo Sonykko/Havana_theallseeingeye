@@ -8,7 +8,6 @@ import org.alexdev.http.dao.PromotionDao;
 import org.alexdev.http.server.Watchdog;
 import org.alexdev.havana.util.config.GameConfiguration;
 import org.alexdev.http.util.Captcha;
-import org.codehaus.plexus.util.StringUtils;
 
 import java.text.NumberFormat;
 import java.util.Locale;
@@ -70,7 +69,7 @@ public class SiteBinder implements TemplateBinder {
         this.siteBanners = PromotionDao.getAdsBanners();
 
         this.emailStaticPath = GameConfiguration.getInstance().getString("email.static.content.path");
-        this.emailHotelName = StringUtils.capitalise(GameConfiguration.getInstance().getString("site.path").replace("https://", "").replace("http://", "").replace("/", ""));
+        this.emailHotelName = GameConfiguration.getInstance().getString("site.path").replace("https://", "").replace("http://", "").replace("/", "").toUpperCase();
 
         this.habboImagingPath = GameConfiguration.getInstance().getString("site.imaging.path");//"https://alex-dev.org";
 
