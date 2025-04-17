@@ -48,7 +48,7 @@ public class HousekeepingCatalogueFrontpageController {
             GameConfiguration.getInstance().updateSetting("catalogue.frontpage.input.3",  client.post().getString("subtext"));
             GameConfiguration.getInstance().updateSetting("catalogue.frontpage.input.4",  client.post().getString("link"));
 
-            HousekeepingLogsDao.logHousekeepingAction("BAD_PERMISSIONS", client.session().getInt("user.id"), session.getName(), "Updated Catalogue frontpage. URL: " + client.request().uri(), client.getIpAddress());
+            HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", client.session().getInt("user.id"), session.getName(), "Updated Catalogue frontpage. URL: " + client.request().uri(), client.getIpAddress());
 
             RconUtil.sendCommand(RconHeader.REFRESH_CATALOGUE_FRONTPAGE, new HashMap<>());
         }
