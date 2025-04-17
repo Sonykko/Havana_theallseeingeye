@@ -8,7 +8,6 @@ import org.alexdev.http.dao.PromotionDao;
 import org.alexdev.http.server.Watchdog;
 import org.alexdev.havana.util.config.GameConfiguration;
 import org.alexdev.http.util.Captcha;
-import org.codehaus.plexus.util.StringUtils;
 
 import java.text.NumberFormat;
 import java.util.Locale;
