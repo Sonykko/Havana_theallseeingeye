@@ -13,7 +13,7 @@ import org.alexdev.http.game.housekeeping.HousekeepingManager;
 import org.alexdev.http.util.GroupUtil;
 import org.alexdev.http.util.SessionUtil;
 import org.alexdev.http.util.housekeeping.ContentModerationUtil;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
