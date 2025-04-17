@@ -97,18 +97,50 @@ body { behavior: url({{ site.staticContentPath }}/web-gallery/js/csshover.htc); 
 
 <div id="content-container">
 
-<div id="navi2-container" class="pngbg">
-    <div id="navi2" class="pngbg clearfix">
+	{% if session.currentPage == "games" %}
+	<div id="navi2-container" class="pngbg">
+		<div id="navi2" class="pngbg clearfix">
 		<ul>
-    		<li class="">
-				<a href="{{ site.sitePath }}/community">Community</a>    		</li>
-    		<li class="">
-				<a href="{{ site.sitePath }}/articles">News</a>    		</li>
-    		<li class=" last">
-				<a href="{{ site.sitePath }}/tag">Tags</a>    		</li>
+				<li class="">
+					<a href="/games">Games</a>
+				</li>
+				<li class="{% if group.getAlias() == 'battleball_rebound' %}selected{% endif %}">
+					<a href="/groups/battleball_rebound">BattleBall: Rebound!</a>
+				</li>
+				<li class="{% if group.getAlias() == 'snow_storm' %}selected{% endif %}">
+					<a href="/groups/snow_storm">SnowStorm</a>
+				</li>
+				<li class="{% if group.getAlias() == 'wobble_squabble' %}selected{% endif %}">
+					<a href="/groups/wobble_squabble">Wobble Squabble</a>
+				</li>
+				<li class="{% if group.getAlias() == 'lido' %}selected{% endif %} last">
+					<a href="/groups/lido">Lido Diving</a>
+				</li>
 		</ul>
-    </div>
-</div>
+		</div>
+	</div>
+	{% endif %}
+
+	{% if session.currentPage == "community" %}
+	<div id="navi2-container" class="pngbg">
+		<div id="navi2" class="pngbg clearfix">
+			<ul>
+				<li class="">
+					<a href="{{ site.sitePath }}/community">Community</a>    		</li>
+				<li class="">
+					<a href="{{ site.sitePath }}/articles">News</a>    		</li>
+				<li class="">
+					<a href="{{ site.sitePath }}/tag">Tags</a>    		</li>
+				<!-- <li class="">
+					<a href="{{ site.sitePath }}/community/photos">Photos</a>    		</li> -->
+				<li class="">
+					<a href="{{ site.sitePath }}/community/events">Events</a>    		</li>
+				<li class=" last">
+					<a href="{{ site.sitePath }}/community/fansites">Fansites</a>    		</li>
+			</ul>
+		</div>
+	</div>
+	{% endif %}
 </div>
 
 <div id="container">
@@ -119,27 +151,27 @@ body { behavior: url({{ site.staticContentPath }}/web-gallery/js/csshover.htc); 
 
 	{% else %}
 		{% if (session.loggedIn) and (group.hasAdministrator(playerDetails.getId())) %}
-		<a href="#" id="myhabbo-group-tools-button" class="new-button dark-button edit-icon" style="float:left"><b><span></span>Edit</b><i></i></a>	
+		<a href="#" id="myhabbo-group-tools-button" class="new-button dark-button edit-icon" style="float:left"><b><span></span>Edit</b><i></i></a>
 		{% endif %}
 		<div class="myhabbo-view-tools">
 		{% if session.loggedIn == false %}
 		<a href="#" id="reporting-button" style="display: none;">Show report buttons</a>
-  	<a href="#" id="stop-reporting-button" style="display: none;">Cancel report</a>  
+  	<a href="#" id="stop-reporting-button" style="display: none;">Cancel report</a>
 		{% else %}
 			{% if (group.isPendingMember(playerDetails.getId()) == false) %}
 				{% if (group.isMember(playerDetails.getId()) == false) %}
 					{% if group.getGroupType() == 0 or group.getGroupType() == 3 %}
 					<a href="{{ site.sitePath }}/groups/actions/join?groupId=101" id="join-group-button">Join</a>
 					{% elseif group.getGroupType() == 1 %}
-					<a href="{{ site.sitePath }}/groups/actions/join?groupId=101" id="join-group-button">Request membership</a>	
+					<a href="{{ site.sitePath }}/groups/actions/join?groupId=101" id="join-group-button">Request membership</a>
 					{% endif %}
 					<a href="#" id="reporting-button" style="display: none;">Show report buttons</a>
-          <a href="#" id="stop-reporting-button" style="display: none;">Cancel report</a>  
+          <a href="#" id="stop-reporting-button" style="display: none;">Cancel report</a>
 				{% else %}
 					{% if group.getOwnerId() != playerDetails.getId() %}
 					<a href="{{ site.sitePath }}/groups/actions/leave?groupId=101" id="leave-group-button">Leave group</a>
 					{% endif %}
-					
+
 					{% if groupMember.isFavourite(group.id) %}
 					<a href="#" id="deselect-favorite-button">Remove favorite</a>
 					{% else %}
@@ -153,7 +185,7 @@ body { behavior: url({{ site.staticContentPath }}/web-gallery/js/csshover.htc); 
 
     <h2 class="page-owner">
 		{% autoescape 'html' %}
-    	{{ group.getName }} 
+    	{{ group.getName }}
 		{% endautoescape %}
 		{% if group.getGroupType() == 1 %}<img src="{{ site.staticContentPath }}/web-gallery/images/groups/status_exclusive_big.gif" width="18" height="16" alt="Exclusive group" title="Exclusive group" class="header-bar-group-status" />{% elseif group.getGroupType() == 2%}<img src="{{ site.staticContentPath }}/web-gallery/images/groups/status_closed_big.gif" width="18" height="16" alt="myhabbo.headerbar.closed_group" title="myhabbo.headerbar.closed_group" class="header-bar-group-status" />{% endif %}   				    </h2>
     <ul class="box-tabs">
@@ -171,7 +203,7 @@ body { behavior: url({{ site.staticContentPath }}/web-gallery/js/csshover.htc); 
 {% include "groups/discussion_replies.tpl" %}
 </div>
                     </div>
-					
+
                 </td>
                 <td style="width: 4px;"></td>
 
@@ -202,7 +234,7 @@ body { behavior: url({{ site.staticContentPath }}/web-gallery/js/csshover.htc); 
 
 <div class="cbb topdialog" id="guestbook-form-dialog">
 	<h2 class="title dialog-handle">Edit Guestbook entry</h2>
-	
+
 	<a class="topdialog-exit" href="#" id="guestbook-form-dialog-exit">X</a>
 	<div class="topdialog-body" id="guestbook-form-dialog-body">
 
@@ -246,17 +278,17 @@ body { behavior: url({{ site.staticContentPath }}/web-gallery/js/csshover.htc); 
 
 	<div class="guestbook-toolbar clearfix">
 		<a href="#" class="new-button" id="guestbook-form-cancel"><b>Cancel</b><i></i></a>
-		<a href="#" class="new-button" id="guestbook-form-preview"><b>Preview</b><i></i></a>	
+		<a href="#" class="new-button" id="guestbook-form-preview"><b>Preview</b><i></i></a>
 	</div>
 
 </form>
 </div>
 <div id="guestbook-preview-tab">&nbsp;</div>
 	</div>
-</div>	
+</div>
 <div class="cbb topdialog" id="guestbook-delete-dialog">
 	<h2 class="title dialog-handle">Delete entry</h2>
-	
+
 	<a class="topdialog-exit" href="#" id="guestbook-delete-dialog-exit">X</a>
 	<div class="topdialog-body" id="guestbook-delete-dialog-body">
 <form method="post" id="guestbook-delete-form">
@@ -292,7 +324,7 @@ body { behavior: url({{ site.staticContentPath }}/web-gallery/js/csshover.htc); 
 </div>
 
 <div class="cbb topdialog black" id="dialog-group-settings">
-	
+
 	<div class="box-tabs-container">
 <ul class="box-tabs">
 	<li class="selected" id="group-settings-link-group"><a href="#">Group settings</a><span class="tab-spacer"></span></li>
@@ -305,7 +337,7 @@ body { behavior: url({{ site.staticContentPath }}/web-gallery/js/csshover.htc); 
 	<div class="topdialog-body" id="dialog-group-settings-body">
 <p style="text-align:center"><img src="{{ site.staticContentPath }}/web-gallery/images/progress_bubbles.gif" alt="" width="29" height="6" /></p>
 	</div>
-</div>	
+</div>
 
 <script language="JavaScript" type="text/javascript">
 Event.observe("dialog-group-settings-exit", "click", function(e) {
@@ -313,7 +345,7 @@ Event.observe("dialog-group-settings-exit", "click", function(e) {
     closeGroupSettings();
 }, false);
 </script><div class="cbb topdialog black" id="group-memberlist">
-	
+
 	<div class="box-tabs-container">
 <ul class="box-tabs">
 	<li class="selected" id="group-memberlist-link-members"><a href="#">Members</a><span class="tab-spacer"></span></li>
@@ -324,7 +356,7 @@ Event.observe("dialog-group-settings-exit", "click", function(e) {
 	<a class="topdialog-exit" href="#" id="group-memberlist-exit">X</a>
 	<div class="topdialog-body" id="group-memberlist-body">
 <div id="group-memberlist-members-search" class="clearfix">
-    
+
     <a id="group-memberlist-members-search-button" href="#" class="new-button"><b>Search</b><i></i></a>
     <input type="text" id="group-memberlist-members-search-string"/>
 </div>
@@ -336,7 +368,7 @@ Event.observe("dialog-group-settings-exit", "click", function(e) {
 	<a href="#" class="new-button group-memberlist-button-disabled" id="group-memberlist-button-revoke-rights"><b>Revoke rights</b><i></i></a>{% endif %}
 	<a href="#" class="new-button group-memberlist-button-disabled" id="group-memberlist-button-remove"><b>Remove</b><i></i></a>
 	<a href="#" class="new-button group-memberlist-button" id="group-memberlist-button-close"><b>Close</b><i></i></a>
-</div> 
+</div>
 <div id="group-memberlist-pending" style="clear: both"></div>
 <div id="group-memberlist-pending-buttons" class="clearfix">
 	<a href="#" class="new-button group-memberlist-button-disabled" id="group-memberlist-button-accept"><b>Accept</b><i></i></a>
@@ -348,7 +380,7 @@ Event.observe("dialog-group-settings-exit", "click", function(e) {
 <div class="cbb topdialog" id="postentry-verifyemail-dialog">
 	<h2 class="title dialog-handle">Confirm email address</h2>
 
-	
+
 	<a class="topdialog-exit" href="#" id="postentry-verifyemail-dialog-exit">X</a>
 	<div class="topdialog-body" id="postentry-verifyemail-dialog-body">
 	<p>You need to confirm your email before you can post new messages.</p>
@@ -361,7 +393,7 @@ Event.observe("dialog-group-settings-exit", "click", function(e) {
 </div>
 <div class="cbb topdialog" id="postentry-delete-dialog">
 	<h2 class="title dialog-handle">Delete discussion</h2>
-	
+
 	<a class="topdialog-exit" href="#" id="postentry-delete-dialog-exit">X</a>
 	<div class="topdialog-body" id="postentry-delete-dialog-body">
 <form method="post" id="postentry-delete-form">
