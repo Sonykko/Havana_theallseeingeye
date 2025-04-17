@@ -10,6 +10,7 @@ public enum RconHeader {
     MOD_GIVE_BADGE("mod_give_badge"),
     MOD_STICKIE_DELETE("mod_stickie_delete"),
     REFRESH_CATALOGUE_PAGES("refresh_catalogue_pages"),
+    REFRESH_SETTINGS("refresh_settings"),
     REFRESH_NAVIGATOR("refresh_navigator"),
     REFRESH_PRIVATE_ROOM("refresh_private_room"),
     REFRESH_WORDFILTER("refresh_wordfilter"),

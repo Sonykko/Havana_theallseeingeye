@@ -402,6 +402,7 @@ INSERT INTO `settings_desc` (`setting`, `description`, `category`) VALUES
 ('players.online', '1', NULL),
 ('profile.editing', 'Profile editing', 'miscellaneous'),
 ('rare.cycle.page.id', 'Set the ID of the catalogue Rare cycle page', 'catalogue'),
+('rcon.catalogue.refresh.message', 'Set the default alert message for catalogue update action', 'housekeeping'),
 ('rcon.cfh.reply.message', 'Set the default CFH reply message', 'housekeeping'),
 ('rcon.delete.stickie.message', 'Set the default reason for Delete Stickie Note', 'housekeeping'),
 ('rcon.give.rank.message', 'Set the default message for remote give rank', 'housekeeping'),
@@ -767,6 +768,7 @@ UPDATE `settings` SET
       WHEN `setting` = 'players.online' THEN NULL
       WHEN `setting` = 'profile.editing' THEN 'miscellaneous'
       WHEN `setting` = 'rare.cycle.page.id' THEN 'catalogue'
+	  WHEN `setting` = 'rcon.catalogue.refresh.message' THEN 'housekeeping'
 	  WHEN `setting` = 'rcon.cfh.reply.message' THEN 'housekeeping'
 	  WHEN `setting` = 'rcon.delete.stickie.message' THEN 'housekeeping'
 	  WHEN `setting` = 'rcon.give.rank.message' THEN 'housekeeping'
