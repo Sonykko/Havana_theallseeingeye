@@ -69,7 +69,7 @@ public class SiteBinder implements TemplateBinder {
         this.siteBanners = PromotionDao.getAdsBanners();
 
         this.emailStaticPath = GameConfiguration.getInstance().getString("email.static.content.path");
-        this.emailHotelName = StringUtils.capitalise(GameConfiguration.getInstance().getString("site.path").replace("https://", "").replace("http://", "").replace("/", ""));
+        this.emailHotelName = GameConfiguration.getInstance().getString("site.path").replace("https://", "").replace("http://", "").replace("/", "").toUpperCase();
 
         this.loaderGameIp = GameConfiguration.getInstance().getString("loader.game.ip");
         this.loaderGamePort = GameConfiguration.getInstance().getString("loader.game.port");
