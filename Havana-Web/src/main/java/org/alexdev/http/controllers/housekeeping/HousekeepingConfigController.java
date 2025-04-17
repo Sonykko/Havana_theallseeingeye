@@ -4,6 +4,7 @@ import org.alexdev.duckhttpd.server.connection.WebConnection;
 import org.alexdev.duckhttpd.template.Template;
 import org.alexdev.havana.dao.mysql.SettingsDao;
 import org.alexdev.havana.game.player.PlayerDetails;
+import org.alexdev.havana.server.rcon.messages.RconHeader;
 import org.alexdev.havana.util.config.Configuration;
 import org.alexdev.havana.util.config.GameConfiguration;
 import org.alexdev.http.Routes;
@@ -11,10 +12,12 @@ import org.alexdev.http.dao.housekeeping.HousekeepingLogsDao;
 import org.alexdev.http.dao.housekeeping.HousekeepingSettingsDao;
 import org.alexdev.http.game.housekeeping.HousekeepingManager;
 import org.alexdev.http.util.ConfigEntry;
+import org.alexdev.http.util.RconUtil;
 import org.alexdev.http.util.SessionUtil;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -56,6 +59,9 @@ public class HousekeepingConfigController {
             }
 
             SettingsDao.updateSettings(postValues.entrySet());
+
+            RconUtil.sendCommand(RconHeader.REFRESH_SETTINGS, new HashMap<>());
+
             HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Updated settings of System status. URL: " + client.request().uri(), client.getIpAddress());
 
             // Reload config

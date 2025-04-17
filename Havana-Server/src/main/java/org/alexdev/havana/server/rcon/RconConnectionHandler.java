@@ -359,9 +359,17 @@ public class RconConnectionHandler extends ChannelInboundHandlerAdapter {
                     }
                     ItemManager.reset();
                     break;
-                case REFRESH_CATALOGUE_PAGES:
-                    CatalogueManager.reset();
+                case REFRESH_SETTINGS:
+                    GameConfiguration.reset(new GameConfigWriter());
                     break;
+                case REFRESH_CATALOGUE_PAGES:
+                    ItemManager.reset();
+                    CatalogueManager.reset();
+
+                    for (Player p : PlayerManager.getInstance().getPlayers()) {
+                        new GET_CATALOG_INDEX(false).handle(p, null);
+                        p.send(new ALERT(GameConfiguration.getInstance().getString("rcon.catalogue.refresh.message")));
+                    }
                 case REFRESH_NAVIGATOR:
                     NavigatorManager.getInstance().reset();
                     NavigatorManager.reset();
