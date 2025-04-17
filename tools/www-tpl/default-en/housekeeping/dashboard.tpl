@@ -16,7 +16,7 @@
 			<tbody class="col-md-4">
 				<tr>
 					<td><strong>Havana Version</strong></td>
-					<td>1.2</td>
+					<td>1.3</td>
 				</tr>
 				<tr>
 					<td>Users</td>
