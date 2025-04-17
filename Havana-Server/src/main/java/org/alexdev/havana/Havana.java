@@ -68,7 +68,7 @@ public class Havana {
     private static int rconPort;
 
     private static boolean isShutdown;
-    
+
     private static NettyServer server;
     private static MusServer musServer;
     private static RconServer rconServer;
@@ -91,7 +91,17 @@ public class Havana {
             log = LoggerFactory.getLogger(Havana.class);
             ResourceLeakDetector.setLevel(ResourceLeakDetector.Level.ADVANCED);
 
-            log.info("Havana - Habbo Hotel V31 Emulation");
+            System.out.println("HAVANA EMULATOR");
+            System.out.println("THE FREE AND OPEN SOURCE HABBO HOTEL EMULATOR");
+            System.out.println("COPYRIGHT (C) 2025 BY QUACKSTER");
+            System.out.println("FOR MORE DETAILS CHECK LICENSE.TXT");
+            System.out.println();
+            System.out.println("BUILD");
+            System.out.println(" CORE: Java 17");
+            System.out.println(" CLIENT: V31+");
+            System.out.println();
+
+            log.info("Starting Havana...");
 
             if (Storage.connect()) {
                 Storage.getLogger().info("Connection to MySQL was a success");
@@ -267,7 +277,7 @@ public class Havana {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss", Locale.US);
 
             if (cl.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY ||
-                cl.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
+                    cl.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
                 from = LocalTime.parse(GameConfiguration.getInstance().getString("happy.hour.weekend.start"), formatter);
                 to = LocalTime.parse(GameConfiguration.getInstance().getString("happy.hour.weekend.end"), formatter);
             } else {
@@ -286,7 +296,7 @@ public class Havana {
 
     /**
      * Returns the interface to the server handler
-     * 
+     *
      * @return {@link NettyServer} interface
      */
     public static NettyServer getServer() {
