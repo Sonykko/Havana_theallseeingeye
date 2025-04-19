@@ -12,11 +12,10 @@ import org.alexdev.http.dao.housekeeping.HousekeepingMiniMailDao;
 import org.alexdev.http.game.housekeeping.HousekeepingManager;
 import org.alexdev.http.game.minimail.MinimailMessage;
 import org.alexdev.http.util.SessionUtil;
+import org.alexdev.http.util.housekeeping.ModerationApiUtil;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static org.alexdev.http.controllers.housekeeping.HousekeepingRCONController.replaceLineBreaks;
 
 public class HousekeepingMiniMailController {
     public static void minimail_reports(WebConnection client) {
@@ -135,7 +134,7 @@ public class HousekeepingMiniMailController {
     public static void massBanMiniMailReported (WebConnection client, PlayerDetails playerDetails) {
         if (client.post().contains("userNames")) {
             List<String> usernames = client.post().getArray("userNames");
-            usernames = usernames.stream().map(s -> replaceLineBreaks(s)).collect(Collectors.toList());
+            usernames = usernames.stream().map(s -> ModerationApiUtil.replaceLineBreaks(s)).collect(Collectors.toList());
             String commonMessage = client.post().getString("commonMessage");
             String customMessage = client.post().getString("customMessage");
             String alertMessage = customMessage != null && !customMessage.isEmpty() ? customMessage : commonMessage;
