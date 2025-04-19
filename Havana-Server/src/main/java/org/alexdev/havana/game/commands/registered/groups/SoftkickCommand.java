@@ -56,7 +56,7 @@ public class SoftkickCommand extends Command {
 
         player.send(new ALERT("Player (" + playerDetails.getName() + ") has been softkicked from the room"));
 
-        ModerationDao.addLog(ModerationActionType.KICK_USER, player.getDetails().getId(), online.getDetails().getId(), args[1], "Command softkick");
+        ModerationDao.addLog(ModerationActionType.KICK_USER, player.getDetails().getId(), online.getDetails().getId(), "", "Command softkick");
     }
 
     @Override
