@@ -96,9 +96,6 @@ public class HousekeepingChatLogsController {
             }
         }
 
-        //Template tpl = client.template("housekeeping/dashboard");
-        tpl.set("housekeepingManager", HousekeepingManager.getInstance());
-
         tpl.set("pageName", "Room Chatlogs");
         tpl.set("chatlogs", HousekeepingRoomDao.getModChatlog(currentPage, sortBy));
         tpl.set("nextChatlogs", HousekeepingRoomDao.getModChatlog(currentPage + 1, sortBy));

@@ -68,8 +68,6 @@ public class HousekeepingGiveBadgeRCONController {
             return;
         }
 
-        tpl.set("housekeepingManager", HousekeepingManager.getInstance());
-
         tpl.set("pageName", "Remote Give Badge");
         tpl.set("remoteGiveBadgesLogs", HousekeepingRCONCommandsDao.getLogs(currentPage, "GIVE_BADGE"));
         tpl.set("nextremoteGiveBadgesLogs", HousekeepingRCONCommandsDao.getLogs(currentPage + 1, "GIVE_BADGE"));

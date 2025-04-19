@@ -105,7 +105,6 @@ public class HousekeepingMiniMailController {
             massBanMiniMailReported(client, playerDetails);
         }
 
-        tpl.set("housekeepingManager", HousekeepingManager.getInstance());
         tpl.set("pageName", "MiniMail Reports");
         tpl.set("CFHTopics", HousekeepingCommandsDao.getCFHTopics());
         tpl.set("showResults", showResults);

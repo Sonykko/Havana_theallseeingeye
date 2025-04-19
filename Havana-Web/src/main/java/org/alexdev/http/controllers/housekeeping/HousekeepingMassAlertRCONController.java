@@ -58,8 +58,6 @@ public class HousekeepingMassAlertRCONController {
             return;
         }
 
-        tpl.set("housekeepingManager", HousekeepingManager.getInstance());
-
         tpl.set("pageName", "Hotel Alert - Mass alert");
         tpl.set("hotelAlertLogs", HousekeepingCommandsDao.MassAlertsLogs(currentPage, sortBy));
         tpl.set("nexthotelAlertLogs", HousekeepingCommandsDao.MassAlertsLogs(currentPage + 1, sortBy));

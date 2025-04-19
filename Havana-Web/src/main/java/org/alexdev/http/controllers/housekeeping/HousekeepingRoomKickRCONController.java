@@ -101,8 +101,6 @@ public class HousekeepingRoomKickRCONController {
 
         }
 
-        tpl.set("housekeepingManager", HousekeepingManager.getInstance());
-
         tpl.set("pageName", "Remote room alerting & kicking");
         tpl.set("CFHTopics", HousekeepingCommandsDao.getCFHTopics());
         tpl.set("remoteRoomKickLogs", HousekeepingCommandsDao.RemoteRoomKicksLogs(currentPage, sortBy));

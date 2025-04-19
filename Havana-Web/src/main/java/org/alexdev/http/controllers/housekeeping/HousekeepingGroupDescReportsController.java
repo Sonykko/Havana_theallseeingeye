@@ -187,7 +187,6 @@ public class HousekeepingGroupDescReportsController {
             }
         }
 
-        tpl.set("housekeepingManager", HousekeepingManager.getInstance());
         tpl.set("pageName", "Group Description Reports");
         tpl.set("showResults", showResults);
         tpl.set("totalReportsSearch", totalReportsSearch);

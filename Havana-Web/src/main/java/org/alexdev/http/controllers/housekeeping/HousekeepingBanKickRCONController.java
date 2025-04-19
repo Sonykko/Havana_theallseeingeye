@@ -138,8 +138,6 @@ public class HousekeepingBanKickRCONController {
             tpl.set("isValidUser", true);
         }
 
-        tpl.set("housekeepingManager", HousekeepingManager.getInstance());
-
         tpl.set("pageName", "User Ban & Kick Tool");
         tpl.set("userBan", badguy);
         tpl.set("CFHTopics", HousekeepingCommandsDao.getCFHTopics());
@@ -256,8 +254,6 @@ public class HousekeepingBanKickRCONController {
             client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/api/mass_unban?usernames=" + usernames);
             return;
         }
-
-        tpl.set("housekeepingManager", HousekeepingManager.getInstance());
 
         tpl.set("pageName", "Mass Unban Tool");
         tpl.set("CFHTopics", HousekeepingCommandsDao.getCFHTopics());

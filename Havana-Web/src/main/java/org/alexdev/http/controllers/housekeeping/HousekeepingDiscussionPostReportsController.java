@@ -199,7 +199,6 @@ public class HousekeepingDiscussionPostReportsController {
             }
         }
 
-        tpl.set("housekeepingManager", HousekeepingManager.getInstance());
         tpl.set("pageName", "Discussion Post Reports");
         tpl.set("showResults", showResults);
         tpl.set("totalReportsSearch", totalReportsSearch);
