@@ -15,14 +15,13 @@ import org.alexdev.http.game.housekeeping.HousekeepingManager;
 import org.alexdev.http.util.RconUtil;
 import org.alexdev.http.util.SessionUtil;
 import org.alexdev.http.util.housekeeping.MessageEncoderUtil;
+import org.alexdev.http.util.housekeeping.ModerationApiUtil;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-import static org.alexdev.http.controllers.housekeeping.HousekeepingRCONController.replaceLineBreaks;
 
 public class HousekeepingStickieNotesController {
     public static void stickie_viewer(WebConnection client) {
@@ -71,7 +70,7 @@ public class HousekeepingStickieNotesController {
             if (!StringUtils.isNumeric(criteria) || (!criteria.equals("1") && !criteria.equals("0"))) {
                 client.session().set("alertColour", "danger");
                 client.session().set("alertMessage", "Please enter a valid criteria.");
-                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/stickie_viewer");
+                client.redirect(getStickieNotesPath());
                 return;
             }
 
@@ -84,14 +83,14 @@ public class HousekeepingStickieNotesController {
                 } else {
                     client.session().set("alertColour", "danger");
                     client.session().set("alertMessage", "Please enter a valid User name.");
-                    client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/stickie_viewer");
+                    client.redirect(getStickieNotesPath());
                     return;
                 }
 
                 if (!userExists) {
                     client.session().set("alertColour", "danger");
                     client.session().set("alertMessage", "The user does not exist.");
-                    client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/stickie_viewer");
+                    client.redirect(getStickieNotesPath());
                     return;
                 }
 
@@ -103,7 +102,7 @@ public class HousekeepingStickieNotesController {
             if (!StringUtils.isNumeric(showMax) || showMaxInt < 1 || showMaxInt > 20) {
                 client.session().set("alertColour", "danger");
                 client.session().set("alertMessage", "Please enter a valid show max value.");
-                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/stickie_viewer");
+                client.redirect(getStickieNotesPath());
                 return;
             }
 
@@ -126,98 +125,18 @@ public class HousekeepingStickieNotesController {
         String action = client.post().getString("action");
 
         if (client.post().contains("onlyArchive")) {
-            String stickieIdsString = client.post().getString("stickieIds");
-            if (stickieIdsString != null && !stickieIdsString.isEmpty()) {
-                String[] stickieIds = stickieIdsString.split(",");
-                for (String stickieId : stickieIds) {
-                    try {
-                        RconUtil.sendCommand(RconHeader.MOD_STICKIE_DELETE, new HashMap<>() {{
-                            put("stickieId", stickieId);
-                            put("stickieText", stickieTextEncoded);
-                            put("deleteStickie", false);
-                        }});
-                    } catch (Exception e) {
-                        client.session().set("alertColour", "danger");
-                        client.session().set("alertMessage", "Error archiving Stickie Note: " + e.getMessage());
-                    }
-                }
-                client.session().set("alertColour", "success");
-                client.session().set("alertMessage", "Selected Stickie Notes have been archived successfully.");
-                HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Archived Stickie Notes (id's: " + stickieIdsString + "). URL: " + client.request().uri(), client.getIpAddress());
-            } else {
-                client.session().set("alertColour", "warning");
-                client.session().set("alertMessage", "No Stickie Notes were selected for archiving.");
-            }
-            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/stickie_viewer");
+            archiveStickieNote(client, playerDetails, stickieTextEncoded);
             return;
         }
 
         if (client.post().contains("onlyDelete")) {
-            String stickieIdsString = client.post().getString("stickieIds");
-            if (stickieIdsString != null && !stickieIdsString.isEmpty()) {
-                String[] stickieIds = stickieIdsString.split(",");
-                for (String stickieId : stickieIds) {
-                    try {
-                        RconUtil.sendCommand(RconHeader.MOD_STICKIE_DELETE, new HashMap<>() {{
-                            put("stickieId", stickieId);
-                            put("stickieText", stickieTextEncoded);
-                            put("deleteStickie", true);
-                        }});
-                    } catch (Exception e) {
-                        client.session().set("alertColour", "danger");
-                        client.session().set("alertMessage", "Error deleting Stickie Note: " + e.getMessage());
-                    }
-                }
-                client.session().set("alertColour", "success");
-                client.session().set("alertMessage", "Selected Stickie Notes have been deleted successfully.");
-                HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Deleted and Archived Stickie Notes (id's: " + stickieIdsString + "). URL: " + client.request().uri(), client.getIpAddress());
-            } else {
-                client.session().set("alertColour", "warning");
-                client.session().set("alertMessage", "No Stickie Notes were selected for deletion.");
-            }
-            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/stickie_viewer");
+            deleteStickieNote(client, playerDetails, stickieTextEncoded);
             return;
         }
 
         if ("massBan".equals(action)) {
-            if (client.post().contains("userNames") && (client.post().contains("commonMessage") || client.post().contains("customMessage"))) {
-                List<String> usernames = client.post().getArray("userNames");
-                usernames = usernames.stream().map(s -> replaceLineBreaks(s)).collect(Collectors.toList());
-                String commonMessage = client.post().getString("commonMessage");
-                String customMessage = client.post().getString("customMessage");
-                String alertMessage = customMessage != null && !customMessage.isEmpty() ? customMessage : commonMessage;
-                String notes = client.post().getString("notes");
-                int banSeconds = client.post().getInt("banSeconds");
-                boolean doBanMachine = client.post().getBoolean("doBanMachine");
-                boolean doBanIP = client.post().getBoolean("doBanIP");
-
-                String stickieIdsString = client.post().getString("stickieIds");
-                String[] stickieIds = stickieIdsString.split(",");
-
-                for (String stickieId : stickieIds) {
-                    try {
-                        RconUtil.sendCommand(RconHeader.MOD_STICKIE_DELETE, new HashMap<>() {{
-                            put("stickieId", stickieId);
-                            put("stickieText", stickieTextEncoded);
-                            put("deleteStickie", true);
-                        }});
-                    } catch (Exception e) {
-                        client.session().set("alertColour", "danger");
-                        client.session().set("alertMessage", "Error deleting Stickie Note: " + e.getMessage());
-                    }
-                    client.session().set("alertColour", "success");
-                    client.session().set("alertMessage", "Selected Stickie Notes have been deleted successfully.");
-                    HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Banned and Deleted Stickie Notes (id's: " + stickieIdsString + "). URL: " + client.request().uri(), client.getIpAddress());
-                }
-
-                if (usernames != null && !usernames.isEmpty()) {
-                    client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/api/mass_ban?usernames=" + usernames + "&alertMessage=" + alertMessage + "&notes=" + notes + "&banSeconds=" + banSeconds + "&doBanMachine=" + doBanMachine + "&doBanIP=" + doBanIP);
-                    return;
-                } else {
-                    client.session().set("alertColour", "danger");
-                    client.session().set("alertMessage", "Please enter a valid usernames");
-                }
-            }
+            massBanStickieNoteOwner(client, playerDetails, stickieTextEncoded);
+            return;
         }
 
         tpl.set("housekeepingManager", HousekeepingManager.getInstance());
@@ -231,5 +150,101 @@ public class HousekeepingStickieNotesController {
 
         // Delete alert after it's been rendered
         client.session().delete("alertMessage");
+    }
+
+    private static String getStickieNotesPath() {
+        return "/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/stickie_viewer";
+    }
+
+    public static void archiveStickieNote (WebConnection client, PlayerDetails playerDetails, String stickieTextEncoded) {
+        String stickieIdsString = client.post().getString("stickieIds");
+        if (stickieIdsString != null && !stickieIdsString.isEmpty()) {
+            String[] stickieIds = stickieIdsString.split(",");
+            for (String stickieId : stickieIds) {
+                try {
+                    RconUtil.sendCommand(RconHeader.MOD_STICKIE_DELETE, new HashMap<>() {{
+                        put("stickieId", stickieId);
+                        put("stickieText", stickieTextEncoded);
+                        put("deleteStickie", false);
+                    }});
+                } catch (Exception e) {
+                    client.session().set("alertColour", "danger");
+                    client.session().set("alertMessage", "Error archiving Stickie Note: " + e.getMessage());
+                }
+            }
+            client.session().set("alertColour", "success");
+            client.session().set("alertMessage", "Selected Stickie Notes have been archived successfully.");
+            HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Archived Stickie Notes (id's: " + stickieIdsString + "). URL: " + client.request().uri(), client.getIpAddress());
+        } else {
+            client.session().set("alertColour", "warning");
+            client.session().set("alertMessage", "No Stickie Notes were selected for archiving.");
+        }
+        client.redirect(getStickieNotesPath());
+    }
+
+    public static void deleteStickieNote (WebConnection client, PlayerDetails playerDetails, String stickieTextEncoded) {
+        String stickieIdsString = client.post().getString("stickieIds");
+        if (stickieIdsString != null && !stickieIdsString.isEmpty()) {
+            String[] stickieIds = stickieIdsString.split(",");
+            for (String stickieId : stickieIds) {
+                try {
+                    RconUtil.sendCommand(RconHeader.MOD_STICKIE_DELETE, new HashMap<>() {{
+                        put("stickieId", stickieId);
+                        put("stickieText", stickieTextEncoded);
+                        put("deleteStickie", true);
+                    }});
+                } catch (Exception e) {
+                    client.session().set("alertColour", "danger");
+                    client.session().set("alertMessage", "Error deleting Stickie Note: " + e.getMessage());
+                }
+            }
+            client.session().set("alertColour", "success");
+            client.session().set("alertMessage", "Selected Stickie Notes have been deleted successfully.");
+            HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Deleted and Archived Stickie Notes (id's: " + stickieIdsString + "). URL: " + client.request().uri(), client.getIpAddress());
+        } else {
+            client.session().set("alertColour", "warning");
+            client.session().set("alertMessage", "No Stickie Notes were selected for deletion.");
+        }
+        client.redirect(getStickieNotesPath());
+    }
+
+    public static void massBanStickieNoteOwner (WebConnection client, PlayerDetails playerDetails, String stickieTextEncoded) {
+        if (client.post().contains("userNames") && (client.post().contains("commonMessage") || client.post().contains("customMessage"))) {
+            List<String> usernames = client.post().getArray("userNames");
+            usernames = usernames.stream().map(s -> ModerationApiUtil.replaceLineBreaks(s)).collect(Collectors.toList());
+            String commonMessage = client.post().getString("commonMessage");
+            String customMessage = client.post().getString("customMessage");
+            String alertMessage = customMessage != null && !customMessage.isEmpty() ? customMessage : commonMessage;
+            String notes = client.post().getString("notes");
+            int banSeconds = client.post().getInt("banSeconds");
+            boolean doBanMachine = client.post().getBoolean("doBanMachine");
+            boolean doBanIP = client.post().getBoolean("doBanIP");
+
+            String stickieIdsString = client.post().getString("stickieIds");
+            String[] stickieIds = stickieIdsString.split(",");
+
+            for (String stickieId : stickieIds) {
+                try {
+                    RconUtil.sendCommand(RconHeader.MOD_STICKIE_DELETE, new HashMap<>() {{
+                        put("stickieId", stickieId);
+                        put("stickieText", stickieTextEncoded);
+                        put("deleteStickie", true);
+                    }});
+                } catch (Exception e) {
+                    client.session().set("alertColour", "danger");
+                    client.session().set("alertMessage", "Error deleting Stickie Note: " + e.getMessage());
+                }
+                client.session().set("alertColour", "success");
+                client.session().set("alertMessage", "Selected Stickie Notes have been deleted successfully.");
+                HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Banned and Deleted Stickie Notes (id's: " + stickieIdsString + "). URL: " + client.request().uri(), client.getIpAddress());
+            }
+
+            if (usernames != null && !usernames.isEmpty()) {
+                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/api/mass_ban?usernames=" + usernames + "&alertMessage=" + alertMessage + "&notes=" + notes + "&banSeconds=" + banSeconds + "&doBanMachine=" + doBanMachine + "&doBanIP=" + doBanIP);
+            } else {
+                client.session().set("alertColour", "danger");
+                client.session().set("alertMessage", "Please enter a valid usernames");
+            }
+        }
     }
 }
