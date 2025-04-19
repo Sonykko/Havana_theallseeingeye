@@ -15,6 +15,7 @@ public enum Fuseright {
     // Hobba fuses
     MUTE("fuse_mute", PlayerRank.HOBBA),
     KICK("fuse_kick", PlayerRank.HOBBA),
+    TRANSFER("fuse_transfer", PlayerRank.HOBBA),
     RECEIVE_CALLS_FOR_HELP("fuse_receive_calls_for_help", PlayerRank.HOBBA),
 
     // Superhobba fuses

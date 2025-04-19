@@ -6,6 +6,7 @@ public enum ModerationActionType {
     ALERT_USER(0, 0, new ModeratorAlertUserAction()),
     KICK_USER(0, 1,  new ModeratorKickUserAction()),
     BAN_USER(0, 2, new ModeratorBanUserAction()),
+    TRANSFER_USER(0, 0, null),
     ROOM_ALERT(1, 0,  new ModeratorRoomAlertAction()),
     ROOM_KICK(1, 1, new ModeratorRoomKickAction());
 
