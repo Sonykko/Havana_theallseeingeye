@@ -76,9 +76,6 @@ public class HousekeepingAlertRCONController {
             return;
         }
 
-        //Template tpl = client.template("housekeeping/dashboard");
-        tpl.set("housekeepingManager", HousekeepingManager.getInstance());
-
         tpl.set("pageName", "User Alert");
         tpl.set("CFHTopics", HousekeepingCommandsDao.getCFHTopics());
         tpl.set("remoteAlertLogs", HousekeepingCommandsDao.RemoteAlertLogs(currentPage, sortBy));

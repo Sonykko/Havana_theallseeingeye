@@ -50,7 +50,6 @@ public class HousekeepingRestoreController {
             return;
         }
 
-        tpl.set("housekeepingManager", HousekeepingManager.getInstance());
         tpl.set("pageName", "Habbo restore tool");
         tpl.render();
 

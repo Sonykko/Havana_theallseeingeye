@@ -184,7 +184,6 @@ public class HousekeepingGuestbookReportsController {
             }
         }
 
-        tpl.set("housekeepingManager", HousekeepingManager.getInstance());
         tpl.set("pageName", "Guestbook Reports");
         tpl.set("showResults", showResults);
         tpl.set("totalReportsSearch", totalReportsSearch);

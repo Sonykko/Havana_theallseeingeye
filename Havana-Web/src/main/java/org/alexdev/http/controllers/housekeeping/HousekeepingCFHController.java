@@ -75,8 +75,6 @@ public class HousekeepingCFHController {
                 }
             }
 
-            tpl.set("housekeepingManager", HousekeepingManager.getInstance());
-
             tpl.set("pageName", "CFH Logs");
             tpl.set("cfhlogs", HousekeepingCFHDao.getCFHlog(currentPage, sortBy));
             tpl.set("nextCFHlogs", HousekeepingCFHDao.getCFHlog(currentPage + 1, sortBy));
@@ -125,8 +123,6 @@ public class HousekeepingCFHController {
             client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/api/cfh.follow?cryIdFollow=" + cryIdFollow + "&moderatorFollow=" + playerDetails.getName());
             return;
         }
-
-        tpl.set("housekeepingManager", HousekeepingManager.getInstance());
 
         tpl.set("pageName", "CFH Action");
         tpl.set("cfhlogsAction", HousekeepingCFHDao.getCFHlogAction(client.get().getString("cryId")));
@@ -191,8 +187,6 @@ public class HousekeepingCFHController {
                     sortBy = client.get().getString("sort");
                 }
             }
-
-            tpl.set("housekeepingManager", HousekeepingManager.getInstance());
 
             tpl.set("pageName", "Remote CFH admin");
             tpl.set("cfhlogs", HousekeepingCFHDao.getCFHlog(currentPage, sortBy));

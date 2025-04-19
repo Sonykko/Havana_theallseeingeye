@@ -182,7 +182,6 @@ public class HousekeepingMottoReportsController {
             }
         }
 
-        tpl.set("housekeepingManager", HousekeepingManager.getInstance());
         tpl.set("pageName", GameConfiguration.getInstance().getString("site.name") + " Motto Reports");
         tpl.set("showResults", showResults);
         tpl.set("totalReportsSearch", totalReportsSearch);

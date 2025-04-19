@@ -139,7 +139,6 @@ public class HousekeepingStickieNotesController {
             return;
         }
 
-        tpl.set("housekeepingManager", HousekeepingManager.getInstance());
         tpl.set("pageName", "Stickie Notes Reports");
         tpl.set("CFHTopics", HousekeepingCommandsDao.getCFHTopics());
         tpl.set("showResults", showResults);

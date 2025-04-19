@@ -179,7 +179,6 @@ public class HousekeepingNameReportsController {
             }
         }
 
-        tpl.set("housekeepingManager", HousekeepingManager.getInstance());
         tpl.set("pageName", GameConfiguration.getInstance().getString("site.name") + " Name Reports");
         tpl.set("showResults", showResults);
         tpl.set("totalReportsSearch", totalReportsSearch);
