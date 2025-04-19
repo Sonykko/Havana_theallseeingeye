@@ -89,9 +89,12 @@ public class CommandManager {
         tempCommands.put(new String[] { "roomalert", "ra" }, new RoomAlertCommand());
         tempCommands.put(new String[] { "ban", "userban" }, new BanCommand());
         tempCommands.put(new String[] { "unban" }, new UnbanCommand());
+        tempCommands.put(new String[] { "superban" }, new PermBanCommand());
         tempCommands.put(new String[] { "tradeban" }, new TradeBanCommand());
-        tempCommands.put(new String[] { "mute" }, new MuteCommand());
+        tempCommands.put(new String[] { "shutup", "mute" }, new MuteCommand());
         tempCommands.put(new String[] { "unmute" }, new UnmuteCommand());
+        tempCommands.put(new String[] { "kick" }, new KickCommand());
+        tempCommands.put(new String[] { "softkick" }, new SoftkickCommand());
 
         List<Pair<String[], Command>> commandList = new ArrayList<>();
 
