@@ -11,7 +11,6 @@ import org.alexdev.havana.game.player.PlayerDetails;
 import org.alexdev.havana.game.player.PlayerManager;
 import org.alexdev.havana.game.player.PlayerRank;
 import org.alexdev.havana.messages.outgoing.alerts.ALERT;
-import org.alexdev.havana.messages.outgoing.messenger.ROOMFORWARD;
 
 public class TransferCommand extends Command {
     @Override
@@ -40,20 +39,21 @@ public class TransferCommand extends Command {
             return;
         }
 
-        if (CommandManager.getInstance().hasPermission(playerDetails, "transfer")) { //añadir el FuseRight fuse_transfer
+        if (CommandManager.getInstance().hasPermission(playerDetails, "transfer")) {
             player.send(new ALERT("Cannot transfer a user who has permission to transfer"));
             return;
         }
 
         var online = PlayerManager.getInstance().getPlayerById(playerDetails.getId());
+        var room = player.getRoomUser().getRoom();
 
         if (online != null) {
-            online.send(new ROOMFORWARD(player.getRoomUser().getRoom().isPublicRoom(), player.getRoomUser().getRoom().getId()));
+            room.forward(online, true);
         }
 
         player.send(new ALERT("Transferred " + playerDetails.getName() + " to your room"));
 
-        ModerationDao.addLog(ModerationActionType.TRANSFER_USER, player.getDetails().getId(), online.getDetails().getId(), args[1], "Command transfer");
+        ModerationDao.addLog(ModerationActionType.TRANSFER_USER, player.getDetails().getId(), online.getDetails().getId(), "", "Command transfer");
     }
 
     @Override
