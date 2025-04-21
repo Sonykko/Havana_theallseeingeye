@@ -10,6 +10,7 @@ import org.alexdev.havana.util.config.GameConfiguration;
 import org.alexdev.http.Routes;
 import org.alexdev.http.dao.housekeeping.HousekeepingLogsDao;
 import org.alexdev.http.dao.housekeeping.HousekeepingPlayerDao;
+import org.alexdev.http.game.housekeeping.HousekeepingManager;
 import org.alexdev.http.util.RconUtil;
 import org.alexdev.http.util.SessionUtil;
 import org.alexdev.http.util.housekeeping.ModerationApiUtil;
@@ -34,6 +35,11 @@ public class HousekeepingBanApiController {
 
             if (playerDetails.getId() == banningPlayerDetails.getId()) {
                 client.send("Can't superban yourself.");
+                return;
+            }
+
+            if (!HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "bans")) {
+                client.send("Cannot ban a user who has permission to superban");
                 return;
             }
 
@@ -73,6 +79,11 @@ public class HousekeepingBanApiController {
 
             if (playerDetails.getId() == banningPlayerDetails.getId()) {
                 client.send("Can't ban yourself.");
+                return;
+            }
+
+            if (!HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "bans")) {
+                client.send("Cannot ban a user who has permission to ban");
                 return;
             }
 
