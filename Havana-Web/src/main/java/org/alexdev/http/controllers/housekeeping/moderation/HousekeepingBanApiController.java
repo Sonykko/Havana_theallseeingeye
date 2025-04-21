@@ -109,8 +109,7 @@ public class HousekeepingBanApiController {
             client.send("");
         }
 
-        int banningId1 = client.session().getInt("user.id");
-        PlayerDetails staffDetails = PlayerManager.getInstance().getPlayerData(banningId1);
+        PlayerDetails staffDetails = PlayerDao.getDetails(client.get().getString("username"));
 
         Map<String, String> params = client.get().getValues();
         String users = params.get("usernames");
@@ -166,8 +165,7 @@ public class HousekeepingBanApiController {
             client.send("");
         }
 
-        int banningId = client.session().getInt("user.id");
-        PlayerDetails staffDetails = PlayerManager.getInstance().getPlayerData(banningId);
+        PlayerDetails staffDetails = PlayerDao.getDetails(client.get().getString("username"));
 
         Map<String, String> params = client.get().getValues();
         String users = params.get("usernames");
