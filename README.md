@@ -79,6 +79,12 @@ Developed by Sonykko.
   - Discussion Post report system
 
 ### Client
+  - Commands
+    - Alert user
+    - Transfer user
+    - Superban user
+    - Kick user
+    - Softkick user
   - Mod Tools
     - Room kick
       - Stop event automatically
