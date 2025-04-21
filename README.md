@@ -80,6 +80,12 @@ Developed by Sonykko.
 
 ### Client
   - Support for Dual Flash/Shockwave connection for RELEASE39-22643-22891-200911110035_07c3a2a30713fd5bea8a8caf07e33438.
+  - Commands
+    - Alert user
+    - Transfer user
+    - Superban user
+    - Kick user
+    - Softkick user
   - Mod Tools
     - Room kick
       - Stop event automatically
