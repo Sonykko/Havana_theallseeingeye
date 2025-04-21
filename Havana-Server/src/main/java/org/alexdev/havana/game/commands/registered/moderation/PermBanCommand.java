@@ -52,7 +52,7 @@ public class PermBanCommand extends Command {
 
         Map<BanType, String> criteria = new HashMap<>();
         long in20Years = DateUtil.getCurrentTimeSeconds() + (TimeUnit.DAYS.toSeconds(365) * 20);
-        var reason = StringUtil.filterInput(Arrays.asList(args).stream().skip(2).collect(Collectors.joining(" ")), true);
+        var reason = StringUtil.filterInput(Arrays.asList(args).stream().skip(1).collect(Collectors.joining(" ")), true);
 
         if (playerDetails.getMachineId() != null && playerDetails.getMachineId().length() > 0) {
             BanDao.addBan(BanType.MACHINE_ID, playerDetails.getMachineId(), in20Years, reason, playerDetails.getId());
@@ -100,6 +100,12 @@ public class PermBanCommand extends Command {
                 BanDao.addBan(BanType.IP_ADDRESS, playerDetails.getIpAddress(), in20Years);
             }
         }*/
+    }
+
+    @Override
+    public void addArguments() {
+        this.arguments.add("player");
+        this.arguments.add("reason");
     }
 
     @Override
