@@ -27,12 +27,30 @@ Developed by Sonykko.
     - Remote baning and kicking
     - Remote superban (original feature)
     - Remote room alerting & kicking
+      - Room kick
+        - Stop event automatically
+      - Room alert
+      - Private rooms
+        - Change room lock to doorbell
+        - Set room as 'Inappropriate to hotel management'
     - User action log
+      - Room chatlogs
+      - Messenger chatlogs
     - Remote Calls for help admin
+      - Pick CFH
+      - Reply CFH
+      - Block CFH
+      - Follow CFH room
     - Remote mass alert
     - Remote mass ban
+      - Mass kick
+      - Mass ban
     - Remote mass unban
     - Habbo restore tool
+      - Mass restore
+      - One user only restore
+        - User email changer
+      - SMTP email output
     - User search & information tool
     - Current furniture
     - Room admin (private rooms)
@@ -41,28 +59,79 @@ Developed by Sonykko.
     - User edit (original feature)
     - User create (original feature)
     - Wordfilter tool
+      - Create word
+      - Edit word
+      - Delete word
     - Voucher codes tool
+      - Create voucher
+        - Credit voucher
+        - Item voucher
     - Group admin (badge editor included)
     - Hobba applications
     - Check Hobba applicant tool
     - Remote give badge (badge manager)
     - Rank manager
+      - Give rank
+      - Staff info list
+      - Staff var admin
     - Trusted person admin
+      - Give trusted person
+      - Remove trusted person
+      - All trusted person activity log
     - Stickie viewer
+      - Archive Stickie Notes
+      - Delete Stickie Notes
+      - Ban Stickie Notes owners
     - MiniMail Reports
+      - Archive reports
+      - Delete reports
+      - Ban MiniMail complaint owner
     - Habbo Name Reports
+      - Archive reports
+      - Delete reports
+      - Ban Habbo reported
     - Habbo Motto Reports
+      - Archive reports
+      - Delete reports
+      - Reemplace Habbo Motto
     - Guestbook Reports
+      - Archive reports
+      - Delete reports
+      - Reemplace Guestbook entry
     - Group Name Reports
+      - Archive reports
+      - Delete reports
+      - Reemplace Group Name
     - Group Description Reports
+      - Archive report
+      - Delete reports
+      - Reemplace Group Description
     - Discussion Post Reports
+      - Archive report
+      - Delete reports
+      - Reemplace Discussion Post
   - Campaign management
     - Ads banners tool
+      - Create Ads banners
+      - Edit Ads banners
+      - Delete Ads banners
     - Staff picks tool (including rooms)
+      - Create Staff picks
+      - Edit Staff picks
+      - Delete Staff picks
     - Recommended groups tool
+      - Create Recommended groups
+      - Edit Recommended groups
+      - Delete Recommended groups
     - Hot campaigns tool
+      - Create Hot campaigns
+      - Edit Hot campaigns
+      - Delete Hot campaigns
     - Create catalogue pages
     - Manage catalogue pages
+      - Edit pages
+      - Copy pages
+      - Delete pages
   - theallseeingeye - Hobbanet design
 
 ### Website
@@ -79,7 +148,7 @@ Developed by Sonykko.
   - Discussion Post report system
 
 ### Client
-  - Support for Dual Flash/Shockwave connection for RELEASE39-22643-22891-200911110035_07c3a2a30713fd5bea8a8caf07e33438.
+  - Support for Dual Flash/Shockwave connection for RELEASE39-22643-22891-200911110035_07c3a2a30713fd5bea8a8caf07e33438 and Habbo Hotel v31+ and older.
   - Commands
     - Alert user
     - Transfer user
