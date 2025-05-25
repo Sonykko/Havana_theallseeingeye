@@ -1,6 +1,6 @@
 <nav class="header-box">
         <!--<button class="btn btn-primary" id="menu-toggle">Toggle Menu</button>-->
-	<text style="padding-inline: inherit;">Logged in as: <b>{{ playerDetails.getName() }}</b> (Prevous login at {{ playerDetails.getLastLoginTimeHK() }} from {{ playerDetails.getLastLoginIPHK() }}) <a class="" href="{{ site.sitePath }}/ase/housekeeping/es/logout">Log out</a></text>	
+	<text style="padding-inline: inherit;">Logged in as: <b>{{ playerDetails.getName() }}</b> (Previous login at {{ playerDetails.getLastLoginTimeHK() }} from {{ playerDetails.getLastLoginIPHK() }}) <a class="" href="{{ site.sitePath }}/ase/housekeeping/es/logout">Log out</a></text>
 				<a class="header-links" href="{{ site.sitePath }}">Secure Login To {{ site.siteName }}</a>
 
             <!-- 
