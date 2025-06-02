@@ -630,6 +630,16 @@ ALTER TABLE `cms_minimail`
 ADD COLUMN `is_reported` TINYINT(1) NOT NULL DEFAULT 0,
 ADD COLUMN `is_moderated` TINYINT(1) NOT NULL DEFAULT 0;
 
+ALTER TABLE `housekeeping_audit_log`
+MODIFY COLUMN `action` ENUM(
+  'alert_user',
+  'kick_user',
+  'ban_user',
+  'room_alert',
+  'room_kick',
+  'transfer_user'
+) NOT NULL;
+
 ALTER TABLE `settings` ADD COLUMN `category` varchar(55) DEFAULT NULL;
 COMMIT;
 
