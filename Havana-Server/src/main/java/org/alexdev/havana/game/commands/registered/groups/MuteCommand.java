@@ -35,12 +35,7 @@ public class MuteCommand extends Command {
         }
 
         String name = args[0];
-        int minutes = StringUtils.isNumeric(args[1]) ? Integer.parseInt(args[1]) : 0;
-        int seconds = 0;
-
-        if (minutes > 0) {
-            seconds = (int) TimeUnit.MINUTES.toSeconds(minutes);
-        }
+        int seconds = (int) TimeUnit.MINUTES.toSeconds(2);
 
         PlayerDetails playerDetails = PlayerManager.getInstance().getPlayerData(name);
 
@@ -79,12 +74,11 @@ public class MuteCommand extends Command {
 
     @Override
     public void addArguments() {
-        arguments.add("user");
-        arguments.add("minutes");
+        arguments.add("player");
     }
 
     @Override
     public String getDescription() {
-        return "Remove user ability to speak";
+        return "Silence the target user for a period of 2 minutes";
     }
 }
