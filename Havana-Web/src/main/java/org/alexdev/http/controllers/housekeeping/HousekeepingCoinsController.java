@@ -85,8 +85,9 @@ public class HousekeepingCoinsController {
         int isSingleUse = Integer.parseInt(isSingleUseStrg);
         int allowNewUsers = Integer.parseInt(allowNewUsersStrg);
 
-        List<Map<String, Object>> checkVoucherCode = HousekeepingCoinsDao.getVoucherByCode(voucherCode);
-        if (!checkVoucherCode.isEmpty()) {
+        var checkVoucherCode = HousekeepingCoinsDao.getVoucherByCode(voucherCode);
+
+        if (checkVoucherCode != null) {
             client.session().set("alertColour", "danger");
             client.session().set("alertMessage", "The Voucher code already exists");
             client.redirect(getVouchersPath());

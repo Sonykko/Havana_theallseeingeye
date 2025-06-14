@@ -1,18 +1,18 @@
 package org.alexdev.http.dao.housekeeping;
 
 import org.alexdev.havana.dao.Storage;
+import org.alexdev.http.game.housekeeping.HousekeepingVouchers;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class HousekeepingCoinsDao {
-    public static List<Map<String, Object>> getAllVouchers() {
-        List<Map<String, Object>> VouchersList = new ArrayList<>();
+    public static List<HousekeepingVouchers> getAllVouchers() {
+        List<HousekeepingVouchers> vouchers = new ArrayList<>();
 
         Connection sqlConnection = null;
         PreparedStatement preparedStatement = null;
@@ -27,15 +27,7 @@ public class HousekeepingCoinsDao {
             resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
-                Map<String, Object> Voucher = new HashMap<>();
-                Voucher.put("voucherCode", resultSet.getString("voucher_code"));
-                Voucher.put("saleCode", resultSet.getString("catalogue_sale_code"));
-                Voucher.put("credits", resultSet.getInt("credits"));
-                Voucher.put("expiryDate", resultSet.getString("expiry_date"));
-                Voucher.put("isSingleUse", resultSet.getInt("is_single_use"));
-                Voucher.put("allowNewUsers", resultSet.getInt("allow_new_users"));
-
-                VouchersList.add(Voucher);
+                vouchers.add(fill(resultSet));
             }
 
         } catch (Exception e) {
@@ -46,7 +38,7 @@ public class HousekeepingCoinsDao {
             Storage.closeSilently(sqlConnection);
         }
 
-        return VouchersList;
+        return vouchers;
     }
 
     public static void createVoucher(String voucherCode, String credits, String expiryDate, int isSingleUse, int allowNewUsers, String item, String type) {
@@ -82,8 +74,8 @@ public class HousekeepingCoinsDao {
         }
     }
 
-    public static List<Map<String, Object>> getVoucherByCode(String voucherCode) {
-        List<Map<String, Object>> getVoucher = new ArrayList<>();
+    public static HousekeepingVouchers getVoucherByCode(String voucherCode) {
+        HousekeepingVouchers voucher = null;
 
         Connection sqlConnection = null;
         PreparedStatement preparedStatement = null;
@@ -91,16 +83,18 @@ public class HousekeepingCoinsDao {
 
         try {
             sqlConnection = Storage.getStorage().getConnection();
-            preparedStatement = Storage.getStorage().prepare("SELECT * FROM vouchers WHERE voucher_code = ?", sqlConnection);
+            preparedStatement = Storage.getStorage().prepare(
+                    "SELECT v.voucher_code, v.credits, v.expiry_date, v.is_single_use, v.allow_new_users, vi.catalogue_sale_code " +
+                            "FROM vouchers v " +
+                            "LEFT JOIN vouchers_items vi ON v.voucher_code = vi.voucher_code " +
+                            "WHERE v.voucher_code = ?", sqlConnection
+            );
             preparedStatement.setString(1, voucherCode);
 
             resultSet = preparedStatement.executeQuery();
 
-            while (resultSet.next()) {
-                Map<String, Object> getVoucherInfo = new HashMap<>();
-                getVoucherInfo.put("voucherCode", resultSet.getString("voucher_code"));
-
-                getVoucher.add(getVoucherInfo);
+            if (resultSet.next()) {
+                voucher = fill(resultSet);
             }
 
         } catch (Exception e) {
@@ -111,6 +105,17 @@ public class HousekeepingCoinsDao {
             Storage.closeSilently(sqlConnection);
         }
 
-        return getVoucher;
+        return voucher;
+    }
+
+    public static HousekeepingVouchers fill(ResultSet resultSet) throws SQLException {
+        return new HousekeepingVouchers(
+                resultSet.getString("voucher_code"),
+                resultSet.getString("catalogue_sale_code"),
+                resultSet.getInt("credits"),
+                resultSet.getString("expiry_date"),
+                resultSet.getBoolean("is_single_use"),
+                resultSet.getBoolean("allow_new_users")
+        );
     }
 }

@@ -58,31 +58,23 @@
 			    {% set num = 1 %}
 				{% for voucher in Vouchers %}
                 <tr>
-				  <td>{{ voucher.voucherCode }}</td>                               
-				  <td>{{ voucher.saleCode }}</td>                               
-				  <td>{{ voucher.credits }}</td>                 
-				  <td>{% if voucher.expiryDate != null %}{{ voucher.expiryDate }}{% else %}No limit{% endif %}</td>                                			 
-				  <td>{% if voucher.isSingleUse == 1 %}Yes{% else %}No{% endif %}</td>                 			 
-				  <td>{% if voucher.allowNewUsers == 1 %}Yes{% else %}No{% endif %}</td>                 			 
+				  <td>{{ voucher.voucherCode() }}</td>
+				  <td>{{ voucher.saleCode() }}</td>
+				  <td>{{ voucher.credits() }}</td>
+				  <td>{% if voucher.expiryDate() != null %}{{ voucher.expiryDate() }}{% else %}No limit{% endif %}</td>
+				  <td>{% if voucher.isSingleUse() %}Yes{% else %}No{% endif %}</td>
+				  <td>{% if voucher.allowNewUsers() %}Yes{% else %}No{% endif %}</td>
                 </tr>
 			   {% set num = num + 1 %}
-			   
+
 			   {% endfor %}
               </tbody>
             </table>
 		  </div>
 		  {% else %}
-		  <p><i>Nothing found to display.</i></p>
-		  {% endif %} 
+		  <p><i><p><i>Nothing found to display.</i></p></i></p>
+		  {% endif %}
     </div>
   </div>
-  <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"></script>
-  <script src="https://blackrockdigital.github.io/startbootstrap-simple-sidebar/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <script>
-    $("#menu-toggle").click(function(e) {
-      e.preventDefault();
-      $("#wrapper").toggleClass("toggled");
-    });
-  </script>
 </body>
 </html>
