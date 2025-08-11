@@ -16,7 +16,7 @@
 			<tbody class="col-md-4">
 				<tr>
 					<td><strong>Havana Version</strong></td>
-					<td>1.3</td>
+					<td>1.4.0</td>
 				</tr>
 				<tr>
 					<td>Users</td>
@@ -47,13 +47,5 @@
 		  </div>         
     </div>
   </div>
-  <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"></script>
-  <script src="https://blackrockdigital.github.io/startbootstrap-simple-sidebar/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <script>
-    $("#menu-toggle").click(function(e) {
-      e.preventDefault();
-      $("#wrapper").toggleClass("toggled");
-    });
-  </script>
 </body>
 </html>
