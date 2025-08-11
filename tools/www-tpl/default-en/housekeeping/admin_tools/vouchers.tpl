@@ -72,7 +72,7 @@
             </table>
 		  </div>
 		  {% else %}
-		  <p><i><p><i>Nothing found to display.</i></p></i></p>
+		  <p><i>Nothing found to display.</i></p>
 		  {% endif %}
     </div>
   </div>

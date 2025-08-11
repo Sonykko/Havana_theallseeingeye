@@ -82,14 +82,6 @@
       </div>
     </div>
   </div>
-  <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"></script>
-  <script src="https://blackrockdigital.github.io/startbootstrap-simple-sidebar/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <script>
-    $("#menu-toggle").click(function(e) {
-      e.preventDefault();
-      $("#wrapper").toggleClass("toggled");
-    });
-  </script>
   <script>
 document.querySelectorAll('.badge-input').forEach(function(input) {
     input.setAttribute('data-original', input.value);
