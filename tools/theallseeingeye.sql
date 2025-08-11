@@ -400,6 +400,27 @@ INSERT INTO `settings_desc` (`setting`, `description`, `category`) VALUES
 ('players.daily.peak', '1', NULL),
 ('players.daily.peak.date', '16-10-2023', NULL),
 ('players.online', '1', NULL),
+('poker.announce.rewards', 'Set if the rewards are announced in the chat', 'games'),
+('poker.announce.rewards.only.in.rooms', 'Set if the rewards are announced only in rooms', 'games'),
+('poker.announce.winner', 'Set if the winner are announced', 'games'),
+('poker.announce.winner.only.in.rooms', 'Set if the winner are announced only in rooms', 'games'),
+('poker.entry.price', 'Set the value of entry price', 'games'),
+('poker.entry.price.only.in.rooms', 'Set the value of entry price only in rooms', 'games'),
+('poker.entry.price.redistribute', 'Set entry price redistribute status as true or false', 'games'),
+('poker.entry.price.redistribute.on.tie', 'Set entry price redistribute on tie status as true or false', 'games'),
+('poker.entry.price.redistribute.only.in.rooms', 'Set entry price redistribute only in rooms status as true or false', 'games'),
+('poker.reward.credits.bonus', 'Set the value of reward credits bonus', 'games'),
+('poker.reward.credits.bonus.on.tie', 'Set reward credits bonus on tie status as true or false', 'games'),
+('poker.reward.credits.bonus.only.in.rooms', 'Set the value of reward credits bonus only in rooms', 'games'),
+('poker.reward.min.player', 'Set the number of players needed to give a reward', 'games'),
+('poker.reward.min.player.only.in.rooms', 'Set the vale of number of players needed to give a reward only in rooms', 'games'),
+('poker.reward.rares', 'Set if the rewards include rares as true or false', 'games'),
+('poker.reward.rares.on.tie', 'Set if the rewards include rares on tie as true or false', 'games'),
+('poker.reward.rares.only.in.rooms', 'Set the value of rewards include rares only in rooms', 'games'),
+('poker.reward.rares.quantity', 'Set the quantity of rares are given per reward', 'games'),
+('poker.reward.tickets', 'Set the quantity of tickets are given per reward', 'games'),
+('poker.reward.tickets.on.tie', 'Set if the tickes are given in the reward on tie', 'games'),
+('poker.reward.tickets.only.in.rooms', 'Set if the tickes are given only in rooms', 'games'),
 ('profile.editing', 'Profile editing', 'miscellaneous'),
 ('rare.cycle.page.id', 'Set the ID of the catalogue Rare cycle page', 'catalogue'),
 ('rcon.catalogue.refresh.message', 'Set the default alert message for catalogue update action', 'housekeeping'),
@@ -732,7 +753,7 @@ UPDATE `settings` SET
       WHEN `setting` = 'happy.hour.weekend.start' THEN 'server'
       WHEN `setting` = 'hk.new.style.enabled' THEN 'housekeeping'
       WHEN `setting` = 'hk.trusted.person.enabled' THEN 'housekeeping'	  
-	  WHEN `setting` = 'hobba.form.lang' THEN 'site'
+	    WHEN `setting` = 'hobba.form.lang' THEN 'site'
       WHEN `setting` = 'homepage.template.file' THEN 'site'
       WHEN `setting` = 'hot.groups.community.limit' THEN 'site'
       WHEN `setting` = 'hot.groups.limit' THEN 'site'
@@ -776,12 +797,32 @@ UPDATE `settings` SET
       WHEN `setting` = 'players.daily.peak' THEN NULL
       WHEN `setting` = 'players.daily.peak.date' THEN NULL
       WHEN `setting` = 'players.online' THEN NULL
-      WHEN `setting` = 'profile.editing' THEN 'miscellaneous'
+      WHEN `setting` = 'poker.announce.rewards' THEN 'games'
+      WHEN `setting` = 'poker.announce.rewards.only.in.rooms' THEN 'games'
+      WHEN `setting` = 'poker.announce.winner' THEN 'games'
+      WHEN `setting` = 'poker.announce.winner.only.in.rooms' THEN 'games'
+      WHEN `setting` = 'poker.entry.price' THEN 'games'
+      WHEN `setting` = 'poker.entry.price.only.in.rooms' THEN 'games'
+      WHEN `setting` = 'poker.entry.price.redistribute' THEN 'games'
+      WHEN `setting` = 'poker.entry.price.redistribute.on.tie' THEN 'games'
+      WHEN `setting` = 'poker.entry.price.redistribute.only.in.rooms' THEN 'games'
+      WHEN `setting` = 'poker.reward.credits.bonus' THEN 'games'
+      WHEN `setting` = 'poker.reward.credits.bonus.on.tie' THEN 'games'
+      WHEN `setting` = 'poker.reward.credits.bonus.only.in.rooms' THEN 'games'
+      WHEN `setting` = 'poker.reward.min.player' THEN 'games'
+      WHEN `setting` = 'poker.reward.min.player.only.in.rooms' THEN 'games'
+      WHEN `setting` = 'poker.reward.rares' THEN 'games'
+      WHEN `setting` = 'poker.reward.rares.on.tie' THEN 'games'
+      WHEN `setting` = 'poker.reward.rares.only.in.rooms' THEN 'games'
+      WHEN `setting` = 'poker.reward.rares.quantity' THEN 'games'
+      WHEN `setting` = 'poker.reward.tickets' THEN 'games'
+      WHEN `setting` = 'poker.reward.tickets.on.tie' THEN 'games'
+      WHEN `setting` = 'poker.reward.tickets.only.in.rooms' THEN 'games'
       WHEN `setting` = 'rare.cycle.page.id' THEN 'catalogue'
-	  WHEN `setting` = 'rcon.catalogue.refresh.message' THEN 'housekeeping'
-	  WHEN `setting` = 'rcon.cfh.reply.message' THEN 'housekeeping'
-	  WHEN `setting` = 'rcon.delete.stickie.message' THEN 'housekeeping'
-	  WHEN `setting` = 'rcon.give.rank.message' THEN 'housekeeping'
+      WHEN `setting` = 'rcon.catalogue.refresh.message' THEN 'housekeeping'
+      WHEN `setting` = 'rcon.cfh.reply.message' THEN 'housekeeping'
+      WHEN `setting` = 'rcon.delete.stickie.message' THEN 'housekeeping'
+      WHEN `setting` = 'rcon.give.rank.message' THEN 'housekeeping'
       WHEN `setting` = 'rcon.kick.message' THEN 'housekeeping'
       WHEN `setting` = 'rcon.room.unacceptable.desc' THEN 'housekeeping'
       WHEN `setting` = 'rcon.room.unacceptable.name' THEN 'housekeeping'
