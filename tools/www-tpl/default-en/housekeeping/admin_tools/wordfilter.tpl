@@ -7,29 +7,27 @@
 		{% include "housekeeping/base/alert.tpl" %}
 		{% if isWordEdit %}
 		<p>Here you can edit word from Wordfilter.</p>
-		{% for WordEdit in wordEdit %}
 		<form class="table-responsive col-md-4" method="post">
 			<div class="form-group">
 				<label>Word</label>
-				<input type="text" name="saveWord" class="form-control" id="saveWord" placeholder="Enter here the word..." value="{{ WordEdit.wordFilter }}" />
+				<input type="text" name="saveWord" class="form-control" id="saveWord" placeholder="Enter here the word..." value="{{ wordEdit.getWord() }}" />
 			</div>
 			<div class="form-group">
 				<label>Is Bannable?</label>
 				<select name="isBannable" id="isBannable" class="form-control">
-					<option value="1" {% if WordEdit.isBannable == 1 %}selected{% endif %}>Yes</option>
-					<option value="0" {% if WordEdit.isBannable != 1 %}selected{% endif %}>No</option>
+					<option value="1" {% if wordEdit.isBannable() %}selected{% endif %}>Yes</option>
+					<option value="0" {% if wordEdit.isBannable() == false %}selected{% endif %}>No</option>
 				</select>
 			</div>
 			<div class="form-group">
 				<label>Is Filterable?</label>
 				<select name="isFilterable" id="isFilterable" class="form-control">
-					<option value="1" {% if WordEdit.isFilterable == 1 %}selected{% endif %}>Yes</option>
-					<option value="0" {% if WordEdit.isFilterable != 1 %}selected{% endif %}>No</option>
+					<option value="1" {% if wordEdit.isFilterable() %}selected{% endif %}>Yes</option>
+					<option value="0" {% if wordEdit.isFilterable() == false %}selected{% endif %}>No</option>
 				</select>
 			</div>
 			<button type="submit">Save Word</button>
 		</form>
-		{% endfor %}
 		{% else %}
 		<p>Here you can add a word to Wordfilter.</p>
 		<form class="table-responsive col-md-4" method="post">
@@ -81,13 +79,13 @@
 			    {% set num = 1 %}
 				{% for word in Words %}
                 <tr>
-				  <td>{{ word.id }}</td>                               
-				  <td>{{ word.wordFilter }}</td>                                			 
-				  <td>{% if word.isBannable == 1 %}Yes{% else %}No{% endif %}</td>                 			 
-				  <td>{% if word.isFilterable == 1 %}Yes{% else %}No{% endif %}</td>                 			                  			 
+				  <td>{{ word.getId() }}</td>                               
+				  <td>{{ word.getWord() }}</td>                                			 
+				  <td>{% if word.isBannable() %}Yes{% else %}No{% endif %}</td>                 			 
+				  <td>{% if word.isFilterable() %}Yes{% else %}No{% endif %}</td>                 			                  			 
 				  <td>
-					<a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/wordfilter?edit={{ word.id }}" style="color:black;"><button type="button">Edit</button></a>
-					<a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/wordfilter?delete={{ word.id }}" style="color:black;"><button type="button">Delete</button></a>
+					<a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/wordfilter?edit={{ word.getId() }}" style="color:black;"><button type="button">Edit</button></a>
+					<a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/wordfilter?delete={{ word.getId() }}" style="color:black;"><button type="button">Delete</button></a>
 				</td>
                 </tr>
 			   {% set num = num + 1 %}
