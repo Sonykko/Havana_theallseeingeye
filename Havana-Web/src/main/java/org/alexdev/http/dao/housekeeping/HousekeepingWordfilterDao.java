@@ -1,67 +1,62 @@
 package org.alexdev.http.dao.housekeeping;
 
 import org.alexdev.havana.dao.Storage;
+import org.alexdev.http.game.housekeeping.HousekeepingWordfilter;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class HousekeepingWordfilterDao {
-    public static List<Map<String, Object>> getAllWords(int page, String sortBy, String orderBy) {
-        List<Map<String, Object>> WordfilterList = new ArrayList<>();
+
+    public static List<HousekeepingWordfilter> getAllWords(int page, String sortBy, String orderBy) {
+        List<HousekeepingWordfilter> wordfilterList = new ArrayList<>();
 
         int rows = 20;
         int nextOffset = page * rows;
 
-        if (nextOffset >= 0) {
-            Connection sqlConnection = null;
-            PreparedStatement preparedStatement = null;
-            ResultSet resultSet = null;
+        Connection sqlConnection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
 
-            try {
-                sqlConnection = Storage.getStorage().getConnection();
-                preparedStatement = Storage.getStorage().prepare("SELECT * FROM wordfilter ORDER BY " + sortBy + " " + orderBy + " LIMIT ? OFFSET ?", sqlConnection);
-                preparedStatement.setInt(1, rows);
-                preparedStatement.setInt(2, nextOffset);
+        try {
+            sqlConnection = Storage.getStorage().getConnection();
+            preparedStatement = Storage.getStorage().prepare("SELECT * FROM wordfilter ORDER BY " + sortBy + " " + orderBy + " LIMIT ? OFFSET ?", sqlConnection);
+            preparedStatement.setInt(1, rows);
+            preparedStatement.setInt(2, nextOffset);
 
-                resultSet = preparedStatement.executeQuery();
+            resultSet = preparedStatement.executeQuery();
 
-                while (resultSet.next()) {
-                    Map<String, Object> Word = new HashMap<>();
-                    Word.put("id", resultSet.getInt("id"));
-                    Word.put("wordFilter", resultSet.getString("word"));
-                    Word.put("isBannable", resultSet.getInt("is_bannable"));
-                    Word.put("isFilterable", resultSet.getInt("is_filterable"));
-
-                    WordfilterList.add(Word);
-                }
-
-            } catch (Exception e) {
-                Storage.logError(e);
-            } finally {
-                Storage.closeSilently(resultSet);
-                Storage.closeSilently(preparedStatement);
-                Storage.closeSilently(sqlConnection);
+            while (resultSet.next()) {
+                wordfilterList.add(fill(resultSet));
             }
+
+        } catch (Exception e) {
+            Storage.logError(e);
+        } finally {
+            Storage.closeSilently(resultSet);
+            Storage.closeSilently(preparedStatement);
+            Storage.closeSilently(sqlConnection);
         }
 
-        return WordfilterList;
+        return wordfilterList;
     }
 
-    public static void createWord(String word, int isBannable, int isFilterable) {
+    public static void createWord(String word, boolean isBannable, boolean isFilterable) {
         Connection sqlConnection = null;
         PreparedStatement preparedStatement = null;
 
         try {
             sqlConnection = Storage.getStorage().getConnection();
-            preparedStatement = Storage.getStorage().prepare("INSERT INTO wordfilter (word, is_bannable, is_filterable) VALUES (?, ?, ?)", sqlConnection);
+            preparedStatement = Storage.getStorage().prepare(
+                    "INSERT INTO wordfilter (word, is_bannable, is_filterable) VALUES (?, ?, ?)",
+                    sqlConnection
+            );
             preparedStatement.setString(1, word);
-            preparedStatement.setInt(2, isBannable);
-            preparedStatement.setInt(3, isFilterable);
+            preparedStatement.setBoolean(2, isBannable);
+            preparedStatement.setBoolean(3, isFilterable);
             preparedStatement.execute();
         } catch (Exception e) {
             Storage.logError(e);
@@ -88,8 +83,8 @@ public class HousekeepingWordfilterDao {
         }
     }
 
-    public static List<Map<String, Object>> editWord(int wordId) {
-        List<Map<String, Object>> WordfilterEditList = new ArrayList<>();
+    public static HousekeepingWordfilter getWordById(int id) {
+        HousekeepingWordfilter wordfilter = null;
 
         Connection sqlConnection = null;
         PreparedStatement preparedStatement = null;
@@ -97,19 +92,13 @@ public class HousekeepingWordfilterDao {
 
         try {
             sqlConnection = Storage.getStorage().getConnection();
-            preparedStatement = Storage.getStorage().prepare("SELECT * FROM wordfilter WHERE id = ?", sqlConnection);
-            preparedStatement.setInt(1, wordId);
+            preparedStatement = Storage.getStorage().prepare("SELECT * FROM wordfilter WHERE id = ? LIMIT 1", sqlConnection);
+            preparedStatement.setInt(1, id);
 
             resultSet = preparedStatement.executeQuery();
 
-            while (resultSet.next()) {
-                Map<String, Object> WordEdit = new HashMap<>();
-                WordEdit.put("id", resultSet.getInt("id"));
-                WordEdit.put("wordFilter", resultSet.getString("word"));
-                WordEdit.put("isBannable", resultSet.getInt("is_bannable"));
-                WordEdit.put("isFilterable", resultSet.getInt("is_filterable"));
-
-                WordfilterEditList.add(WordEdit);
+            if (resultSet.next()) {
+                wordfilter = fill(resultSet);
             }
 
         } catch (Exception e) {
@@ -120,19 +109,51 @@ public class HousekeepingWordfilterDao {
             Storage.closeSilently(sqlConnection);
         }
 
-        return WordfilterEditList;
+        return wordfilter;
     }
 
-    public static void saveWord(String saveWord, int isBannable, int isFilterable, int wordId) {
+    public static HousekeepingWordfilter getWordByWord(String word) {
+        HousekeepingWordfilter wordfilter = null;
+
+        Connection sqlConnection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+
+        try {
+            sqlConnection = Storage.getStorage().getConnection();
+            preparedStatement = Storage.getStorage().prepare("SELECT * FROM wordfilter WHERE word = ? LIMIT 1", sqlConnection);
+            preparedStatement.setString(1, word);
+
+            resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                wordfilter = fill(resultSet);
+            }
+
+        } catch (Exception e) {
+            Storage.logError(e);
+        } finally {
+            Storage.closeSilently(resultSet);
+            Storage.closeSilently(preparedStatement);
+            Storage.closeSilently(sqlConnection);
+        }
+
+        return wordfilter;
+    }
+
+    public static void saveWord(String saveWord, boolean isBannable, boolean isFilterable, int wordId) {
         Connection sqlConnection = null;
         PreparedStatement preparedStatement = null;
 
         try {
             sqlConnection = Storage.getStorage().getConnection();
-            preparedStatement = Storage.getStorage().prepare("UPDATE wordfilter SET word = ?, is_bannable = ?, is_filterable = ? WHERE id = ?", sqlConnection);
+            preparedStatement = Storage.getStorage().prepare(
+                    "UPDATE wordfilter SET word = ?, is_bannable = ?, is_filterable = ? WHERE id = ?",
+                    sqlConnection
+            );
             preparedStatement.setString(1, saveWord);
-            preparedStatement.setInt(2, isBannable);
-            preparedStatement.setInt(3, isFilterable);
+            preparedStatement.setBoolean(2, isBannable);
+            preparedStatement.setBoolean(3, isFilterable);
             preparedStatement.setInt(4, wordId);
             preparedStatement.execute();
         } catch (Exception e) {
@@ -143,31 +164,12 @@ public class HousekeepingWordfilterDao {
         }
     }
 
-    public static boolean CheckWord(String word) {
-        boolean wordExists = false;
-
-        Connection sqlConnection = null;
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet = null;
-
-        try {
-            sqlConnection = Storage.getStorage().getConnection();
-            preparedStatement = Storage.getStorage().prepare("SELECT * FROM wordfilter WHERE word = ? LIMIT 1", sqlConnection);
-            preparedStatement.setString(1, word);
-            resultSet = preparedStatement.executeQuery();
-
-            if (resultSet.next()) {
-                wordExists = true;
-            }
-
-        } catch (Exception e) {
-            Storage.logError(e);
-        } finally {
-            Storage.closeSilently(resultSet);
-            Storage.closeSilently(preparedStatement);
-            Storage.closeSilently(sqlConnection);
-        }
-
-        return wordExists;
+    private static HousekeepingWordfilter fill(ResultSet resultSet) throws Exception {
+        return new HousekeepingWordfilter(
+                resultSet.getInt("id"),
+                resultSet.getString("word"),
+                resultSet.getBoolean("is_bannable"),
+                resultSet.getBoolean("is_filterable")
+        );
     }
 }
