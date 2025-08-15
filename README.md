@@ -54,6 +54,9 @@ Developed by Sonykko.
     - User search & information tool
     - Current furniture
     - Room admin (private rooms)
+      - Search rooms (including filter by owner name)
+      - Edit/manage rooms
+      - Copy/clone rooms
     - Room action log
     - CFH action log
     - User edit (original feature)
