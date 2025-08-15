@@ -17,6 +17,7 @@ import org.alexdev.havana.game.groups.GroupMember;
 import org.alexdev.havana.game.infobus.InfobusManager;
 import org.alexdev.havana.game.item.Item;
 import org.alexdev.havana.game.item.ItemManager;
+import org.alexdev.havana.game.item.base.ItemBehaviour;
 import org.alexdev.havana.game.messenger.MessengerUser;
 import org.alexdev.havana.game.moderation.cfh.CallForHelp;
 import org.alexdev.havana.game.moderation.cfh.CallForHelpManager;
@@ -48,6 +49,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -211,6 +214,79 @@ public class RconConnectionHandler extends ChannelInboundHandlerAdapter {
 
                     cfhFollow.getRoom().forward(moderatorFollow, false);
                     CallForHelpManager.getInstance().deleteCall(cfhFollow);
+                    break;
+                case COPY_PRIVATE_ROOM:
+                    String moderatorCopy = message.getValues().get("moderator");
+                    int roomIdToCopy = Integer.parseInt(message.getValues().get("roomId"));
+                    var playerCopy = PlayerDao.getDetails(moderatorCopy);
+                    var roomToCopy = RoomManager.getInstance().getRoomById(roomIdToCopy);
+
+                    if (playerCopy == null || roomToCopy == null || roomToCopy.isPublicRoom()) {
+                        return;
+                    }
+
+                    var roomName = roomToCopy.getData().getName() + " (2)";
+                    var roomModel = roomToCopy.getModel().getName();
+                    var roomShowName = roomToCopy.getData().showOwnerName();
+                    var accessType = roomToCopy.getData().getAccessTypeId();
+
+                    int roomIdCopy = -1;
+                    try {
+                        roomIdCopy = NavigatorDao.createRoom(playerCopy.getId(), roomName, roomModel, roomShowName, accessType);
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+
+                    if (roomIdCopy == -1)
+                        return;
+
+                    var copyRoom = RoomDao.getRoomById(roomIdCopy);
+
+                    copyRoom.getData().setWallpaper(roomToCopy.getData().getWallpaper());
+                    copyRoom.getData().setFloor(roomToCopy.getData().getFloor());
+                    copyRoom.getData().setLandscape(roomToCopy.getData().getLandscape());
+
+                    RoomDao.saveDecorations(copyRoom);
+
+                    List<Item> items = new ArrayList<>();
+
+                    for (Item item : roomToCopy.getItems()) {
+                        if (item.hasBehaviour(ItemBehaviour.TELEPORTER)) {
+                            continue;
+                        }
+
+                        var copyItem = new Item();
+                        copyItem.setOwnerId(playerCopy.getId());
+                        copyItem.setDefinitionId(item.getDefinition().getId());
+                        copyItem.setCustomData(item.getCustomData());
+                        copyItem.setRoomId(roomIdCopy);
+
+                        if (item.hasBehaviour(ItemBehaviour.WALL_ITEM))
+                            copyItem.setWallPosition(item.getWallPosition());
+                        else {
+                            copyItem.getPosition().setX(item.getPosition().getX());
+                            copyItem.getPosition().setY(item.getPosition().getY());
+                            copyItem.getPosition().setZ(item.getPosition().getZ());
+                            copyItem.getPosition().setRotation(item.getPosition().getRotation());
+                        }
+
+                        try {
+                            ItemDao.newItem(copyItem);
+                            items.add(copyItem);
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+
+                    ItemDao.updateItems(items);
+
+                    Player playerCopy2 = PlayerManager.getInstance().getPlayerByName(moderatorCopy);
+
+                    if (playerCopy2 == null) {
+                        return;
+                    }
+
+                    copyRoom.forward(playerCopy2, false);
                     break;
                 case MOD_ROOM_KICK:
                     int roomId = Integer.parseInt(message.getValues().get("roomId"));
