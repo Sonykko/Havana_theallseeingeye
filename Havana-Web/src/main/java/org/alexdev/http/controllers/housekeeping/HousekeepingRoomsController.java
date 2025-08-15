@@ -37,7 +37,9 @@ public class HousekeepingRoomsController {
             return;
         }
 
-        if (client.post().queries().size() > 0) {
+        String action = client.post().getString("action");
+
+        if (client.post().queries().size() > 0 && !action.equals("copyRoom")) {
             String[] fieldCheck = new String[]{"searchField", "searchQuery", "searchType"};
 
             for (String field : fieldCheck) {
@@ -84,11 +86,54 @@ public class HousekeepingRoomsController {
             tpl.set("roomsAdmin", roomsAdmin);
         }
 
+        if ("copyRoom".equals(action)) {
+            copyRoom(client, playerDetails);
+            return;
+        }
+
         tpl.set("pageName", "Room admin");
         tpl.render();
 
         // Delete alert after it's been rendered
         client.session().delete("alertMessage");
+    }
+
+    public static void copyRoom (WebConnection client, PlayerDetails playerDetails) {
+        String roomIdStrg = client.post().getString("roomId");
+
+        if (!StringUtils.isNumeric(roomIdStrg)) {
+            client.session().set("alertColour", "danger");
+            client.session().set("alertMessage", "Please select a valid roomId");
+            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/rooms/search");
+            return;
+        }
+
+        int roomId = client.post().getInt("roomId");
+        var room = RoomDao.getRoomById(roomId);
+
+        if (room == null || room.isPublicRoom()) {
+            client.session().set("alertColour", "danger");
+            client.session().set("alertMessage", "Please select a valid private room");
+            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/rooms/search");
+            return;
+        }
+
+        RconUtil.sendCommand(RconHeader.COPY_PRIVATE_ROOM, new HashMap<>() {{
+            put("moderator", playerDetails.getName());
+            put("roomId", roomId);
+        }});
+
+        HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Copy/clone the room with the ID " + room.getId() + " . URL: " + client.request().uri(), client.getIpAddress());
+
+        var clonedRoomId = getClonedRoom(playerDetails);
+
+        client.session().set("alertColour", "success");
+        client.session().set("alertMessage", "Copy/cloned the room with the ID " + room.getId() + ". For edit the room <a href=\"/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/rooms/edit?id=" + clonedRoomId + "\">click here</a>");
+        client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/rooms/search");
+    }
+
+    public static int getClonedRoom (PlayerDetails playerDetails) {
+        return HousekeepingRoomDao.getClonedRoom(playerDetails.getId());
     }
 
     public static void editRoom(WebConnection client) {

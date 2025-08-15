@@ -543,4 +543,31 @@ public class HousekeepingRoomDao {
 
         return conversations;
     }
+
+    public static int getClonedRoom(int ownerId) {
+        int roomId = 0;
+        Connection sqlConnection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+
+        try {
+            sqlConnection = Storage.getStorage().getConnection();
+            preparedStatement = Storage.getStorage().prepare("SELECT * FROM rooms WHERE owner_id = ? ORDER BY id DESC LIMIT 1", sqlConnection);
+            preparedStatement.setInt(1, ownerId);
+            resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                roomId = resultSet.getInt("id");
+            }
+
+        } catch (Exception e) {
+            Storage.logError(e);
+        } finally {
+            Storage.closeSilently(resultSet);
+            Storage.closeSilently(preparedStatement);
+            Storage.closeSilently(sqlConnection);
+        }
+
+        return roomId + 1;
+    }
 }
