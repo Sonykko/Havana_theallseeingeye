@@ -304,12 +304,12 @@ public class RconConnectionHandler extends ChannelInboundHandlerAdapter {
                         return;
                     }
 
-                    if (roomLock) {
+                    if (roomLock && !roomKick.isPublicRoom()) {
                         roomKick.getData().setAccessType(1);
                         RoomDao.save(roomKick);
                     }
 
-                    if (unacceptable) {
+                    if (unacceptable && !roomKick.isPublicRoom()) {
                         roomKick.getData().setName(unacceptableValue);
                         roomKick.getData().setDescription(unacceptableDescValue);
                         RoomDao.save(roomKick);
