@@ -71,7 +71,7 @@ public class HousekeepingRoomKickRCONController {
 
             if (room == null) {
                 client.session().set("alertColour", "danger");
-                client.session().set("alertMessage", "The room not exist");
+                client.session().set("alertMessage", "The room does not exists");
                 client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/room_kick");
                 return;
             }

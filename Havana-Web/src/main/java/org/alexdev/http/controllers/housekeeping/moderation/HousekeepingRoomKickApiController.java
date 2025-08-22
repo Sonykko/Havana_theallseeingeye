@@ -2,6 +2,7 @@ package org.alexdev.http.controllers.housekeeping.moderation;
 
 import org.alexdev.duckhttpd.server.connection.WebConnection;
 import org.alexdev.havana.dao.mysql.PlayerDao;
+import org.alexdev.havana.dao.mysql.RoomDao;
 import org.alexdev.havana.game.player.PlayerDetails;
 import org.alexdev.havana.server.rcon.messages.RconHeader;
 import org.alexdev.havana.util.config.GameConfiguration;
@@ -12,6 +13,7 @@ import org.alexdev.http.game.housekeeping.HousekeepingManager;
 import org.alexdev.http.util.RconUtil;
 import org.alexdev.http.util.SessionUtil;
 import org.alexdev.http.util.housekeeping.MessageEncoderUtil;
+import org.apache.commons.lang3.math.NumberUtils;
 
 import java.util.HashMap;
 
@@ -35,11 +37,22 @@ public class HousekeepingRoomKickApiController {
         String message = client.get().getString("alertRoomKick");
         String messageEncoded = MessageEncoderUtil.encodeMessage(message);
         String action = client.get().getString("action");
-        boolean unacceptable = client.get().getBoolean("unacceptable");
+
+        int roomId = NumberUtils.isParsable(roomKick) ? Integer.parseInt(roomKick) : 0;
+        var room = RoomDao.getRoomById(roomId);
+
+        if (room == null) {
+            client.session().set("alertColour", "danger");
+            client.session().set("alertMessage", "The room does not exists");
+            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/room_kick");
+            return;
+        }
+
+        boolean unacceptable = !room.isPublicRoom() && client.get().getBoolean("unacceptable");
+        boolean roomLock = !room.isPublicRoom() && client.get().getBoolean("roomLock");
         String unacceptableValue = GameConfiguration.getInstance().getString("rcon.room.unacceptable.name");
         String unacceptableDescValue = GameConfiguration.getInstance().getString("rcon.room.unacceptable.desc");
         String unacceptableAlertText = unacceptable ? "and the room has been set as Inappropriate" : "";
-        boolean roomLock = client.get().getBoolean("roomLock");
         String roomLockText = roomLock ? "and closed with doorbell" : "";
 
         try {
