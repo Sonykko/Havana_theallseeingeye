@@ -157,6 +157,7 @@ Developed by Sonykko.
     - Superban user
     - Kick user
     - Softkick user
+    - Mimic/copy look user
   - Mod Tools
     - Room kick
       - Stop event automatically
