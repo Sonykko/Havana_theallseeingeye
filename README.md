@@ -152,15 +152,21 @@ Developed by Sonykko.
 
 ### Client
   - Commands
-    - Alert user
-    - Transfer user
-    - Superban user
-    - Kick user
-    - Softkick user
+    - Staff
+      - Alert user
+      - Transfer user
+      - Superban user
+      - Kick user
+      - Softkick user
+      - Super pull user
+      - Send user to room
+      - Massteleport room
+  - User
     - Mimic/copy look user
     - Push user
     - Pull user
-    - Super pull user
+    - Follow user
+    - Go to room
   - Mod Tools
     - Room kick
       - Stop event automatically
