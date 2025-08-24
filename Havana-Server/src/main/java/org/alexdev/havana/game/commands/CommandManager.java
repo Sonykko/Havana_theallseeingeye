@@ -86,6 +86,7 @@ public class CommandManager {
         tempCommands.put(new String[] { "giftroom" }, new GiftRoomCommand());
         tempCommands.put(new String[] { "superpull", "spull" }, new SuperPullCommand());
         tempCommands.put(new String[] { "sendto" }, new SendToCommand());
+        tempCommands.put(new String[] { "massteleport", "masstp" }, new MassTeleportCommand());
 
         // Moderation
         tempCommands.put(new String[] { "dc", "disconnect" }, new DisconnectUserCommand());
