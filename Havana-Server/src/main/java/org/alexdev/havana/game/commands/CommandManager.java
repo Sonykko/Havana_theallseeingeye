@@ -84,6 +84,7 @@ public class CommandManager {
         tempCommands.put(new String[] { "unacceptable" }, new UnacceptableCommand());
         tempCommands.put(new String[] { "giftroom" }, new GiftRoomCommand());
         tempCommands.put(new String[] { "superpull", "spull" }, new SuperPullCommand());
+        tempCommands.put(new String[] { "sendto" }, new SendToCommand());
 
         // Moderation
         tempCommands.put(new String[] { "dc", "disconnect" }, new DisconnectUserCommand());
