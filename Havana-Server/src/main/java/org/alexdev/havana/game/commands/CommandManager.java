@@ -63,6 +63,7 @@ public class CommandManager {
         tempCommands.put(new String[] { "push" }, new PushCommand());
         tempCommands.put(new String[] { "pull" }, new PullCommand());
         tempCommands.put(new String[] { "follow", "fw" }, new FollowCommand());
+        tempCommands.put(new String[] { "gotoroom", "gtr" }, new GotoRoomCommand());
 
         // Staff commands
         tempCommands.put(new String[] { "copyroom" }, new CopyRoomCommand());
