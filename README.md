@@ -153,17 +153,23 @@ Developed by Sonykko.
 ### Client
   - Support for Dual Flash/Shockwave connection for RELEASE39-22643-22891-200911110035_07c3a2a30713fd5bea8a8caf07e33438 and Habbo Hotel v31+ and older.
   - Commands
-    - Alert user
-    - Transfer user
-    - Superban user
-    - Kick user
-    - Softkick user
-    - Mimic/copy look user
-    - Push user
-    - Pull user
-    - Super pull user
+    - Staff
+      - Alert user
+      - Transfer user
+      - Superban user
+      - Kick user
+      - Softkick user
+      - Super pull user
+      - Send user to room
+      - Massteleport room
+    - User
+      - Mimic/copy look user
+      - Push user
+      - Pull user
+      - Follow user
+      - Go to room
   - Mod Tools
-    - Room kick
+    - Room kick 
       - Stop event automatically
     - Calls for help
       - Access to Housekeeping user chatlog
