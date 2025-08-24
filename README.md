@@ -159,6 +159,9 @@ Developed by Sonykko.
     - Kick user
     - Softkick user
     - Mimic/copy look user
+    - Push user
+    - Pull user
+    - Super pull user
   - Mod Tools
     - Room kick
       - Stop event automatically
