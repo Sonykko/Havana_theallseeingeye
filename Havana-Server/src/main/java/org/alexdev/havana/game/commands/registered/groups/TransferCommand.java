@@ -48,7 +48,11 @@ public class TransferCommand extends Command {
         var room = player.getRoomUser().getRoom();
 
         if (online != null) {
-            room.forward(online, true);
+            if (room.isPublicRoom()) {
+                room.forward(online, false);
+            } else {
+                room.getEntityManager().enterRoom(online, null);
+            }
         }
 
         player.send(new ALERT("Transferred " + playerDetails.getName() + " to your room"));
