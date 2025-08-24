@@ -62,6 +62,7 @@ public class CommandManager {
         tempCommands.put(new String[] { "mimic" }, new MimicCommand());
         tempCommands.put(new String[] { "push" }, new PushCommand());
         tempCommands.put(new String[] { "pull" }, new PullCommand());
+        tempCommands.put(new String[] { "follow", "fw" }, new FollowCommand());
 
         // Staff commands
         tempCommands.put(new String[] { "copyroom" }, new CopyRoomCommand());
