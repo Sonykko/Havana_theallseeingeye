@@ -60,6 +60,7 @@ public class CommandManager {
         tempCommands.put(new String[] { "afk", "idle" }, new AfkCommand());
         tempCommands.put(new String[] { "guidestatus" }, new GuideStatusCommand());
         tempCommands.put(new String[] { "mimic" }, new MimicCommand());
+        tempCommands.put(new String[] { "push" }, new PushCommand());
 
         // Staff commands
         tempCommands.put(new String[] { "copyroom" }, new CopyRoomCommand());
