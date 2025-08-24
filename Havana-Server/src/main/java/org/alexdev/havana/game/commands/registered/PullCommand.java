@@ -60,10 +60,13 @@ public class PullCommand extends Command {
         }
 
         var pullTile = player.getRoomUser().getPosition().getSquareInFront();
+        var pullTiles = player.getRoomUser().getPosition().getCircle(0);
         var secondTile = pullTile.getSquareInFront();
 
-        if (!targetUser.getRoomUser().getPosition().equals(secondTile)) {
-            player.send(new ALERT("The player is not two tiles in front of you"));
+        pullTiles.add(secondTile);
+
+        if (!pullTiles.contains(targetUser.getRoomUser().getPosition())) {
+            player.send(new ALERT("You can't pull that way"));
             return;
         }
 
