@@ -33,7 +33,7 @@ public class MimicCommand extends Command {
             return;
         }
 
-        if (!player.getDetails().hasClubSubscription() && player.getDetails().getRank().getRankId() < 5) {
+        if (!player.getDetails().hasClubSubscription() && player.getDetails().getRank().getRankId() < PlayerRank.MODERATOR.getRankId()) {
             player.send(new ALERT("You need to be a Habbo Club member to use this command"));
             return;
         }
@@ -50,7 +50,7 @@ public class MimicCommand extends Command {
             return;
         }
 
-        if (targetUser.getRank().getRankId() > 2) {
+        if (targetUser.getRank().getRankId() > PlayerRank.GUIDE.getRankId()) {
             player.send(new ALERT("You can't copy the look of a Staff member"));
         }
 
