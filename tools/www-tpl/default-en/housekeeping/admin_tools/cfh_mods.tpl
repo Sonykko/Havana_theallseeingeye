@@ -30,25 +30,27 @@
               <tbody>
 			    {% set num = 1 %}
 				{% for cfhlog in cfhlogs %}
+				{% autoescape 'html' %}
                 <tr>
-				  <td><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/chatlog.action?chatId={{ cfhlog.userId }}">{{ cfhlog.username }} (id: {{ cfhlog.userId }})</a></td>
-				  <td>{{ cfhlog.createdTime }}</td>	
-				  <td>{{ cfhlog.roomName }} (id: {{ cfhlog.roomId }})</td>				  
-				  <td>{{ cfhlog.reason }}</td>				  
-				  {% if cfhlog.status != "1" %}
-				  <td><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/api/cfh.pick?cryId={{ cfhlog.cryId }}">Pick Up</a></td>
+				  <td><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/chatlog.action?chatId={{ cfhlog.getUserId() }}">{{ cfhlog.getUsername() }} (id: {{ cfhlog.getUserId() }})</a></td>
+				  <td>{{ cfhlog.getCreatedTime() }}</td>
+				  <td>{{ cfhlog.getRoomName() }} (id: {{ cfhlog.getRoomId() }})</td>				  
+				  <td>{{ cfhlog.getReason() }}</td>			  
+				  {% if cfhlog.isDeleted() %}
+				  <td>-</td>				  
 				  {% else %}
-				  <td>-</td>
+				  <td><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/api/cfh.pick?cryId={{ cfhlog.getCryId() }}">Pick Up</a></td>
 				  {% endif %}
                 </tr>
 			   {% set num = num + 1 %}
+			   {% endautoescape %}
 			   {% endfor %}
               </tbody>
             </table>
-		   </div>
+		  </div>
 		  {% else %}
 		  <p><i>Nothing found to display.</i></p>
-		  {% endif %} 
+		  {% endif %}  
     </div>
   </div>
 </body>
