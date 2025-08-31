@@ -28,7 +28,7 @@
 				  <th>Time picked</th>				  
 				  <th>Action</th>				  
 				  <th>Message reply</th>				  				    	  
-				  <th></th>				 
+				  <th></th>
                 </tr>
               </thead>
               <tbody>
@@ -36,18 +36,18 @@
 				{% for cfhlog in cfhlogs %}
 				{% autoescape 'html' %}
                 <tr>                 
-				  <td><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/chatlog.action?chatId={{ cfhlog.userId }}">{{ cfhlog.username }} (id: {{ cfhlog.userId }})</a></td>
-				  <td>{{ cfhlog.createdTime }}</td>
-				  <td>{{ cfhlog.roomName }} (id: {{ cfhlog.roomId }})</td>
-				  <td>{{ cfhlog.reason }}</td>					  
-				  <td>{% if cfhlog.moderator == null %}-{% else %}{{ cfhlog.moderator }}{% endif %}</td>
-				  <td>{% if cfhlog.pickedTime == null %}-{% else %}{{ cfhlog.pickedTime }}{% endif %}</td>
-				  <td>{% if cfhlog.action == null %}-{% else %}{{ cfhlog.action }}{% endif %}</td>
-				  <td>{% if cfhlog.messageToUser == null %}-{% else %}{{ cfhlog.messageToUser }}{% endif %}</td>				  					  
-				  {% if cfhlog.status != "1" %}
-				  <td><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/api/cfh.pick?cryId={{ cfhlog.cryId }}">Pick Up</a></td>
+				  <td><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/chatlog.action?chatId={{ cfhlog.getUserId() }}">{{ cfhlog.getUsername() }} (id: {{ cfhlog.getUserId() }})</a></td>
+				  <td>{{ cfhlog.getCreatedTime() }}</td>
+				  <td>{{ cfhlog.getRoomName() }} (id: {{ cfhlog.getRoomId() }})</td>
+				  <td>{{ cfhlog.getReason() }}</td>					  
+				  <td>{% if cfhlog.getModerator() == null %}-{% else %}{{ cfhlog.getModerator() }}{% endif %}</td>
+				  <td>{% if cfhlog.getPickedTime() == null %}-{% else %}{{ cfhlog.getPickedTime() }}{% endif %}</td>
+				  <td>{% if cfhlog.getAction() == null %}-{% else %}{{ cfhlog.getAction() }}{% endif %}</td>
+				  <td>{% if cfhlog.getAction() == 'REPLY' %}{{ cfhlog.getMessageToUser() }}{% else %}-{% endif %}</td>				  					  
+				  {% if cfhlog.isDeleted() %}
+				  <td>-</td>				  
 				  {% else %}
-				  <td>-</td>
+				  <td><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/api/cfh.pick?cryId={{ cfhlog.getCryId() }}">Pick Up</a></td>
 				  {% endif %}
                 </tr>
 			   {% set num = num + 1 %}
@@ -58,7 +58,7 @@
 		  </div>
 		  {% else %}
 		  <p><i>Nothing found to display.</i></p>
-		  {% endif %} 
+		  {% endif %}  		  
     </div>
   </div>
 </body>

@@ -8,6 +8,7 @@ import org.alexdev.http.Routes;
 import org.alexdev.http.dao.housekeeping.HousekeepingCFHDao;
 import org.alexdev.http.dao.housekeeping.HousekeepingLogsDao;
 import org.alexdev.http.dao.housekeeping.HousekeepingRoomDao;
+import org.alexdev.http.game.housekeeping.HousekeepingCFH;
 import org.alexdev.http.game.housekeeping.HousekeepingManager;
 import org.alexdev.http.util.SessionUtil;
 
@@ -54,7 +55,7 @@ public class HousekeepingCFHController {
                 return;
             }
 
-            List<Map<String, Object>> CFHList = new ArrayList<>();
+            List<HousekeepingCFH> CFHList = new ArrayList<>();
 
             tpl.set("searchChatlogs", CFHList);
 
@@ -167,7 +168,7 @@ public class HousekeepingCFHController {
                 return;
             }
 
-            List<Map<String, Object>> CFHList = new ArrayList<>();
+            List<HousekeepingCFH> CFHList = new ArrayList<>();
 
             tpl.set("searchChatlogs", CFHList);
 

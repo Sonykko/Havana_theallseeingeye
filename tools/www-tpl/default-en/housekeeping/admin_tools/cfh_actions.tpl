@@ -17,20 +17,20 @@
               <tbody>
 			    {% set num = 1 %}
 				{% for cfhlog in cfhlogsAction %}
-				{% if cfhlog.action != "PICK UP" %}
+				{% if cfhlog.getAction() != "PICK UP" %}
 				<div class="alert alert-danger">
 					<text>The CFH is already picked up or it's not picked up by any Moderator yet</text>
 				</div>
 				{% else %}
                 <tr>
                   <td style="display: flex;flex-direction: column;">					  
-					  <text>- <b>Caller:</b> <a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/chatlog.action?chatId={{ cfhlog.userId }}"><u>{{ cfhlog.username }}</u> (id: {{ cfhlog.userId }})</a></text>
-					  <text>- <b>Time:</b> {{ cfhlog.createdTime }}</text>
-					  <text>- <b>Room name:</b> {{ cfhlog.roomName }} (id: {{ cfhlog.roomId }})</text>
-					  <text>- <b>Reason for action:</b> {{ cfhlog.reason }}</text>					  
-					  <text>- <b>Picked by:</b> {% if cfhlog.status != "1" %}-{% else %}{{ cfhlog.moderator }}{% endif %}</text>
-					  <text>- <b>Time pick up:</b> {% if cfhlog.status != "1" %}-{% else %}{{ cfhlog.pickedTime }}{% endif %}</text>	
-					  <text>- <b>Status:</b> {% if cfhlog.status == "1" %}Picked Up{% else %}{{ cfhlog.action }}{% endif %}</text>
+					  <text>- <b>Caller:</b> <a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/chatlog.action?chatId={{ cfhlog.getUserId() }}"><u>{{ cfhlog.getUsername() }}</u> (id: {{ cfhlog.getUserId() }})</a></text>
+					  <text>- <b>Time:</b> {{ cfhlog.getCreatedTime() }}</text>
+					  <text>- <b>Room name:</b> {{ cfhlog.getRoomName() }} (id: {{ cfhlog.getRoomId() }})</text>
+					  <text>- <b>Reason for action:</b> {{ cfhlog.getReason() }}</text>					  
+					  <text>- <b>Picked by:</b> {% if cfhlog.getModerator() == null %}-{% else %}{{ cfhlog.getModerator() }}{% endif %}</text>
+					  <text>- <b>Time pick up:</b> {% if cfhlog.getPickedTime() == null %}-{% else %}{{ cfhlog.getPickedTime() }}{% endif %}</text>	
+					  <text>- <b>Status:</b> {% if cfhlog.isDeleted() %}Picked Up{% else %}{{ cfhlog.getAction() }}{% endif %}</text>
 				  </td>
 				  <td>
 					<form method="post">
