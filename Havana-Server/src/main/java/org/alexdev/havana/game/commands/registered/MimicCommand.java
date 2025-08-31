@@ -9,6 +9,11 @@ import org.alexdev.havana.game.player.Player;
 import org.alexdev.havana.game.player.PlayerDetails;
 import org.alexdev.havana.game.player.PlayerRank;
 import org.alexdev.havana.messages.outgoing.alerts.ALERT;
+import org.alexdev.havana.messages.outgoing.rooms.user.CHAT_MESSAGE;
+
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class MimicCommand extends Command {
     @Override
@@ -52,6 +57,7 @@ public class MimicCommand extends Command {
 
         if (targetUser.getRank().getRankId() > PlayerRank.GUIDE.getRankId()) {
             player.send(new ALERT("You can't copy the look of a Staff member"));
+            return;
         }
 
         var lookToCopy = targetUser.getFigure();
@@ -69,7 +75,12 @@ public class MimicCommand extends Command {
         player.getDetails().setSex(genderToCopy);
         PlayerDao.saveDetails(player.getDetails().getId(), lookToCopy, player.getDetails().getPoolFigure(), genderToCopy);
 
+        player.getRoomUser().useEffect(4);
         player.getRoomUser().refreshAppearance();
+        player.send(new CHAT_MESSAGE(CHAT_MESSAGE.ChatMessageType.WHISPER, player.getRoomUser().getInstanceId(), "Successfully copied " + targetUser.getName() + "'s look", 0));
+
+        ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+        scheduler.schedule(() -> { player.getRoomUser().stopEffect(); scheduler.shutdown(); }, 2, TimeUnit.SECONDS);
     }
 
     @Override
