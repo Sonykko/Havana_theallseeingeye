@@ -6,6 +6,7 @@ import org.alexdev.havana.dao.mysql.PlayerDao;
 import org.alexdev.havana.game.player.PlayerDetails;
 import org.alexdev.havana.util.config.GameConfiguration;
 import org.alexdev.http.Routes;
+import org.alexdev.http.dao.housekeeping.HousekeepingCFHTopicsDao;
 import org.alexdev.http.dao.housekeeping.HousekeepingCommandsDao;
 import org.alexdev.http.dao.housekeeping.HousekeepingLogsDao;
 import org.alexdev.http.game.housekeeping.HousekeepingManager;
@@ -140,7 +141,7 @@ public class HousekeepingBanKickRCONController {
 
         tpl.set("pageName", "User Ban & Kick Tool");
         tpl.set("userBan", badguy);
-        tpl.set("CFHTopics", HousekeepingCommandsDao.getCFHTopics());
+        tpl.set("CFHTopics", HousekeepingCFHTopicsDao.getCFHTopics());
         tpl.render();
 
         // Delete alert after it's been rendered
@@ -212,7 +213,7 @@ public class HousekeepingBanKickRCONController {
         }
 
         tpl.set("pageName", "Mass Ban & Kick Tool");
-        tpl.set("CFHTopics", HousekeepingCommandsDao.getCFHTopics());
+        tpl.set("CFHTopics", HousekeepingCFHTopicsDao.getCFHTopics());
         tpl.render();
 
         // Delete alert after it's been rendered
@@ -254,7 +255,7 @@ public class HousekeepingBanKickRCONController {
         }
 
         tpl.set("pageName", "Mass Unban Tool");
-        tpl.set("CFHTopics", HousekeepingCommandsDao.getCFHTopics());
+        tpl.set("CFHTopics", HousekeepingCFHTopicsDao.getCFHTopics());
         tpl.render();
 
         // Delete alert after it's been rendered

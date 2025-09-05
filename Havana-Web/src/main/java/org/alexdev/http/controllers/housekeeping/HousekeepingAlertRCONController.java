@@ -5,6 +5,7 @@ import org.alexdev.duckhttpd.template.Template;
 import org.alexdev.havana.dao.mysql.PlayerDao;
 import org.alexdev.havana.game.player.PlayerDetails;
 import org.alexdev.http.Routes;
+import org.alexdev.http.dao.housekeeping.HousekeepingCFHTopicsDao;
 import org.alexdev.http.dao.housekeeping.HousekeepingCommandsDao;
 import org.alexdev.http.dao.housekeeping.HousekeepingLogsDao;
 import org.alexdev.http.game.housekeeping.HousekeepingManager;
@@ -77,7 +78,7 @@ public class HousekeepingAlertRCONController {
         }
 
         tpl.set("pageName", "User Alert");
-        tpl.set("CFHTopics", HousekeepingCommandsDao.getCFHTopics());
+        tpl.set("CFHTopics", HousekeepingCFHTopicsDao.getCFHTopics());
         tpl.set("remoteAlertLogs", HousekeepingCommandsDao.RemoteAlertLogs(currentPage, sortBy));
         tpl.set("nextremoteAlertLogs", HousekeepingCommandsDao.RemoteAlertLogs(currentPage + 1, sortBy));
         tpl.set("previousremoteAlertLogs", HousekeepingCommandsDao.RemoteAlertLogs(currentPage - 1, sortBy));

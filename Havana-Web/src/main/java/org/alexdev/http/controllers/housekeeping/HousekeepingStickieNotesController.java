@@ -7,10 +7,7 @@ import org.alexdev.havana.game.player.PlayerDetails;
 import org.alexdev.havana.server.rcon.messages.RconHeader;
 import org.alexdev.havana.util.config.GameConfiguration;
 import org.alexdev.http.Routes;
-import org.alexdev.http.dao.housekeeping.HousekeepingCommandsDao;
-import org.alexdev.http.dao.housekeeping.HousekeepingLogsDao;
-import org.alexdev.http.dao.housekeeping.HousekeepingPlayerDao;
-import org.alexdev.http.dao.housekeeping.HousekeepingStickieNotesDao;
+import org.alexdev.http.dao.housekeeping.*;
 import org.alexdev.http.game.housekeeping.HousekeepingManager;
 import org.alexdev.http.util.RconUtil;
 import org.alexdev.http.util.SessionUtil;
@@ -140,7 +137,7 @@ public class HousekeepingStickieNotesController {
         }
 
         tpl.set("pageName", "Stickie Notes Reports");
-        tpl.set("CFHTopics", HousekeepingCommandsDao.getCFHTopics());
+        tpl.set("CFHTopics", HousekeepingCFHTopicsDao.getCFHTopics());
         tpl.set("showResults", showResults);
         tpl.set("totalReports", HousekeepingStickieNotesDao.countStickieNotes(stickieText));
         tpl.set("totalReportsSearch", totalReportsSearch);
