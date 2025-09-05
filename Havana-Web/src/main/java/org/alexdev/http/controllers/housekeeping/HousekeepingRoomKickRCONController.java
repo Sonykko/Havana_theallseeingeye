@@ -10,6 +10,7 @@ import org.alexdev.http.Routes;
 import org.alexdev.http.dao.housekeeping.HousekeepingCFHTopicsDao;
 import org.alexdev.http.dao.housekeeping.HousekeepingCommandsDao;
 import org.alexdev.http.dao.housekeeping.HousekeepingLogsDao;
+import org.alexdev.http.dao.housekeeping.HousekeepingRoomKickDao;
 import org.alexdev.http.game.housekeeping.HousekeepingManager;
 import org.alexdev.http.util.SessionUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -104,9 +105,9 @@ public class HousekeepingRoomKickRCONController {
 
         tpl.set("pageName", "Remote room alerting & kicking");
         tpl.set("CFHTopics", HousekeepingCFHTopicsDao.getCFHTopics());
-        tpl.set("remoteRoomKickLogs", HousekeepingCommandsDao.RemoteRoomKicksLogs(currentPage, sortBy));
-        tpl.set("nextremoteRoomKickLogs", HousekeepingCommandsDao.RemoteRoomKicksLogs(currentPage + 1, sortBy));
-        tpl.set("previousremoteRoomKickLogs", HousekeepingCommandsDao.RemoteRoomKicksLogs(currentPage - 1, sortBy));
+        tpl.set("remoteRoomKickLogs", HousekeepingRoomKickDao.RemoteRoomKicksLogs(currentPage, sortBy));
+        tpl.set("nextremoteRoomKickLogs", HousekeepingRoomKickDao.RemoteRoomKicksLogs(currentPage + 1, sortBy));
+        tpl.set("previousremoteRoomKickLogs", HousekeepingRoomKickDao.RemoteRoomKicksLogs(currentPage - 1, sortBy));
         tpl.set("page", currentPage);
         tpl.set("sortBy", sortBy);
         tpl.render();
