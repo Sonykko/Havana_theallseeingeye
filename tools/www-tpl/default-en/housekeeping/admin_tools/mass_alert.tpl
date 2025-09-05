@@ -53,10 +53,10 @@
 			    {% set num = 1 %}
 				{% for massAlertLog in hotelAlertLogs %}
                 <tr>
-				  <td>Hotel Alert ID:{{ massAlertLog.id }}</td>
-				  <td>{{ massAlertLog.timestamp }}</td>				  
-				  <td>{{ massAlertLog.moderator }}</td>
-				  <td>{{ massAlertLog.message }}</td>		 
+				  <td>Hotel Alert ID:{{ massAlertLog.getId() }}</td>
+				  <td>{{ massAlertLog.getTimestamp() }}</td>				  
+				  <td>{{ massAlertLog.getModerator() }}</td>
+				  <td>{{ massAlertLog.getMessage() }}</td>		 
                 </tr>
 			   {% set num = num + 1 %}
 			   {% endfor %}
