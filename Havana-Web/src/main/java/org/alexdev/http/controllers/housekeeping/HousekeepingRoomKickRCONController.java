@@ -7,6 +7,7 @@ import org.alexdev.havana.game.player.PlayerDetails;
 import org.alexdev.havana.game.room.Room;
 import org.alexdev.havana.util.config.GameConfiguration;
 import org.alexdev.http.Routes;
+import org.alexdev.http.dao.housekeeping.HousekeepingCFHTopicsDao;
 import org.alexdev.http.dao.housekeeping.HousekeepingCommandsDao;
 import org.alexdev.http.dao.housekeeping.HousekeepingLogsDao;
 import org.alexdev.http.game.housekeeping.HousekeepingManager;
@@ -102,7 +103,7 @@ public class HousekeepingRoomKickRCONController {
         }
 
         tpl.set("pageName", "Remote room alerting & kicking");
-        tpl.set("CFHTopics", HousekeepingCommandsDao.getCFHTopics());
+        tpl.set("CFHTopics", HousekeepingCFHTopicsDao.getCFHTopics());
         tpl.set("remoteRoomKickLogs", HousekeepingCommandsDao.RemoteRoomKicksLogs(currentPage, sortBy));
         tpl.set("nextremoteRoomKickLogs", HousekeepingCommandsDao.RemoteRoomKicksLogs(currentPage + 1, sortBy));
         tpl.set("previousremoteRoomKickLogs", HousekeepingCommandsDao.RemoteRoomKicksLogs(currentPage - 1, sortBy));

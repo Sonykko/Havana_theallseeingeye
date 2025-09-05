@@ -240,41 +240,4 @@ public class HousekeepingCommandsDao {
 
         return RemoteRoomKicksLogsList;
     }
-
-    public static List<Map<String, Object>> getCFHTopics() {
-        List<Map<String, Object>> CFHTopicsList = new ArrayList<>();
-
-        Connection sqlConnection = null;
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet = null;
-
-        try {
-            sqlConnection = Storage.getStorage().getConnection();
-
-            String query = "SELECT * FROM bans_reasons";
-
-            preparedStatement = Storage.getStorage().prepare(query, sqlConnection);
-
-            resultSet = preparedStatement.executeQuery();
-
-            while (resultSet.next()) {
-                Map<String, Object> CFHTopics = new HashMap<>();
-                CFHTopics.put("id", resultSet.getInt("id"));
-                CFHTopics.put("sanctionReasonId", resultSet.getString("sanctionReasonId"));
-                CFHTopics.put("sanctionReasonValue", resultSet.getString("sanctionReasonValue"));
-                CFHTopics.put("sanctionReasonDesc", resultSet.getString("sanctionReasonDesc"));
-
-                CFHTopicsList.add(CFHTopics);
-            }
-
-        } catch (Exception e) {
-            Storage.logError(e);
-        } finally {
-            Storage.closeSilently(resultSet);
-            Storage.closeSilently(preparedStatement);
-            Storage.closeSilently(sqlConnection);
-        }
-
-        return CFHTopicsList;
-    }
 }
