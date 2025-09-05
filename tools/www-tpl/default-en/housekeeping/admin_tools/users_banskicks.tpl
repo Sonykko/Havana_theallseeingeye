@@ -172,11 +172,11 @@
 			    {% set num = 1 %}
 				{% for remoteKickLog in remoteKickLogs %}
                 <tr>
-				  <td>{{ remoteKickLog.type }}</td>
-				  <td>{{ remoteKickLog.user }}</td>
-				  <td>{{ remoteKickLog.message }}</td>				  				  				  	
-				  <td>{{ remoteKickLog.timestamp }}</td>
-				  <td>{{ remoteKickLog.moderator }}</td>
+				  <td>{{ remoteKickLog.getType() }}</td>
+				  <td>{{ remoteKickLog.getUser() }}</td>
+				  <td>{{ remoteKickLog.getMessage() }}</td>				  				  				  	
+				  <td>{{ remoteKickLog.getTimestamp() }}</td>
+				  <td>{{ remoteKickLog.getModerator() }}</td>
                 </tr>
 			   {% set num = num + 1 %}
 			   {% endfor %}

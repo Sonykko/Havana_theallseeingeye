@@ -6,6 +6,7 @@ import org.alexdev.havana.dao.mysql.BanDao;
 import org.alexdev.havana.game.player.PlayerDetails;
 import org.alexdev.http.Routes;
 import org.alexdev.http.dao.housekeeping.HousekeepingCommandsDao;
+import org.alexdev.http.dao.housekeeping.HousekeepingKickDao;
 import org.alexdev.http.dao.housekeeping.HousekeepingLogsDao;
 import org.alexdev.http.dao.housekeeping.HousekeepingPlayerDao;
 import org.alexdev.http.game.housekeeping.HousekeepingManager;
@@ -107,9 +108,9 @@ public class HousekeepingBansController {
 
         String kickSortBy = "id";
 
-        tpl.set("remoteKickLogs", HousekeepingCommandsDao.RemoteKickLogs(currentPageKick, kickSortBy));
-        tpl.set("nextremoteKickLogs", HousekeepingCommandsDao.RemoteKickLogs(currentPageKick + 1, kickSortBy));
-        tpl.set("previousremoteKickLogs", HousekeepingCommandsDao.RemoteKickLogs(currentPageKick - 1, kickSortBy));
+        tpl.set("remoteKickLogs", HousekeepingKickDao.RemoteKickLogs(currentPageKick, kickSortBy));
+        tpl.set("nextremoteKickLogs", HousekeepingKickDao.RemoteKickLogs(currentPageKick + 1, kickSortBy));
+        tpl.set("previousremoteKickLogs", HousekeepingKickDao.RemoteKickLogs(currentPageKick - 1, kickSortBy));
         tpl.set("pageKick", currentPageKick);
         tpl.set("kickSortBy", kickSortBy);
         tpl.render();
