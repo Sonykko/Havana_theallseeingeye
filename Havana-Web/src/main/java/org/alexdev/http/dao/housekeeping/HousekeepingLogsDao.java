@@ -1,12 +1,16 @@
 package org.alexdev.http.dao.housekeeping;
 
 import org.alexdev.havana.dao.Storage;
+import org.alexdev.http.game.housekeeping.HousekeepingLog;
+import org.alexdev.http.game.housekeeping.HousekeepingLoginLog;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 public class HousekeepingLogsDao {
     public static void logHousekeepingAction(String type, int userId, String username, String description, String userIp) {
@@ -38,8 +42,8 @@ public class HousekeepingLogsDao {
         }
     }
 
-    public static List<Map<String, Object>> getHousekeepingLogs(String type, int page) {
-        List<Map<String, Object>> StaffActionLogsList = new ArrayList<>();
+    public static List<HousekeepingLog> getHousekeepingLogs(String type, int page) {
+        List<HousekeepingLog> StaffActionLogsList = new ArrayList<>();
 
         int rows = 20;
         int nextOffset = page * rows;
@@ -59,15 +63,7 @@ public class HousekeepingLogsDao {
                 resultSet = preparedStatement.executeQuery();
 
                 while (resultSet.next()) {
-                    Map<String, Object> staffActionLog = new HashMap<>();
-                    staffActionLog.put("id", resultSet.getInt("id"));
-                    staffActionLog.put("userId", resultSet.getString("user_id"));
-                    staffActionLog.put("userName", resultSet.getString("username"));
-                    staffActionLog.put("description", resultSet.getString("description"));
-                    staffActionLog.put("userIp", resultSet.getString("user_ip"));
-                    staffActionLog.put("date", resultSet.getString("timestamp"));
-
-                    StaffActionLogsList.add(staffActionLog);
+                    StaffActionLogsList.add(fillHousekeepingLog(resultSet));
                 }
 
             } catch (Exception e) {
@@ -82,8 +78,8 @@ public class HousekeepingLogsDao {
         return StaffActionLogsList;
     }
 
-    public static List<Map<String, Object>> getAllLoginLogs(int page) {
-        List<Map<String, Object>> LoginLogsList = new ArrayList<>();
+    public static List<HousekeepingLoginLog> getAllLoginLogs(int page) {
+        List<HousekeepingLoginLog> LoginLogsList = new ArrayList<>();
 
         int rows = 20;
         int nextOffset = page * rows;
@@ -102,14 +98,7 @@ public class HousekeepingLogsDao {
                 resultSet = preparedStatement.executeQuery();
 
                 while (resultSet.next()) {
-                    Map<String, Object> loginLog = new HashMap<>();
-                    loginLog.put("id", resultSet.getInt("id"));
-                    loginLog.put("userId", resultSet.getString("user_id"));
-                    loginLog.put("userName", resultSet.getString("username"));
-                    loginLog.put("userIp", resultSet.getString("ip_address"));
-                    loginLog.put("date", resultSet.getString("login_time"));
-
-                    LoginLogsList.add(loginLog);
+                    LoginLogsList.add(fillLoginLog(resultSet));
                 }
 
             } catch (Exception e) {
@@ -122,5 +111,27 @@ public class HousekeepingLogsDao {
         }
 
         return LoginLogsList;
+    }
+
+    private static HousekeepingLog fillHousekeepingLog(ResultSet resultSet) throws Exception {
+        return new HousekeepingLog(
+                resultSet.getInt("id"),
+                resultSet.getInt("user_id"),
+                resultSet.getString("username"),
+                resultSet.getString("description"),
+                resultSet.getString("user_ip"),
+                resultSet.getString("timestamp"),
+                resultSet.getString("type")
+        );
+    }
+
+    private static HousekeepingLoginLog fillLoginLog(ResultSet resultSet) throws Exception {
+        return new HousekeepingLoginLog(
+                resultSet.getInt("id"),
+                resultSet.getInt("user_id"),
+                resultSet.getString("username"),
+                resultSet.getString("ip_address"),
+                resultSet.getString("login_time")
+        );
     }
 }

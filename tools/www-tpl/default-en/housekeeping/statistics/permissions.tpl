@@ -16,7 +16,7 @@
 				<a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/statistics/permissions?page={{ ourNextPage }}"><button type="button">Go back</button></a>
 			{% endif %}
 			</div>
-		{% if PermissionLogs|length > 0 %}
+		  {% if PermissionLogs|length > 0 %}
           <div class="table-responsive">
             <table class="table table-striped">
               <thead>
@@ -32,11 +32,11 @@
 			    {% set num = 1 %}
 				{% for permissionLog in PermissionLogs %}
                 <tr>
-				  <td>{{ permissionLog.id }}</td>
-				  <td>{{ permissionLog.userName }} (id: {{ permissionLog.userId }})</td>
-				  <td>Try to access to {{ permissionLog.description }}</td>
-				  <td>{{ permissionLog.date }}</td>
-				  <td>{{ permissionLog.userIp }}</td>		 
+				  <td>{{ permissionLog.getId() }}</td>
+				  <td>{{ permissionLog.getUserName() }} (id: {{ permissionLog.getUserId() }})</td>
+				  <td>Try to access to {{ permissionLog.getDescription() }}</td>
+				  <td>{{ permissionLog.getDate() }}</td>
+				  <td>{{ permissionLog.getUserIp() }}</td>		 
                 </tr>
 			   {% set num = num + 1 %}
 			   {% endfor %}

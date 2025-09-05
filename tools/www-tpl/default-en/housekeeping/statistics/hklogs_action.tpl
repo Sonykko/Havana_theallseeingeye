@@ -32,11 +32,11 @@
 			    {% set num = 1 %}
 				{% for staffActionLog in StaffActionLogs %}
                 <tr>
-				  <td>{{ staffActionLog.id }}</td>
-				  <td>{{ staffActionLog.userName }} (id: {{ staffActionLog.userId }})</td>
-				  <td>{{ staffActionLog.description }}</td>
-				  <td>{{ staffActionLog.date }}</td>
-				  <td>{{ staffActionLog.userIp }}</td>		 
+				  <td>{{ staffActionLog.getId() }}</td>
+				  <td>{{ staffActionLog.getUserName() }} (id: {{ staffActionLog.getUserId() }})</td>
+				  <td>{{ staffActionLog.detDescription() }}</td>
+				  <td>{{ staffActionLog.getDate() }}</td>
+				  <td>{{ staffActionLog.getUserIp() }}</td>		 
                 </tr>
 			   {% set num = num + 1 %}
 			   {% endfor %}
