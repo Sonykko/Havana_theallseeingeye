@@ -31,16 +31,16 @@
 			    {% set num = 1 %}
 				{% for loginLog in LoginLogs %}
                 <tr>
-				  <td>{{ loginLog.id }}</td>
-				  <td>{{ loginLog.userName }} (id: {{ loginLog.userId }})</td>
-				  <td>{{ loginLog.date }}</td>
-				  <td>{{ loginLog.userIp }}</td>
+				  <td>{{ loginLog.getId() }}</td>
+				  <td>{{ loginLog.getUserName() }} (id: {{ loginLog.getUserId() }})</td>
+				  <td>{{ loginLog.getDate() }}</td>
+				  <td>{{ loginLog.getUserIp() }}</td>
                 </tr>
 			   {% set num = num + 1 %}
 			   {% endfor %}
               </tbody>
             </table>
-          </div>
+		  </div>
 		  {% else %}
 		  <p><i>Nothing found to display.</i></p>
 		  {% endif %} 
