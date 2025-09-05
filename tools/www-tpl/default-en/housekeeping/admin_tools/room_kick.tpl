@@ -14,9 +14,9 @@
 				</div>
 				<div class="alert__tool__commonmessage">
 					<select name="commonMessage" id="commonMessage">
-						<option value="">Choose a common message</option>
+						<option value="" disabled selected>Choose a common message</option>
 						{% for CFHTopics in CFHTopics %}
-						<option value="{{ CFHTopics.getgetSanctionReasonDesc()() }}">{{ CFHTopics.getgetSanctionReasonValue()() }}</option>
+						<option value="{{ CFHTopics.getSanctionReasonDesc() }}">{{ CFHTopics.sanctionReasonValue }}</option>
 						{% endfor %}
 					</select>
 				</div>								
@@ -51,7 +51,7 @@
 				<a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/room_kick?page={{ ourNextPage }}&sort={{ sortBy }}"><button type="button">Go back</button></a>
 			{% endif %}
 			</div>
-		  {% if remoteRoomKickLogs|length > 0 %}	
+		  {% if remoteRoomKickLogs|length > 0 %}
           <div class="table-responsive">
             <table class="table table-striped">
               <thead>
@@ -69,12 +69,12 @@
 			    {% set num = 1 %}
 				{% for remoteRoomKickLog in remoteRoomKickLogs %}
                 <tr>
-				  <td>{{ remoteRoomKickLog.id }}</td>				  
-				  <td>{% if remoteRoomKickLog.type == "REMOTE_ROOM_KICK" %}Room kick{% elseif remoteRoomKickLog.type == "REMOTE_ROOM_ALERT" %}Room alert{% endif %}</td>		
-				  <td><a href="{{ site.sitePath }}/ase/habbo/es/housekeeping/extra/hobba/admin_tools/rooms/edit?id={{ remoteRoomKickLog.user }}">{{ remoteRoomKickLog.user }}</a></td>		
-				  <td>{{ remoteRoomKickLog.message }}</td>		
-				  <td>{{ remoteRoomKickLog.timestamp }}</td>				  
-				  <td>{{ remoteRoomKickLog.moderator }}</td>				  
+				  <td>{{ remoteRoomKickLog.getId() }}</td>				  
+				  <td>{% if remoteRoomKickLog.getType() == "REMOTE_ROOM_KICK" %}Room kick{% elseif remoteRoomKickLog.getType() == "REMOTE_ROOM_ALERT" %}Room alert{% endif %}</td>		
+				  <td><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/rooms/edit?id={{ remoteRoomKickLog.getUser() }}">{{ remoteRoomKickLog.getUser() }}</a></td>		
+				  <td>{{ remoteRoomKickLog.getMessage() }}</td>		
+				  <td>{{ remoteRoomKickLog.getTimestamp() }}</td>				  
+				  <td>{{ remoteRoomKickLog.getModerator() }}</td>				  
                 </tr>
 			   {% set num = num + 1 %}
 			   {% endfor %}
@@ -83,7 +83,7 @@
 		  </div>
 		  {% else %}
 		  <p><i>Nothing found to display.</i></p>
-		  {% endif %} 	  
+		  {% endif %} 
     </div>
   </div>
 </body>
