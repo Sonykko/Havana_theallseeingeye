@@ -3,19 +3,19 @@
 	{% set bansActive = " active " %}
 	{% include "housekeeping/base/navigation.tpl" %}
 	{% include "housekeeping/base/navigation_admin_tools.tpl" %}
-     <h2 class="mt-4">Guestbook Reports</h2>
+     <h2 class="mt-4">Guestbook Reports</h2>		
 		{% include "housekeeping/base/alert.tpl" %}
-
+		
 		<br/>
 		<p>[] <b>{{ totalReports }}</b> reports in database.</p>
 		<p style="font-size:16px;"><b>Query</b></p>
-
+		
 		<form id="getAllReports" action="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/guestbook_reports_list" method="post">
 			<input type="hidden" name="latest" id="latest" />
-			<a href="#" onclick="submitForm()"><text style="font-weight:bold;font-size:16px;">Get latest reports</text></a>
+			<a href="#" onclick="submitForm()"><text style="font-weight:bold;font-size:16px;">Get latest reports</text></a>			
 		</form>
 		<br/>
-
+		
 		<form class="table-responsive col-md-4 stickie__search__form" method="post" name="searchQuery">
 			<div class="stickie__search__query">
 				<div style="display:flex;">
@@ -24,15 +24,15 @@
 						<label>User name:</label>
 						<label>Show max:</label>
 					</div>
-
+					
 					<div class="stickie__search__inputs">
-						<label>
+						<label>				
 							<select name="criteria" id="criteria">
 								<option value="1">Reported {{ site.siteName }}</option>
 								<option value="0">New</option>
 							</select>
 						</label>
-						<label>
+						<label>				
 							<input type="text" id="text" name="reportedUser" />
 						</label>
 						<label>
@@ -57,8 +57,8 @@
 								<option value="18">18</option>
 								<option value="19">19</option>
 								<option value="20">20</option>
-							</select>
-						</label>
+							</select>	
+						</label>	
 					</div>
 				</div>
 				<button type="submit" name="searchQuery" value="searchQuery" style="">Send request</button>
@@ -86,25 +86,25 @@
 					{% set num = 1 %}
 					{% for contentReportsList in latestReports %}
 					<tr>
-						<input type="hidden" value="{{ contentReportsList.id }}" class="reportId" />
-						<td><input type="checkbox" value="{{ contentReportsList.objectId }}" class="objectId" /></td>
-						<td>{{ contentReportsList.type }}</td>
-						<td>{{ contentReportsList.objectId }}</td>
-						<td>{{ contentReportsList.message }}</td>
+						<input type="hidden" value="{{ contentReportsList.getId() }}" class="reportId" />
+						<td><input type="checkbox" value="{{ contentReportsList.getObjectId() }}" class="objectId" /></td>
+						<td>{{ contentReportsList.getType() }}</td>
+						<td>{{ contentReportsList.getObjectId() }}</td>
+						<td>{{ contentReportsList.getMessage() }}</td>
 						{% autoescape'html' %}
-						<td>{{ contentReportsList.guestbookEntry }}</td>
+						<td>{{ contentReportsList.getValue() }}</td>
 						{% endautoescape %}
-						<td>{{ contentReportsList.timestamp }}</td>
+						<td>{{ contentReportsList.getTimestamp() }}</td>
 					</tr>
 					{% set num = num + 1 %}
 					{% endfor %}
-
+					
 					{% set num = 1 %}
 				</tbody>
 			</table>
-		{% else  %}
+		{% else  %}		
 			<p>Nothing found to display.</p>
-		{% endif %}
+		{% endif %}			
 			<div style="display: ruby;">
 				<p>Remplacement text: :</p>
 				{% autoescape'html' %}
@@ -118,11 +118,11 @@
 				<input type="hidden" name="action" value="process" />
 				<button type="button" name="action" id="undo">Undo</button>
 				<button type="submit" id="process">Process</button>
-			</form>
+			</form>	
 			<br/>
 			<p><b>Note:</b> when you click "Process", Guestbook posts whose checkbox has been checked entry will be changed. Other reports are ignored and deleted from database.</p>
-		</div>
-		{% endif %}
+		</div>				
+		{% endif %}	
       </div>
     </div>
   </div>
@@ -130,10 +130,10 @@
 		function submitForm() {
 			document.getElementById('getAllReports').submit();
 		}
-
+		
 		document.getElementById("undo").addEventListener("click", function () {
 			document.getElementById("remplacementText").value = "";
-		});
+		});		
 
 		document.getElementById("process").addEventListener("click", function (e) {
 			e.preventDefault();
@@ -153,7 +153,7 @@
 			document.getElementById("replacementTextInput").value = replacementText;
 
 			document.getElementById("processReportsForm").submit();
-		});
-	</script>
+		});	
+	</script>    
 </body>
 </html>

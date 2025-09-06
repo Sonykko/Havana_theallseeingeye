@@ -1,14 +1,13 @@
 package org.alexdev.http.dao.housekeeping;
 
 import org.alexdev.havana.dao.Storage;
+import org.alexdev.http.game.housekeeping.HousekeepingContentModeration;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class HousekeepingContentModerationDao {
 
@@ -41,8 +40,8 @@ public class HousekeepingContentModerationDao {
         return count;
     }
 
-    public static List<Map<String, Object>> searchContentReports(int limit, String type) {
-        List<Map<String, Object>> contentReportsList = new ArrayList<>();
+    public static List<HousekeepingContentModeration> searchContentReports(int limit, String type) {
+        List<HousekeepingContentModeration> contentReportsList = new ArrayList<>();
 
         Connection sqlConnection = null;
         PreparedStatement preparedStatement = null;
@@ -57,16 +56,7 @@ public class HousekeepingContentModerationDao {
             resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
-                Map<String, Object> contentReport = new HashMap<>();
-
-                contentReport.put("id", resultSet.getBigDecimal("id"));
-                contentReport.put("type", resultSet.getString("type"));
-                contentReport.put("objectId", resultSet.getInt("object_id"));
-                contentReport.put("message", resultSet.getString("message"));
-                contentReport.put("isModerated", resultSet.getInt("is_moderated"));
-                contentReport.put("timestamp", resultSet.getString("timestamp"));
-
-                contentReportsList.add(contentReport);
+                contentReportsList.add(fill(resultSet));
             }
 
         } catch (Exception e) {
@@ -100,5 +90,16 @@ public class HousekeepingContentModerationDao {
             Storage.closeSilently(preparedStatement);
             Storage.closeSilently(sqlConnection);
         }
+    }
+
+    private static HousekeepingContentModeration fill(ResultSet resultSet) throws Exception {
+        return new HousekeepingContentModeration(
+                resultSet.getInt("id"),
+                resultSet.getString("type"),
+                resultSet.getString("object_id"),
+                resultSet.getString("message"),
+                resultSet.getInt("is_moderated"),
+                resultSet.getString("timestamp")
+        );
     }
 }
