@@ -46,8 +46,8 @@ public class HousekeepingCFHDao {
         return CFHList;
     }
 
-    public static List<HousekeepingCFH> getCFHlogAction(String cryIdSaved) {
-        List<HousekeepingCFH> CFHActionList = new ArrayList<>();
+    public static HousekeepingCFH getCFHLogByCryId(String cryIdSaved) {
+        HousekeepingCFH cfh = null;
 
         Connection sqlConnection = null;
         PreparedStatement preparedStatement = null;
@@ -61,7 +61,7 @@ public class HousekeepingCFHDao {
             resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
-                CFHActionList.add(fill(resultSet));
+                cfh = fill(resultSet);
             }
 
         } catch (Exception e) {
@@ -72,9 +72,8 @@ public class HousekeepingCFHDao {
             Storage.closeSilently(sqlConnection);
         }
 
-        return CFHActionList;
+        return cfh;
     }
-
     private static HousekeepingCFH fill(ResultSet resultSet) throws Exception {
         return new HousekeepingCFH(
                 resultSet.getInt("cfh_id"),

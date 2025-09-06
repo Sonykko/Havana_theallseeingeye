@@ -126,7 +126,7 @@ public class HousekeepingCFHController {
         }
 
         tpl.set("pageName", "CFH Action");
-        tpl.set("cfhlogsAction", HousekeepingCFHDao.getCFHlogAction(client.get().getString("cryId")));
+        tpl.set("cfhlog", HousekeepingCFHDao.getCFHLogByCryId(client.get().getString("cryId")));
         tpl.set("defaultReply", GameConfiguration.getInstance().getString("rcon.cfh.reply.message"));
         tpl.render();
 
