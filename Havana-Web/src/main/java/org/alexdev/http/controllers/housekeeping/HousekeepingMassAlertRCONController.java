@@ -5,6 +5,7 @@ import org.alexdev.duckhttpd.template.Template;
 import org.alexdev.havana.game.player.PlayerDetails;
 import org.alexdev.http.Routes;
 import org.alexdev.http.dao.housekeeping.HousekeepingLogsDao;
+import org.alexdev.http.dao.housekeeping.HousekeepingMassAlertDao;
 import org.alexdev.http.game.housekeeping.HousekeepingManager;
 import org.alexdev.http.util.SessionUtil;
 
@@ -58,9 +59,9 @@ public class HousekeepingMassAlertRCONController {
         }
 
         tpl.set("pageName", "Hotel Alert - Mass alert");
-        tpl.set("hotelAlertLogs", HousekeepingCommandsDao.MassAlertsLogs(currentPage, sortBy));
-        tpl.set("nexthotelAlertLogs", HousekeepingCommandsDao.MassAlertsLogs(currentPage + 1, sortBy));
-        tpl.set("previoushotelAlertLogs", HousekeepingCommandsDao.MassAlertsLogs(currentPage - 1, sortBy));
+        tpl.set("hotelAlertLogs", HousekeepingMassAlertDao.MassAlertsLogs(currentPage, sortBy));
+        tpl.set("nexthotelAlertLogs", HousekeepingMassAlertDao.MassAlertsLogs(currentPage + 1, sortBy));
+        tpl.set("previoushotelAlertLogs", HousekeepingMassAlertDao.MassAlertsLogs(currentPage - 1, sortBy));
         tpl.set("page", currentPage);
         tpl.set("sortBy", sortBy);
         tpl.render();
