@@ -16,7 +16,7 @@
 					<select name="commonMessage" id="commonMessage">
 						<option value="" disabled selected>Choose a common message</option>
 						{% for CFHTopics in CFHTopics %}
-						<option value="{{ CFHTopics.getSanctionReasonDesc() }}">{{ CFHTopics.sanctionReasonValue }}</option>
+						<option value="{{ CFHTopics.getSanctionReasonDesc() }}">{{ CFHTopics.getSanctionReasonValue() }}</option>
 						{% endfor %}
 					</select>
 				</div>								
