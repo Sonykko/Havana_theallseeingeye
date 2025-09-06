@@ -86,13 +86,15 @@
 					{% set num = 1 %}
 					{% for contentReportsList in latestReports %}
 					<tr>
-						<input type="hidden" value="{{ contentReportsList.id }}" class="reportId" />
-						<td><input type="checkbox" value="{{ contentReportsList.objectId }}" class="objectId" /></td>
-						<td>{{ contentReportsList.type }}</td>
-						<td>{{ contentReportsList.objectId }}</td>
-						<td>{{ contentReportsList.message }}</td>
-						<td>{{ contentReportsList.groupName }}</td>
-						<td>{{ contentReportsList.timestamp }}</td>
+						<input type="hidden" value="{{ contentReportsList.getId() }}" class="reportId" />
+						<td><input type="checkbox" value="{{ contentReportsList.getObjectId() }}" class="objectId" /></td>
+						<td>{{ contentReportsList.getType() }}</td>
+						<td>{{ contentReportsList.getObjectId() }}</td>
+						<td>{{ contentReportsList.getMessage() }}</td>
+						{% autoescape'html' %}
+						<td>{{ contentReportsList.getValue() }}</td>
+						{% endautoescape %}
+						<td>{{ contentReportsList.getTimestamp() }}</td>
 					</tr>
 					{% set num = num + 1 %}
 					{% endfor %}

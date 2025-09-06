@@ -2,23 +2,19 @@ package org.alexdev.http.controllers.housekeeping;
 
 import org.alexdev.duckhttpd.server.connection.WebConnection;
 import org.alexdev.duckhttpd.template.Template;
-import org.alexdev.havana.dao.mysql.PlayerDao;
 import org.alexdev.havana.game.player.PlayerDetails;
 import org.alexdev.http.Routes;
 import org.alexdev.http.dao.GuestbookDao;
 import org.alexdev.http.dao.housekeeping.HousekeepingContentModerationDao;
 import org.alexdev.http.dao.housekeeping.HousekeepingLogsDao;
 import org.alexdev.http.game.housekeeping.HousekeepingManager;
+import org.alexdev.http.game.housekeeping.HousekeepingReportsSearchResult;
 import org.alexdev.http.util.SessionUtil;
 import org.alexdev.http.util.housekeeping.ContentModerationUtil;
-import org.apache.commons.lang3.StringUtils;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 public class HousekeepingGuestbookReportsController {
+    private static final String typeReport = "guestbook";
+    
     public static void guestbook_reports(WebConnection client) {
         if (!client.session().getBoolean(SessionUtil.LOGGED_IN_HOUSKEEPING)) {
             client.redirect("/" + Routes.HOUSEKEEPING_DEFAULT_PATH);
@@ -36,162 +32,84 @@ public class HousekeepingGuestbookReportsController {
             return;
         }
 
-        boolean showResults = false;
-        int totalReportsSearch = 0;
-        String searchCriteria = "";
-        String typeReport = "guestbook";
+        HousekeepingReportsSearchResult searchResult = new HousekeepingReportsSearchResult();
 
         if (client.post().contains("latest")) {
-            List<Map<String, Object>> reportsWithDetails = ContentModerationUtil.getLatestReports(20, typeReport);
-
-            tpl.set("latestReports", reportsWithDetails);
-            showResults = true;
-            totalReportsSearch = reportsWithDetails.size();
-            searchCriteria = ContentModerationUtil.getSearchCriteria("latest");
+            ContentModerationUtil.getLatestReportsUtil(tpl, searchResult, typeReport);
         }
 
         if (client.post().contains("searchQuery")) {
-            String reportedUser = client.post().getString("reportedUser");
-            String criteria = client.post().getString("criteria");
-            String showMax = client.post().getString("showMax");
-
-            if (!StringUtils.isNumeric(criteria) || (!criteria.equals("1") && !criteria.equals("0")) || !StringUtils.isNumeric(showMax)) {
-                client.session().set("alertColour", "danger");
-                client.session().set("alertMessage", "Please enter a valid criteria or show max value.");
-                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/guestbook_reports_list");
-                return;
-            }
-
-            int criteriaInt = Integer.parseInt(criteria);
-            int showMaxInt = Integer.parseInt(showMax);
-
-            if (showMaxInt < 1 || showMaxInt > 20) {
-                client.session().set("alertColour", "danger");
-                client.session().set("alertMessage", "Please enter a valid show max value.");
-                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/guestbook_reports_list");
-                return;
-            }
-
-            if (criteriaInt == 0) {
-                List<Map<String, Object>> reportsWithDetails = ContentModerationUtil.getLatestReports(showMaxInt, typeReport);
-
-                tpl.set("latestReports", reportsWithDetails);
-                showResults = true;
-                totalReportsSearch = reportsWithDetails.size();
-                searchCriteria = ContentModerationUtil.getSearchCriteria("new");
-            }
-
-            if (criteriaInt == 1) {
-                if (reportedUser == null) {
-                    client.session().set("alertColour", "danger");
-                    client.session().set("alertMessage", "Please provided a valid reported username.");
-                    client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/guestbook_reports_list");
-                    return;
-                }
-
-                var reportedDetails = PlayerDao.getDetails(reportedUser);
-
-                if (reportedDetails == null) {
-                    client.session().set("alertColour", "danger");
-                    client.session().set("alertMessage", "The reported does not exist.");
-                    client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/guestbook_reports_list");
-                    return;
-                }
-
-                List<Map<String, Object>> latestReports = HousekeepingContentModerationDao.searchContentReports(showMaxInt, typeReport);
-
-                List<Map<String, Object>> filteredReports = latestReports.stream()
-                        .filter(report -> {
-                            int objectId = (int) report.get("objectId");
-                            var entry = GuestbookDao.getEntry(objectId);
-                            var entryAuthor = entry.getUser().getName();
-                            return entryAuthor.equals(reportedUser);
-                        })
-                        .collect(Collectors.toList());
-
-                List<Map<String, Object>> filteredReportsWithGuestbookEntries = new ArrayList<>();
-
-                for (Map<String, Object> report : filteredReports) {
-                    int objectId = (int) report.get("objectId");
-                    var entry = GuestbookDao.getEntry(objectId);
-                    String entryMessage = entry.getMessage();
-
-                    report.put("guestbookEntry", entryMessage);
-
-                    filteredReportsWithGuestbookEntries.add(report);
-                }
-
-                tpl.set("latestReports", filteredReportsWithGuestbookEntries);
-                showResults = true;
-                totalReportsSearch = filteredReportsWithGuestbookEntries.size();
-                searchCriteria = ContentModerationUtil.getSearchCriteria("reported habbo");
-            }
+            ContentModerationUtil.search(client, tpl, searchResult, typeReport);
         }
-
+        
         String objectIdsParam = client.post().getString("objectIds");
         String reportIdsParam = client.post().getString("reportIds");
         String replacementText = client.post().getString("replacementText");
         String action = client.post().getString("action");
 
         if (action.equals("process")) {
-            if (objectIdsParam == null || objectIdsParam.isEmpty() ||
-                    reportIdsParam == null || reportIdsParam.isEmpty() ||
-                    replacementText == null || replacementText.isEmpty()) {
-
-                client.session().set("alertColour", "danger");
-                client.session().set("alertMessage", "Please select at least one report and provide a replacement text.");
-                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/guestbook_reports_list");
-                return;
-            }
-
-            String[] objectIdsArray = objectIdsParam.split(",");
-            String[] reportIdsArray = reportIdsParam.split(",");
-
-            if (objectIdsArray.length != reportIdsArray.length) {
-                client.session().set("alertColour", "danger");
-                client.session().set("alertMessage", "Mismatch between selected reports and objects.");
-                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/guestbook_reports_list");
-                return;
-            }
-
-            for (int i = 0; i < objectIdsArray.length; i++) {
-                int objectId = Integer.parseInt(objectIdsArray[i].trim());
-                int reportId = Integer.parseInt(reportIdsArray[i].trim());
-
-                var guestbookReported = GuestbookDao.getEntry(objectId);
-
-                if (guestbookReported == null) {
-                    client.session().set("alertColour", "danger");
-                    client.session().set("alertMessage", "The Guestbook entry with the ID " + objectId + " does not exist.");
-                    client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/guestbook_reports_list");
-                    return;
-                }
-
-                try {
-                    guestbookReported.setMessage(replacementText);
-                    GuestbookDao.saveEntry(guestbookReported);
-                } catch (Exception ex) {
-
-                }
-
-                HousekeepingContentModerationDao.setAsModerated(reportId);
-                HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Moderated " + typeReport + " content reports with the id's: " + reportIdsParam + ". URL: " + client.request().uri(), client.getIpAddress());
-
-                client.session().set("alertColour", "success");
-                client.session().set("alertMessage", "Guestbook reports moderated successfully.");
-                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/guestbook_reports_list");
-                return;
-            }
+            process(client, playerDetails, objectIdsParam, reportIdsParam, replacementText);
         }
 
         tpl.set("pageName", "Guestbook Reports");
-        tpl.set("showResults", showResults);
-        tpl.set("totalReportsSearch", totalReportsSearch);
+        tpl.set("showResults", searchResult.isShowResults());
+        tpl.set("totalReportsSearch", searchResult.getTotalReportsSearch());
         tpl.set("totalReports", HousekeepingContentModerationDao.countReports(typeReport));
-        tpl.set("searchCriteria", searchCriteria);
+        tpl.set("searchCriteria", searchResult.getSearchCriteria());
         tpl.render();
 
         // Delete alert after it's been rendered
         client.session().delete("alertMessage");
+    }
+
+    public static void process(WebConnection client, PlayerDetails playerDetails, String objectIdsParam, String reportIdsParam, String replacementText) {
+        if (objectIdsParam == null || objectIdsParam.isEmpty() ||
+                reportIdsParam == null || reportIdsParam.isEmpty() ||
+                replacementText == null || replacementText.isEmpty()) {
+
+            client.session().set("alertColour", "danger");
+            client.session().set("alertMessage", "Please select at least one report and provide a replacement text.");
+            client.redirect(ContentModerationUtil.getPath(typeReport));
+            return;
+        }
+
+        String[] objectIdsArray = objectIdsParam.split(",");
+        String[] reportIdsArray = reportIdsParam.split(",");
+
+        if (objectIdsArray.length != reportIdsArray.length) {
+            client.session().set("alertColour", "danger");
+            client.session().set("alertMessage", "Mismatch between selected reports and objects.");
+            client.redirect(ContentModerationUtil.getPath(typeReport));
+            return;
+        }
+
+        for (int i = 0; i < objectIdsArray.length; i++) {
+            int objectId = Integer.parseInt(objectIdsArray[i].trim());
+            int reportId = Integer.parseInt(reportIdsArray[i].trim());
+
+            var guestbookReported = GuestbookDao.getEntry(objectId);
+
+            if (guestbookReported == null) {
+                client.session().set("alertColour", "danger");
+                client.session().set("alertMessage", "The Guestbook entry with the ID " + objectId + " does not exist.");
+                client.redirect(ContentModerationUtil.getPath(typeReport));
+                return;
+            }
+
+            try {
+                guestbookReported.setMessage(replacementText);
+                GuestbookDao.saveEntry(guestbookReported);
+            } catch (Exception ex) {
+
+            }
+
+            HousekeepingContentModerationDao.setAsModerated(reportId);
+            HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Moderated " + typeReport + " content reports with the id's: " + reportIdsParam + ". URL: " + client.request().uri(), client.getIpAddress());
+
+            client.session().set("alertColour", "success");
+            client.session().set("alertMessage", "Guestbook reports moderated successfully.");
+            client.redirect(ContentModerationUtil.getPath(typeReport));
+            return;
+        }
     }
 }
