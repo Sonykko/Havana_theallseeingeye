@@ -32,13 +32,6 @@ public class HousekeepingMassAlertDao {
                 resultSet = preparedStatement.executeQuery();
 
                 while (resultSet.next()) {
-                    Map<String, Object> massAlertLog = new HashMap<>();
-                    massAlertLog.put("id", resultSet.getInt("id"));
-                    massAlertLog.put("type", resultSet.getString("type"));
-                    massAlertLog.put("moderator", resultSet.getString("moderator"));
-                    massAlertLog.put("message", resultSet.getString("message"));
-                    massAlertLog.put("timestamp", resultSet.getString("timestamp"));
-
                     MassAlertsLogsList.add(fill(resultSet));
                 }
 
