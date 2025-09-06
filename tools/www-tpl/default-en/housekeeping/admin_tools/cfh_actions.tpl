@@ -15,8 +15,6 @@
                 </tr>
               </thead>
               <tbody>
-			    {% set num = 1 %}
-				{% for cfhlog in cfhlogsAction %}
 				{% if cfhlog.getAction() != "PICK UP" %}
 				<div class="alert alert-danger">
 					<text>The CFH is already picked up or it's not picked up by any Moderator yet</text>
@@ -48,8 +46,6 @@
 				  </td>
                 </tr>
 				{% endif %}
-			   {% set num = num + 1 %}
-			   {% endfor %}
               </tbody>
             </table>
       </div>
