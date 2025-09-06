@@ -5,7 +5,6 @@ import org.alexdev.havana.dao.mysql.PlayerDao;
 import org.alexdev.havana.game.player.PlayerDetails;
 import org.alexdev.havana.server.rcon.messages.RconHeader;
 import org.alexdev.http.Routes;
-import org.alexdev.http.dao.housekeeping.HousekeepingCommandsDao;
 import org.alexdev.http.dao.housekeeping.HousekeepingLogsDao;
 import org.alexdev.http.game.housekeeping.HousekeepingManager;
 import org.alexdev.http.util.RconUtil;
@@ -43,7 +42,7 @@ public class HousekeepingMassAlertApiController {
 
             }});
 
-            boolean dbInsertSuccess = HousekeepingCommandsDao.insertRconLog("HOTEL_ALERT", null, moderator, message);
+            boolean dbInsertSuccess = HousekeepingLogsDao.insertRconLog("HOTEL_ALERT", null, moderator, message);
 
             if (dbInsertSuccess) {
                 client.session().set("alertColour", "success");

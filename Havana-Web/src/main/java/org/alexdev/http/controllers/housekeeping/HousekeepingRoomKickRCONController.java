@@ -8,7 +8,6 @@ import org.alexdev.havana.game.room.Room;
 import org.alexdev.havana.util.config.GameConfiguration;
 import org.alexdev.http.Routes;
 import org.alexdev.http.dao.housekeeping.HousekeepingCFHTopicsDao;
-import org.alexdev.http.dao.housekeeping.HousekeepingCommandsDao;
 import org.alexdev.http.dao.housekeeping.HousekeepingLogsDao;
 import org.alexdev.http.dao.housekeeping.HousekeepingRoomKickDao;
 import org.alexdev.http.game.housekeeping.HousekeepingManager;

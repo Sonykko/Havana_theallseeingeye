@@ -113,6 +113,42 @@ public class HousekeepingLogsDao {
         return LoginLogsList;
     }
 
+    public static boolean insertRconLog(String type, String user, String moderator, String message) {
+        Connection sqlConnection = null;
+        PreparedStatement preparedStatement = null;
+
+        try {
+            sqlConnection = Storage.getStorage().getConnection();
+
+            long unixTimestamp = System.currentTimeMillis() / 1000;
+
+            java.sql.Date date = new java.sql.Date(unixTimestamp * 1000);
+
+            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm d/MM/yyyy");
+            String formattedDate = sdf.format(date);
+
+            preparedStatement = sqlConnection.prepareStatement("INSERT INTO housekeeping_rcon_logs (type, user, moderator, message, timestamp) VALUES (?, ?, ?, ?, ?)");
+            preparedStatement.setString(1, type);
+            preparedStatement.setString(2, user);
+            preparedStatement.setString(3, moderator);
+            preparedStatement.setString(4, message);
+            preparedStatement.setString(5, formattedDate);
+
+            int rowsAffected = preparedStatement.executeUpdate();
+
+            if (rowsAffected > 0) {
+                return true;
+            }
+        } catch (Exception e) {
+            Storage.logError(e);
+        } finally {
+            Storage.closeSilently(preparedStatement);
+            Storage.closeSilently(sqlConnection);
+        }
+
+        return false;
+    }
+
     private static HousekeepingLog fillHousekeepingLog(ResultSet resultSet) throws Exception {
         return new HousekeepingLog(
                 resultSet.getInt("id"),
