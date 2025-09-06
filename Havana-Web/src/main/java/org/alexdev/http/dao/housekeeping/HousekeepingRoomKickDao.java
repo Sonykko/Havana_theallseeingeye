@@ -1,7 +1,7 @@
 package org.alexdev.http.dao.housekeeping;
 
 import org.alexdev.havana.dao.Storage;
-import org.alexdev.http.game.housekeeping.HousekeepingRoomKickLog;
+import org.alexdev.http.game.housekeeping.HousekeepingRCONLog;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -10,8 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HousekeepingRoomKickDao {
-    public static List<HousekeepingRoomKickLog> RemoteRoomKicksLogs(int page, String sortBy) {
-        List<HousekeepingRoomKickLog> RemoteRoomKicksLogsList = new ArrayList<>();
+    public static List<HousekeepingRCONLog> RemoteRoomKicksLogs(int page, String sortBy) {
+        List<HousekeepingRCONLog> RemoteRoomKicksLogsList = new ArrayList<>();
 
         int rows = 20;
         int nextOffset = page * rows;
@@ -45,8 +45,8 @@ public class HousekeepingRoomKickDao {
         return RemoteRoomKicksLogsList;
     }
 
-    private static HousekeepingRoomKickLog fill(ResultSet resultSet) throws Exception {
-        return new HousekeepingRoomKickLog(
+    private static HousekeepingRCONLog fill(ResultSet resultSet) throws Exception {
+        return new HousekeepingRCONLog(
                 resultSet.getInt("id"),
                 resultSet.getString("type"),
                 resultSet.getString("user"),

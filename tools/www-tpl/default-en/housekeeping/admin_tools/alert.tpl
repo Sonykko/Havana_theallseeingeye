@@ -58,13 +58,13 @@
 			    {% set num = 1 %}
 				{% for remoteAlertLog in remoteAlertLogs %}
                 <tr>
-				  <td>{{ remoteAlertLog.id }}</td>				  
-				  <td>{{ remoteAlertLog.user }}</td>	
+				  <td>{{ remoteAlertLog.getId() }}</td>				  
+				  <td>{{ remoteAlertLog.getUser() }}</td>	
 				{% autoescape 'html' %}				  
-				  <td>{{ remoteAlertLog.message }}</td>	
+				  <td>{{ remoteAlertLog.getMessage() }}</td>	
 				{% endautoescape %}
-				  <td>{{ remoteAlertLog.timestamp }}</td>				  
-				  <td>{{ remoteAlertLog.moderator }}</td>				  
+				  <td>{{ remoteAlertLog.getTimestamp() }}</td>				  
+				  <td>{{ remoteAlertLog.getTimestamp() }}</td>				  
                 </tr>
 			   {% set num = num + 1 %}
 			   {% endfor %}
