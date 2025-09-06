@@ -1,7 +1,7 @@
 package org.alexdev.http.dao.housekeeping;
 
 import org.alexdev.havana.dao.Storage;
-import org.alexdev.http.game.housekeeping.HousekeepingMassAlertLog;
+import org.alexdev.http.game.housekeeping.HousekeepingRCONLog;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,8 +12,8 @@ import java.util.List;
 import java.util.Map;
 
 public class HousekeepingMassAlertDao {
-    public static List<HousekeepingMassAlertLog> MassAlertsLogs(int page, String sortBy) {
-        List<HousekeepingMassAlertLog> MassAlertsLogsList = new ArrayList<>();
+    public static List<HousekeepingRCONLog> MassAlertsLogs(int page, String sortBy) {
+        List<HousekeepingRCONLog> MassAlertsLogsList = new ArrayList<>();
 
         int rows = 20;
         int nextOffset = page * rows;
@@ -25,10 +25,7 @@ public class HousekeepingMassAlertDao {
 
             try {
                 sqlConnection = Storage.getStorage().getConnection();
-                preparedStatement = Storage.getStorage().prepare(
-                        "SELECT * FROM housekeeping_rcon_logs WHERE type = 'HOTEL_ALERT' ORDER BY " + sortBy + " DESC LIMIT ? OFFSET ?",
-                        sqlConnection
-                );
+                preparedStatement = Storage.getStorage().prepare("SELECT * FROM housekeeping_rcon_logs WHERE type = 'HOTEL_ALERT' ORDER BY " + sortBy + " DESC LIMIT ? OFFSET ?", sqlConnection);
                 preparedStatement.setInt(1, rows);
                 preparedStatement.setInt(2, nextOffset);
 
@@ -57,8 +54,8 @@ public class HousekeepingMassAlertDao {
         return MassAlertsLogsList;
     }
 
-    private static HousekeepingMassAlertLog fill(ResultSet resultSet) throws Exception {
-        return new HousekeepingMassAlertLog(
+    private static HousekeepingRCONLog fill(ResultSet resultSet) throws Exception {
+        return new HousekeepingRCONLog(
                 resultSet.getInt("id"),
                 resultSet.getString("type"),
                 resultSet.getString("user"),

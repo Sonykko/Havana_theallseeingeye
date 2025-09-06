@@ -9,9 +9,9 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HousekeepingKickDao {
-    public static List<HousekeepingRCONLog> RemoteKickLogs(int page, String sortBy) {
-        List<HousekeepingRCONLog> RemoteKickLogsList = new ArrayList<>();
+public class HousekeepingAlertDao {
+    public static List<HousekeepingRCONLog> RemoteAlertLogs(int page, String sortBy) {
+        List<HousekeepingRCONLog> RemoteAlertLogsList = new ArrayList<>();
 
         int rows = 20;
         int nextOffset = page * rows;
@@ -23,14 +23,14 @@ public class HousekeepingKickDao {
 
             try {
                 sqlConnection = Storage.getStorage().getConnection();
-                preparedStatement = Storage.getStorage().prepare("SELECT * FROM housekeeping_rcon_logs WHERE type = 'REMOTE_KICK' ORDER BY " + sortBy + " DESC LIMIT ? OFFSET ?", sqlConnection);
+                preparedStatement = Storage.getStorage().prepare("SELECT * FROM housekeeping_rcon_logs WHERE type = 'REMOTE_ALERT' ORDER BY " + sortBy + " DESC LIMIT ? OFFSET ?", sqlConnection);
                 preparedStatement.setInt(1, rows);
                 preparedStatement.setInt(2, nextOffset);
 
                 resultSet = preparedStatement.executeQuery();
 
                 while (resultSet.next()) {
-                    RemoteKickLogsList.add(fill(resultSet));
+                    RemoteAlertLogsList.add(fill(resultSet));
                 }
 
             } catch (Exception e) {
@@ -42,7 +42,7 @@ public class HousekeepingKickDao {
             }
         }
 
-        return RemoteKickLogsList;
+        return RemoteAlertLogsList;
     }
 
     private static HousekeepingRCONLog fill(ResultSet resultSet) throws Exception {

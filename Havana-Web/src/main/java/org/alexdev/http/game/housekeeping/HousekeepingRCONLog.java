@@ -1,6 +1,6 @@
 package org.alexdev.http.game.housekeeping;
 
-public class HousekeepingMassAlertLog {
+public class HousekeepingRCONLog {
     private final int id;
     private final String type;
     private final String user;
@@ -8,7 +8,7 @@ public class HousekeepingMassAlertLog {
     private final String message;
     private final String timestamp;
 
-    public HousekeepingMassAlertLog(int id, String type, String user, String moderator, String message, String timestamp) {
+    public HousekeepingRCONLog(int id, String type, String user, String moderator, String message, String timestamp) {
         this.id = id;
         this.type = type;
         this.user = user;
