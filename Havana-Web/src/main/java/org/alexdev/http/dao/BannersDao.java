@@ -1,18 +1,19 @@
 package org.alexdev.http.dao;
 
 import org.alexdev.havana.dao.Storage;
+import org.alexdev.http.game.promotion.Banner;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-public class PromotionDao {
-    public static String getAdsBanners() {
+public class BannersDao {
+    public static List<Banner> getAdsBanners() {
+        List<Banner> banner = new ArrayList<>();
+
         Connection sqlConnection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
@@ -24,12 +25,7 @@ public class PromotionDao {
             resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
-                if (resultSet.getString("advanced").equals("1")) {
-                    banners.append(resultSet.getString("banner") + "<br />");
-                } else {
-                    banners.append("<a target=\"_blank\" href=\"" + resultSet.getString("url") + "\"><img src=\"" + resultSet.getString("banner") + "\"></a><br />");
-                    banners.append("<a target=\"_blank\" href=\"" + resultSet.getString("url") + "\">" + resultSet.getString("text") + "</a><br />");
-                }
+                banner.add(fill(resultSet));
             }
         } catch (SQLException e) {
             Storage.logError(e);
@@ -39,6 +35,18 @@ public class PromotionDao {
             Storage.closeSilently(sqlConnection);
         }
 
-        return banners.toString();
+        return banner;
+    }
+
+    private static Banner fill(ResultSet resultSet) throws SQLException {
+        return new Banner(
+                resultSet.getInt("id"),
+                resultSet.getString("text"),
+                resultSet.getString("banner"),
+                resultSet.getString("url"),
+                resultSet.getInt("status"),
+                resultSet.getInt("advanced"),
+                resultSet.getInt("order_id")
+        );
     }
 }
