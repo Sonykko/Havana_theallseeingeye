@@ -25,6 +25,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Watchdog implements Runnable {
+    public static List<Room> STAFF_PICK_ROOMS = new ArrayList<>();
     public static List<HotCampaign> HOT_CAMPAIGNS  = new ArrayList<>();
     public static List<Group> STAFF_PICK_GROUPS = new ArrayList<>();
     public static List<Group> RECOMMENDED_GROUPS = new ArrayList<>();
@@ -144,6 +145,11 @@ public class Watchdog implements Runnable {
                 RECOMMENDED_ROOMS = RoomDao.getRecommendedRooms(5, 0);
             } catch (Exception ex) {
 
+            }
+
+            try {
+                STAFF_PICK_ROOMS = RoomDao.getStaffPickRooms();
+            } catch (Exception ex) {
             }
 
             try {
