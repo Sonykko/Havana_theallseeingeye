@@ -1,18 +1,17 @@
 package org.alexdev.http.dao.housekeeping;
 
-import org.alexdev.duckhttpd.util.config.Settings;
 import org.alexdev.havana.dao.Storage;
+import org.alexdev.http.game.housekeeping.HousekeepingBanner;
 
-import java.io.File;
-import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
-public class HousekeepingPromotionDao {
-    public static List<Map<String, Object>> getAllBanners() {
-        List<Map<String, Object>> BannersList = new ArrayList<>();
+public class HousekeepingBannersDao {
+    public static List<HousekeepingBanner> getAllBanners() {
+        List<HousekeepingBanner> BannersList = new ArrayList<>();
 
         Connection sqlConnection = null;
         PreparedStatement preparedStatement = null;
@@ -24,16 +23,7 @@ public class HousekeepingPromotionDao {
             resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
-                Map<String, Object> Banner = new HashMap<>();
-                Banner.put("id", resultSet.getInt("id"));
-                Banner.put("text", resultSet.getString("text"));
-                Banner.put("banner", resultSet.getString("banner"));
-                Banner.put("url", resultSet.getString("url"));
-                Banner.put("status", resultSet.getInt("status"));
-                Banner.put("advanced", resultSet.getInt("advanced"));
-                Banner.put("orderId", resultSet.getInt("order_id"));
-
-                BannersList.add(Banner);
+                BannersList.add(fill(resultSet));
             }
 
         } catch (Exception e) {
@@ -86,8 +76,8 @@ public class HousekeepingPromotionDao {
         }
     }
 
-    public static List<Map<String, Object>> EditBanner(int bannerId) {
-        List<Map<String, Object>> BannersEditList = new ArrayList<>();
+    public static HousekeepingBanner getBannerById(int bannerId) {
+        HousekeepingBanner BannersEditList = null;
 
         Connection sqlConnection = null;
         PreparedStatement preparedStatement = null;
@@ -100,17 +90,8 @@ public class HousekeepingPromotionDao {
 
             resultSet = preparedStatement.executeQuery();
 
-            while (resultSet.next()) {
-                Map<String, Object> BannerEdit = new HashMap<>();
-                BannerEdit.put("id", resultSet.getInt("id"));
-                BannerEdit.put("text", resultSet.getString("text"));
-                BannerEdit.put("banner", resultSet.getString("banner"));
-                BannerEdit.put("url", resultSet.getString("url"));
-                BannerEdit.put("status", resultSet.getInt("status"));
-                BannerEdit.put("advanced", resultSet.getInt("advanced"));
-                BannerEdit.put("orderId", resultSet.getInt("order_id"));
-
-                BannersEditList.add(BannerEdit);
+            if (resultSet.next()) {
+                BannersEditList = fill(resultSet);
             }
 
         } catch (Exception e) {
@@ -145,5 +126,17 @@ public class HousekeepingPromotionDao {
             Storage.closeSilently(preparedStatement);
             Storage.closeSilently(sqlConnection);
         }
+    }
+
+    private static HousekeepingBanner fill(ResultSet resultSet) throws Exception {
+        return new HousekeepingBanner(
+                resultSet.getInt("id"),
+                resultSet.getString("text"),
+                resultSet.getString("banner"),
+                resultSet.getString("url"),
+                resultSet.getInt("status"),
+                resultSet.getInt("advanced"),
+                resultSet.getInt("order_id")
+        );
     }
 }

@@ -4,14 +4,11 @@ import org.alexdev.duckhttpd.server.connection.WebConnection;
 import org.alexdev.duckhttpd.template.Template;
 import org.alexdev.havana.game.player.PlayerDetails;
 import org.alexdev.http.Routes;
+import org.alexdev.http.dao.housekeeping.HousekeepingBannersDao;
 import org.alexdev.http.dao.housekeeping.HousekeepingLogsDao;
-import org.alexdev.http.dao.housekeeping.HousekeepingPromotionDao;
 import org.alexdev.http.game.housekeeping.HousekeepingManager;
 import org.alexdev.http.util.SessionUtil;
 import org.apache.commons.lang3.StringUtils;
-
-import java.util.List;
-import java.util.Map;
 
 public class HousekeepingBannersController {
     public static void banners (WebConnection client) {
@@ -54,7 +51,7 @@ public class HousekeepingBannersController {
         }
 
         tpl.set("pageName", "Ads banners");
-        tpl.set("Banners", HousekeepingPromotionDao.getAllBanners());
+        tpl.set("Banners", HousekeepingBannersDao.getAllBanners());
         tpl.render();
 
         client.session().delete("alertMessage");
@@ -63,7 +60,7 @@ public class HousekeepingBannersController {
     private static String getBannersPath() {
         return "/" + Routes.HOUSEKEEPING_PATH + "/campaign_management/banners";
     }
-
+    
     public static void createBanner (WebConnection client, PlayerDetails playerDetails) {
         String textBanner = client.post().getString("textBanner");
         String createBanner = client.post().getString("createBanner");
@@ -94,7 +91,7 @@ public class HousekeepingBannersController {
             return;
         }
 
-        HousekeepingPromotionDao.createBanner(textBanner, createBanner, urlBanner, statusBanner, advancedBanner, orderIdBanner);
+        HousekeepingBannersDao.createBanner(textBanner, createBanner, urlBanner, statusBanner, advancedBanner, orderIdBanner);
         HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Created Ad Banner. URL: " + client.request().uri(), client.getIpAddress());
 
         client.session().set("alertColour", "success");
@@ -106,30 +103,30 @@ public class HousekeepingBannersController {
         String bannerIdStr = client.get().getString("delete");
         int bannerId = StringUtils.isNumeric(bannerIdStr) ? Integer.parseInt(bannerIdStr) : 0;
 
-        List<Map<String, Object>> checkBanner = HousekeepingPromotionDao.EditBanner(bannerId);
+        var banner = HousekeepingBannersDao.getBannerById(bannerId);
 
-        if (checkBanner.isEmpty()) {
+        if (banner == null) {
             client.session().set("alertColour", "danger");
             client.session().set("alertMessage", "The Banner not exists");
             client.redirect(getBannersPath());
             return;
         }
 
-        HousekeepingPromotionDao.deleteBanner(bannerId);
+        HousekeepingBannersDao.deleteBanner(bannerId);
         HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Deleted Ad Banner with the ID " + bannerId + ". URL: " + client.request().uri(), client.getIpAddress());
 
         client.session().set("alertColour", "success");
         client.session().set("alertMessage", "The Banner has been successfully deleted");
         client.redirect(getBannersPath());
     }
-
+    
     public static void editBanner (WebConnection client, Template tpl) {
         String editIdStr = client.get().getString("edit");
         int bannerId = StringUtils.isNumeric(editIdStr) ? Integer.parseInt(editIdStr) : 0;
 
-        List<Map<String, Object>> checkBanner = HousekeepingPromotionDao.EditBanner(bannerId);
+        var banner = HousekeepingBannersDao.getBannerById(bannerId);
 
-        if (checkBanner.isEmpty()) {
+        if (banner == null) {
             tpl.set("isBannerEdit", false);
             client.session().set("alertColour", "danger");
             client.session().set("alertMessage", "The Banner not exists");
@@ -137,7 +134,7 @@ public class HousekeepingBannersController {
             return;
         }
 
-        tpl.set("BannerEdit", HousekeepingPromotionDao.EditBanner(Integer.parseInt(editIdStr)));
+        tpl.set("BannerEdit", HousekeepingBannersDao.getBannerById(Integer.parseInt(editIdStr)));
         tpl.set("isBannerEdit", true);
     }
 
@@ -153,9 +150,9 @@ public class HousekeepingBannersController {
         String bannerIdStr = client.get().getString("edit");
         int bannerId = StringUtils.isNumeric(bannerIdStr) ? Integer.parseInt(bannerIdStr) : 0;
 
-        List<Map<String, Object>> checkBanner = HousekeepingPromotionDao.EditBanner(bannerId);
+        var banner = HousekeepingBannersDao.getBannerById(bannerId);
 
-        if (checkBanner.isEmpty()) {
+        if (banner == null) {
             client.session().set("alertColour", "danger");
             client.session().set("alertMessage", "The Banner not exists");
             client.redirect(getBannersPath());
@@ -183,7 +180,7 @@ public class HousekeepingBannersController {
             return;
         }
 
-        HousekeepingPromotionDao.saveBanner(textBanner, saveBanner, urlBanner, statusBanner, advancedBanner, orderIdBanner, bannerId);
+        HousekeepingBannersDao.saveBanner(textBanner, saveBanner, urlBanner, statusBanner, advancedBanner, orderIdBanner, bannerId);
         HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Edit Ad Banner with the ID " + bannerId + ". URL: " + client.request().uri(), client.getIpAddress());
 
         client.session().set("alertColour", "success");
