@@ -10,7 +10,7 @@
 		<form class="table-responsive col-md-4" method="post"><input type="hidden" name="sid" value="7">
 			<div class="form-group">
 				<label>Badge</label>
-				<div><img src="h{{ site.sitePath }}/habbo-imaging/badge/{{ RecommendedEditList.getGroupImage() }}.gif" class="badge__group" /></div>
+				<div><img src="{{ site.sitePath }}/habbo-imaging/badge/{{ RecommendedEditList.getGroupImage() }}.gif" class="badge__group" /></div>
 			</div>
 			<div class="form-group">
 				<label>Name</label>
