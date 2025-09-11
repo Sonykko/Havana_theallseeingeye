@@ -69,7 +69,7 @@ public class SiteBinder implements TemplateBinder {
         this.staticContentPath = GameConfiguration.getInstance().getString("static.content.path");
         this.furniImagerPath = "https://classichabbo.com/imager/furni";
 
-        this.siteBanners = BannersDao.getAdsBanners();
+        this.siteBanners = Watchdog.ADS_BANNERS;
 
         this.emailStaticPath = GameConfiguration.getInstance().getString("email.static.content.path");
         this.emailHotelName = GameConfiguration.getInstance().getString("site.path").replace("https://", "").replace("http://", "").replace("/", "").toUpperCase();
