@@ -27,7 +27,7 @@ public class ProxyHabblet {
 
         if (webConnection.get().getString("hid").equals("h21")) {
             Template template = webConnection.template("habblet/StaffPickRooms");
-            template.set("StaffPickRooms", RoomDao.getStaffPickRooms());
+            template.set("StaffPickRooms", Watchdog.STAFF_PICK_ROOMS);
             template.render();
             return;
         }
