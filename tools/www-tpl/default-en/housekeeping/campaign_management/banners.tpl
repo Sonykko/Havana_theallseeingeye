@@ -7,41 +7,39 @@
 		{% include "housekeeping/base/alert.tpl" %}
 		{% if isBannerEdit %}
 		<p>Here you can edit a Banner.</p>
-		{% for bannerEdit in BannerEdit %}
 		<form class="table-responsive col-md-4" method="post">
 			<div class="form-group">
 				<label>Text (If are not Advanced)</label>
-				<input type="text" name="textBanner" class="form-control" id="textBanner" placeholder="Enter here a text for the banner..." value="{{ bannerEdit.text }}" />
+				<input type="text" name="textBanner" class="form-control" id="textBanner" placeholder="Enter here a text for the banner..." value="{{ BannerEdit.getText() }}" />
 			</div>
 			<div class="form-group">
 				<label>Banner</label>
-				<textarea name="saveBanner" class="form-control" id="saveBanner" placeholder="Enter here the URL of the banner image, if it are a advanced one put here the HTML of it...">{{ bannerEdit.banner }}</textarea>
+				<textarea name="saveBanner" class="form-control" id="saveBanner" placeholder="Enter here the URL of the banner image, if it are a advanced one put here the HTML of it...">{{ BannerEdit.getBanner() }}</textarea>
 			</div>
 			<div class="form-group">
 				<label>URL (If are not Advanced)</label>
-				<input type="text" name="urlBanner" class="form-control" id="urlBanner" placeholder="Enter here a URL for the banner..." value="{{ bannerEdit.url }}" />
+				<input type="text" name="urlBanner" class="form-control" id="urlBanner" placeholder="Enter here a URL for the banner..." value="{{ BannerEdit.getUrl() }}" />
 			</div>
 			<div class="form-group">
 				<label>Status</label>
 				<select name="statusBanner" id="statusBanner" class="form-control">
-					<option value="1" {% if bannerEdit.status == 1 %}selected{% endif %}>Active</option>
-					<option value="0" {% if bannerEdit.status != 1 %}selected{% endif %}>Hidden</option>
+					<option value="1" {% if BannerEdit.getStatus() == 1 %}selected{% endif %}>Active</option>
+					<option value="0" {% if BannerEdit.getStatus() != 1 %}selected{% endif %}>Hidden</option>
 				</select>
 			</div>
 			<div class="form-group">
 				<label>Is Advanced?</label>
 				<select name="advancedBanner" id="advancedBanner" class="form-control">
-					<option value="1" {% if bannerEdit.advanced == 1 %}selected{% endif %}>Yes</option>
-					<option value="0" {% if bannerEdit.advanced != 1 %}selected{% endif %}>No</option>
+					<option value="1" {% if BannerEdit.getAdvanced() == 1 %}selected{% endif %}>Yes</option>
+					<option value="0" {% if BannerEdit.getAdvanced() != 1 %}selected{% endif %}>No</option>
 				</select>
 			</div>
 			<div class="form-group">
 				<label>Order ID</label>
-				<input type="text" name="orderIdBanner" class="form-control" id="orderIdBanner" placeholder="Enter here a order number for display the banner..." value="{{ bannerEdit.orderId }}" />
+				<input type="text" name="orderIdBanner" class="form-control" id="orderIdBanner" placeholder="Enter here a order number for display the banner..." value="{{ BannerEdit.getOrderId() }}" />
 			</div>
 			<button type="submit">Save Banner</button>
 		</form>
-		{% endfor %}
 		{% else %}
 		<p>Here you can add a Banner.</p>
 		<form class="table-responsive col-md-4" method="post">
@@ -98,16 +96,16 @@
 			    {% set num = 1 %}
 				{% for banner in Banners %}
                 <tr>
-				  <td>{{ banner.id }}</td>                               
-				  <td>{{ banner.text }}</td>                 
-				  <td><textarea style="width:100%;">{{ banner.banner }}</textarea></td>                 
+				  <td>{{ banner.getId() }}</td>                               
+				  <td>{{ banner.getText() }}</td>                 
+				  <td><textarea style="width:100%;">{{ banner.getBanner() }}</textarea></td>                 
 				  <td>{{ banner.url }}</td>                 			 
-				  <td>{% if banner.status == 1 %}Active{% else %}Hidden{% endif %}</td>                 			 
-				  <td>{% if banner.advanced == 1 %}Yes{% else %}No{% endif %}</td>                 			 
-				  <td>{{ banner.orderId }}</td>                 			 
+				  <td>{% if banner.getStatus() == 1 %}Active{% else %}Hidden{% endif %}</td>                 			 
+				  <td>{% if banner.getAdvanced() == 1 %}Yes{% else %}No{% endif %}</td>                 			 
+				  <td>{{ banner.getOrderId() }}</td>                 			 
 				  <td>
-					<a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/campaign_management/banners?edit={{ banner.id }}" style="color:black;"><button type="button">Edit</button></a>
-					<a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/campaign_management/banners?delete={{ banner.id }}" style="color:black;"><button type="button">Delete</button></a>
+					<a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/campaign_management/banners?edit={{ banner.getId() }}" style="color:black;"><button type="button">Edit</button></a>
+					<a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/campaign_management/banners?delete={{ banner.getId() }}" style="color:black;"><button type="button">Delete</button></a>
 				</td>
                 </tr>
 			   {% set num = num + 1 %}
