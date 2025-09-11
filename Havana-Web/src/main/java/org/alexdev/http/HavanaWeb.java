@@ -35,7 +35,7 @@ public class HavanaWeb {
     private static final Gson gson = new Gson();
     private static ScheduledExecutorService scheduler;
     private static ExecutorService executor;
-    public static final String THEALLSEEINGEYE_BUILD = "3.5.0 build 65";
+    public static final String THEALLSEEINGEYE_BUILD = "3.6.0 build 66";
 
     public static void main(String[] args) throws Exception {
         WebLoggingConfiguration.checkLoggingConfig();
