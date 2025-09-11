@@ -7,27 +7,26 @@
 		{% include "housekeeping/base/alert.tpl" %}
 		{% if editingReco %}
 		<p>Here you can edit a Recommended group.</p>
-		{% for recommendedEdit in RecommendedEditList %}
 		<form class="table-responsive col-md-4" method="post"><input type="hidden" name="sid" value="7">
 			<div class="form-group">
 				<label>Badge</label>
-				<div><img src="{{ site.sitePath }}/habbo-imaging/badge/{{ recommendedEdit.groupImage }}.gif" class="badge__group" /></div>
+				<div><img src="h{{ site.sitePath }}/habbo-imaging/badge/{{ RecommendedEditList.getGroupImage() }}.gif" class="badge__group" /></div>
 			</div>
 			<div class="form-group">
 				<label>Name</label>
-				<input type="text" class="form-control" placeholder="" value="{{ recommendedEdit.groupName }}" readonly />
+				<input type="text" class="form-control" placeholder="" value="{{ RecommendedEditList.getGroupName() }}" readonly />
 			</div>
 			<div class="form-group">
 				<label>Description</label>
-				<input type="text" class="form-control" placeholder="" value="{{ recommendedEdit.groupDescription }}" readonly />
+				<input type="text" class="form-control" placeholder="" value="{{ RecommendedEditList.getGroupDescription() }}" readonly />
 			</div>
 			<div class="form-group">
 				<label>Owner</label>
-				<input type="text" class="form-control" placeholder="" value="{{ recommendedEdit.groupOwner }}" readonly />
+				<input type="text" class="form-control" placeholder="" value="{{ RecommendedEditList.getGroupOwner() }}" readonly />
 			</div>
 			<div class="form-group">
 				<label>ID</label>
-				<input type="text" name="IdSave" class="form-control" id="IdSave" placeholder="Enter here the group ID..." value="{{ recommendedEdit.groupId }}" />
+				<input type="text" name="IdSave" class="form-control" id="IdSave" placeholder="Enter here the group ID..." value="{{ RecommendedEditList.getGroupId() }}" />
 			</div>
 			<div class="form-group">
 				<label>Set as Staff Pick?</label>
@@ -38,7 +37,6 @@
 			</div>
 			<button type="submit" value="">Save Pick</input>
 		</form>
-		{% endfor %}
 		{% else %}
 		<p>Here you can add a Recommended group.</p>
 		<form class="table-responsive col-md-4" method="post">
@@ -60,7 +58,6 @@
                   <th>Name</th>
                   <th>Description</th>
                   <th>Owner</th>
-				  <!--<th>Is Picked</th>-->
 				  <th></th>
                 </tr>
               </thead>
@@ -69,13 +66,13 @@
 				{% for recommended in RecommendedList %}
                 <tr>
                   <td><img src="{{ site.sitePath }}/habbo-imaging/badge/{{ recommended.groupImage }}.gif" class="badge__group" /></td>
-				  <td>{{ recommended.ID }}</td>                               
-				  <td>{{ recommended.groupName }}</td>                 
-				  <td>{{ recommended.groupDescription }}</td>                 
-				  <td>{{ recommended.groupOwner }}</td>                 			 
+				  <td>{{ recommended.getPickRecoId() }}</td>                               
+				  <td>{{ recommended.getGroupName() }}</td>                 
+				  <td>{{ recommended.getGroupDescription() }}</td>                 
+				  <td>{{ recommended.getGroupOwner() }}</td>                 			 
 				  <td>
-					<a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/campaign_management/recommended?edit={{ recommended.ID }}" style="color:black;"><button type="button">Edit</button></a>
-					<a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/campaign_management/recommended?delete={{ recommended.ID }}" style="color:black;"><button type="post">Delete</button></a>
+					<a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/campaign_management/recommended?edit={{ recommended.getPickRecoId() }}" style="color:black;"><button type="button">Edit</button></a>
+					<a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/campaign_management/recommended?delete={{ recommended.getPickRecoId() }}" style="color:black;"><button type="post">Delete</button></a>
 				</td>
                 </tr>
 			   {% set num = num + 1 %}

@@ -7,41 +7,39 @@
 		{% include "housekeeping/base/alert.tpl" %}
 		{% if editingPick %}
 		<p>Here you can edit a Staff pick.</p>
-		{% for staffPickEdit in EditStaffPick %}
 		<form class="table-responsive col-md-4" method="post"><input type="hidden" name="sid" value="7">
 			<div class="form-group">
 				<label>Name</label>
-				<input type="text" class="form-control" placeholder="" value="{{ staffPickEdit.name }}" readonly />
+				<input type="text" class="form-control" placeholder="" value="{{ EditStaffPick.getRoomName() }}{{ EditStaffPick.getGroupName() }}" readonly />
 			</div>
 			<div class="form-group">
 				<label>Description</label>
-				<input type="text" class="form-control" placeholder="" value="{{ staffPickEdit.description }}" readonly />
+				<input type="text" class="form-control" placeholder="" value="{{ EditStaffPick.getRoomDescription() }}{{ EditStaffPick.getGroupDescription() }}" readonly />
 			</div>
 			<div class="form-group">
 				<label>Owner</label>
-				<input type="text" class="form-control" placeholder="" value="{{ staffPickEdit.owner }}" readonly />
+				<input type="text" class="form-control" placeholder="" value="{{ EditStaffPick.getRoomOwner() }}{{ EditStaffPick.getGroupOwner() }}" readonly />
 			</div>
 			<div class="form-group">
 				<label>Pick ID</label>
-				<input type="text" name="IdSave" class="form-control" id="IdSave" placeholder="Enter here the pick ID..." value="{{ staffPickEdit.pickId }}" />
+				<input type="text" name="IdSave" class="form-control" id="IdSave" placeholder="Enter here the pick ID..." value="{{ EditStaffPick.getPickRecoId() }}" />
 			</div>
 			<div class="form-group">
 				<label>Pick type</label>
 				<select name="typeSave" id="typeSave" class="form-control">
-					<option value="GROUP" {% if staffPickEdit.type == 'GROUP' %}selected{% endif %}>Group</option>
-					<option value="ROOM" {% if staffPickEdit.type == 'ROOM' %}selected{% endif %}>Room</option>
+					<option value="GROUP" {% if EditStaffPick.getType() == 'GROUP' %}selected{% endif %}>Group</option>
+					<option value="ROOM" {% if EditStaffPick.getType()  == 'ROOM' %}selected{% endif %}>Room</option>
 				</select>
 			</div>
 			<div class="form-group">
 				<label>Is Staff Pick?</label>
 				<select name="isPickedSave" id="isPickedSave" class="form-control">
-					<option value="1" {% if staffPickEdit.isPicked == '1' %}selected{% endif %}>Yes</option>
-					<option value="0" {% if staffPickEdit.isPicked == '0' %}selected{% endif %}>No</option>
+					<option value="1" {% if EditStaffPick.getIsPicked() == '1' %}selected{% endif %}>Yes</option>
+					<option value="0" {% if EditStaffPick.getIsPicked() == '0' %}selected{% endif %}>No</option>
 				</select>
 			</div>
 			<button type="submit" value="">Save Pick</input>
 		</form>
-		{% endfor %}
 		{% else %}
 		<p>Here you can add a Staff pick.</p>
 		<form class="table-responsive col-md-4" method="post">
@@ -77,14 +75,14 @@
 			    {% set num = 1 %}
 				{% for staffPick in StaffPicksList %}
                 <tr>
-                  <td>{{ staffPick.type }}</td>
-				  <td>{{ staffPick.ID }}</td>                               
-				  <td>{{ staffPick.groupName }}{{ staffPick.roomName }}</td>                 
-				  <td>{{ staffPick.groupDescription }}{{ staffPick.roomDescription }}</td>                 
-				  <td>{{ staffPick.groupOwner }}{{ staffPick.roomOwner }}</td>                 			 
+                  <td>{{ staffPick.getType() }}</td>
+				  <td>{{ staffPick.getPickRecoId() }}</td>                               
+				  <td>{{ staffPick.getGroupName() }}{{ staffPick.getRoomName() }}</td>                 
+				  <td>{{ staffPick.getGroupDescription() }}{{ staffPick.getRoomDescription() }}</td>                 
+				  <td>{{ staffPick.getGroupOwner() }}{{ staffPick.getRoomOwner() }}</td>                 			 
 				  <td>
-					<a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/campaign_management/staff_picks?edit={{ staffPick.ID }}&type={{ staffPick.type }}" style="color:black;"><button type="button">Edit</button></a>
-					<a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/campaign_management/staff_picks?delete={{ staffPick.ID }}&type={{ staffPick.type }}" style="color:black;"><button type="button">Delete</button></a>
+					<a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/campaign_management/staff_picks?edit={{ staffPick.getPickRecoId() }}&type={{ staffPick.getType() }}" style="color:black;"><button type="button">Edit</button></a>
+					<a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/campaign_management/staff_picks?delete={{ staffPick.getPickRecoId() }}&type={{ staffPick.getType() }}" style="color:black;"><button type="button">Delete</button></a>
 				</td>
                 </tr>
 			   {% set num = num + 1 %}
