@@ -3,6 +3,7 @@ package org.alexdev.http.template.binders;
 import org.alexdev.duckhttpd.server.connection.WebConnection;
 import org.alexdev.duckhttpd.template.Template;
 import org.alexdev.duckhttpd.template.TemplateBinder;
+import org.alexdev.http.HavanaWeb;
 import org.alexdev.http.Routes;
 import org.alexdev.http.dao.PromotionDao;
 import org.alexdev.http.server.Watchdog;
@@ -102,7 +103,7 @@ public class SiteBinder implements TemplateBinder {
         this.housekeepingPath = Routes.HOUSEKEEPING_PATH;
 
         this.hkNewStyle = GameConfiguration.getInstance().getBoolean("hk.new.style.enabled");
-        this.hkBuild = "3.5.0 build 65";
+        this.hkBuild = HavanaWeb.THEALLSEEINGEYE_BUILD;
 
         template.set("site", this);
         template.set("gameConfig", GameConfiguration.getInstance());
