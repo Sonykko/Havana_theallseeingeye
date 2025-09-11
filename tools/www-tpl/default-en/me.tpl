@@ -357,22 +357,22 @@
 						<div id="hotcampaigns-habblet-list-container">
 							<ul id="hotcampaigns-habblet-list">
 							
-								{% set num = 0 %}
-								{% for HotCampaign in hotCampaigns %}
-								{% if num % 2 == 0 %}
-								<li class="even">
-								{% else %}
-								<li class="odd">
-								{% endif %}
-									<div class="hotcampaign-container">
-										<a href="{{ HotCampaign.url }}"><img src="{{ site.staticContentPath }}/c_images/hot_campaign_images_all/{{ HotCampaign.image }}" align="left" alt="{{ HotCampaign.title }}" /></a>
-										<h3>{{ HotCampaign.title }}</h3>
-										<p>{{ HotCampaign.description }}</p>
-										<p class="link"><a href="{{ HotCampaign.url }}">{{ HotCampaign.urlText }} &raquo;</a></p>
-									</div>
-								</li>
-								{% set num = num + 1 %}
-								{% endfor %}
+							{% set num = 0 %}
+							{% for HotCampaign in hotCampaigns %}
+							{% if num % 2 == 0 %}
+							<li class="even">
+							{% else %}
+							<li class="odd">
+							{% endif %}
+								<div class="hotcampaign-container">
+									<a href="{{ HotCampaign.getUrl() }}"><img src="{{ site.staticContentPath }}/c_images/hot_campaign_images_all/{{ HotCampaign.getImage() }}" align="left" alt="{{ HotCampaign.getTitle() }}" /></a>
+									<h3>{{ HotCampaign.getTitle() }}</h3>
+									<p>{{ HotCampaign.getDescription() }}</p>
+									<p class="link"><a href="{{ HotCampaign.getUrl() }}">{{ HotCampaign.getUrlText() }} &raquo;</a></p>
+								</div>
+							</li>
+							{% set num = num + 1 %}
+							{% endfor %}
 								
 								<!-- 
 								<li class="odd">
