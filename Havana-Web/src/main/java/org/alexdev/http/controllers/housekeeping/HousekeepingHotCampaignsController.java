@@ -4,14 +4,13 @@ import org.alexdev.duckhttpd.server.connection.WebConnection;
 import org.alexdev.duckhttpd.template.Template;
 import org.alexdev.havana.game.player.PlayerDetails;
 import org.alexdev.http.Routes;
+import org.alexdev.http.dao.housekeeping.HousekeepingHotCampaignsDao;
 import org.alexdev.http.dao.housekeeping.HousekeepingLogsDao;
-import org.alexdev.http.dao.housekeeping.HousekeepingPromotionDao;
 import org.alexdev.http.game.housekeeping.HousekeepingManager;
 import org.alexdev.http.util.SessionUtil;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
-import java.util.Map;
 
 public class HousekeepingHotCampaignsController {
     public static void hot_campaigns(WebConnection client) {
@@ -52,10 +51,10 @@ public class HousekeepingHotCampaignsController {
             return;
         }
 
-        List<String> images = HousekeepingPromotionDao.getHotCampaignImages();
+        List<String> images = HousekeepingHotCampaignsDao.getHotCampaignImages();
 
         tpl.set("pageName", "Hot Campaigns");
-        tpl.set("HotCampaigns", HousekeepingPromotionDao.getAllHotCampaigns());
+        tpl.set("HotCampaigns", HousekeepingHotCampaignsDao.getAllHotCampaigns());
         tpl.set("images", images);
         tpl.render();
 
@@ -94,14 +93,14 @@ public class HousekeepingHotCampaignsController {
         }
 
 
-        HousekeepingPromotionDao.createHotCampaign(title, description, createHotCampaign, url, urlText, status, orderId);
+        HousekeepingHotCampaignsDao.createHotCampaign(title, description, createHotCampaign, url, urlText, status, orderId);
         HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Created Hot Campaign. URL: " + client.request().uri(), client.getIpAddress());
 
         client.session().set("alertColour", "success");
         client.session().set("alertMessage", "The Hot Campaign has been successfully created");
         client.redirect(getHotCampaignsPath());
     }
-
+    
     public static void deleteHotCampaign (WebConnection client, PlayerDetails playerDetails) {
         String hotCampaignIdString = client.get().getString("delete");
 
@@ -114,23 +113,23 @@ public class HousekeepingHotCampaignsController {
 
         int hotCampaignId = Integer.parseInt(hotCampaignIdString);
 
-        List<Map<String, Object>> checkHotCampaign = HousekeepingPromotionDao.EditHotCampaign(hotCampaignId);
+        var hotCampaign = HousekeepingHotCampaignsDao.getHotCampaignById(hotCampaignId);
 
-        if (checkHotCampaign.isEmpty()) {
+        if (hotCampaign == null) {
             client.session().set("alertColour", "danger");
             client.session().set("alertMessage", "The Hot Campaign ID not exists");
             client.redirect(getHotCampaignsPath());
             return;
         }
 
-        HousekeepingPromotionDao.deleteHotCampaign(hotCampaignId);
+        HousekeepingHotCampaignsDao.deleteHotCampaign(hotCampaignId);
         HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Deleted Hot Campaign with the ID " + hotCampaignId + ". URL: " + client.request().uri(), client.getIpAddress());
 
         client.session().set("alertColour", "success");
         client.session().set("alertMessage", "The Hot Campaign has been successfully deleted");
         client.redirect(getHotCampaignsPath());
     }
-
+    
     public static void editHotCampaign (WebConnection client, Template tpl) {
         String editIdString = client.get().getString("edit");
 
@@ -144,9 +143,9 @@ public class HousekeepingHotCampaignsController {
 
         int editId = Integer.parseInt(editIdString);
 
-        List<Map<String, Object>> checkHotCampaign = HousekeepingPromotionDao.EditHotCampaign(editId);
+        var hotCampaign = HousekeepingHotCampaignsDao.getHotCampaignById(editId);
 
-        if (checkHotCampaign.isEmpty()) {
+        if (hotCampaign == null) {
             client.session().set("alertColour", "danger");
             client.session().set("alertMessage", "The Hot Campaign ID not exists");
             client.redirect(getHotCampaignsPath());
@@ -154,10 +153,10 @@ public class HousekeepingHotCampaignsController {
             return;
         }
 
-        tpl.set("HotCampaignEdit", HousekeepingPromotionDao.EditHotCampaign(editId));
+        tpl.set("HotCampaignEdit", hotCampaign);
         tpl.set("isHotCampaignEdit", true);
     }
-
+    
     public static void saveHotCampaign (WebConnection client, PlayerDetails playerDetails) {
         String title = client.post().getString("title");
         String description = client.post().getString("description");
@@ -180,9 +179,9 @@ public class HousekeepingHotCampaignsController {
         int orderId = Integer.parseInt(orderIdString);
         int hotCampaignId = Integer.parseInt(editIdString);
 
-        List<Map<String, Object>> checkHotCampaign = HousekeepingPromotionDao.EditHotCampaign(hotCampaignId);
+        var hotCampaign = HousekeepingHotCampaignsDao.getHotCampaignById(hotCampaignId);
 
-        if (checkHotCampaign.isEmpty()) {
+        if (hotCampaign == null) {
             client.session().set("alertColour", "danger");
             client.session().set("alertMessage", "The Hot Campaign ID not exists");
             client.redirect(getHotCampaignsPath() + "?edit="+ hotCampaignId);
@@ -196,7 +195,7 @@ public class HousekeepingHotCampaignsController {
             return;
         }
 
-        HousekeepingPromotionDao.saveHotCampaign(title, description, saveHotCampaign, url, urlText, status, orderId, hotCampaignId);
+        HousekeepingHotCampaignsDao.saveHotCampaign(title, description, saveHotCampaign, url, urlText, status, orderId, hotCampaignId);
         HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Edited Hot Campaign with the ID " + hotCampaignId + ". URL: " + client.request().uri(), client.getIpAddress());
 
         client.session().set("alertColour", "success");
