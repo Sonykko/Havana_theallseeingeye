@@ -35,6 +35,7 @@ public class HavanaWeb {
     private static final Gson gson = new Gson();
     private static ScheduledExecutorService scheduler;
     private static ExecutorService executor;
+    public static final String THEALLSEEINGEYE_BUILD = "3.5.0 build 65";
 
     public static void main(String[] args) throws Exception {
         WebLoggingConfiguration.checkLoggingConfig();
@@ -43,6 +44,7 @@ public class HavanaWeb {
 
         logger.info("HavanaWeb by Quackster");
         logger.info("Loading configuration..");
+        logger.info("Loading theallseeingeye " + THEALLSEEINGEYE_BUILD + " by Sonykko...");
 
         ResourceLeakDetector.setLevel(ResourceLeakDetector.Level.ADVANCED);
 
