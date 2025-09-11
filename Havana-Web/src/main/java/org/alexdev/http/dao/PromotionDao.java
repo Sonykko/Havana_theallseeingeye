@@ -41,41 +41,4 @@ public class PromotionDao {
 
         return banners.toString();
     }
-
-    public static List<Map<String, Object>> getAllHotCampaigns() {
-        List<Map<String, Object>> AllHotCampaignsList = new ArrayList<>();
-
-        Connection sqlConnection = null;
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet = null;
-
-        try {
-            sqlConnection = Storage.getStorage().getConnection();
-            preparedStatement = Storage.getStorage().prepare(
-                    "SELECT * FROM cms_hot_campaigns WHERE status = '1' ORDER BY order_id ASC", sqlConnection);
-
-            resultSet = preparedStatement.executeQuery();
-
-            while (resultSet.next()) {
-                Map<String, Object> HotCampaign = new HashMap<>();
-                HotCampaign.put("id", resultSet.getInt("id"));
-                HotCampaign.put("title", resultSet.getString("title"));
-                HotCampaign.put("description", resultSet.getString("description"));
-                HotCampaign.put("image", resultSet.getString("image"));
-                HotCampaign.put("url", resultSet.getString("url"));
-                HotCampaign.put("urlText", resultSet.getString("url_text"));
-
-                AllHotCampaignsList.add(HotCampaign);
-            }
-
-        } catch (Exception e) {
-            Storage.logError(e);
-        } finally {
-            Storage.closeSilently(resultSet);
-            Storage.closeSilently(preparedStatement);
-            Storage.closeSilently(sqlConnection);
-        }
-
-        return AllHotCampaignsList;
-    }
 }

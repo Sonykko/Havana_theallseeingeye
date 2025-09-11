@@ -380,10 +380,10 @@ body { behavior: url({{ site.staticContentPath }}/web-gallery/js/csshover.htc); 
 		<li class="odd">
 		{% endif %}
             <div class="hotcampaign-container">
-                <a href="{{ HotCampaign.url }}"><img src="{{ site.staticContentPath }}/c_images/hot_campaign_images_all/{{ HotCampaign.image }}" align="left" alt="{{ HotCampaign.title }}" /></a>
-                <h3>{{ HotCampaign.title }}</h3>
-                <p>{{ HotCampaign.description }}</p>
-                <p class="link"><a href="{{ HotCampaign.url }}">{{ HotCampaign.urlText }} &raquo;</a></p>
+                <a href="{{ HotCampaign.getUrl() }}"><img src="{{ site.staticContentPath }}/c_images/hot_campaign_images_all/{{ HotCampaign.getImage() }}" align="left" alt="{{ HotCampaign.getTitle() }}" /></a>
+                <h3>{{ HotCampaign.getTitle() }}</h3>
+                <p>{{ HotCampaign.getDescription() }}</p>
+                <p class="link"><a href="{{ HotCampaign.getUrl() }}">{{ HotCampaign.getUrlText() }} &raquo;</a></p>
             </div>
         </li>
 		{% set num = num + 1 %}
