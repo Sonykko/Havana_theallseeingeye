@@ -220,7 +220,7 @@ public class AccountController {
             }
         }
 
-        template.set("hotCampaigns", HotCampaignsDao.getAllHotCampaigns());
+        template.set("hotCampaigns", Watchdog.HOT_CAMPAIGNS);
         template.render();
     }
 

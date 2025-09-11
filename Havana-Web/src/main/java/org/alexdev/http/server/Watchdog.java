@@ -12,6 +12,7 @@ import org.alexdev.http.dao.*;
 import org.alexdev.http.game.groups.DiscussionTopic;
 import org.alexdev.http.game.news.NewsArticle;
 import org.alexdev.http.game.news.NewsDateKey;
+import org.alexdev.http.game.promotion.HotCampaign;
 import org.alexdev.http.util.config.WebSettingsConfigWriter;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -24,6 +25,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Watchdog implements Runnable {
+    public static List<HotCampaign> HOT_CAMPAIGNS  = new ArrayList<>();
     public static List<Group> STAFF_PICK_GROUPS = new ArrayList<>();
     public static List<Group> RECOMMENDED_GROUPS = new ArrayList<>();
     public static List<Event> EVENTS = new ArrayList<>();
@@ -119,6 +121,11 @@ public class Watchdog implements Runnable {
                 EVENTS = EventsDao.getEvents();
             } catch (Exception ex) {
 
+            }
+
+            try {
+                HOT_CAMPAIGNS = HotCampaignsDao.getAllHotCampaigns();
+            } catch (Exception ex) {
             }
 
             try {
