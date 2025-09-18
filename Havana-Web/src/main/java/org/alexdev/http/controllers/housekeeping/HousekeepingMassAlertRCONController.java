@@ -5,11 +5,13 @@ import org.alexdev.duckhttpd.template.Template;
 import org.alexdev.havana.game.player.PlayerDetails;
 import org.alexdev.http.Routes;
 import org.alexdev.http.dao.housekeeping.HousekeepingLogsDao;
-import org.alexdev.http.dao.housekeeping.HousekeepingMassAlertDao;
+import org.alexdev.http.dao.housekeeping.HousekeepingRCONCommandsDao;
 import org.alexdev.http.game.housekeeping.HousekeepingManager;
 import org.alexdev.http.util.SessionUtil;
 
 public class HousekeepingMassAlertRCONController {
+    private static final String typeRCON = "HOTEL_ALERT";
+
     public static void massAlertRCON(WebConnection client) {
         if (!client.session().getBoolean(SessionUtil.LOGGED_IN_HOUSKEEPING)) {
             client.redirect("/" + Routes.HOUSEKEEPING_DEFAULT_PATH);
@@ -59,9 +61,9 @@ public class HousekeepingMassAlertRCONController {
         }
 
         tpl.set("pageName", "Hotel Alert - Mass alert");
-        tpl.set("hotelAlertLogs", HousekeepingMassAlertDao.MassAlertsLogs(currentPage, sortBy));
-        tpl.set("nexthotelAlertLogs", HousekeepingMassAlertDao.MassAlertsLogs(currentPage + 1, sortBy));
-        tpl.set("previoushotelAlertLogs", HousekeepingMassAlertDao.MassAlertsLogs(currentPage - 1, sortBy));
+        tpl.set("hotelAlertLogs", HousekeepingRCONCommandsDao.getAllTypeRCONLogs(currentPage, sortBy, typeRCON));
+        tpl.set("nexthotelAlertLogs", HousekeepingRCONCommandsDao.getAllTypeRCONLogs(currentPage + 1, sortBy, typeRCON));
+        tpl.set("previoushotelAlertLogs", HousekeepingRCONCommandsDao.getAllTypeRCONLogs(currentPage - 1, sortBy, typeRCON));
         tpl.set("page", currentPage);
         tpl.set("sortBy", sortBy);
         tpl.render();

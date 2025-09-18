@@ -8,6 +8,7 @@ import org.alexdev.havana.server.rcon.messages.RconHeader;
 import org.alexdev.havana.util.config.GameConfiguration;
 import org.alexdev.http.Routes;
 import org.alexdev.http.dao.housekeeping.HousekeepingLogsDao;
+import org.alexdev.http.dao.housekeeping.HousekeepingRCONCommandsDao;
 import org.alexdev.http.game.housekeeping.HousekeepingManager;
 import org.alexdev.http.util.RconUtil;
 import org.alexdev.http.util.SessionUtil;
@@ -69,7 +70,7 @@ public class HousekeepingRoomKickApiController {
 
             String type = action.equals("kick") ? "REMOTE_ROOM_KICK" : "REMOTE_ROOM_ALERT";
 
-            boolean dbInsertSuccess = HousekeepingLogsDao.insertRconLog(type, roomKick, moderator, message);
+            boolean dbInsertSuccess = HousekeepingRCONCommandsDao.insertRconLog(type, roomKick, moderator, message);
 
             if (dbInsertSuccess) {
                 client.session().set("alertColour", "success");

@@ -5,9 +5,9 @@ import org.alexdev.duckhttpd.template.Template;
 import org.alexdev.havana.dao.mysql.BanDao;
 import org.alexdev.havana.game.player.PlayerDetails;
 import org.alexdev.http.Routes;
-import org.alexdev.http.dao.housekeeping.HousekeepingKickDao;
 import org.alexdev.http.dao.housekeeping.HousekeepingLogsDao;
 import org.alexdev.http.dao.housekeeping.HousekeepingPlayerDao;
+import org.alexdev.http.dao.housekeeping.HousekeepingRCONCommandsDao;
 import org.alexdev.http.game.housekeeping.HousekeepingManager;
 import org.alexdev.http.util.SessionUtil;
 
@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HousekeepingBansController {
+    private static final String typeRCON = "REMOTE_KICK";
+
     public static void bans(WebConnection client) {
         if (!client.session().getBoolean(SessionUtil.LOGGED_IN_HOUSKEEPING)) {
             client.redirect("/" + Routes.HOUSEKEEPING_DEFAULT_PATH);
@@ -107,9 +109,9 @@ public class HousekeepingBansController {
 
         String kickSortBy = "id";
 
-        tpl.set("remoteKickLogs", HousekeepingKickDao.RemoteKickLogs(currentPageKick, kickSortBy));
-        tpl.set("nextremoteKickLogs", HousekeepingKickDao.RemoteKickLogs(currentPageKick + 1, kickSortBy));
-        tpl.set("previousremoteKickLogs", HousekeepingKickDao.RemoteKickLogs(currentPageKick - 1, kickSortBy));
+        tpl.set("remoteKickLogs", HousekeepingRCONCommandsDao.getAllTypeRCONLogs(currentPageKick, kickSortBy, typeRCON));
+        tpl.set("nextremoteKickLogs", HousekeepingRCONCommandsDao.getAllTypeRCONLogs(currentPageKick + 1, kickSortBy, typeRCON));
+        tpl.set("previousremoteKickLogs", HousekeepingRCONCommandsDao.getAllTypeRCONLogs(currentPageKick - 1, kickSortBy, typeRCON));
         tpl.set("pageKick", currentPageKick);
         tpl.set("kickSortBy", kickSortBy);
         tpl.render();
