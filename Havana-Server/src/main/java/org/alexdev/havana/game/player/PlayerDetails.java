@@ -590,4 +590,8 @@ public class PlayerDetails {
     public boolean isTrustedPerson() {
         return this.trustedPerson;
     }
+
+    public String getRankName() {
+        return PlayerDao.getRankName(this.getRank().getRankId());
+    }
 }

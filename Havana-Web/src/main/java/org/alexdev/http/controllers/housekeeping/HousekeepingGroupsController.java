@@ -182,7 +182,6 @@ public class HousekeepingGroupsController {
         }
 
         tpl.set("pageName", "Group admin");
-        tpl.set("allRanks", HousekeepingPlayerDao.getAllRanks());
         tpl.set("page", currentPage);
         tpl.set("ruffleActive", true);
         tpl.render();

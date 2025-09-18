@@ -16,10 +16,10 @@
 					</div>
 				<div class="alert__tool__commonmessage">
 					<select name="rankId" id="rankId">
-						<option value="">Choose a rank</option>
+						<option value="" disabled selected>Choose a rank</option>
 						{% set num = 1 %}
 						{% for ranks in allRanks %}
-						<option value="{{ ranks.id }}">{{ ranks.name }} (id: {{ ranks.id }})</option>
+						<option value="{{ ranks.getId() }}">{{ ranks.getName() }} (id: {{ ranks.getId() }})</option>
 						{% set num = num + 1 %}
 						{% endfor %}
 					</select>
@@ -38,17 +38,17 @@
 		  {% if staffDetailsList|length > 0 %}
 		  <div style="display: flex;flex-direction:column;">
                 {% for staff in staffDetailsList %}
-                    <text>{{ staff.name }} - {{ staff.rankName }} (id: {{ staff.rankId }})</text>
+                    <text>{{ staff.getName() }} - {{ staff.getRankName() }} (id: {{ staff.getRank().getRankId() }})</text>
                 {% endfor %}	
 		  </div>
 		  {% else %}
 		  <p><i>Nothing found to display.</i></p>
-		  {% endif %} 
+		  {% endif %} 		  
 		  <hr />
 		  <p><b>Staff texts variables</b></p>
 		  <p>This tool allows you to set the texts variables information of Staff ranks.</p>
-		{% if allRanks|length > 0 %}
-		<div class="table-responsive">
+		  {% if allRanks|length > 0 %}
+		  <div class="table-responsive">
 				<table class="table table-striped">
 					<thead>
 						<tr>
@@ -64,10 +64,10 @@
 						{% for ranks in allRanks %}
 						<tr>
 							<form method="post">
-								<td><input type="hidden" name="rankIdVars" value="{{ ranks.id }}" />{{ ranks.id }}</td>
-								<td><input type="text" name="rankNameVars" value="{{ ranks.name }}" /></td>
-								<td><input type="text" name="rankBadgeVars" value="{{ ranks.badge }}" style="margin-right:5px;" class="badge-input" /> - Preview: <img src="{{ site.sitePath }}/c_images/album1584/{{ ranks.badge }}.gif" class="badge-preview" /></td>
-								<td><textarea name="rankDescVars" style="width:100%;">{{ ranks.description }}</textarea></td>
+								<td><input type="hidden" name="rankIdVars" value="{{ ranks.getId() }}" />{{ ranks.getId() }}</td>
+								<td><input type="text" name="rankNameVars" value="{{ ranks.getName() }}" /></td>
+								<td><input type="text" name="rankBadgeVars" value="{{ ranks.getBadge() }}" style="margin-right:5px;" class="badge-input" /> - Preview: <img src="{{ site.staticContentPath }}/c_images/album1584/{{ ranks.getBadge() }}.gif" class="badge-preview" /></td>
+								<td><textarea name="rankDescVars" style="width:100%;">{{ ranks.getDescription() }}</textarea></td>
 								<td><button type="submit" name="action" value="staffVars">Save</button></td>
 							</form>
 						</tr>
@@ -75,10 +75,10 @@
 						{% endfor %}
 					</tbody>
 				</table>
-			</div>
-		  {% else %}
-		  <p><i>Nothing found to display.</i></p>
-		  {% endif %} 
+			</div>	
+			{% else %}
+			<p><i>Nothing found to display.</i></p>
+			{% endif %} 				
       </div>
     </div>
   </div>
@@ -101,7 +101,7 @@ document.querySelectorAll('.badge-input').forEach(function(input) {
             }
 
             const img = this.closest('td').querySelector('.badge-preview');
-            img.src = '{{ site.sitePath }}/c_images/album1584/' + badgeCode + '.gif';
+            img.src = '{{ site.staticContentPath }}/c_images/album1584/' + badgeCode + '.gif';
         }, typingInterval);
     });
 });
