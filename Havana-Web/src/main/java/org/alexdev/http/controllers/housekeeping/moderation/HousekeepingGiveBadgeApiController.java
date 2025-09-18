@@ -55,8 +55,7 @@ public class HousekeepingGiveBadgeApiController {
 
             String badgeLog = finalBadge.isEmpty() ? removeBadge : finalBadge;
 
-            boolean dbInsertSuccess = HousekeepingRCONCommandsDao.insertLog(user, badgeLog, description + ". Moderator: " + playerDetails.getName(),"GIVE_BADGE");
-            //HousekeepingRCONCommandsDao.insertGiveBadgeToUser(userId, badge, 0, 0);
+            boolean dbInsertSuccess = HousekeepingRCONCommandsDao.insertRconLog("GIVE_BADGE", user, badgeLog, description + ". Moderator: " + playerDetails.getName());
 
             if (dbInsertSuccess) {
                 client.session().set("alertColour", "success");
