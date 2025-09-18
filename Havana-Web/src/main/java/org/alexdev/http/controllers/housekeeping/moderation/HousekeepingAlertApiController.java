@@ -6,6 +6,7 @@ import org.alexdev.havana.game.player.PlayerDetails;
 import org.alexdev.havana.server.rcon.messages.RconHeader;
 import org.alexdev.http.Routes;
 import org.alexdev.http.dao.housekeeping.HousekeepingLogsDao;
+import org.alexdev.http.dao.housekeeping.HousekeepingRCONCommandsDao;
 import org.alexdev.http.game.housekeeping.HousekeepingManager;
 import org.alexdev.http.util.RconUtil;
 import org.alexdev.http.util.SessionUtil;
@@ -41,7 +42,7 @@ public class HousekeepingAlertApiController {
 
             String moderator = playerDetails.getName();
 
-            boolean dbInsertSuccess = HousekeepingLogsDao.insertRconLog("REMOTE_ALERT", user, moderator, message);
+            boolean dbInsertSuccess = HousekeepingRCONCommandsDao.insertRconLog("REMOTE_ALERT", user, moderator, message);
 
             if (dbInsertSuccess) {
                 client.session().set("alertColour", "success");

@@ -5,13 +5,15 @@ import org.alexdev.duckhttpd.template.Template;
 import org.alexdev.havana.dao.mysql.PlayerDao;
 import org.alexdev.havana.game.player.PlayerDetails;
 import org.alexdev.http.Routes;
-import org.alexdev.http.dao.housekeeping.HousekeepingAlertDao;
 import org.alexdev.http.dao.housekeeping.HousekeepingCFHTopicsDao;
 import org.alexdev.http.dao.housekeeping.HousekeepingLogsDao;
+import org.alexdev.http.dao.housekeeping.HousekeepingRCONCommandsDao;
 import org.alexdev.http.game.housekeeping.HousekeepingManager;
 import org.alexdev.http.util.SessionUtil;
 
 public class HousekeepingAlertRCONController {
+    private static final String typeRCON = "REMOTE_ALERT";
+
     public static void alertUserRCON(WebConnection client) {
         if (!client.session().getBoolean(SessionUtil.LOGGED_IN_HOUSKEEPING)) {
             client.redirect("/" + Routes.HOUSEKEEPING_DEFAULT_PATH);
@@ -79,9 +81,9 @@ public class HousekeepingAlertRCONController {
 
         tpl.set("pageName", "User Alert");
         tpl.set("CFHTopics", HousekeepingCFHTopicsDao.getCFHTopics());
-        tpl.set("remoteAlertLogs", HousekeepingAlertDao.RemoteAlertLogs(currentPage, sortBy));
-        tpl.set("nextremoteAlertLogs", HousekeepingAlertDao.RemoteAlertLogs(currentPage + 1, sortBy));
-        tpl.set("previousremoteAlertLogs", HousekeepingAlertDao.RemoteAlertLogs(currentPage - 1, sortBy));
+        tpl.set("remoteAlertLogs", HousekeepingRCONCommandsDao.getAllTypeRCONLogs(currentPage, sortBy, typeRCON));
+        tpl.set("nextremoteAlertLogs", HousekeepingRCONCommandsDao.getAllTypeRCONLogs(currentPage + 1, sortBy, typeRCON));
+        tpl.set("previousremoteAlertLogs", HousekeepingRCONCommandsDao.getAllTypeRCONLogs(currentPage - 1, sortBy, typeRCON));
         tpl.set("page", currentPage);
         tpl.set("sortBy", sortBy);
         tpl.render();
