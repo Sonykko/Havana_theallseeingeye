@@ -6,8 +6,7 @@ import org.alexdev.havana.dao.mysql.PlayerDao;
 import org.alexdev.havana.game.player.PlayerDetails;
 import org.alexdev.http.Routes;
 import org.alexdev.http.dao.housekeeping.HousekeepingLogsDao;
-import org.alexdev.http.dao.housekeeping.HousekeepingPlayerDao;
-import org.alexdev.http.dao.housekeeping.HousekeepingRankDao;
+import org.alexdev.http.dao.housekeeping.HousekeepingTrustedPersonDao;
 import org.alexdev.http.game.housekeeping.HousekeepingManager;
 import org.alexdev.http.util.SessionUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -46,10 +45,10 @@ public class HousekeepingTrustedPersonController {
         }
 
         tpl.set("pageName", "Trusted person tool");
-        tpl.set("trustedPersons", HousekeepingPlayerDao.getTrustedPersonLogs(currentPage));
-        tpl.set("nextTrustedPersons", HousekeepingPlayerDao.getTrustedPersonLogs(currentPage + 1));
-        tpl.set("previousTrustedPersons", HousekeepingPlayerDao.getTrustedPersonLogs(currentPage - 1));
-        tpl.set("players", HousekeepingPlayerDao.getActiveTrustedPersons());
+        tpl.set("trustedPersons", HousekeepingTrustedPersonDao.getTrustedPersonLogs(currentPage));
+        tpl.set("nextTrustedPersons", HousekeepingTrustedPersonDao.getTrustedPersonLogs(currentPage + 1));
+        tpl.set("previousTrustedPersons", HousekeepingTrustedPersonDao.getTrustedPersonLogs(currentPage - 1));
+        tpl.set("players", HousekeepingTrustedPersonDao.getActiveTrustedPersons());
         tpl.set("page", currentPage);
         tpl.render();
 
@@ -72,8 +71,8 @@ public class HousekeepingTrustedPersonController {
             return;
         }
 
-        HousekeepingPlayerDao.setTrustedPerson(revoke, 0, "0");
-        HousekeepingPlayerDao.logTrustedPerson(revoke, 0, playerDetails.getName(), "0");
+        HousekeepingTrustedPersonDao.setTrustedPerson(revoke, 0, "0");
+        HousekeepingTrustedPersonDao.logTrustedPerson(revoke, 0, playerDetails.getName(), "0");
 
         client.session().set("alertColour", "success");
         client.session().set("alertMessage", "Successfully revoke trusted person to user " + revoke);
@@ -122,8 +121,8 @@ public class HousekeepingTrustedPersonController {
             return;
         }
 
-        HousekeepingPlayerDao.setTrustedPerson(userName, userIDint, type);
-        HousekeepingPlayerDao.logTrustedPerson(userName, userIDint, playerDetails.getName(), type);
+        HousekeepingTrustedPersonDao.setTrustedPerson(userName, userIDint, type);
+        HousekeepingTrustedPersonDao.logTrustedPerson(userName, userIDint, playerDetails.getName(), type);
         HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Set trusted/untrusted person to user " + (userName != null ? userName : userID) + ". URL: " + client.request().uri(), client.getIpAddress());
 
         client.session().set("alertColour", "success");
