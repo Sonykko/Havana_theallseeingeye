@@ -8,6 +8,7 @@ import org.alexdev.http.Routes;
 import org.alexdev.http.dao.housekeeping.HousekeepingCatalogueDao;
 import org.alexdev.http.dao.housekeeping.HousekeepingLogsDao;
 import org.alexdev.http.dao.housekeeping.HousekeepingPlayerDao;
+import org.alexdev.http.dao.housekeeping.HousekeepingRankDao;
 import org.alexdev.http.game.housekeeping.HousekeepingManager;
 import org.alexdev.http.util.RconUtil;
 import org.alexdev.http.util.SessionUtil;
@@ -69,7 +70,7 @@ public class HousekeepingCataloguePagesController {
         }
 
         tpl.set("pageName", "Manage catalogue pages");
-        tpl.set("allRanks", HousekeepingPlayerDao.getAllRanks());
+        tpl.set("allRanks", HousekeepingRankDao.getAllRanksVars());
         tpl.set("ParentNames", HousekeepingCatalogueDao.getAllParentNames());
         tpl.set("pages", HousekeepingCatalogueDao.getCataloguePages("all", 0, currentPage));
         tpl.set("nextCatalogPages", HousekeepingCatalogueDao.getCataloguePages("all", 0, currentPage + 1));
@@ -244,7 +245,7 @@ public class HousekeepingCataloguePagesController {
         }
 
         tpl.set("pageName", "Create catalogue pages");
-        tpl.set("allRanks", HousekeepingPlayerDao.getAllRanks());
+        tpl.set("allRanks", HousekeepingRankDao.getAllRanksVars());
         tpl.set("ParentNames", HousekeepingCatalogueDao.getAllParentNames());
         tpl.render();
 

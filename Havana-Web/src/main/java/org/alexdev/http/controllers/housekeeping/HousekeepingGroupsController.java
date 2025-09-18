@@ -12,6 +12,7 @@ import org.alexdev.http.Routes;
 import org.alexdev.http.dao.housekeeping.HousekeepingGroupsDao;
 import org.alexdev.http.dao.housekeeping.HousekeepingLogsDao;
 import org.alexdev.http.dao.housekeeping.HousekeepingPlayerDao;
+import org.alexdev.http.dao.housekeeping.HousekeepingRankDao;
 import org.alexdev.http.game.housekeeping.HousekeepingManager;
 import org.alexdev.http.util.GroupUtil;
 import org.alexdev.http.util.HtmlUtil;
@@ -182,7 +183,6 @@ public class HousekeepingGroupsController {
         }
 
         tpl.set("pageName", "Group admin");
-        tpl.set("allRanks", HousekeepingPlayerDao.getAllRanks());
         tpl.set("page", currentPage);
         tpl.set("ruffleActive", true);
         tpl.render();

@@ -7,6 +7,7 @@ import org.alexdev.havana.game.player.PlayerDetails;
 import org.alexdev.http.Routes;
 import org.alexdev.http.dao.housekeeping.HousekeepingLogsDao;
 import org.alexdev.http.dao.housekeeping.HousekeepingPlayerDao;
+import org.alexdev.http.dao.housekeeping.HousekeepingRankDao;
 import org.alexdev.http.game.housekeeping.HousekeepingManager;
 import org.alexdev.http.util.SessionUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -45,7 +46,6 @@ public class HousekeepingTrustedPersonController {
         }
 
         tpl.set("pageName", "Trusted person tool");
-        tpl.set("allRanks", HousekeepingPlayerDao.getAllRanks());
         tpl.set("trustedPersons", HousekeepingPlayerDao.getTrustedPersonLogs(currentPage));
         tpl.set("nextTrustedPersons", HousekeepingPlayerDao.getTrustedPersonLogs(currentPage + 1));
         tpl.set("previousTrustedPersons", HousekeepingPlayerDao.getTrustedPersonLogs(currentPage - 1));

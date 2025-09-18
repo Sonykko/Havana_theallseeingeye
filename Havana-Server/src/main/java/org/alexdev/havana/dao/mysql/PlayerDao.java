@@ -1059,4 +1059,31 @@ public class PlayerDao {
 
         return time;
     }
+
+    public static String getRankName(int rankId) {
+        Connection sqlConnection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        String rankName = null;
+
+        try {
+            sqlConnection = Storage.getStorage().getConnection();
+            preparedStatement = Storage.getStorage().prepare("SELECT * FROM ranks WHERE id = ? ORDER BY id ASC", sqlConnection);
+            preparedStatement.setInt(1, rankId);
+            resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                rankName = resultSet.getString("name");
+            }
+
+        } catch (Exception e) {
+            Storage.logError(e);
+        } finally {
+            Storage.closeSilently(resultSet);
+            Storage.closeSilently(preparedStatement);
+            Storage.closeSilently(sqlConnection);
+        }
+
+        return rankName;
+    }
 }

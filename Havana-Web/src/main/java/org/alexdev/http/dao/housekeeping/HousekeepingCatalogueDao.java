@@ -1,6 +1,7 @@
 package org.alexdev.http.dao.housekeeping;
 
 import org.alexdev.havana.dao.Storage;
+import org.alexdev.http.game.housekeeping.HousekeepingRankVar;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -11,7 +12,7 @@ import java.util.Map;
 public class HousekeepingCatalogueDao {
     public static List<Map<String, Object>> searchCataloguePage(String type, String field, String input) {
         List<Map<String, Object>> searchPagesList = new ArrayList<>();
-        List<Map<String, Object>> allRanksList = HousekeepingPlayerDao.getAllRanks();
+        List<HousekeepingRankVar> allRanksList = HousekeepingRankDao.getAllRanksVars();
 
         Connection sqlConnection = null;
         PreparedStatement preparedStatement = null;
@@ -83,7 +84,7 @@ public class HousekeepingCatalogueDao {
 
     public static List<Map<String, Object>> getCataloguePages(String type, int pageId, int page) {
         List<Map<String, Object>> cataloguePagesList = new ArrayList<>();
-        List<Map<String, Object>> allRanksList = HousekeepingPlayerDao.getAllRanks();
+        List<HousekeepingRankVar> allRanksList = HousekeepingRankDao.getAllRanksVars();
 
         int rows = 20;
         int nextOffset = page * rows;
@@ -147,10 +148,10 @@ public class HousekeepingCatalogueDao {
         return cataloguePagesList;
     }
 
-    private static String findRankName(int rankId, List<Map<String, Object>> allRanksList) {
-        for (Map<String, Object> rank : allRanksList) {
-            if ((int) rank.get("id") == rankId) {
-                return (String) rank.get("name");
+    private static String findRankName(int rankId, List<HousekeepingRankVar> allRanksList) {
+        for (HousekeepingRankVar rank : allRanksList) {
+            if (rank.getId() == rankId) {
+                return rank.getName();
             }
         }
         return null;

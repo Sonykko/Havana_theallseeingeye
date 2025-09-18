@@ -157,41 +157,6 @@ public class HousekeepingPlayerDao {
         }
     }
 
-    public static List<Map<String, Object>> getAllRanks() {
-        List<Map<String, Object>> allRanksList = new ArrayList<>();
-
-        Connection sqlConnection = null;
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet = null;
-
-        try {
-            sqlConnection = Storage.getStorage().getConnection();
-            preparedStatement = Storage.getStorage().prepare(
-                    "SELECT * FROM ranks ORDER BY id ASC", sqlConnection);
-
-            resultSet = preparedStatement.executeQuery();
-
-            while (resultSet.next()) {
-                Map<String, Object> ranks = new HashMap<>();
-                ranks.put("id", resultSet.getInt("id"));
-                ranks.put("name", resultSet.getString("name"));
-                ranks.put("badge", resultSet.getString("badge"));
-                ranks.put("description", resultSet.getString("description"));
-
-                allRanksList.add(ranks);
-            }
-
-        } catch (Exception e) {
-            Storage.logError(e);
-        } finally {
-            Storage.closeSilently(resultSet);
-            Storage.closeSilently(preparedStatement);
-            Storage.closeSilently(sqlConnection);
-        }
-
-        return allRanksList;
-    }
-
     public static void setRank(String username, int rankId) {
         Connection sqlConnection = null;
         PreparedStatement preparedStatement = null;
@@ -232,39 +197,6 @@ public class HousekeepingPlayerDao {
             Storage.closeSilently(preparedStatement);
             Storage.closeSilently(sqlConnection);
         }
-    }
-
-    public static List<Map<String, Object>> getAllStaffsNames() {
-        List<Map<String, Object>> allStaffsNamesList = new ArrayList<>();
-
-        Connection sqlConnection = null;
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet = null;
-
-        try {
-            sqlConnection = Storage.getStorage().getConnection();
-            preparedStatement = Storage.getStorage().prepare(
-                    "SELECT * FROM users WHERE rank > 2 ORDER BY rank DESC", sqlConnection);
-
-            resultSet = preparedStatement.executeQuery();
-
-            while (resultSet.next()) {
-                Map<String, Object> ranks = new HashMap<>();
-                ranks.put("id", resultSet.getInt("id"));
-                ranks.put("username", resultSet.getString("username"));
-
-                allStaffsNamesList.add(ranks);
-            }
-
-        } catch (Exception e) {
-            Storage.logError(e);
-        } finally {
-            Storage.closeSilently(resultSet);
-            Storage.closeSilently(preparedStatement);
-            Storage.closeSilently(sqlConnection);
-        }
-
-        return allStaffsNamesList;
     }
 
     public static String CheckDBName(String username) {
