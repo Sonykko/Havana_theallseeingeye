@@ -11,6 +11,8 @@ import org.alexdev.http.game.housekeeping.HousekeepingManager;
 import org.alexdev.http.util.SessionUtil;
 
 public class HousekeepingGiveBadgeRCONController {
+    private static final String typeRCON = "GIVE_BADGE";
+
     public static void giveBadge(WebConnection client) {
         if (!client.session().getBoolean(SessionUtil.LOGGED_IN_HOUSKEEPING)) {
             client.redirect("/" + Routes.HOUSEKEEPING_DEFAULT_PATH);
@@ -68,10 +70,12 @@ public class HousekeepingGiveBadgeRCONController {
             return;
         }
 
+        String sortBy = "id";
+
         tpl.set("pageName", "Remote Give Badge");
-        tpl.set("remoteGiveBadgesLogs", HousekeepingRCONCommandsDao.getLogs(currentPage, "GIVE_BADGE"));
-        tpl.set("nextremoteGiveBadgesLogs", HousekeepingRCONCommandsDao.getLogs(currentPage + 1, "GIVE_BADGE"));
-        tpl.set("previousremoteGiveBadgesLogs", HousekeepingRCONCommandsDao.getLogs(currentPage - 1, "GIVE_BADGE"));
+        tpl.set("remoteGiveBadgesLogs", HousekeepingRCONCommandsDao.getAllTypeRCONLogs(currentPage, sortBy, typeRCON));
+        tpl.set("nextremoteGiveBadgesLogs", HousekeepingRCONCommandsDao.getAllTypeRCONLogs(currentPage + 1, sortBy, typeRCON));
+        tpl.set("previousremoteGiveBadgesLogs", HousekeepingRCONCommandsDao.getAllTypeRCONLogs( currentPage - 1, sortBy, typeRCON));
         tpl.set("page", currentPage);
         tpl.render();
 
