@@ -10,6 +10,7 @@ import org.alexdev.http.dao.housekeeping.HousekeepingLogsDao;
 import org.alexdev.http.game.housekeeping.HousekeepingManager;
 import org.alexdev.http.util.SessionUtil;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -155,18 +156,21 @@ public class HousekeepingHobbasController {
     }
 
     public static void pickUpHobbaForm (WebConnection client, PlayerDetails playerDetails) {
-        String logId = client.post().getString("logId");
+        String logIdStr = client.post().getString("logId");
+        int logId = NumberUtils.isParsable(logIdStr) ? Integer.parseInt(logIdStr) : 0;
+        var log = HousekeepingHobbasDao.getLogById(logId);
 
-        if (!StringUtils.isNumeric(logId) && Integer.parseInt(logId) < 0) {
+        if (log == null) {
             client.session().set("alertColour", "danger");
             client.session().set("alertMessage", "Please enter a valid Hobba application form ID");
             client.redirect(getHobbaApplicationsPath());
             return;
         }
 
-        HousekeepingHobbasDao.updateApplication(Integer.parseInt(logId));
+        log.setPickedUp("1");
+        HousekeepingHobbasDao.updateApplication(log.getId());
 
-        HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Has picked up the Hobba application with the ID: " + logId + ". URL: " + client.request().uri(), client.getIpAddress());
+        HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Has picked up the Hobba application with the ID: " + log.getId() + ". URL: " + client.request().uri(), client.getIpAddress());
 
         client.session().set("alertColour", "success");
         client.session().set("alertMessage", "The Hobba application has been picked up");
