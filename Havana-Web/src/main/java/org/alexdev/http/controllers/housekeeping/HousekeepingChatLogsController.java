@@ -4,15 +4,17 @@ import org.alexdev.duckhttpd.server.connection.WebConnection;
 import org.alexdev.duckhttpd.template.Template;
 import org.alexdev.havana.game.player.PlayerDetails;
 import org.alexdev.http.Routes;
+import org.alexdev.http.dao.housekeeping.HousekeepingChatLogDao;
 import org.alexdev.http.dao.housekeeping.HousekeepingLogsDao;
-import org.alexdev.http.dao.housekeeping.HousekeepingRoomDao;
+import org.alexdev.http.game.housekeeping.ChatLog;
 import org.alexdev.http.game.housekeeping.HousekeepingManager;
+import org.alexdev.http.game.housekeeping.HousekeepingMessengerChatLog;
+import org.alexdev.http.game.housekeeping.HousekeepingRoomChatLog;
 import org.alexdev.http.util.SessionUtil;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 import java.util.Collections;
+import java.util.List;
 
 public class HousekeepingChatLogsController {
 
@@ -65,10 +67,10 @@ public class HousekeepingChatLogsController {
             whitelistColumns.add("room_id");
             whitelistColumns.add("room_name");
 
-            List<Map<String, Object>> chatLogs = null;
+            List<HousekeepingRoomChatLog> chatLogs = null;
 
             if (whitelistColumns.contains(field)) {
-                chatLogs = HousekeepingRoomDao.searchChatLogs(type, field, input);
+                chatLogs = HousekeepingChatLogDao.searchRoomChatLogs(type, field, input);
             } else {
                 chatLogs = new ArrayList<>();
             }
@@ -97,9 +99,9 @@ public class HousekeepingChatLogsController {
         }
 
         tpl.set("pageName", "Room Chatlogs");
-        tpl.set("chatlogs", HousekeepingRoomDao.getModChatlog(currentPage, sortBy));
-        tpl.set("nextChatlogs", HousekeepingRoomDao.getModChatlog(currentPage + 1, sortBy));
-        tpl.set("previousChatlogs", HousekeepingRoomDao.getModChatlog(currentPage - 1, sortBy));
+        tpl.set("chatlogs", HousekeepingChatLogDao.getAllRoomChatlogs(currentPage, sortBy));
+        tpl.set("nextChatlogs", HousekeepingChatLogDao.getAllRoomChatlogs(currentPage + 1, sortBy));
+        tpl.set("previousChatlogs", HousekeepingChatLogDao.getAllRoomChatlogs(currentPage - 1, sortBy));
         tpl.set("page", currentPage);
         tpl.set("sortBy", sortBy);
         tpl.render();
@@ -125,7 +127,7 @@ public class HousekeepingChatLogsController {
             return;
         }
 
-        List<Map<String, Object>> userChatlogs = new ArrayList<>();
+        List<ChatLog> userChatlogs = new ArrayList<>();
         String userId1Param = client.get().getString("id1");
         String userId2Param = client.get().getString("id2");
 
@@ -134,7 +136,7 @@ public class HousekeepingChatLogsController {
                 int userId1 = Integer.parseInt(userId1Param);
                 int userId2 = Integer.parseInt(userId2Param);
 
-                userChatlogs.addAll(HousekeepingRoomDao.getConversationsBetweenUsers(userId1, userId2));
+                userChatlogs.addAll(HousekeepingChatLogDao.getConversationsBetweenUsers(userId1, userId2));
             } catch (NumberFormatException e) {
                 client.session().set("alertColour", "danger");
                 client.session().set("alertMessage", "Please provide valid user IDs for the conversation search.");
@@ -145,20 +147,20 @@ public class HousekeepingChatLogsController {
                 try {
                     int userId = Integer.parseInt(userIdParam);
 
-                    List<Map<String, Object>> chatLogs = HousekeepingRoomDao.getChatlogsByUserId(userId);
-                    List<Map<String, Object>> messengerMessages = HousekeepingRoomDao.getMessengerMessagesByUserId(userId);
+                    List<HousekeepingRoomChatLog> chatLogs = HousekeepingChatLogDao.getChatlogsByUserId(userId);
+                    List<HousekeepingMessengerChatLog> messengerMessages = HousekeepingChatLogDao.getMessengerMessagesByUserId(userId);
 
-                    for (Map<String, Object> chatlog : chatLogs) {
-                        chatlog.put("logType", "Chatlog");
+                    for (HousekeepingRoomChatLog chatlog : chatLogs) {
+                        chatlog.setLogType("Chatlog");
                     }
 
-                    for (Map<String, Object> message : messengerMessages) {
-                        message.put("logType", "MessengerMessage");
+                    for (HousekeepingMessengerChatLog message : messengerMessages) {
+                        message.setLogType("MessengerMessage");
                     }
 
                     userChatlogs.addAll(chatLogs);
                     userChatlogs.addAll(messengerMessages);
-                    Collections.sort(userChatlogs, (a, b) -> Long.compare((long) b.get("timestamp"), (long) a.get("timestamp")));
+                    Collections.sort(userChatlogs, (a, b) -> Long.compare(b.getDate(), a.getDate()));
 
                     if (userChatlogs.isEmpty()) {
                         client.session().set("alertColour", "danger");

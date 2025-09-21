@@ -2,7 +2,7 @@
 <body>
     {% set bansActive = " active " %}
     {% include "housekeeping/base/navigation.tpl" %}
-    {% include "housekeeping/base/navigation_admin_tools.tpl" %}		
+    {% include "housekeeping/base/navigation_admin_tools.tpl" %}
           <h2 class="mt-4">User Chatlogs</h2>
 		  <p>Here can see the recently chatlogs in rooms and messenger console or conversations with friends from given user.</p>
 		  {% include "housekeeping/base/alert.tpl" %}
@@ -24,8 +24,8 @@
 	<div class="form-group">
     <label for="chatId1">User ID</label>
     <input type="text" name="id1" class="form-control" id="chatId1" placeholder="Enter here an user ID for search messenger conversations with a friend...">
-	</div>	
-	
+	</div>
+
 	<div class="form-group">
     <label for="chatId2">Friend ID</label>
     <input type="text" name="id2" class="form-control" id="chatId2" placeholder="Enter here the friend ID for search messenger conversations with the user...">
@@ -43,11 +43,9 @@
     groupSelector.addEventListener("change", function() {
         const selectedGroup = groupSelector.value;
 
-        // Oculta todos los grupos primero
         chatIdGroup.style.display = "none";
         id1id2Group.style.display = "none";
 
-        // Muestra el grupo seleccionado
         if (selectedGroup === "chatId") {
             chatIdGroup.style.display = "block";
         } else if (selectedGroup === "id1id2") {
@@ -72,27 +70,27 @@
         <tbody>
     {% for chatlog in userChatlogs %}
         <tr>
-			<td>{{ (chatlog.timestamp * 1000)| date("HH:mm dd/MM/yyyy") }}</td>
-            <td><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/chatlog.action?chatId={{ chatlog.userId }}" style="color:black;"><b>{{ chatlog.username }}</b> (id: {{ chatlog.userId }})</a></td>
-            <td>{{ chatlog.message }}</td>            
+			<td>{{ (chatlog.getDate() * 1000)| date("HH:mm dd/MM/yyyy") }}</td>
+            <td><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/chatlog.action?chatId={{ chatlog.getUserId() }}" style="color:black;"><b>{{ chatlog.getUserName() }}</b> (id: {{ chatlog.getUserId() }})</a></td>
+            <td>{{ chatlog.getBody() }}</td>
             <td>
-                {% if chatlog.logType == "Chatlog" %}
-                    {{ chatlog.roomName }} (id: {{ chatlog.roomId }})
-                {% elseif chatlog.logType == "MessengerMessage" %}
-				<a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/chatlog.action?chatId={{ chatlog.friendId }}" style="color:black;text-decoration:none;">{{ chatlog.friendName }}</a>
-				{% elseif chatlog.logType == "Conversation" %}
-				<a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/chatlog.action?chatId={{ chatlog.friendId }}" style="color:black;"><b>{{ chatlog.friendName }}</b> (id: {{ chatlog.friendId }})</a>
+                {% if chatlog.getLogType() == "Chatlog" %}
+                    {{ chatlog.getRoomName() }} (id: {{ chatlog.getRoomId() }})
+                {% elseif chatlog.getLogType() == "MessengerMessage" %}
+				<a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/chatlog.action?chatId={{ chatlog.getFriendId() }}" style="color:black;text-decoration:none;">{{ chatlog.getFriendName() }}</a>
+				{% elseif chatlog.getLogType() == "Conversation" %}
+				<a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/chatlog.action?chatId={{ chatlog.getFriendId() }}" style="color:black;"><b>{{ chatlog.getFriendName() }}</b> (id: {{ chatlog.getFriendId() }})</a>
                 {% endif %}
-            </td>    
+            </td>
 			<td>
-                {% if chatlog.logType == "Chatlog" %}                  
+                {% if chatlog.getLogType() == "Chatlog" %}
 					<text style="color:limegreen;"><b>Room</b></text>
-                {% elseif chatlog.logType == "MessengerMessage" %}
+                {% elseif chatlog.getLogType() == "MessengerMessage" %}
                     <text style="color:orange;"><b>Messenger</b></text>
-				{% elseif chatlog.logType == "Conversation" %}
+				{% elseif chatlog.getLogType() == "Conversation" %}
                     <text style="color:blue;"><b>Conversation</b></text>
                 {% endif %}
-            </td>			
+            </td>
         </tr>
     {% endfor %}
 </tbody>
@@ -108,20 +106,15 @@ function update() {
     const chatId1 = chatId1Input.value.trim();
     const chatId2 = chatId2Input.value.trim();
 
-    // Verifica si se proporcionaron ambas IDs
     if (chatId1 && chatId2) {
-        // Construye la URL con ambas IDs
         var url = "/{{ site.housekeepingPath }}/chatlog.action?&id1=" + encodeURIComponent(chatId1) + "&id2=" + encodeURIComponent(chatId2);
     } else {
-        // Si solo se proporcionó una ID, utiliza el valor de chatId
         var chatId = document.getElementById("chatId").value.trim();
         var url = "/{{ site.housekeepingPath }}/chatlog.action?chatId=" + encodeURIComponent(chatId);
     }
 
-    // Redirigir al usuario a la URL
     window.location.href = url;
 
-    // Evitar que el formulario se envíe normalmente
     return false;
 }
    </script>

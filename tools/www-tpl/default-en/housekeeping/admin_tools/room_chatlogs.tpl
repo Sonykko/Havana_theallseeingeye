@@ -50,18 +50,18 @@
                 {% set num = 1 %}
                 {% for searchChatlogs in searchChatlogs %}
                 <tr>
-                    <td>{{ searchChatlogs.id }}</td>
-					<td>{{ (searchChatlogs.timestamp * 1000)| date("HH:mm d/MM/yyyy") }}</td>
-                    <td><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/chatlog.action?chatId={{ searchChatlogs.userId }}" style="color:black;"><b>{{ searchChatlogs.username }}</b></a></td>
-                    <td>{{ searchChatlogs.message }}</td>
-					<td>{{ searchChatlogs.roomName }} (id: {{ searchChatlogs.roomId }})</td> 
+                    <td>{{ searchChatlogs.getId() }}</td>
+					<td>{{ (searchChatlogs.getDate() * 1000)| date("HH:mm d/MM/yyyy") }}</td>
+                    <td><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/chatlog.action?chatId={{ searchChatlogs.getUserId() }}" style="color:black;"><b>{{ searchChatlogs.getUserName() }}</b></a></td>
+                    <td>{{ searchChatlogs.getMessage() }}</td>
+					<td>{{ searchChatlogs.getRoomName() }} (id: {{ searchChatlogs.getRoomId() }})</td> 
                 </tr>
                 {% set num = num + 1 %}
                 {% endfor %}
             </tbody>
         </table>
     </div>
-    {% endif %}
+    {% endif %}	
 	{% if noResults %}
 	<hr/>
 	<p style="font-size:16px;"><b>Search results</b></p>
@@ -95,10 +95,10 @@
 			    {% set num = 1 %}
 				{% for chatlog in chatlogs %}
                 <tr>
-				  <td>{{ (chatlog.timestamp * 1000)| date("HH:mm d/MM/yyyy") }}</td>				  				  
-				  <td><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/chatlog.action?chatId={{ chatlog.userId }}" style="color:black;"><b>{{ chatlog.username }}</b></a></td>
-				  <td>{{ chatlog.message }}</td>
-				  <td>{{ chatlog.roomName }} (id: {{ chatlog.roomId }})</td>
+				  <td>{{ (chatlog.getDate() * 1000)| date("HH:mm d/MM/yyyy") }}</td>				  				  
+				  <td><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/chatlog.action?chatId={{ chatlog.getUserId() }}" style="color:black;"><b>{{ chatlog.getUserName() }}</b></a></td>
+				  <td>{{ chatlog.getMessage() }}</td>
+				  <td>{{ chatlog.getRoomName() }} (id: {{ chatlog.getRoomId() }})</td>
                 </tr>
 			   {% set num = num + 1 %}
 			   {% endfor %}
