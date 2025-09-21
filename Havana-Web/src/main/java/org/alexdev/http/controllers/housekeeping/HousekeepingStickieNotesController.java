@@ -7,17 +7,20 @@ import org.alexdev.havana.game.player.PlayerDetails;
 import org.alexdev.havana.server.rcon.messages.RconHeader;
 import org.alexdev.havana.util.config.GameConfiguration;
 import org.alexdev.http.Routes;
-import org.alexdev.http.dao.housekeeping.*;
+import org.alexdev.http.dao.housekeeping.HousekeepingCFHTopicsDao;
+import org.alexdev.http.dao.housekeeping.HousekeepingLogsDao;
+import org.alexdev.http.dao.housekeeping.HousekeepingPlayerDao;
+import org.alexdev.http.dao.housekeeping.HousekeepingStickieNotesDao;
 import org.alexdev.http.game.housekeeping.HousekeepingManager;
+import org.alexdev.http.game.housekeeping.HousekeepingStickieNote;
 import org.alexdev.http.util.RconUtil;
 import org.alexdev.http.util.SessionUtil;
 import org.alexdev.http.util.housekeeping.MessageEncoderUtil;
 import org.alexdev.http.util.housekeeping.ModerationApiUtil;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 public class HousekeepingStickieNotesController {
@@ -49,7 +52,7 @@ public class HousekeepingStickieNotesController {
         String searchCriteria = "";
 
         if (client.post().contains("latest")) {
-            List<Map<String, Object>> latestReports = HousekeepingStickieNotesDao.searchStickieNotes(0, 20, stickieText);
+            List<HousekeepingStickieNote> latestReports = HousekeepingStickieNotesDao.searchStickieNotes(0, 20, stickieText);
             tpl.set("latestReports", latestReports);
             showResults = true;
             totalReportsSearch = latestReports.size();
@@ -113,7 +116,7 @@ public class HousekeepingStickieNotesController {
                 searchCriteria = "new";
             }
 
-            List<Map<String, Object>> searchReports = HousekeepingStickieNotesDao.searchStickieNotes(query, showMaxInt, stickieText);
+            List<HousekeepingStickieNote> searchReports = HousekeepingStickieNotesDao.searchStickieNotes(query, showMaxInt, stickieText);
             tpl.set("searchReports", searchReports);
             showResults = true;
             totalReportsSearch = searchReports.size();
@@ -177,7 +180,7 @@ public class HousekeepingStickieNotesController {
         }
         client.redirect(getStickieNotesPath());
     }
-
+    
     public static void deleteStickieNote (WebConnection client, PlayerDetails playerDetails, String stickieTextEncoded) {
         String stickieIdsString = client.post().getString("stickieIds");
         if (stickieIdsString != null && !stickieIdsString.isEmpty()) {
@@ -203,7 +206,7 @@ public class HousekeepingStickieNotesController {
         }
         client.redirect(getStickieNotesPath());
     }
-
+    
     public static void massBanStickieNoteOwner (WebConnection client, PlayerDetails playerDetails, String stickieTextEncoded) {
         if (client.post().contains("userNames") && (client.post().contains("commonMessage") || client.post().contains("customMessage"))) {
             List<String> usernames = client.post().getArray("userNames");

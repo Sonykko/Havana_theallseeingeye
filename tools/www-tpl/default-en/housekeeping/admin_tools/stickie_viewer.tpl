@@ -81,13 +81,13 @@
 					{% set num = 1 %}
 					{% for stickieNotesList in latestReports %}
 					<tr>
-						<input type="hidden" value="{{ stickieNotesList.id }}" id="stickieId" />
-						<input type="hidden" value="{{ stickieNotesList.roomId }}" id="stickieRoomId" />
-						<td><input type="checkbox" value="{{ stickieNotesList.userName }}" id="stickieOwner" /></td>
-						<td>{{ stickieNotesList.updatedAt }}</td>
-						<td>{{ stickieNotesList.createdAt }}</td>
-						<td>{{ stickieNotesList.userName }}</td>
-						<td>{{ stickieNotesList.text }}</td>
+						<input type="hidden" value="{{ stickieNotesList.getId() }}" id="stickieId" />
+						<input type="hidden" value="{{ stickieNotesList.getRoomId() }}" id="stickieRoomId" />
+						<td><input type="checkbox" value="{{ stickieNotesList.getUserName() }}" id="stickieOwner" /></td>
+						<td>{{ stickieNotesList.getUpdatedAt() }}</td>
+						<td>{{ stickieNotesList.getCreatedAt() }}</td>
+						<td>{{ stickieNotesList.getUserName() }}</td>
+						<td>{{ stickieNotesList.getText() }}</td>
 					</tr>
 					{% set num = num + 1 %}
 					{% endfor %}
@@ -95,13 +95,13 @@
 					{% set num = 1 %}
 					{% for stickieNotesList in searchReports %}
 					<tr>
-						<input type="hidden" value="{{ stickieNotesList.id }}" id="stickieId" />
-						<input type="hidden" value="{{ stickieNotesList.roomId }}" id="stickieRoomId" />
-						<td><input type="checkbox" value="{{ stickieNotesList.userName }}" id="stickieOwner" /></td>
-						<td>{{ stickieNotesList.updatedAt }}</td>
-						<td>{{ stickieNotesList.createdAt }}</td>
-						<td>{{ stickieNotesList.userName }}</td>
-						<td>{{ stickieNotesList.text }}</td>
+						<input type="hidden" value="{{ stickieNotesList.getId() }}" id="stickieId" />
+						<input type="hidden" value="{{ stickieNotesList.getRoomId() }}" id="stickieRoomId" />
+						<td><input type="checkbox" value="{{ stickieNotesList.getUserName() }}" id="stickieOwner" /></td>
+						<td>{{ stickieNotesList.getUpdatedAt() }}</td>
+						<td>{{ stickieNotesList.getCreatedAt() }}</td>
+						<td>{{ stickieNotesList.getUserName() }}</td>
+						<td>{{ stickieNotesList.getText() }}</td>
 					</tr>
 					{% set num = num + 1 %}
 					{% endfor %}
@@ -122,7 +122,7 @@
 
 		<div style="display:none;" class="stickie__ban__tool" id="banTool">
 		<form method="post">
-			<div >
+			<div>
 				<label>Ban selected accounts for:</label>
 				<select name="banSeconds" id="banSeconds">
 					<option value="7200" selected>2 Hours</option>
@@ -278,11 +278,6 @@
 				
 				document.body.appendChild(form);
 				form.submit();
-			});
-			
-			$("#menu-toggle").click(function(e) {
-				e.preventDefault();
-				$("#wrapper").toggleClass("toggled");
 			});
 		});
 	</script>    
