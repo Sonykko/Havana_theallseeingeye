@@ -44,7 +44,7 @@ public class HavanaWeb {
 
         logger.info("HavanaWeb by Quackster");
         logger.info("Loading configuration..");
-        logger.info("Loading theallseeingeye " + THEALLSEEINGEYE_BUILD + " by Sonykko...");
+        logger.info("Loading theallseeingeye " + THEALLSEEINGEYE_BUILD + " by Sonykko..");
 
         ResourceLeakDetector.setLevel(ResourceLeakDetector.Level.ADVANCED);
 
