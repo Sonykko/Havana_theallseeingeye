@@ -1,0 +1,19 @@
+package org.alexdev.http.game.housekeeping;
+
+public class HousekeepingCatalogueParent {
+    private int id;
+    private String name;
+
+    public HousekeepingCatalogueParent(int id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+}

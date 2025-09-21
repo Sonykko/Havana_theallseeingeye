@@ -1,17 +1,17 @@
 package org.alexdev.http.dao.housekeeping;
 
 import org.alexdev.havana.dao.Storage;
+import org.alexdev.http.game.housekeeping.HousekeepingCataloguePage;
+import org.alexdev.http.game.housekeeping.HousekeepingCatalogueParent;
 import org.alexdev.http.game.housekeeping.HousekeepingRankVar;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class HousekeepingCatalogueDao {
-    public static List<Map<String, Object>> searchCataloguePage(String type, String field, String input) {
-        List<Map<String, Object>> searchPagesList = new ArrayList<>();
+    public static List<HousekeepingCataloguePage> searchCataloguePage(String type, String field, String input) {
+        List<HousekeepingCataloguePage> searchPagesList = new ArrayList<>();
         List<HousekeepingRankVar> allRanksList = HousekeepingRankDao.getAllRanksVars();
 
         Connection sqlConnection = null;
@@ -49,26 +49,8 @@ public class HousekeepingCatalogueDao {
             resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
-                Map<String, Object> CataloguePagesSearch = new HashMap<>();
-                CataloguePagesSearch.put("id", resultSet.getInt("id"));
-                CataloguePagesSearch.put("parent_id", resultSet.getInt("parent_id"));
-                CataloguePagesSearch.put("order_id", resultSet.getInt("order_id"));
-                int minRoleId = resultSet.getInt("min_role");
-                String minRoleName = findRankName(minRoleId, allRanksList);
-                CataloguePagesSearch.put("min_role", minRoleName);
-                CataloguePagesSearch.put("min_role_ID", minRoleId);
-                CataloguePagesSearch.put("is_navigatable", resultSet.getInt("is_navigatable"));
-                CataloguePagesSearch.put("is_club_only", resultSet.getInt("is_club_only"));
-                CataloguePagesSearch.put("name", resultSet.getString("name"));
-                CataloguePagesSearch.put("icon", resultSet.getInt("icon"));
-                CataloguePagesSearch.put("colour", resultSet.getInt("colour"));
-                CataloguePagesSearch.put("layout", resultSet.getString("layout"));
-                CataloguePagesSearch.put("images", resultSet.getString("images"));
-                CataloguePagesSearch.put("texts", resultSet.getString("texts"));
-                CataloguePagesSearch.put("seasonal_start", resultSet.getString("seasonal_start"));
-                CataloguePagesSearch.put("seasonal_length", resultSet.getInt("seasonal_length"));
 
-                searchPagesList.add(CataloguePagesSearch);
+                searchPagesList.add(fillPage(resultSet, allRanksList));
             }
 
         } catch (Exception e) {
@@ -82,8 +64,8 @@ public class HousekeepingCatalogueDao {
         return searchPagesList;
     }
 
-    public static List<Map<String, Object>> getCataloguePages(String type, int pageId, int page) {
-        List<Map<String, Object>> cataloguePagesList = new ArrayList<>();
+    public static List<HousekeepingCataloguePage> getCataloguePages(String type, int pageId, int page) {
+        List<HousekeepingCataloguePage> cataloguePagesList = new ArrayList<>();
         List<HousekeepingRankVar> allRanksList = HousekeepingRankDao.getAllRanksVars();
 
         int rows = 20;
@@ -114,26 +96,7 @@ public class HousekeepingCatalogueDao {
                 resultSet = preparedStatement.executeQuery();
 
                 while (resultSet.next()) {
-                    Map<String, Object> CataloguePages = new HashMap<>();
-                    CataloguePages.put("id", resultSet.getInt("id"));
-                    CataloguePages.put("parent_id", resultSet.getInt("parent_id"));
-                    CataloguePages.put("order_id", resultSet.getInt("order_id"));
-                    int minRoleId = resultSet.getInt("min_role");
-                    String minRoleName = findRankName(minRoleId, allRanksList);
-                    CataloguePages.put("min_role", minRoleName);
-                    CataloguePages.put("min_role_ID", minRoleId);
-                    CataloguePages.put("is_navigatable", resultSet.getInt("is_navigatable"));
-                    CataloguePages.put("is_club_only", resultSet.getInt("is_club_only"));
-                    CataloguePages.put("name", resultSet.getString("name"));
-                    CataloguePages.put("icon", resultSet.getInt("icon"));
-                    CataloguePages.put("colour", resultSet.getInt("colour"));
-                    CataloguePages.put("layout", resultSet.getString("layout"));
-                    CataloguePages.put("images", resultSet.getString("images"));
-                    CataloguePages.put("texts", resultSet.getString("texts"));
-                    CataloguePages.put("seasonal_start", resultSet.getString("seasonal_start"));
-                    CataloguePages.put("seasonal_length", resultSet.getInt("seasonal_length"));
-
-                    cataloguePagesList.add(CataloguePages);
+                    cataloguePagesList.add(fillPage(resultSet, allRanksList));
                 }
 
             } catch (Exception e) {
@@ -157,8 +120,8 @@ public class HousekeepingCatalogueDao {
         return null;
     }
 
-    public static List<Map<String, Object>> getAllParentNames() {
-        List<Map<String, Object>> allParentNamesList = new ArrayList<>();
+    public static List<HousekeepingCatalogueParent> getAllParentNames() {
+        List<HousekeepingCatalogueParent> allParentNamesList = new ArrayList<>();
 
         Connection sqlConnection = null;
         PreparedStatement preparedStatement = null;
@@ -172,11 +135,7 @@ public class HousekeepingCatalogueDao {
             resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
-                Map<String, Object> parentNames = new HashMap<>();
-                parentNames.put("id", resultSet.getInt("id"));
-                parentNames.put("name", resultSet.getString("name"));
-
-                allParentNamesList.add(parentNames);
+                allParentNamesList.add(fillParent(resultSet));
             }
 
         } catch (Exception e) {
@@ -207,25 +166,25 @@ public class HousekeepingCatalogueDao {
         }
     }
 
-    public static void updatePage(int pageId, int parentId, int orderId, int minRank, int isNavigatable, int isHCOnly, String name, int icon, int colour, String layout, String images, String texts, int originalPageId) {
+    public static void updatePage(HousekeepingCataloguePage cataloguePage, int originalPageId) {
         Connection sqlConnection = null;
         PreparedStatement preparedStatement = null;
 
         try {
             sqlConnection = Storage.getStorage().getConnection();
             preparedStatement = Storage.getStorage().prepare("UPDATE catalogue_pages SET id = ?, parent_id = ?, order_id = ?, min_role = ?, is_navigatable = ?, is_club_only = ?, name = ?, icon = ?, colour = ?, layout = ?, images = ?, texts = ? WHERE id = ?", sqlConnection);
-            preparedStatement.setInt(1, pageId);
-            preparedStatement.setInt(2, parentId);
-            preparedStatement.setInt(3, orderId);
-            preparedStatement.setInt(4, minRank);
-            preparedStatement.setInt(5, isNavigatable);
-            preparedStatement.setInt(6, isHCOnly);
-            preparedStatement.setString(7, name);
-            preparedStatement.setInt(8, icon);
-            preparedStatement.setInt(9, colour);
-            preparedStatement.setString(10, layout);
-            preparedStatement.setString(11, images);
-            preparedStatement.setString(12, texts);
+            preparedStatement.setInt(1, cataloguePage.getId());
+            preparedStatement.setInt(2, cataloguePage.getParentId());
+            preparedStatement.setInt(3, cataloguePage.getOrderId());
+            preparedStatement.setInt(4, cataloguePage.getMinRoleId());
+            preparedStatement.setInt(5, cataloguePage.getIsNavigatable());
+            preparedStatement.setInt(6, cataloguePage.getIsClubOnly());
+            preparedStatement.setString(7, cataloguePage.getName());
+            preparedStatement.setInt(8, cataloguePage.getIcon());
+            preparedStatement.setInt(9, cataloguePage.getColour());
+            preparedStatement.setString(10, cataloguePage.getLayout());
+            preparedStatement.setString(11, cataloguePage.getImages());
+            preparedStatement.setString(12, cataloguePage.getTexts());
             preparedStatement.setInt(13, originalPageId);
             preparedStatement.execute();
         } catch (Exception e) {
@@ -296,5 +255,35 @@ public class HousekeepingCatalogueDao {
             Storage.closeSilently(preparedStatement);
             Storage.closeSilently(sqlConnection);
         }
+    }
+
+    private static HousekeepingCataloguePage fillPage(ResultSet resultSet, List<HousekeepingRankVar> allRanksList) throws Exception {
+        int minRoleId = resultSet.getInt("min_role");
+        String minRoleName = findRankName(minRoleId, allRanksList);
+
+        return new HousekeepingCataloguePage(
+                resultSet.getInt("id"),
+                resultSet.getInt("parent_id"),
+                resultSet.getInt("order_id"),
+                minRoleName,
+                minRoleId,
+                resultSet.getInt("is_navigatable"),
+                resultSet.getInt("is_club_only"),
+                resultSet.getString("name"),
+                resultSet.getInt("icon"),
+                resultSet.getInt("colour"),
+                resultSet.getString("layout"),
+                resultSet.getString("images"),
+                resultSet.getString("texts"),
+                resultSet.getString("seasonal_start"),
+                resultSet.getInt("seasonal_length")
+        );
+    }
+
+    private static HousekeepingCatalogueParent fillParent(ResultSet resultSet) throws Exception {
+        return new HousekeepingCatalogueParent(
+                resultSet.getInt("id"),
+                resultSet.getString("name")
+        );
     }
 }

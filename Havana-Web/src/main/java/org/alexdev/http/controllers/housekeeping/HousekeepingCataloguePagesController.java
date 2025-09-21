@@ -7,8 +7,8 @@ import org.alexdev.havana.server.rcon.messages.RconHeader;
 import org.alexdev.http.Routes;
 import org.alexdev.http.dao.housekeeping.HousekeepingCatalogueDao;
 import org.alexdev.http.dao.housekeeping.HousekeepingLogsDao;
-import org.alexdev.http.dao.housekeeping.HousekeepingPlayerDao;
 import org.alexdev.http.dao.housekeeping.HousekeepingRankDao;
+import org.alexdev.http.game.housekeeping.HousekeepingCataloguePage;
 import org.alexdev.http.game.housekeeping.HousekeepingManager;
 import org.alexdev.http.util.RconUtil;
 import org.alexdev.http.util.SessionUtil;
@@ -17,7 +17,6 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class HousekeepingCataloguePagesController {
     public static void pages (WebConnection client) {
@@ -119,7 +118,7 @@ public class HousekeepingCataloguePagesController {
         whitelistColumns.add("images");
         whitelistColumns.add("texts");
 
-        List<Map<String, Object>> searchPages = null;
+        List<HousekeepingCataloguePage> searchPages = null;
 
         if (whitelistColumns.contains(field)) {
             searchPages = HousekeepingCatalogueDao.searchCataloguePage(type, field, input);
@@ -192,7 +191,21 @@ public class HousekeepingCataloguePagesController {
             return;
         }
 
-        HousekeepingCatalogueDao.updatePage(editId, editParentId, editOrderId, editMinRank, editIsNavigatable, editIsHCOnly, editName, editIcon, editColour, editLayout, editImages, editTexts, originalPageId);
+        HousekeepingCataloguePage cataloguePage = new HousekeepingCataloguePage();
+        cataloguePage.setId(editId);
+        cataloguePage.setParentId(editParentId);
+        cataloguePage.setOrderId(editOrderId);
+        cataloguePage.setMinRoleId(editMinRank);
+        cataloguePage.setIsNavigatable(editIsNavigatable);
+        cataloguePage.setIsClubOnly(editIsHCOnly);
+        cataloguePage.setName(editName);
+        cataloguePage.setIcon(editIcon);
+        cataloguePage.setColour(editColour);
+        cataloguePage.setLayout(editLayout);
+        cataloguePage.setImages(editImages);
+        cataloguePage.setTexts(editTexts);
+
+        HousekeepingCatalogueDao.updatePage(cataloguePage, originalPageId);
         HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Edited Catalogue page with the ID " + editId + "(id original: " + originalPageId + "). URL: " + client.request().uri(), client.getIpAddress());
 
         client.session().set("alertColour", "success");
