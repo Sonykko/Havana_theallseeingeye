@@ -1,6 +1,7 @@
 package org.alexdev.http.dao.housekeeping;
 
 import org.alexdev.havana.dao.Storage;
+import org.alexdev.http.game.housekeeping.HousekeepingHobbaForm;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -11,8 +12,8 @@ import java.util.List;
 import java.util.Map;
 
 public class HousekeepingHobbasDao {
-    public static List<Map<String, Object>> getLogs(int page) {
-        List<Map<String, Object>> HobbaFormsList = new ArrayList<>();
+    public static List<HousekeepingHobbaForm> getLogs(int page) {
+        List<HousekeepingHobbaForm> HobbaFormsList = new ArrayList<>();
 
         int rows = 50;
         int nextOffset = page * rows;
@@ -25,28 +26,13 @@ public class HousekeepingHobbasDao {
 
             try {
                 sqlConnection = Storage.getStorage().getConnection();
-
-                String query = "SELECT * FROM hobbas_forms " +
-                        "ORDER BY id DESC LIMIT ? OFFSET ?";
-
-                preparedStatement = Storage.getStorage().prepare(query, sqlConnection);
-
+                preparedStatement = Storage.getStorage().prepare("SELECT * FROM hobbas_forms ORDER BY id DESC LIMIT ? OFFSET ?", sqlConnection);
                 preparedStatement.setInt(1, rows);
                 preparedStatement.setInt(2, nextOffset);
-
                 resultSet = preparedStatement.executeQuery();
 
                 while (resultSet.next()) {
-                    Map<String, Object> HobbaForm = new HashMap<>();
-                    HobbaForm.put("id", resultSet.getInt("id"));
-                    HobbaForm.put("habboname", resultSet.getString("habboname"));
-                    HobbaForm.put("email", resultSet.getString("email"));
-                    HobbaForm.put("firstname", resultSet.getString("firstname"));
-                    HobbaForm.put("lastname", resultSet.getString("lastname"));
-                    HobbaForm.put("picked_up", resultSet.getString("picked_up"));
-                    HobbaForm.put("timestamp", resultSet.getString("timestamp"));
-
-                    HobbaFormsList.add(HobbaForm);
+                    HobbaFormsList.add(fillLogs(resultSet));
                 }
 
             } catch (Exception e) {
@@ -57,6 +43,34 @@ public class HousekeepingHobbasDao {
                 Storage.closeSilently(sqlConnection);
             }
         }
+        return HobbaFormsList;
+    }
+
+    public static HousekeepingHobbaForm getLogById(int logId) {
+        HousekeepingHobbaForm HobbaFormsList = null;
+
+
+            Connection sqlConnection = null;
+            PreparedStatement preparedStatement = null;
+            ResultSet resultSet = null;
+
+            try {
+                sqlConnection = Storage.getStorage().getConnection();
+                preparedStatement = Storage.getStorage().prepare("SELECT * FROM hobbas_forms WHERE id = ? LIMIT 1", sqlConnection);
+                preparedStatement.setInt(1, logId);
+                resultSet = preparedStatement.executeQuery();
+
+                if (resultSet.next()) {
+                    HobbaFormsList = fillLogs(resultSet);
+                }
+
+            } catch (Exception e) {
+                Storage.logError(e);
+            } finally {
+                Storage.closeSilently(resultSet);
+                Storage.closeSilently(preparedStatement);
+                Storage.closeSilently(sqlConnection);
+            }
         return HobbaFormsList;
     }
 
@@ -224,15 +238,15 @@ public class HousekeepingHobbasDao {
         }
     }
 
-    private static boolean isNumeric(String str) {
-        if (str == null) {
-            return false;
-        }
-        try {
-            Integer.parseInt(str);
-        } catch (NumberFormatException e) {
-            return false;
-        }
-        return true;
+    private static HousekeepingHobbaForm fillLogs(ResultSet resultSet) throws Exception {
+        return new HousekeepingHobbaForm(
+                resultSet.getInt("id"),
+                resultSet.getString("habboname"),
+                resultSet.getString("email"),
+                resultSet.getString("firstname"),
+                resultSet.getString("lastname"),
+                resultSet.getString("picked_up"),
+                resultSet.getString("timestamp")
+        );
     }
 }

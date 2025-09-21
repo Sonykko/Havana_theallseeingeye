@@ -34,18 +34,18 @@
                 {% set num = 1 %}
                 {% for HobbasFormsList in hobbasFormLogs %}
                 <tr>
-                    <td>{{ HobbasFormsList.id }}</td>
-                    <td>{{ HobbasFormsList.habboname }}</td>
-                    <td>{{ HobbasFormsList.email }}</td>
-                    <td>{{ HobbasFormsList.firstname }}</td>
-                    <td>{{ HobbasFormsList.lastname }}</td>
-                    <td>{{ HobbasFormsList.timestamp }}</td>
+                    <td>{{ HobbasFormsList.getId() }}</td>
+                    <td>{{ HobbasFormsList.getHabboname() }}</td>
+                    <td>{{ HobbasFormsList.getEmail() }}</td>
+                    <td>{{ HobbasFormsList.getFirstname() }}</td>
+                    <td>{{ HobbasFormsList.getLastname() }}</td>
+                    <td>{{ HobbasFormsList.getTimestamp() }}</td>
                     <td>
-					{% if HobbasFormsList.picked_up == '1' %}
+					{% if HobbasFormsList.getPickUp() == '1' %}
 					Picked
 					{% else %}
 						<form method="post">
-							<input type="hidden" id="logId" name="logId" value="{{ HobbasFormsList.id }}" />
+							<input type="hidden" id="logId" name="logId" value="{{ HobbasFormsList.getId() }}" />
 							<button type="submit">Pick Up</button>
 						</form>					
 					{% endif%}
