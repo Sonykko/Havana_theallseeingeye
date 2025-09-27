@@ -50,7 +50,7 @@ public class Cryptography {
         this.i = 0;
         String tPrMixString = "NV6VVFPoC7FLDlzDUri3qcOAg9cRoFOmsYR9ffDGy5P8HfF6eekX40SFSVfJ1mDb3lcpYRqdg28sp61eHkPukKbqTu1JsVEKiRavi04YtSzUsLXaYSa5BEGwg5G2OF";
         for (l = 1; l <= 52; l++) {
-           this.AkwGx8bHG2kc1xGG4xbdHPCV0fqvK(tPrMixString);
+            this.AkwGx8bHG2kc1xGG4xbdHPCV0fqvK(tPrMixString);
         }
     }
 

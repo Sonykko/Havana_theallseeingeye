@@ -5,6 +5,6 @@ import java.nio.charset.StandardCharsets;
 
 public class MessageDecoderUtil {
     public static String decodeMessage(String message) {
-        return URLDecoder.decode(message, StandardCharsets.UTF_8);
+        return URLDecoder.decode(message, StandardCharsets.ISO_8859_1);
     }
 }
