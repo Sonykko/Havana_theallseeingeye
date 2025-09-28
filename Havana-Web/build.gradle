@@ -41,7 +41,10 @@ dependencies {
     // https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient
     implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5'
 
-    // https://github.com/Quackster/duckHTTPD/
+    // https://github.com/Quackster/Avatara4j/
+    implementation name: 'Avatara4j-1.0.2'
+	
+	// https://github.com/Quackster/duckHTTPD/
     implementation name: 'duckHTTPD-all'
 
     // https://github.com/Quackster/Kepler/Kepler-Server
