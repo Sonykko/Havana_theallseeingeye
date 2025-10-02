@@ -8,7 +8,6 @@ import org.alexdev.havana.server.rcon.messages.RconHeader;
 import org.alexdev.havana.util.config.GameConfiguration;
 import org.alexdev.http.Routes;
 import org.alexdev.http.dao.housekeeping.HousekeepingLogsDao;
-import org.alexdev.http.dao.housekeeping.HousekeepingPlayerDao;
 import org.alexdev.http.dao.housekeeping.HousekeepingRankDao;
 import org.alexdev.http.game.housekeeping.HousekeepingManager;
 import org.alexdev.http.game.housekeeping.HousekeepingRankVar;
@@ -136,7 +135,7 @@ public class HousekeepingRanksController {
             }});
         }
 
-        HousekeepingPlayerDao.setRank(user, rankId);
+        HousekeepingRankDao.setRank(user, rankId);
         HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Set the rank ID " + rankId + " (" + rankName + ") to user " + user + ". URL: " + client.request().uri(), client.getIpAddress());
 
         client.session().set("alertColour", "success");
@@ -192,7 +191,7 @@ public class HousekeepingRanksController {
         rankVar.setBadge(rankBadge);
         rankVar.setDescription(rankDescription);
 
-        HousekeepingPlayerDao.setRankTextVars(rankVar.getId(), rankVar.getName(), rankVar.getBadge(), rankVar.getDescription());
+        HousekeepingRankDao.setRankTextVars(rankVar.getId(), rankVar.getName(), rankVar.getBadge(), rankVar.getDescription());
         HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Updated the variables for rank " + rankVar.getName() + " (id: " + rankVar.getId() + "). URL: " + client.request().uri(), client.getIpAddress());
 
         client.session().set("alertColour", "success");
