@@ -300,6 +300,9 @@ INSERT INTO `settings_desc` (`setting`, `description`, `category`) VALUES
 ('delete.chatlogs.after.x.age', 'Set the delete chatlogs afer x age in seconds', 'server'),
 ('delete.iplogs.after.x.age', 'Set the delete iplogs after x age in seconds', 'server'),
 ('delete.tradelogs.after.x.age', 'Set the delete tradelogs afer x age in seconds', 'server'),
+('discord.widget.community.enabled', 'Set if the Discord widget is showed in me community'),
+('discord.widget.id', 'Set the Discord widget ID'),
+('discord.widget.me.enabled', 'Set if the Discord widget is showed in me page'),
 ('discussions.per.page', 'Set the max number of forum discussions per page', 'site'),
 ('discussions.replies.per.page', 'Set the max number of forum discussions replies per page', 'site'),
 ('email.smtp.enable', 'Toggle status of email SMTP service as true or false', 'email'),
@@ -697,6 +700,9 @@ UPDATE `settings` SET
       WHEN `setting` = 'delete.chatlogs.after.x.age' THEN 'server'
       WHEN `setting` = 'delete.iplogs.after.x.age' THEN 'server'
       WHEN `setting` = 'delete.tradelogs.after.x.age' THEN 'server'
+      WHEN `setting` = 'discord.widget.community.enabled' THEN 'site'
+      WHEN `setting` = 'discord.widget.id' THEN 'site'
+      WHEN `setting` = 'discord.widget.me.enabled' THEN 'site'
       WHEN `setting` = 'discussions.per.page' THEN 'site'
       WHEN `setting` = 'discussions.replies.per.page' THEN 'site'
       WHEN `setting` = 'email.smtp.enable' THEN 'email'

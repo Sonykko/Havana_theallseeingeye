@@ -657,12 +657,14 @@ body { behavior: url({{ site.staticContentPath }}/web-gallery/js/csshover.htc); 
 					</div>
 
 				</div>
+				{% if gameConfig.getBoolean('discord.widget.me.enabled') %}
 					<div>
 					<!-- <p><a href="{{ site.sitePath }}/community"><img src="https://i.imgur.com/87IsMuC.png"></a></p> -->
 					<!-- <p><a href="{{ site.sitePath }}/community"><img src="https://i.imgur.com/SGFjYN2.gif"></a></p> -->
 					<!-- <p><a href="{{ site.sitePath }}"><img src="https://i.imgur.com/9lUdOG1.png"></a></p> -->
-					<p><iframe src="https://discordapp.com/widget?id=524768066907668521&theme=light" height="280" allowtransparency="true" frameborder="0"></iframe></p>
+					<p><iframe src="https://discordapp.com/widget?id={{ site.discordWidgetId }}&theme=light" height="280" allowtransparency="true" frameborder="0"></iframe></p>
 					</div>
+				{% endif %}
 					<script type="text/javascript">if (!$(document.body).hasClassName('process-template')) { Rounder.init(); }</script>
 				<div class="habblet-container ">		
 						<div class="cbb clearfix red ">

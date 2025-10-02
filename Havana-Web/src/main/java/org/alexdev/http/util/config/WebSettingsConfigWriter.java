@@ -103,6 +103,10 @@ public class WebSettingsConfigWriter implements ConfigWriter {
         config.put("hk.new.style.enabled", "true");
         config.put("hk.trusted.person.enabled", "false");
 
+        config.put("discord.widget.community.enabled", "true");
+        config.put("discord.widget.id", "524768066907668521");
+        config.put("discord.widget.me.enabled", "true");
+
         config.putAll(new GameConfigWriter().setConfigurationDefaults());
         return config;
     }

@@ -59,6 +59,8 @@ public class SiteBinder implements TemplateBinder {
     private boolean hkNewStyle;
     private String hkBuild;
 
+    private String discordWidgetId;
+
     @Override
     public void onRegister(Template template, WebConnection webConnection) {
         this.captcha = new Captcha();
@@ -102,6 +104,8 @@ public class SiteBinder implements TemplateBinder {
 
         this.hkNewStyle = GameConfiguration.getInstance().getBoolean("hk.new.style.enabled");
         this.hkBuild = HavanaWeb.THEALLSEEINGEYE_BUILD;
+
+        this.discordWidgetId = GameConfiguration.getInstance().getString("discord.widget.id");
 
         template.set("site", this);
         template.set("gameConfig", GameConfiguration.getInstance());
@@ -229,5 +233,9 @@ public class SiteBinder implements TemplateBinder {
 
     public String getHKBuild() {
         return this.hkBuild;
+    }
+
+    public String getDiscordWidgetId() {
+        return this.discordWidgetId;
     }
 }

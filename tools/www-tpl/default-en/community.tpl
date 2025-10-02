@@ -445,9 +445,11 @@ var discussionMoreDataHelper = new MoreDataHelper("discussions-toggle-more-data-
 					</div>
 				</div>
 				<script type="text/javascript">if (!$(document.body).hasClassName('process-template')) { Rounder.init(); }</script>
+				{% if gameConfig.getBoolean('discord.widget.community.enabled') %}
 				<div>
-				<p><iframe src="https://discordapp.com/widget?id=524768066907668521&theme=light" height="280" allowtransparency="true" frameborder="0"></iframe></p>
+				<p><iframe src="https://discordapp.com/widget?id={{ site.discordWidgetId }}&theme=light" height="280" allowtransparency="true" frameborder="0"></iframe></p>
 				</div>
+				{% endif %}
 				<script type="text/javascript">if (!$(document.body).hasClassName('process-template')) { Rounder.init(); }</script>
 
 </div>
