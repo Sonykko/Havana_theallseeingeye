@@ -9,7 +9,6 @@ import org.alexdev.havana.util.config.GameConfiguration;
 import org.alexdev.http.Routes;
 import org.alexdev.http.dao.housekeeping.HousekeepingCFHTopicsDao;
 import org.alexdev.http.dao.housekeeping.HousekeepingLogsDao;
-import org.alexdev.http.dao.housekeeping.HousekeepingPlayerDao;
 import org.alexdev.http.dao.housekeeping.HousekeepingStickieNotesDao;
 import org.alexdev.http.game.housekeeping.HousekeepingManager;
 import org.alexdev.http.game.housekeeping.HousekeepingStickieNote;
@@ -46,9 +45,7 @@ public class HousekeepingStickieNotesController {
         String stickieTextEncoded = MessageEncoderUtil.encodeMessage(stickieText);
 
         boolean showResults = false;
-
         int totalReportsSearch = 0;
-
         String searchCriteria = "";
 
         if (client.post().contains("latest")) {
@@ -64,39 +61,12 @@ public class HousekeepingStickieNotesController {
             String username = client.post().getString("username");
             String showMax = client.post().getString("showMax");
             int showMaxInt = Integer.parseInt(showMax);
-            int query = 0;
-            int userId = 0;
 
             if (!StringUtils.isNumeric(criteria) || (!criteria.equals("1") && !criteria.equals("0"))) {
                 client.session().set("alertColour", "danger");
                 client.session().set("alertMessage", "Please enter a valid criteria.");
                 client.redirect(getStickieNotesPath());
                 return;
-            }
-
-            int criteriaInt = Integer.parseInt(criteria);
-
-            if (criteriaInt == 1) {
-                boolean userExists = false;
-                if (!username.isEmpty()) {
-                    userExists = HousekeepingPlayerDao.CheckDBName(username).equalsIgnoreCase(username);
-                } else {
-                    client.session().set("alertColour", "danger");
-                    client.session().set("alertMessage", "Please enter a valid User name.");
-                    client.redirect(getStickieNotesPath());
-                    return;
-                }
-
-                if (!userExists) {
-                    client.session().set("alertColour", "danger");
-                    client.session().set("alertMessage", "The user does not exist.");
-                    client.redirect(getStickieNotesPath());
-                    return;
-                }
-
-                var playerStickieDetails = PlayerDao.getDetails(username);
-                userId = playerStickieDetails.getId();
-                query = userId;
             }
 
             if (!StringUtils.isNumeric(showMax) || showMaxInt < 1 || showMaxInt > 20) {
@@ -106,17 +76,27 @@ public class HousekeepingStickieNotesController {
                 return;
             }
 
+            int criteriaInt = Integer.parseInt(criteria);
+
             if (criteriaInt == 1) {
                 var playerStickieDetails = PlayerDao.getDetails(username);
-                userId = playerStickieDetails.getId();
-                query = userId;
+
+                if (playerStickieDetails == null) {
+                    client.session().set("alertColour", "danger");
+                    client.session().set("alertMessage", "The user does not exist.");
+                    client.redirect(getStickieNotesPath());
+                    return;
+                }
+
+                criteriaInt = playerStickieDetails.getId();
                 searchCriteria = "stickie owner";
-            } else {
-                query = 0;
+            }
+
+            if (criteriaInt == 0) {
                 searchCriteria = "new";
             }
 
-            List<HousekeepingStickieNote> searchReports = HousekeepingStickieNotesDao.searchStickieNotes(query, showMaxInt, stickieText);
+            List<HousekeepingStickieNote> searchReports = HousekeepingStickieNotesDao.searchStickieNotes(criteriaInt, showMaxInt, stickieText);
             tpl.set("searchReports", searchReports);
             showResults = true;
             totalReportsSearch = searchReports.size();
