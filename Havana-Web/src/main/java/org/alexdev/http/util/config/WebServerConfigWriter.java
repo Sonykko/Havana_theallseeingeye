@@ -29,6 +29,9 @@ public class WebServerConfigWriter implements ConfigWriter {
         config.put("template.name", "default-en");
 
         config.put("page.encoding", "utf-8");
+
+        config.put("discordapp.client.id", "0");
+        config.put("discordapp.client.secret", "0");
         return config;
     }
 
@@ -57,6 +60,9 @@ public class WebServerConfigWriter implements ConfigWriter {
         writer.println("template.name=" + config.get("template.name"));
         writer.println("");
         writer.println("page.encoding=" + config.get("page.encoding"));
+        writer.println("");
+        writer.println("discordapp.client.id=" + config.get("discordapp.client.id"));
+        writer.println("discordapp.client.secret=" + config.get("discordapp.client.secret"));
         writer.flush();
         writer.close();
     }

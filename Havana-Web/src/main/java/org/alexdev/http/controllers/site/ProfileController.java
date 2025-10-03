@@ -17,6 +17,7 @@ import org.alexdev.havana.server.rcon.messages.RconHeader;
 import org.alexdev.havana.util.DateUtil;
 import org.alexdev.havana.util.StringUtil;
 import org.alexdev.havana.util.config.GameConfiguration;
+import org.alexdev.havana.util.config.ServerConfiguration;
 import org.alexdev.http.dao.SessionDao;
 import org.alexdev.http.util.*;
 import org.apache.commons.lang3.StringUtils;
@@ -502,7 +503,7 @@ public class ProfileController {
             webConnection.session().set("alertMessage", "This email is already used for a trade pass.");
             webConnection.session().set("alertColour", "red");
         } else if (!playerDetails.discordVerified) {
-            webConnection.session().set("alertMessage", "Please <a href=\"https://discordapp.com/api/oauth2/authorize?client_id=1082753885657124975&redirect_uri=" + GameConfiguration.getInstance().getString("site.path") + "/api/discord&response_type=code&scope=identify\">link your account with Discord</a> in order to turn trading on");
+            webConnection.session().set("alertMessage", "Please <a href=\"https://discordapp.com/api/oauth2/authorize?client_id=" + ServerConfiguration.getString("discordapp.client.id") + "&redirect_uri=" + GameConfiguration.getInstance().getString("site.path") + "/api/discord&response_type=code&scope=identify\">link your account with Discord</a> in order to turn trading on");
             webConnection.session().set("alertColour", "red");
         } else {
             webConnection.session().set("alertMessage", "Security settings updated successfully");

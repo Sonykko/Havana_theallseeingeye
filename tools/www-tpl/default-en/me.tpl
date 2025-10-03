@@ -277,7 +277,7 @@
                               {% elseif playerDetails.discordVerified == true %}
                               <li class="small" id="feed-trading-disabled">Trading is off. <a href="{{ site.sitePath }}/profile?tab=6" title="">Click here to turn it on</a></li>
                               {% else %}
-                              <li class="small" id="feed-trading-disabled">Trading is off. Please <a href="https://discordapp.com/api/oauth2/authorize?client_id=1082753885657124975&redirect_uri={{ site.sitePath }}/api/discord&response_type=code&scope=identify">link your account with Discord</a> in order to turn it on</a></li>
+                              <li class="small" id="feed-trading-disabled">Trading is off. Please <a href="https://discordapp.com/api/oauth2/authorize?client_id={{ site.discordappId }}&redirect_uri={{ site.sitePath }}/api/discord&response_type=code&scope=identify">link your account with Discord</a> in order to turn it on</a></li>
                               {% endif %}
                               <!-- <li class="small" id="feed-flashbeta-invites">This server is currently in beta, some features may not be operating correctly. You may also expect spontaneous maintenance periods.</li> -->
                               <li class="small" id="feed-lastlogin">

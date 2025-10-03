@@ -19,6 +19,7 @@ import org.alexdev.havana.game.player.PlayerDetails;
 import org.alexdev.havana.server.rcon.RconConnectionHandler;
 import org.alexdev.havana.server.rcon.messages.RconHeader;
 import org.alexdev.havana.util.config.GameConfiguration;
+import org.alexdev.havana.util.config.ServerConfiguration;
 import org.alexdev.http.util.RconUtil;
 import org.alexdev.http.util.SessionUtil;
 
@@ -30,8 +31,8 @@ public class DiscordController {
 
         try {
             var data = 
-                "client_id=" + URLEncoder.encode("CHANGE ME", "UTF-8") + "&" +
-                "client_secret=" + URLEncoder.encode("CHANGE ME", "UTF-8") + "&" +
+                "client_id=" + URLEncoder.encode(ServerConfiguration.getString("discordapp.client.id"), "UTF-8") + "&" +
+                "client_secret=" + URLEncoder.encode(ServerConfiguration.getString("discordapp.client.secret"), "UTF-8") + "&" +
                 "grant_type=" + URLEncoder.encode("authorization_code", "UTF-8") + "&" +
                 "code=" + URLEncoder.encode(code, "UTF-8") + "&" +
                 "redirect_uri=" + URLEncoder.encode(GameConfiguration.getInstance().getString("site.path") + "/api/discord", "UTF-8") + "&" +

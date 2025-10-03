@@ -3,6 +3,7 @@ package org.alexdev.http.template.binders;
 import org.alexdev.duckhttpd.server.connection.WebConnection;
 import org.alexdev.duckhttpd.template.Template;
 import org.alexdev.duckhttpd.template.TemplateBinder;
+import org.alexdev.havana.util.config.ServerConfiguration;
 import org.alexdev.http.HavanaWeb;
 import org.alexdev.http.Routes;
 import org.alexdev.http.dao.BannersDao;
@@ -60,6 +61,8 @@ public class SiteBinder implements TemplateBinder {
     private boolean hkNewStyle;
     private String hkBuild;
 
+    private String discordappId;
+
     @Override
     public void onRegister(Template template, WebConnection webConnection) {
         this.captcha = new Captcha();
@@ -106,6 +109,8 @@ public class SiteBinder implements TemplateBinder {
 
         this.hkNewStyle = GameConfiguration.getInstance().getBoolean("hk.new.style.enabled");
         this.hkBuild = HavanaWeb.THEALLSEEINGEYE_BUILD;
+
+        this.discordappId = ServerConfiguration.getString("discordapp.client.id");
 
         template.set("site", this);
         template.set("gameConfig", GameConfiguration.getInstance());
@@ -241,5 +246,9 @@ public class SiteBinder implements TemplateBinder {
 
     public String getHKBuild() {
         return this.hkBuild;
+    }
+
+    public String getDiscordappId() {
+        return this.discordappId;
     }
 }

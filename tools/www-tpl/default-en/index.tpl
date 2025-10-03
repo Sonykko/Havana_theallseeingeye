@@ -150,7 +150,7 @@ body { behavior: url({{ site.staticContentPath }}/web-gallery/js/csshover.htc); 
 }
 </style>
 <a class="discord-login"
-href="https://discordapp.com/api/oauth2/authorize?client_id=1082753885657124975&redirect_uri=http://localhost/api/discord&response_type=code&scope=identify">Sign in with Discord &raquo;</a>
+href="https://discordapp.com/api/oauth2/authorize?client_id={{ site.discordappId }}&redirect_uri={{ site.sitePath }}/api/discord&response_type=code&scope=identify">Sign in with Discord &raquo;</a>
 <div id="remember-me-notification" class="bottom-bubble" style="display:none;">
 	<div class="bottom-bubble-t"><div></div></div>
 	<div class="bottom-bubble-c">
