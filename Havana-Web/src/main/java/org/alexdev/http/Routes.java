@@ -352,6 +352,7 @@ public class Routes {
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/cfh_logs", HousekeepingCFHController::cfh_logs);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/cfh_actions", HousekeepingCFHController::cfh_actions);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/cfh_mods", HousekeepingCFHController::cfh_mods);
+        RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/cfh_topics", HousekeepingCFHTopicsController::cfh_topics);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/users", HousekeepingUsersController::users);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/users/search", HousekeepingUsersController::search);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/users/create", HousekeepingUsersController::create);
