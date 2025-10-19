@@ -100,7 +100,10 @@
 			{% endif %}
 			{% if (housekeepingManager.hasPermission(playerDetails.getRank(), 'trusted_person/manage')) and (playerDetails.getId() == 1) %}
 			<text><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/trusted_person" class="subnav-link">Trusted person admin</a></text>
-			{% endif %}					
+			{% endif %}
+			{% if housekeepingManager.hasPermission(playerDetails.getRank(), 'cfh/topics') %}
+			<text><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/cfh_topics" class="subnav-link">CFH topics tool</a></text>
+			{% endif %}
       </div>
     </div>
 {% endif %}
