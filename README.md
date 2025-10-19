@@ -113,6 +113,11 @@ Developed by Sonykko.
         - Archive report
         - Delete reports
         - Reemplace Discussion Post
+    - CFH topics tool
+        - Create topic
+        - Search topic
+        - Delete topic
+        - Save topic
 - Campaign management
     - Ads banners tool
         - Create Ads banners
