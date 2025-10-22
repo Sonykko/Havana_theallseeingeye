@@ -118,7 +118,11 @@ public class HousekeepingCFHTopicsController {
             return;
         }
 
-        HousekeepingCFHTopicsDao.save(topic.getId(), sanctionReasonId, sanctionReasonValue, sanctionReasonDesc);
+        topic.setSanctionReasonId(sanctionReasonId);
+        topic.setSanctionReasonValue(sanctionReasonValue);
+        topic.setSanctionReasonDesc(sanctionReasonDesc);
+
+        HousekeepingCFHTopicsDao.save(topic);
 
         HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Updated the CFH topic with the ID " + topic.getId() + ". URL: " + client.request().uri(), client.getIpAddress());
 
@@ -145,7 +149,7 @@ public class HousekeepingCFHTopicsController {
         HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Deleted the CFH topic with the ID " + topic.getId() + ". URL: " + client.request().uri(), client.getIpAddress());
 
         client.session().set("alertColour", "success");
-        client.session().set("alertMessage", "Successfully deleted the CFH topic with the ID " + topic.getId());
+        client.session().set("alertMessage", "Successfully deleted the CFH topic");
         client.redirect(getCFHTopicsPath());
     }
 }

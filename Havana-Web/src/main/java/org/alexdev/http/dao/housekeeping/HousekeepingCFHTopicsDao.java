@@ -115,17 +115,17 @@ public class HousekeepingCFHTopicsDao {
         return topics;
     }
 
-    public static void save(int topicId, String sanctionReasonId, String sanctionReasonValue, String sanctionReasonDesc) {
+    public static void save(HousekeepingCFHTopics topic) {
         Connection sqlConnection = null;
         PreparedStatement preparedStatement = null;
 
         try {
             sqlConnection = Storage.getStorage().getConnection();
             preparedStatement = Storage.getStorage().prepare("UPDATE bans_reasons SET sanctionReasonId = ?, sanctionReasonValue = ?, sanctionReasonDesc = ? WHERE id = ?", sqlConnection);
-            preparedStatement.setString(1, sanctionReasonId);
-            preparedStatement.setString(2, sanctionReasonValue);
-            preparedStatement.setString(3, sanctionReasonDesc);
-            preparedStatement.setInt(4, topicId);
+            preparedStatement.setString(1, topic.getSanctionReasonId());
+            preparedStatement.setString(2, topic.getSanctionReasonValue());
+            preparedStatement.setString(3, topic.getSanctionReasonDesc());
+            preparedStatement.setInt(4, topic.getId());
             preparedStatement.execute();
         } catch (Exception e) {
             Storage.logError(e);

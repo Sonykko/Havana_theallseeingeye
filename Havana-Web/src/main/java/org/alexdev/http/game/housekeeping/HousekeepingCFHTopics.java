@@ -2,9 +2,9 @@ package org.alexdev.http.game.housekeeping;
 
 public class HousekeepingCFHTopics {
     private final int id;
-    private final String sanctionReasonId;
-    private final String sanctionReasonValue;
-    private final String sanctionReasonDesc;
+    private String sanctionReasonId;
+    private String sanctionReasonValue;
+    private String sanctionReasonDesc;
 
     public HousekeepingCFHTopics(int id, String sanctionReasonId, String sanctionReasonValue, String sanctionReasonDesc) {
         this.id = id;
@@ -27,5 +27,17 @@ public class HousekeepingCFHTopics {
 
     public String getSanctionReasonDesc() {
         return sanctionReasonDesc;
+    }
+
+    public void setSanctionReasonId(String sanctionReasonId) {
+        this.sanctionReasonId = sanctionReasonId;
+    }
+
+    public void setSanctionReasonValue(String sanctionReasonValue) {
+        this.sanctionReasonValue = sanctionReasonValue;
+    }
+
+    public void setSanctionReasonDesc(String sanctionReasonDesc) {
+        this.sanctionReasonDesc = sanctionReasonDesc;
     }
 }
