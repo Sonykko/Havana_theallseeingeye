@@ -97,8 +97,8 @@
 			<p><i>No results found to display.</i></p>
 			{% endif %}
 		  <hr />
-          <p><b>List of current wordfilter</p></b>
-		  <p>The Wordfilter list is seen below.</p>
+          <p><b>List of current words</p></b>
+		  <p>This tool allow you to see the complete list of all current words in the Wordfilter.</p>
 		  <div class="pagination-buttons-box">
 		  {% if nextWords|length > 0 %}
 				{% set ourNextPage = page + 1 %}
