@@ -42,7 +42,7 @@
 				<input type="text" name="searchStr" id="searchStr" />
 				{% endautoescape %}
 			</div>
-			<button type="submit" name="action" value="searchTopic">Submit</button>
+			<button type="submit" name="action" value="searchWord">Submit</button>
 		</form>		  
 		  {% if searchWordsDetails|length > 0 %}
 		  <br />
