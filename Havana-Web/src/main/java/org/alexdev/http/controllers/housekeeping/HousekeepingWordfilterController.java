@@ -53,6 +53,7 @@ public class HousekeepingWordfilterController {
 
         if ("saveWord".equals(action)) {
             saveWord(client, playerDetails);
+            return;
         }
 
         int currentPage = 0;
