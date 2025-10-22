@@ -152,7 +152,7 @@ public class HousekeepingWordfilterDao {
 
         try {
             sqlConnection = Storage.getStorage().getConnection();
-            preparedStatement = Storage.getStorage().prepare("SELECT * FROM wordfilter WHERE word LIKE ? OR id = ? LIMIT 50", sqlConnection);
+            preparedStatement = Storage.getStorage().prepare("SELECT * FROM wordfilter WHERE word LIKE ? OR id = ? LIMIT 20", sqlConnection);
             preparedStatement.setString(1, query + "%");
             preparedStatement.setString(2, query + "%");
 

@@ -7,7 +7,7 @@
 		{% include "housekeeping/base/alert.tpl" %}
 		<br />
 		<p><b>Create word</b></p>
-		<p>Here you can add a word to Wordfilter.</p>
+		<p>This tool allows you to add a word to Wordfilter.</p>
 		<div class="alert__tool">
 			<form class="alert__tool__form" method="post">
 				<div class="alert__tool__recipient">
@@ -60,7 +60,7 @@
 					</thead>
 					<tbody>
 						{% set num = 1 %}
-						{% for word in Words %}
+						{% for word in searchWordsDetails %}
 						<tr>
 						{% autoescape 'html' %}
 						<form method="post">
