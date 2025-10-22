@@ -5,10 +5,11 @@
 	{% include "housekeeping/base/navigation_admin_tools.tpl" %}
 	     <h2 class="mt-4">Wordfilter tool</h2>
 		{% include "housekeeping/base/alert.tpl" %}
+		<br />
 		<p><b>Create word</b></p>
 		<p>Here you can add a word to Wordfilter.</p>
 		<div class="alert__tool">
-			<form class="alert__tool__form" method="post">	
+			<form class="alert__tool__form" method="post">
 				<div class="alert__tool__recipient">
 					<label for="word">The word</label>
 					<input type="text" name="addword" class="" id="addword" value="" />
@@ -19,14 +20,14 @@
 						<option value="true">Yes</option>
 						<option value="false">No</option>
 					</select>
-				</div>								
+				</div>
 				<div class="alert__tool__commonmessage">
 					<select name="isFilterable" id="isFilterable">
 						<option value="" disabled selected>Is Filterable?</option>
 						<option value="true">Yes</option>
 						<option value="false">No</option>
-					</select>				
-				</div>	
+					</select>
+				</div>
 				<div class="alert__tool__submit">
 					<button type="submit" name="action" value="addWord">Add</button>
 				</div>
@@ -43,7 +44,7 @@
 				{% endautoescape %}
 			</div>
 			<button type="submit" name="action" value="searchWord">Submit</button>
-		</form>		  
+		</form>
 		  {% if searchWordsDetails|length > 0 %}
 		  <br />
 		  <p>Words starting with '{{ query }}' or with id '{{ query }}'</p>
@@ -64,22 +65,22 @@
 						{% autoescape 'html' %}
 						<form method="post">
 						  <input type="hidden" name="wordId" value="{{ word.getId() }}" />
-						  <td>{{ word.getId() }}</td>                               
+						  <td>{{ word.getId() }}</td>
 						  <td>
-							<input type="text" name="saveWord" class="form-control" id="saveWord" placeholder="Enter here the word..." value="{{ word.getWord() }}" />
-						  </td>                                			 
+							<input type="text" name="saveWord" id="saveWord" value="{{ word.getWord() }}" style="width:100%;" />
+						  </td>
 						  <td>
 							<select name="isBannable" id="isBannable">
 								<option value="true" {% if word.isBannable() %}selected{% endif %}>Yes</option>
 								<option value="false" {% if word.isBannable() != true %}selected{% endif %}>No</option>
 							</select>
-						  </td>                 			 
+						  </td>
 						  <td>
 							<select name="isFilterable" id="isFilterable">
 								<option value="true" {% if word.isFilterable() %}selected{% endif %}>Yes</option>
 								<option value="false" {% if word.isFilterable() != true %}selected{% endif %}>No</option>
 							</select>
-						  </td>                 			                  			 
+						  </td>
 						  <td>
 							<button type="submit" name="action" value="saveWord">Save</button>
 							<button type="submit" name="action" value="deleteWord">Delete</button>
@@ -97,8 +98,8 @@
 			<p><i>No results found to display.</i></p>
 			{% endif %}
 		  <hr />
-          <p><b>List of current wordfilter</p></b>
-		  <p>The Wordfilter list is seen below.</p>
+          <p><b>List of current words</p></b>
+		  <p>This tool allow you to see the complete list of all current words in the Wordfilter.</p>
 		  <div class="pagination-buttons-box">
 		  {% if nextWords|length > 0 %}
 				{% set ourNextPage = page + 1 %}
@@ -127,22 +128,22 @@
                 <tr>
 				<form method="post">
 				  <input type="hidden" name="wordId" value="{{ word.getId() }}" />
-				  <td>{{ word.getId() }}</td>                               
+				  <td>{{ word.getId() }}</td>
 				  <td>
-					<input type="text" name="saveWord" class="form-control" id="saveWord" placeholder="Enter here the word..." value="{{ word.getWord() }}" />
-				  </td>                                			 
+					<input type="text" name="saveWord" id="saveWord" value="{{ word.getWord() }}" style="width:100%;" />
+				  </td>
 				  <td>
 					<select name="isBannable" id="isBannable">
 						<option value="true" {% if word.isBannable() %}selected{% endif %}>Yes</option>
 						<option value="false" {% if word.isBannable() != true %}selected{% endif %}>No</option>
 					</select>
-				  </td>                 			 
+				  </td>
 				  <td>
 					<select name="isFilterable" id="isFilterable">
 						<option value="true" {% if word.isFilterable() %}selected{% endif %}>Yes</option>
 						<option value="false" {% if word.isFilterable() != true %}selected{% endif %}>No</option>
 					</select>
-				  </td>                 			                  			 
+				  </td>
 				  <td>
 					<button type="submit" name="action" value="saveWord">Save</button>
 					<button type="submit" name="action" value="deleteWord">Delete</button>
@@ -150,14 +151,14 @@
 				</form>
                 </tr>
 			   {% set num = num + 1 %}
-			   
+
 			   {% endfor %}
               </tbody>
             </table>
 		  </div>
 		  {% else %}
 		  <p><i>Nothing found to display.</i></p>
-		  {% endif %} 
+		  {% endif %}
     </div>
   </div>
 </body>
