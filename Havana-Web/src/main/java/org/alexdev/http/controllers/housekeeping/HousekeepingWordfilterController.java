@@ -42,8 +42,8 @@ public class HousekeepingWordfilterController {
             return;
         }
 
-        if ("searchTopic".equals(action)) {
-            searchTopic(client, tpl);
+        if ("searchWord".equals(action)) {
+            searchWord(client, tpl);
         }
 
         if ("deleteWord".equals(action)) {
@@ -145,7 +145,7 @@ public class HousekeepingWordfilterController {
         client.redirect(getWordfilterPath());
     }
 
-    private static void searchTopic(WebConnection client, Template tpl) {
+    private static void searchWord(WebConnection client, Template tpl) {
         String query = client.post().getString("searchStr");
 
         if (StringUtils.isEmpty(query)) {
