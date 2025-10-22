@@ -17,28 +17,30 @@ public class HousekeepingWordfilterDao {
         int rows = 20;
         int nextOffset = page * rows;
 
-        Connection sqlConnection = null;
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet = null;
+        if (nextOffset >= 0) {
+            Connection sqlConnection = null;
+            PreparedStatement preparedStatement = null;
+            ResultSet resultSet = null;
 
-        try {
-            sqlConnection = Storage.getStorage().getConnection();
-            preparedStatement = Storage.getStorage().prepare("SELECT * FROM wordfilter ORDER BY " + sortBy + " " + orderBy + " LIMIT ? OFFSET ?", sqlConnection);
-            preparedStatement.setInt(1, rows);
-            preparedStatement.setInt(2, nextOffset);
+            try {
+                sqlConnection = Storage.getStorage().getConnection();
+                preparedStatement = Storage.getStorage().prepare("SELECT * FROM wordfilter ORDER BY " + sortBy + " " + orderBy + " LIMIT ? OFFSET ?", sqlConnection);
+                preparedStatement.setInt(1, rows);
+                preparedStatement.setInt(2, nextOffset);
 
-            resultSet = preparedStatement.executeQuery();
+                resultSet = preparedStatement.executeQuery();
 
-            while (resultSet.next()) {
-                wordfilterList.add(fill(resultSet));
+                while (resultSet.next()) {
+                    wordfilterList.add(fill(resultSet));
+                }
+
+            } catch (Exception e) {
+                Storage.logError(e);
+            } finally {
+                Storage.closeSilently(resultSet);
+                Storage.closeSilently(preparedStatement);
+                Storage.closeSilently(sqlConnection);
             }
-
-        } catch (Exception e) {
-            Storage.logError(e);
-        } finally {
-            Storage.closeSilently(resultSet);
-            Storage.closeSilently(preparedStatement);
-            Storage.closeSilently(sqlConnection);
         }
 
         return wordfilterList;
@@ -139,6 +141,36 @@ public class HousekeepingWordfilterDao {
         }
 
         return wordfilter;
+    }
+
+    public static List<HousekeepingWordfilter> searchWords(String query) {
+        List<HousekeepingWordfilter> words = new ArrayList<>();
+
+        Connection sqlConnection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+
+        try {
+            sqlConnection = Storage.getStorage().getConnection();
+            preparedStatement = Storage.getStorage().prepare("SELECT * FROM wordfilter WHERE word LIKE ? OR id = ? LIMIT 50", sqlConnection);
+            preparedStatement.setString(1, query + "%");
+            preparedStatement.setString(2, query + "%");
+
+            resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                words.add(fill(resultSet));
+            }
+
+        } catch (Exception e) {
+            Storage.logError(e);
+        } finally {
+            Storage.closeSilently(resultSet);
+            Storage.closeSilently(preparedStatement);
+            Storage.closeSilently(sqlConnection);
+        }
+
+        return words;
     }
 
     public static void saveWord(String saveWord, boolean isBannable, boolean isFilterable, int wordId) {
