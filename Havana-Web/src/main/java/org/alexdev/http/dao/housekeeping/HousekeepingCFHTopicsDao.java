@@ -92,7 +92,7 @@ public class HousekeepingCFHTopicsDao {
 
         try {
             sqlConnection = Storage.getStorage().getConnection();
-            preparedStatement = Storage.getStorage().prepare("SELECT * FROM bans_reasons WHERE sanctionReasonId LIKE ? OR sanctionReasonValue LIKE ? OR sanctionReasonDesc LIKE ? OR id = ? LIMIT 50", sqlConnection);
+            preparedStatement = Storage.getStorage().prepare("SELECT * FROM bans_reasons WHERE sanctionReasonId LIKE ? OR sanctionReasonValue LIKE ? OR sanctionReasonDesc LIKE ? OR id = ? LIMIT 20", sqlConnection);
             preparedStatement.setString(1, query + "%");
             preparedStatement.setString(2, query + "%");
             preparedStatement.setString(3, query + "%");
