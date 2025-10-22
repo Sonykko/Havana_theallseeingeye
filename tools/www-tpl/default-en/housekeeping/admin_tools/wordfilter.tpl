@@ -5,53 +5,99 @@
 	{% include "housekeeping/base/navigation_admin_tools.tpl" %}
 	     <h2 class="mt-4">Wordfilter tool</h2>
 		{% include "housekeeping/base/alert.tpl" %}
-		{% if isWordEdit %}
-		<p>Here you can edit word from Wordfilter.</p>
-		<form class="table-responsive col-md-4" method="post">
-			<div class="form-group">
-				<label>Word</label>
-				<input type="text" name="saveWord" class="form-control" id="saveWord" placeholder="Enter here the word..." value="{{ wordEdit.getWord() }}" />
-			</div>
-			<div class="form-group">
-				<label>Is Bannable?</label>
-				<select name="isBannable" id="isBannable" class="form-control">
-					<option value="1" {% if wordEdit.isBannable() %}selected{% endif %}>Yes</option>
-					<option value="0" {% if wordEdit.isBannable() == false %}selected{% endif %}>No</option>
-				</select>
-			</div>
-			<div class="form-group">
-				<label>Is Filterable?</label>
-				<select name="isFilterable" id="isFilterable" class="form-control">
-					<option value="1" {% if wordEdit.isFilterable() %}selected{% endif %}>Yes</option>
-					<option value="0" {% if wordEdit.isFilterable() == false %}selected{% endif %}>No</option>
-				</select>
-			</div>
-			<button type="submit">Save Word</button>
-		</form>
-		{% else %}
+		<p><b>Create word</b></p>
 		<p>Here you can add a word to Wordfilter.</p>
-		<form class="table-responsive col-md-4" method="post">
-			<div class="form-group">
-				<label>Word</label>
-				<input type="text" name="addword" class="form-control" id="addword" placeholder="Enter here the word..." />
+		<div class="alert__tool">
+			<form class="alert__tool__form" method="post">	
+				<div class="alert__tool__recipient">
+					<label for="word">The word</label>
+					<input type="text" name="addword" class="" id="addword" value="" />
+				</div>
+				<div class="alert__tool__commonmessage">
+					<select name="isBannable" id="isBannable">
+						<option value="" disabled selected>Is Bannable?</option>
+						<option value="true">Yes</option>
+						<option value="false">No</option>
+					</select>
+				</div>								
+				<div class="alert__tool__commonmessage">
+					<select name="isFilterable" id="isFilterable">
+						<option value="" disabled selected>Is Filterable?</option>
+						<option value="true">Yes</option>
+						<option value="false">No</option>
+					</select>				
+				</div>	
+				<div class="alert__tool__submit">
+					<button type="submit" name="action" value="addWord">Add</button>
+				</div>
+			 </form>
+		</div>
+		<hr />
+		  <p><b>Find word</b></p>
+		  <p>This tool allows you to search a word with letter starting or by id.</p>
+		<form class="" method="post" style="display: flex;gap: 10px;align-items: center;">
+			<div class="">
+				<label>Search</label>
+				{% autoescape 'html' %}
+				<input type="text" name="searchStr" id="searchStr" />
+				{% endautoescape %}
 			</div>
-			<div class="form-group">
-				<label>Is Bannable?</label>
-				<select name="isBannable" id="isBannable" class="form-control">
-					<option value="1">Yes</option>
-					<option value="0" selected>No</option>
-				</select>
-			</div>
-			<div class="form-group">
-				<label>Is Filterable?</label>
-				<select name="isFilterable" id="isFilterable" class="form-control">
-					<option value="1" selected>Yes</option>
-					<option value="0">No</option>
-				</select>
-			</div>
-			<button type="submit">Add Word</button>
-		</form>
-          <h2 class="mt-4">Edit words</h2>
+			<button type="submit" name="action" value="searchTopic">Submit</button>
+		</form>		  
+		  {% if searchWordsDetails|length > 0 %}
+		  <br />
+		  <p>Words starting with '{{ query }}' or with id '{{ query }}'</p>
+				<table class="table table-striped">
+					<thead>
+						<tr>
+						  <th>ID</a></th>
+						  <th>Word</a></th>
+						  <th>Is Bannable?</th>
+						  <th>Is Filterable?</th>
+						  <th></th>
+						</tr>
+					</thead>
+					<tbody>
+						{% set num = 1 %}
+						{% for word in Words %}
+						<tr>
+						{% autoescape 'html' %}
+						<form method="post">
+						  <input type="hidden" name="wordId" value="{{ word.getId() }}" />
+						  <td>{{ word.getId() }}</td>                               
+						  <td>
+							<input type="text" name="saveWord" class="form-control" id="saveWord" placeholder="Enter here the word..." value="{{ word.getWord() }}" />
+						  </td>                                			 
+						  <td>
+							<select name="isBannable" id="isBannable">
+								<option value="true" {% if word.isBannable() %}selected{% endif %}>Yes</option>
+								<option value="false" {% if word.isBannable() != true %}selected{% endif %}>No</option>
+							</select>
+						  </td>                 			 
+						  <td>
+							<select name="isFilterable" id="isFilterable">
+								<option value="true" {% if word.isFilterable() %}selected{% endif %}>Yes</option>
+								<option value="false" {% if word.isFilterable() != true %}selected{% endif %}>No</option>
+							</select>
+						  </td>                 			                  			 
+						  <td>
+							<button type="submit" name="action" value="saveWord">Save</button>
+							<button type="submit" name="action" value="deleteWord">Delete</button>
+						</td>
+						</form>
+						{% endautoescape %}
+						</tr>
+						{% set num = num + 1 %}
+						{% endfor %}
+					</tbody>
+				</table>
+				{% endif %}
+			{% if searchEmpty %}
+			<br>
+			<p><i>No results found to display.</i></p>
+			{% endif %}
+		  <hr />
+          <p><b>List of current wordfilter</p></b>
 		  <p>The Wordfilter list is seen below.</p>
 		  <div class="pagination-buttons-box">
 		  {% if nextWords|length > 0 %}
@@ -79,14 +125,29 @@
 			    {% set num = 1 %}
 				{% for word in Words %}
                 <tr>
+				<form method="post">
+				  <input type="hidden" name="wordId" value="{{ word.getId() }}" />
 				  <td>{{ word.getId() }}</td>                               
-				  <td>{{ word.getWord() }}</td>                                			 
-				  <td>{% if word.isBannable() %}Yes{% else %}No{% endif %}</td>                 			 
-				  <td>{% if word.isFilterable() %}Yes{% else %}No{% endif %}</td>                 			                  			 
 				  <td>
-					<a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/wordfilter?edit={{ word.getId() }}" style="color:black;"><button type="button">Edit</button></a>
-					<a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/wordfilter?delete={{ word.getId() }}" style="color:black;"><button type="button">Delete</button></a>
+					<input type="text" name="saveWord" class="form-control" id="saveWord" placeholder="Enter here the word..." value="{{ word.getWord() }}" />
+				  </td>                                			 
+				  <td>
+					<select name="isBannable" id="isBannable">
+						<option value="true" {% if word.isBannable() %}selected{% endif %}>Yes</option>
+						<option value="false" {% if word.isBannable() != true %}selected{% endif %}>No</option>
+					</select>
+				  </td>                 			 
+				  <td>
+					<select name="isFilterable" id="isFilterable">
+						<option value="true" {% if word.isFilterable() %}selected{% endif %}>Yes</option>
+						<option value="false" {% if word.isFilterable() != true %}selected{% endif %}>No</option>
+					</select>
+				  </td>                 			                  			 
+				  <td>
+					<button type="submit" name="action" value="saveWord">Save</button>
+					<button type="submit" name="action" value="deleteWord">Delete</button>
 				</td>
+				</form>
                 </tr>
 			   {% set num = num + 1 %}
 			   
@@ -97,7 +158,6 @@
 		  {% else %}
 		  <p><i>Nothing found to display.</i></p>
 		  {% endif %} 
-	  {% endif %}
     </div>
   </div>
 </body>
