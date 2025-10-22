@@ -198,7 +198,7 @@ public class HousekeepingWordfilterController {
         word.setIsBannable(isBannable);
         word.setIsFilterable(isFilterable);
 
-        HousekeepingWordfilterDao.saveWord(saveWord, isBannable, isFilterable, wordId);
+        HousekeepingWordfilterDao.saveWord(word);
         HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Edited the word " + saveWord + " of Wordfilter. URL: " + client.request().uri(), client.getIpAddress());
 
         RconUtil.sendCommand(RconHeader.REFRESH_WORDFILTER, new HashMap<>() {});
