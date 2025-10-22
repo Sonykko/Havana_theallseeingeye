@@ -173,7 +173,7 @@ public class HousekeepingWordfilterDao {
         return words;
     }
 
-    public static void saveWord(String saveWord, boolean isBannable, boolean isFilterable, int wordId) {
+    public static void saveWord(HousekeepingWordfilter word) {
         Connection sqlConnection = null;
         PreparedStatement preparedStatement = null;
 
@@ -183,10 +183,10 @@ public class HousekeepingWordfilterDao {
                     "UPDATE wordfilter SET word = ?, is_bannable = ?, is_filterable = ? WHERE id = ?",
                     sqlConnection
             );
-            preparedStatement.setString(1, saveWord);
-            preparedStatement.setBoolean(2, isBannable);
-            preparedStatement.setBoolean(3, isFilterable);
-            preparedStatement.setInt(4, wordId);
+            preparedStatement.setString(1, word.getWord());
+            preparedStatement.setBoolean(2, word.isBannable());
+            preparedStatement.setBoolean(3, word.isFilterable());
+            preparedStatement.setInt(4, word.getId());
             preparedStatement.execute();
         } catch (Exception e) {
             Storage.logError(e);
