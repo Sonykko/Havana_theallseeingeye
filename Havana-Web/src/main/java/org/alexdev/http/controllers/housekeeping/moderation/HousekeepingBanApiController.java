@@ -33,7 +33,7 @@ public class HousekeepingBanApiController {
             String message = GameConfiguration.getInstance().getString("rcon.superban.message");
 
             if (playerDetails.getId() == banningPlayerDetails.getId()) {
-                client.send("Can't superban yourself.");
+                client.send("Can't superban yourself");
                 return;
             }
 
@@ -46,7 +46,7 @@ public class HousekeepingBanApiController {
             return;
         }
 
-        client.send("User doesn't exist");
+        client.send("Player doesn't exist");
     }
 
     public static void banuser(WebConnection client) {
@@ -72,7 +72,7 @@ public class HousekeepingBanApiController {
             boolean doBanIP = client.get().getBoolean("doBanIP");
 
             if (playerDetails.getId() == banningPlayerDetails.getId()) {
-                client.send("Can't ban yourself.");
+                client.send("Can't ban yourself");
                 return;
             }
 
@@ -85,11 +85,11 @@ public class HousekeepingBanApiController {
 
             client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/" + redirect);
             client.session().set("alertColour", "success");
-            client.session().set("alertMessage", "The user " + playerDetails.getName() + " has been banned.");
+            client.session().set("alertMessage", "The player " + playerDetails.getName() + " has been banned.");
             return;
         }
 
-        client.send("User doesn't exist");
+        client.send("Player doesn't exist");
     }
 
     public static void massBanuser(WebConnection client) {
@@ -98,32 +98,34 @@ public class HousekeepingBanApiController {
             client.send("");
         }
 
+        String redirect =  client.get().getString("redirect");
+        if (redirect.isEmpty()) {
+            redirect = "mass_ban";
+        }
+
         int banningId = client.session().getInt("user.id");
         PlayerDetails staffDetails = PlayerManager.getInstance().getPlayerData(banningId);
 
         Map<String, String> params = client.get().getValues();
         String users = params.get("usernames");
+
+        if (!users.startsWith("[") && !users.endsWith("]") || users.equals("[]")) {
+            client.send("Invalid params");
+            return;
+        }
+
         List<String> usernames = ModerationApiUtil.splitUsernames(users);
 
         for (String username : usernames) {
-            String redirect =  client.get().getString("redirect");
-            if (redirect.isEmpty()) {
-                redirect = "mass_ban";
-            }
-
             var playerDetails = PlayerDao.getDetails(username);
 
             if (playerDetails == null) {
-                client.session().set("alertColour", "danger");
-                client.session().set("alertMessage", "The user " + username + " does not exist.");
-                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/" + redirect);
+                client.send("Player does not exist");
                 return;
             }
 
             if (playerDetails.getId() == staffDetails.getId()) {
-                client.session().set("alertColour", "warning");
-                client.session().set("alertMessage", "Can't mass ban yourself.");
-                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/" + redirect);
+                client.send("Can't mass ban yourself");
                 return;
             }
 
@@ -142,7 +144,7 @@ public class HousekeepingBanApiController {
             client.send(ModeratorBanUserAction.ban(banningPlayerDetails, alertMessage, notes, playerDetails.getName(), banSeconds, doBanMachine, doBanIP));
 
             client.session().set("alertColour", "success");
-            client.session().set("alertMessage", "The users " + users + " has been banned.");
+            client.session().set("alertMessage", "The players " + users + " has been banned.");
             client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/" + redirect);
             return;
         }
@@ -159,15 +161,19 @@ public class HousekeepingBanApiController {
 
         Map<String, String> params = client.get().getValues();
         String users = params.get("usernames");
+
+        if (!users.startsWith("[") && !users.endsWith("]") || users.equals("[]")) {
+            client.send("Invalid params");
+            return;
+        }
+
         List<String> usernames = ModerationApiUtil.splitUsernames(users);
 
         for (String username : usernames) {
             var playerDetails = PlayerDao.getDetails(username);
 
             if (playerDetails == null) {
-                client.session().set("alertColour", "danger");
-                client.session().set("alertMessage", "The user " + username + " does not exist.");
-                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/mass_unban");
+                client.send("Player does not exist");
                 return;
             }
 
@@ -176,7 +182,7 @@ public class HousekeepingBanApiController {
             HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", staffDetails.getId(), staffDetails.getName(), "Ha desbaneado al " + GameConfiguration.getInstance().getString("site.name") + " '" + username + " (id: " + playerDetails.getId() + ")'. URL: " + client.request().uri(), client.getIpAddress());
 
             client.session().set("alertColour", "success");
-            client.session().set("alertMessage", "The users " + users + " has been unbanned.");
+            client.session().set("alertMessage", "The players " + users + " has been unbanned.");
             client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/mass_unban");
             return;
         }
