@@ -40,16 +40,17 @@ public class HousekeepingKickApiController {
         var playerKickDetails = PlayerDao.getDetails(user);
 
         if (playerKickDetails == null) {
-            client.session().set("alertColour", "danger");
-            client.session().set("alertMessage", "The user " + user + " does not exist.");
-            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/bans_kicks");
+            client.send("Player does not exist");
             return;
         }
 
         if (playerKickDetails.getId() == playerDetails.getId()) {
-            client.session().set("alertColour", "warning");
-            client.session().set("alertMessage", "Can't kick yourself.");
-            client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/bans_kicks");
+            client.send("Can't kick yourself");
+            return;
+        }
+
+        if (!playerKickDetails.isOnline()) {
+            client.send("Player not online");
             return;
         }
 
@@ -97,15 +98,28 @@ public class HousekeepingKickApiController {
         Map<String, String> params = client.get().getValues();
         String users = params.get("users");
 
+        if (!users.startsWith("[") && !users.endsWith("]") || users.equals("[]")) {
+            client.send("Invalid params");
+            return;
+        }
+
         List<String> usernames = ModerationApiUtil.splitUsernames(users);
 
         for (String username : usernames) {
             var playerMassKickDetails = PlayerDao.getDetails(username);
 
-            if (playerDetails.getId() == playerMassKickDetails.getId()) {
-                client.session().set("alertColour", "warning");
-                client.session().set("alertMessage", "Can't mass kick yourself.");
-                client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/mass_ban");
+            if (playerMassKickDetails == null) {
+                client.send("Player does not exist");
+                return;
+            }
+
+            if (playerMassKickDetails.getId() == playerDetails.getId()) {
+                client.send("Can't kick yourself");
+                return;
+            }
+
+            if (!playerMassKickDetails.isOnline()) {
+                client.send("Player not online");
                 return;
             }
 

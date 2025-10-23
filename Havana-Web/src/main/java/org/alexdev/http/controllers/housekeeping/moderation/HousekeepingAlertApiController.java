@@ -33,6 +33,18 @@ public class HousekeepingAlertApiController {
         String message = client.get().getString("message");
         String messageEncoded = MessageEncoderUtil.encodeMessage(message);
 
+        var player = PlayerDao.getDetails(user);
+
+        if (player == null) {
+            client.send("Player does not exists");
+            return;
+        }
+
+        if (!player.isOnline()) {
+            client.send("Player not online");
+            return;
+        }
+
         try {
             RconUtil.sendCommand(RconHeader.MOD_ALERT_USER, new HashMap<>() {{
                 put("receiver", user);

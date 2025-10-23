@@ -58,14 +58,14 @@ public class HousekeepingBanKickRCONController {
 
             if (playerKickDetails == null) {
                 client.session().set("alertColour", "danger");
-                client.session().set("alertMessage", "The user does not exists.");
+                client.session().set("alertMessage", "The user does not exists");
                 client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/bans_kicks");
                 return;
             }
 
             if (playerKickDetails.getId() == playerDetails.getId()) {
                 client.session().set("alertColour", "danger");
-                client.session().set("alertMessage", "Can't kick yourself.");
+                client.session().set("alertMessage", "Can't kick yourself");
                 client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/bans_kicks");
                 return;
             }
@@ -176,7 +176,7 @@ public class HousekeepingBanKickRCONController {
             String defaultMessage = GameConfiguration.getInstance().getString("rcon.kick.message");
             String finalMessage = customMessage.isEmpty() && commonMessage.isEmpty() ? defaultMessage : alertMessage;
 
-            if (usernames == null || usernames.isEmpty()) {
+            if (!usernames.toString().startsWith("[") && !usernames.toString().endsWith("]") || usernames.toString().equals("[]")) {
                 client.session().set("alertColour", "danger");
                 client.session().set("alertMessage", "Please enter a valid usernames");
                 client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/mass_ban");
@@ -211,8 +211,6 @@ public class HousekeepingBanKickRCONController {
             return;
         }
 
-        tpl.set("housekeepingManager", HousekeepingManager.getInstance());
-
         tpl.set("pageName", "Mass Ban & Kick Tool");
         tpl.set("CFHTopics", HousekeepingCFHTopicsDao.getCFHTopics());
         tpl.render();
@@ -244,7 +242,7 @@ public class HousekeepingBanKickRCONController {
             List<String> usernames = client.post().getArray("userNames");
             usernames = usernames.stream().map(s -> ModerationApiUtil.replaceLineBreaks(s)).collect(Collectors.toList());
 
-            if (usernames == null || usernames.isEmpty()) {
+            if (!usernames.toString().startsWith("[") && !usernames.toString().endsWith("]") || usernames.toString().equals("[]")) {
                 client.session().set("alertColour", "danger");
                 client.session().set("alertMessage", "Please enter a valid usernames");
                 client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/mass_unban");
