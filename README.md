@@ -63,12 +63,15 @@ Developed by Sonykko.
     - User create (original feature)
     - Wordfilter tool
         - Create word
+        - Search word
         - Edit word
         - Delete word
     - Voucher codes tool
         - Create voucher
             - Credit voucher
             - Item voucher
+        - Search voucher
+        - Delete voucher
     - Group admin (badge editor included)
     - Hobba applications
     - Check Hobba applicant tool
