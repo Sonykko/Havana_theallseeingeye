@@ -2,7 +2,7 @@
 <body>
     {% set bansActive = " active " %}
     {% include "housekeeping/base/navigation.tpl" %}
-    {% include "housekeeping/base/navigation_admin_tools.tpl" %}
+    {% include "housekeeping/base/navigation_admin_tools.tpl" %}		
           <h2 class="mt-4">User Chatlogs</h2>
 		  <p>Here can see the recently chatlogs in rooms and messenger console or conversations with friends from given user.</p>
 		  {% include "housekeeping/base/alert.tpl" %}
@@ -24,8 +24,8 @@
 	<div class="form-group">
     <label for="chatId1">User ID</label>
     <input type="text" name="id1" class="form-control" id="chatId1" placeholder="Enter here an user ID for search messenger conversations with a friend...">
-	</div>
-
+	</div>	
+	
 	<div class="form-group">
     <label for="chatId2">Friend ID</label>
     <input type="text" name="id2" class="form-control" id="chatId2" placeholder="Enter here the friend ID for search messenger conversations with the user...">
@@ -53,7 +53,6 @@
         }
     });
 </script>
-
 {% if userChatlogs|length > 0 %}
 	<hr/>
     <p style="font-size: 16px;"><b>Search Results</b></p>
@@ -71,8 +70,8 @@
     {% for chatlog in userChatlogs %}
         <tr>
 			<td>{{ (chatlog.getDate() * 1000)| date("HH:mm dd/MM/yyyy") }}</td>
-            <td><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/chatlog.action?chatId={{ chatlog.getUserId() }}" style="color:black;"><b>{{ chatlog.getUserName() }}</b> (id: {{ chatlog.getUserId() }})</a></td>
-            <td>{{ chatlog.getBody() }}</td>
+            <td><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/chatlog.action?chatId={{ chatlog.getUserId() }}" style="color:black;"><b>{{ chatlog.getUsername() }}</b> (id: {{ chatlog.getUserId() }})</a></td>
+            <td>{{ chatlog.getBody() }}{{ chatlog.getMessage() }}</td>            
             <td>
                 {% if chatlog.getLogType() == "Chatlog" %}
                     {{ chatlog.getRoomName() }} (id: {{ chatlog.getRoomId() }})
@@ -81,16 +80,16 @@
 				{% elseif chatlog.getLogType() == "Conversation" %}
 				<a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/chatlog.action?chatId={{ chatlog.getFriendId() }}" style="color:black;"><b>{{ chatlog.getFriendName() }}</b> (id: {{ chatlog.getFriendId() }})</a>
                 {% endif %}
-            </td>
+            </td>    
 			<td>
-                {% if chatlog.getLogType() == "Chatlog" %}
+                {% if chatlog.getLogType() == "Chatlog" %}                  
 					<text style="color:limegreen;"><b>Room</b></text>
                 {% elseif chatlog.getLogType() == "MessengerMessage" %}
                     <text style="color:orange;"><b>Messenger</b></text>
 				{% elseif chatlog.getLogType() == "Conversation" %}
                     <text style="color:blue;"><b>Conversation</b></text>
                 {% endif %}
-            </td>
+            </td>			
         </tr>
     {% endfor %}
 </tbody>
