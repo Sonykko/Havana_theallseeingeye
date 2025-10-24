@@ -53,7 +53,6 @@
         }
     });
 </script>
-
 {% if userChatlogs|length > 0 %}
 	<hr/>
     <p style="font-size: 16px;"><b>Search Results</b></p>
@@ -71,8 +70,8 @@
     {% for chatlog in userChatlogs %}
         <tr>
 			<td>{{ (chatlog.getDate() * 1000)| date("HH:mm dd/MM/yyyy") }}</td>
-            <td><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/chatlog.action?chatId={{ chatlog.getUserId() }}" style="color:black;"><b>{{ chatlog.getUserName() }}</b> (id: {{ chatlog.getUserId() }})</a></td>
-            <td>{{ chatlog.getBody() }}</td>
+            <td><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/chatlog.action?chatId={{ chatlog.getUserId() }}" style="color:black;"><b>{{ chatlog.getUsername() }}</b> (id: {{ chatlog.getUserId() }})</a></td>
+            <td>{{ chatlog.getBody() }}{{ chatlog.getMessage() }}</td>
             <td>
                 {% if chatlog.getLogType() == "Chatlog" %}
                     {{ chatlog.getRoomName() }} (id: {{ chatlog.getRoomId() }})
