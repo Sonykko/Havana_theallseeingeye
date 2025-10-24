@@ -8,7 +8,6 @@ import org.alexdev.havana.server.rcon.messages.RconHeader;
 import org.alexdev.havana.util.config.GameConfiguration;
 import org.alexdev.http.Routes;
 import org.alexdev.http.dao.housekeeping.HousekeepingLogsDao;
-import org.alexdev.http.dao.housekeeping.HousekeepingPlayerDao;
 import org.alexdev.http.dao.housekeeping.HousekeepingRankDao;
 import org.alexdev.http.game.housekeeping.HousekeepingManager;
 import org.alexdev.http.game.housekeeping.HousekeepingRankVar;
@@ -98,6 +97,7 @@ public class HousekeepingRanksController {
         }
 
         var rankName = playerDetailsRank.getRankName();
+        var newRankName = HousekeepingRankDao.getRankVarByRankId(rankId).getName();
 
         if (playerDetailsRank.getRank().getRankId() == rankId) {
             client.session().set("alertColour", "warning");
@@ -137,16 +137,16 @@ public class HousekeepingRanksController {
         }
 
         HousekeepingRankDao.setRank(user, rankId);
-        HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Set the rank ID " + rankId + " (" + rankName + ") to user " + user + ". URL: " + client.request().uri(), client.getIpAddress());
+        HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Set the rank ID " + rankId + " (" + newRankName + ") to player " + user + ". URL: " + client.request().uri(), client.getIpAddress());
 
         client.session().set("alertColour", "success");
-        client.session().set("alertMessage", "Successfully set the rank ID " + rankId + " (" + rankName + ") to the user " + user);
+        client.session().set("alertMessage", "Successfully set the rank ID " + rankId + " (" + newRankName + ") to the player " + user);
 
         client.redirect(getGiveRankPath());
 
         if (sendAlert) {
             String message = GameConfiguration.getInstance().getString("rcon.give.rank.message");
-            String finalMessage = StringUtils.replace(message, "%rank%", rankName);
+            String finalMessage = StringUtils.replace(message, "%rank%", newRankName);
             String messageEncoded = MessageEncoderUtil.encodeMessage(finalMessage);
 
             RconUtil.sendCommand(RconHeader.MOD_ALERT_USER, new HashMap<>() {{
