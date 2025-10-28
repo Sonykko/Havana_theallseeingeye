@@ -104,6 +104,16 @@
 		  <hr />
           <p><b>List of current codes</p></b>
 		  <p>This tool allow you to see the complete list of all current codes in the Vouchers.</p>
+		  <div class="pagination-buttons-box">
+		  {% if nextVouchers|length > 0 %}
+				{% set ourNextPage = page + 1 %}
+				<a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/vouchers?page={{ ourNextPage }}&sort={{ sortBy }}"><button type="button">Next Page</button></a>
+			{% endif %}
+			{% if previousVouchers|length > 0 %}
+				{% set ourNextPage = page - 1 %}
+				<a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/vouchers?page={{ ourNextPage }}&sort={{ sortBy }}"><button type="button">Go back</button></a>
+			{% endif %}
+		</div>
 		  {% if Vouchers|length > 0 %}
           <div class="table-responsive">
             <table class="table table-striped">

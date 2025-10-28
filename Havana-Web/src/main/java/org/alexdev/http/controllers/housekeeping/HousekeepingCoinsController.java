@@ -48,8 +48,17 @@ public class HousekeepingCoinsController {
             return;
         }
 
+        int currentPage = 0;
+
+        if (client.get().contains("page")) {
+            currentPage = Integer.parseInt(client.get().getString("page"));
+        }
+
         tpl.set("pageName", "Vouchers codes");
-        tpl.set("Vouchers", HousekeepingCoinsDao.getAllVouchers());
+        tpl.set("Vouchers", HousekeepingCoinsDao.getAllVouchers(currentPage));
+        tpl.set("nextVouchers", HousekeepingCoinsDao.getAllVouchers(currentPage + 1));
+        tpl.set("previousVouchers", HousekeepingCoinsDao.getAllVouchers(currentPage - 1));
+        tpl.set("page", currentPage);
         tpl.set("voucherRandom", generateRandomCode());
         tpl.render();
 

@@ -11,31 +11,38 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HousekeepingCoinsDao {
-    public static List<HousekeepingVouchers> getAllVouchers() {
+    public static List<HousekeepingVouchers> getAllVouchers(int page) {
         List<HousekeepingVouchers> vouchers = new ArrayList<>();
 
-        Connection sqlConnection = null;
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet = null;
+        int rows = 20;
+        int nextOffset = page * rows;
 
-        try {
-            sqlConnection = Storage.getStorage().getConnection();
-            preparedStatement = Storage.getStorage().prepare("SELECT v.voucher_code AS voucherCode, v.credits, v.expiry_date, v.is_single_use, v.allow_new_users, vi.catalogue_sale_code " +
-                    "FROM vouchers v " +
-                    "LEFT JOIN vouchers_items vi ON v.voucher_code = vi.voucher_code", sqlConnection);
+        if (nextOffset >= 0) {
+            Connection sqlConnection = null;
+            PreparedStatement preparedStatement = null;
+            ResultSet resultSet = null;
 
-            resultSet = preparedStatement.executeQuery();
+            try {
+                sqlConnection = Storage.getStorage().getConnection();
+                preparedStatement = Storage.getStorage().prepare("SELECT v.voucher_code AS voucherCode, v.credits, v.expiry_date, v.is_single_use, v.allow_new_users, vi.catalogue_sale_code " +
+                        "FROM vouchers v " +
+                        "LEFT JOIN vouchers_items vi ON v.voucher_code = vi.voucher_code LIMIT ? OFFSET ?", sqlConnection);
+                preparedStatement.setInt(1, rows);
+                preparedStatement.setInt(2, nextOffset);
 
-            while (resultSet.next()) {
-                vouchers.add(fill(resultSet));
+                resultSet = preparedStatement.executeQuery();
+
+                while (resultSet.next()) {
+                    vouchers.add(fill(resultSet));
+                }
+
+            } catch (Exception e) {
+                Storage.logError(e);
+            } finally {
+                Storage.closeSilently(resultSet);
+                Storage.closeSilently(preparedStatement);
+                Storage.closeSilently(sqlConnection);
             }
-
-        } catch (Exception e) {
-            Storage.logError(e);
-        } finally {
-            Storage.closeSilently(resultSet);
-            Storage.closeSilently(preparedStatement);
-            Storage.closeSilently(sqlConnection);
         }
 
         return vouchers;
