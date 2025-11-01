@@ -55,6 +55,41 @@ public class HousekeepingCFHTopicsDao {
         return CFHTopicsList;
     }
 
+    public static List<HousekeepingCFHTopics> getCFHTopicsByPage(int page) {
+        List<HousekeepingCFHTopics> CFHTopicsList = new ArrayList<>();
+
+        int rows = 20;
+        int nextOffset = page * rows;
+
+        if (nextOffset >= 0) {
+            Connection sqlConnection = null;
+            PreparedStatement preparedStatement = null;
+            ResultSet resultSet = null;
+
+            try {
+                sqlConnection = Storage.getStorage().getConnection();
+                preparedStatement = Storage.getStorage().prepare("SELECT * FROM bans_reasons LIMIT ? OFFSET ?", sqlConnection);
+                preparedStatement.setInt(1, rows);
+                preparedStatement.setInt(2, nextOffset);
+
+                resultSet = preparedStatement.executeQuery();
+                while (resultSet.next()) {
+                    CFHTopicsList.add(fill(resultSet));
+                }
+
+            } catch (Exception e) {
+                Storage.logError(e);
+            } finally {
+                Storage.closeSilently(resultSet);
+                Storage.closeSilently(preparedStatement);
+                Storage.closeSilently(sqlConnection);
+            }
+
+        }
+
+        return CFHTopicsList;
+    }
+
     public static HousekeepingCFHTopics getCFHTopicById(int id) {
         HousekeepingCFHTopics CFHTopic = null;
 
