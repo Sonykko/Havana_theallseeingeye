@@ -2,6 +2,7 @@ package org.alexdev.http.controllers.housekeeping;
 
 import org.alexdev.duckhttpd.server.connection.WebConnection;
 import org.alexdev.duckhttpd.template.Template;
+import org.alexdev.havana.game.item.ItemManager;
 import org.alexdev.havana.game.player.PlayerDetails;
 import org.alexdev.http.Routes;
 import org.alexdev.http.dao.housekeeping.HousekeepingCoinsDao;
@@ -101,6 +102,15 @@ public class HousekeepingCoinsController {
         if (checkVoucherCode != null) {
             client.session().set("alertColour", "danger");
             client.session().set("alertMessage", "The Voucher code already exists");
+            client.redirect(getVouchersPath());
+            return;
+        }
+
+        var checkItem = ItemManager.getInstance().getDefinitionBySprite(item);
+
+        if (!item.isEmpty() && checkItem == null) {
+            client.session().set("alertColour", "danger");
+            client.session().set("alertMessage", "The sale code not exists");
             client.redirect(getVouchersPath());
             return;
         }
