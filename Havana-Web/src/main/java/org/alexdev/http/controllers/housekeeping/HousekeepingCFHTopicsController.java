@@ -53,8 +53,17 @@ public class HousekeepingCFHTopicsController {
             return;
         }
 
+        int currentPage = 0;
+
+        if (client.get().contains("page")) {
+            currentPage = Integer.parseInt(client.get().getString("page"));
+        }
+
         tpl.set("pageName", "CFH topics tool");
-        tpl.set("CFHTopics", HousekeepingCFHTopicsDao.getCFHTopics());
+        tpl.set("CFHTopics", HousekeepingCFHTopicsDao.getCFHTopicsByPage(currentPage));
+        tpl.set("nextTopics", HousekeepingCFHTopicsDao.getCFHTopicsByPage(currentPage + 1));
+        tpl.set("previousTopics", HousekeepingCFHTopicsDao.getCFHTopicsByPage(currentPage - 1));
+        tpl.set("page", currentPage);
         tpl.render();
 
         client.session().delete("alertMessage");

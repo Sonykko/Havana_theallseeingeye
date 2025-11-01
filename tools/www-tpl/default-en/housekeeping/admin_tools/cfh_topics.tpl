@@ -80,6 +80,16 @@
 		  <hr />
 		  <p><b>List of current topics</b></p>
 		  <p>This tool allow you to see the complete list of all current topics in the Hotel.</p>
+		  <div class="pagination-buttons-box">
+		  {% if nextTopics|length > 0 %}
+				{% set ourNextPage = page + 1 %}
+				<a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/cfh_topics?page={{ ourNextPage }}&sort={{ sortBy }}"><button type="button">Next Page</button></a>
+			{% endif %}
+			{% if previousTopics|length > 0 %}
+				{% set ourNextPage = page - 1 %}
+				<a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/cfh_topics?page={{ ourNextPage }}&sort={{ sortBy }}"><button type="button">Go back</button></a>
+			{% endif %}
+		  </div>			  
 			  {% if CFHTopics|length > 0 %}
 			  <div class="table-responsive">
 				<table class="table table-striped">
