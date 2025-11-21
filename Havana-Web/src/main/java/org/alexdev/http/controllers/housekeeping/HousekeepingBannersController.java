@@ -180,7 +180,15 @@ public class HousekeepingBannersController {
             return;
         }
 
-        HousekeepingBannersDao.saveBanner(textBanner, saveBanner, urlBanner, statusBanner, advancedBanner, orderIdBanner, bannerId);
+        banner.setText(textBanner);
+        banner.setBanner(saveBanner);
+        banner.setUrl(urlBanner);
+        banner.setStatus(Integer.parseInt(statusBanner));
+        banner.setAdvanced(Integer.parseInt(advancedBanner));
+        banner.setOrderId(orderIdBanner);
+
+        HousekeepingBannersDao.saveBanner(banner);
+
         HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Edit Ad Banner with the ID " + bannerId + ". URL: " + client.request().uri(), client.getIpAddress());
 
         client.session().set("alertColour", "success");
