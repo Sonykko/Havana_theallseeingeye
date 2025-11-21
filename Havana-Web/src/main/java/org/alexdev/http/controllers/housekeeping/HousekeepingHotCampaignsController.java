@@ -202,7 +202,6 @@ public class HousekeepingHotCampaignsController {
         hotCampaign.setUrlText(urlText);
         hotCampaign.setStatus(status);
         hotCampaign.setOrderId(orderId);
-        hotCampaign.setId(hotCampaignId);
 
         HousekeepingHotCampaignsDao.saveHotCampaign(hotCampaign);
 
