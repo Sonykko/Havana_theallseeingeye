@@ -113,21 +113,21 @@ public class HousekeepingHotCampaignsDao {
         return HotCampaignsEditList;
     }
 
-    public static void saveHotCampaign(String title, String description, String image, String url, String urlText, int status, int orderId, int hotCampaignId) {
+    public static void saveHotCampaign(HousekeepingHotCampaign hotCampaign) {
         Connection sqlConnection = null;
         PreparedStatement preparedStatement = null;
 
         try {
             sqlConnection = Storage.getStorage().getConnection();
             preparedStatement = Storage.getStorage().prepare("UPDATE cms_hot_campaigns SET title = ?, description = ?, image = ?, url = ?, url_text = ?, status = ?, order_id = ? WHERE id = ?", sqlConnection);
-            preparedStatement.setString(1, title);
-            preparedStatement.setString(2, description);
-            preparedStatement.setString(3, image);
-            preparedStatement.setString(4, url);
-            preparedStatement.setString(5, urlText);
-            preparedStatement.setInt(6, status);
-            preparedStatement.setInt(7, orderId);
-            preparedStatement.setInt(8, hotCampaignId);
+            preparedStatement.setString(1, hotCampaign.getTitle());
+            preparedStatement.setString(2, hotCampaign.getDescription());
+            preparedStatement.setString(3, hotCampaign.getImage());
+            preparedStatement.setString(4, hotCampaign.getUrl());
+            preparedStatement.setString(5, hotCampaign.getUrlText());
+            preparedStatement.setInt(6, hotCampaign.getStatus());
+            preparedStatement.setInt(7, hotCampaign.getOrderId());
+            preparedStatement.setInt(8, hotCampaign.getId());
             preparedStatement.execute();
         } catch (Exception e) {
             Storage.logError(e);
@@ -136,7 +136,6 @@ public class HousekeepingHotCampaignsDao {
             Storage.closeSilently(sqlConnection);
         }
     }
-
     public static List<String> getHotCampaignImages() {
         List<String> images = new ArrayList<String>();
 

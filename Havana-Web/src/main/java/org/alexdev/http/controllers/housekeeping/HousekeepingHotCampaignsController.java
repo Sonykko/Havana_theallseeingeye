@@ -195,7 +195,17 @@ public class HousekeepingHotCampaignsController {
             return;
         }
 
-        HousekeepingHotCampaignsDao.saveHotCampaign(title, description, saveHotCampaign, url, urlText, status, orderId, hotCampaignId);
+        hotCampaign.setTitle(title);
+        hotCampaign.setDescription(description);
+        hotCampaign.setImage(saveHotCampaign);
+        hotCampaign.setUrl(url);
+        hotCampaign.setUrlText(urlText);
+        hotCampaign.setStatus(status);
+        hotCampaign.setOrderId(orderId);
+        hotCampaign.setId(hotCampaignId);
+
+        HousekeepingHotCampaignsDao.saveHotCampaign(hotCampaign);
+
         HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Edited Hot Campaign with the ID " + hotCampaignId + ". URL: " + client.request().uri(), client.getIpAddress());
 
         client.session().set("alertColour", "success");
