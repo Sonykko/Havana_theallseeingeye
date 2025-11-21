@@ -105,20 +105,20 @@ public class HousekeepingBannersDao {
         return BannersEditList;
     }
 
-    public static void saveBanner(String textBanner, String saveBanner, String urlBanner, String statusBanner, String advancedBanner, int orderIdBanner, int bannerId) {
+    public static void saveBanner(HousekeepingBanner banner) {
         Connection sqlConnection = null;
         PreparedStatement preparedStatement = null;
 
         try {
             sqlConnection = Storage.getStorage().getConnection();
             preparedStatement = Storage.getStorage().prepare("UPDATE cms_banners SET text = ?, banner = ?, url = ?, status = ?, advanced = ?, order_id = ? WHERE id = ?", sqlConnection);
-            preparedStatement.setString(1, textBanner);
-            preparedStatement.setString(2, saveBanner);
-            preparedStatement.setString(3, urlBanner);
-            preparedStatement.setString(4, statusBanner);
-            preparedStatement.setString(5, advancedBanner);
-            preparedStatement.setInt(6, orderIdBanner);
-            preparedStatement.setInt(7, bannerId);
+            preparedStatement.setString(1, banner.getText());
+            preparedStatement.setString(2, banner.getBanner());
+            preparedStatement.setString(3, banner.getUrl());
+            preparedStatement.setInt(4, banner.getStatus());
+            preparedStatement.setInt(5, banner.getAdvanced());
+            preparedStatement.setInt(6, banner.getOrderId());
+            preparedStatement.setInt(7, banner.getId());
             preparedStatement.execute();
         } catch (Exception e) {
             Storage.logError(e);
