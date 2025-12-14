@@ -1,6 +1,6 @@
 package org.alexdev.http.game.housekeeping;
 
-public interface ChatLog {
+public interface IChatLog {
     long getDate();
     String getLogType();
     void setLogType(String type);
