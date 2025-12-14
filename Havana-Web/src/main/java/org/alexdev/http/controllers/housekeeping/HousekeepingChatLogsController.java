@@ -6,8 +6,7 @@ import org.alexdev.havana.game.player.PlayerDetails;
 import org.alexdev.http.Routes;
 import org.alexdev.http.dao.housekeeping.HousekeepingChatLogDao;
 import org.alexdev.http.dao.housekeeping.HousekeepingLogsDao;
-import org.alexdev.http.dao.housekeeping.HousekeepingRoomDao;
-import org.alexdev.http.game.housekeeping.ChatLog;
+import org.alexdev.http.game.housekeeping.IChatLog;
 import org.alexdev.http.game.housekeeping.HousekeepingManager;
 import org.alexdev.http.game.housekeeping.HousekeepingMessengerChatLog;
 import org.alexdev.http.game.housekeeping.HousekeepingRoomChatLog;
@@ -15,7 +14,6 @@ import org.alexdev.http.util.SessionUtil;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Collections;
 
 public class HousekeepingChatLogsController {
@@ -129,7 +127,7 @@ public class HousekeepingChatLogsController {
             return;
         }
 
-        List<ChatLog> userChatlogs = new ArrayList<>();
+        List<IChatLog> userChatlogs = new ArrayList<>();
         String userId1Param = client.get().getString("id1");
         String userId2Param = client.get().getString("id2");
 

@@ -1,6 +1,6 @@
 package org.alexdev.http.game.housekeeping;
 
-public class HousekeepingMessengerChatLog implements ChatLog {
+public class HousekeepingMessengerChatLog implements IChatLog {
     private String logType;
     private int id;
     private int userId;
