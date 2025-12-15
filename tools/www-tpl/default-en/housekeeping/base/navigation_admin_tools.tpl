@@ -104,6 +104,9 @@
 			{% if housekeepingManager.hasPermission(playerDetails.getRank(), 'cfh/topics') %}
 			<text><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/cfh_topics" class="subnav-link">CFH topics tool</a></text>
 			{% endif %}
+			{% if housekeepingManager.hasPermission(playerDetails.getRank(), 'user/ranks') %}
+			<text><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/games_ranks" class="subnav-link">Games ranks tool</a></text>
+			{% endif %}
       </div>
     </div>
 {% endif %}

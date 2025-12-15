@@ -383,6 +383,7 @@ public class Routes {
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/name_reports_list", HousekeepingNameReportsController::name_reports);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/motto_reports_list", HousekeepingMottoReportsController::motto_reports);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/guestbook_reports_list", HousekeepingGuestbookReportsController::guestbook_reports);
+        RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/admin_tools/games_ranks", HousekeepingGamesRanksController::games_ranks);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/chatlog.action", HousekeepingChatLogsController::userchatlogs);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/users/imitate/*", HousekeepingUsersController::imitate);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/campaign_management/infobus_polls", HousekeepingInfobusController::polls);
