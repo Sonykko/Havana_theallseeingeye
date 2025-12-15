@@ -80,8 +80,8 @@ public class HousekeepingGamesRanksController {
     private static void createRank(WebConnection client, PlayerDetails playerDetails) {
         String gameTypeStr = client.post().getString("gameType");
         String title = client.post().getString("rankTitle");
-        String minPointsStr = client.post().getString("minPoints");
-        String maxPointsStr = client.post().getString("maxPoints");
+        String minPointsStr = client.post().getString("rankMinPoints");
+        String maxPointsStr = client.post().getString("rankMaxPoints");
         int minPoints = !NumberUtils.isParsable(minPointsStr) ? 0 : Integer.parseInt(minPointsStr);
         int maxPoints = !NumberUtils.isParsable(maxPointsStr) ? 0 : Integer.parseInt(maxPointsStr);
 
@@ -135,8 +135,8 @@ public class HousekeepingGamesRanksController {
         int rankId = !NumberUtils.isParsable(rankIdStr) ? 0 : Integer.parseInt(rankIdStr);
         String gameTypeStr = client.post().getString("gameType");
         String title = client.post().getString("rankTitle");
-        String minPointsStr = client.post().getString("minPoints");
-        String maxPointsStr = client.post().getString("maxPoints");
+        String minPointsStr = client.post().getString("rankMinPoints");
+        String maxPointsStr = client.post().getString("rankMaxPoints");
         int minPoints = !NumberUtils.isParsable(minPointsStr) ? 0 : Integer.parseInt(minPointsStr);
         int maxPoints = !NumberUtils.isParsable(maxPointsStr) ? 0 : Integer.parseInt(maxPointsStr);
 
