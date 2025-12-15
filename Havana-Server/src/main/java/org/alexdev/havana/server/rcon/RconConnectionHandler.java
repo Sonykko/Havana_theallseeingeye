@@ -13,6 +13,8 @@ import org.alexdev.havana.game.catalogue.CatalogueManager;
 import org.alexdev.havana.game.events.Event;
 import org.alexdev.havana.game.events.EventsManager;
 import org.alexdev.havana.game.fuserights.Fuseright;
+import org.alexdev.havana.game.games.GameManager;
+import org.alexdev.havana.game.games.enums.GameType;
 import org.alexdev.havana.game.groups.GroupMember;
 import org.alexdev.havana.game.infobus.InfobusManager;
 import org.alexdev.havana.game.item.Item;
@@ -34,6 +36,8 @@ import org.alexdev.havana.messages.flash.outgoing.FLASH_ROOMENTRYINFO;
 import org.alexdev.havana.messages.incoming.catalogue.GET_CATALOG_INDEX;
 import org.alexdev.havana.messages.outgoing.alerts.ALERT;
 import org.alexdev.havana.messages.outgoing.events.ROOMEEVENT_INFO;
+import org.alexdev.havana.messages.outgoing.games.GAMEPLAYERINFO;
+import org.alexdev.havana.messages.outgoing.games.LOUNGEINFO;
 import org.alexdev.havana.messages.outgoing.handshake.RIGHTS;
 import org.alexdev.havana.messages.outgoing.moderation.CRY_REPLY;
 import org.alexdev.havana.messages.outgoing.moderation.MODERATOR_ALERT;
@@ -439,6 +443,20 @@ public class RconConnectionHandler extends ChannelInboundHandlerAdapter {
                     break;
                 case REFRESH_SETTINGS:
                     GameConfiguration.reset(new GameConfigWriter());
+                    break;
+                case REFRESH_GAMESRANKS:
+                    List<Player> playersGamesRanks = PlayerManager.getInstance().getPlayers();
+
+                    for (Player player : playersGamesRanks) {
+                        var roomBattleBall = RoomManager.getInstance().getRoomByModel(GameType.BATTLEBALL.getLobbyModel());
+                        var roomSnowStorm = RoomManager.getInstance().getRoomByModel(GameType.SNOWSTORM.getLobbyModel());
+
+                        roomBattleBall.send(new GAMEPLAYERINFO(GameType.BATTLEBALL, List.of(player)));
+                        roomSnowStorm.send(new GAMEPLAYERINFO(GameType.SNOWSTORM, List.of(player)));
+                        player.send(new LOUNGEINFO());
+
+                        GameManager.reset();
+                    }
                     break;
                 case REFRESH_CATALOGUE_PAGES:
                     ItemManager.reset();

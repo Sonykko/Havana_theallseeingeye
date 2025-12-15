@@ -3,6 +3,7 @@ package org.alexdev.http.controllers.housekeeping;
 import org.alexdev.duckhttpd.server.connection.WebConnection;
 import org.alexdev.duckhttpd.template.Template;
 import org.alexdev.havana.game.player.PlayerDetails;
+import org.alexdev.havana.server.rcon.messages.RconHeader;
 import org.alexdev.http.Routes;
 import org.alexdev.http.dao.housekeeping.HousekeepingCFHTopicsDao;
 import org.alexdev.http.dao.housekeeping.HousekeepingGamesRanksDao;
@@ -10,11 +11,13 @@ import org.alexdev.http.dao.housekeeping.HousekeepingLogsDao;
 import org.alexdev.http.game.housekeeping.HousekeepingGamesRanks;
 import org.alexdev.http.game.housekeeping.HousekeepingManager;
 import org.alexdev.http.game.housekeeping.enums.GameType;
+import org.alexdev.http.util.RconUtil;
 import org.alexdev.http.util.SessionUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 public class HousekeepingGamesRanksController {
@@ -76,6 +79,9 @@ public class HousekeepingGamesRanksController {
     private static String getGamesRanksPath() {
         return "/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/games_ranks";
     }
+    private static void refreshGamesRanks() {
+        RconUtil.sendCommand(RconHeader.REFRESH_GAMESRANKS, new HashMap<>() {});
+    }
 
     private static void createRank(WebConnection client, PlayerDetails playerDetails) {
         String gameTypeStr = client.post().getString("gameType");
@@ -105,6 +111,7 @@ public class HousekeepingGamesRanksController {
         }
 
         HousekeepingGamesRanksDao.create(title, gameType, minPoints, maxPoints);
+        refreshGamesRanks();
 
         HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Created game rank. URL: " + client.request().uri(), client.getIpAddress());
 
@@ -174,6 +181,7 @@ public class HousekeepingGamesRanksController {
         gameRank.setMaxPoints(maxPoints);
 
         HousekeepingGamesRanksDao.save(gameRank);
+        refreshGamesRanks();
 
         HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Updated the game rank with the ID " + gameRank.getId() + ". URL: " + client.request().uri(), client.getIpAddress());
 
@@ -196,6 +204,7 @@ public class HousekeepingGamesRanksController {
         }
 
         HousekeepingGamesRanksDao.delete(gameRank.getId());
+        refreshGamesRanks();
 
         HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Deleted the game rank with the ID " + gameRank.getId() + ". URL: " + client.request().uri(), client.getIpAddress());
 
