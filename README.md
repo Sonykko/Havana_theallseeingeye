@@ -121,6 +121,11 @@ Developed by Sonykko.
         - Search topic
         - Delete topic
         - Save topic
+    - Games ranks tool
+        - Create rank
+        - Search rank
+        - Delete rank
+        - Save rank
 - Campaign management
     - Ads banners tool
         - Create Ads banners
