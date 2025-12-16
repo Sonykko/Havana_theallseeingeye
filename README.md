@@ -187,6 +187,7 @@ Developed by Sonykko.
     - Calls for help
       - Access to Housekeeping user chatlog
       - All activity log system
+      - Room/user CFH topics
   - Navigator
     - Pets count for room visitors count
   - Room
