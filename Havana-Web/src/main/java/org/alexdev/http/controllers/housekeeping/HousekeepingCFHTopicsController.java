@@ -78,6 +78,13 @@ public class HousekeepingCFHTopicsController {
         String sanctionReasonValue = client.post().getString("sanctionReasonValue");
         String sanctionReasonDesc = client.post().getString("sanctionReasonDesc");
 
+        if (sanctionReasonId.isEmpty() || sanctionReasonValue.isEmpty()) {
+            client.session().set("alertColour", "danger");
+            client.session().set("alertMessage", "Please fill a valid reason id and value");
+            client.redirect(getCFHTopicsPath());
+            return;
+        }
+
         if (sanctionReasonId.length() > 255 || sanctionReasonValue.length() > 255 || sanctionReasonDesc.length() > 255) {
             client.session().set("alertColour", "danger");
             client.session().set("alertMessage", "The values are too long");
@@ -123,6 +130,20 @@ public class HousekeepingCFHTopicsController {
         if (topic == null) {
             client.session().set("alertColour", "danger");
             client.session().set("alertMessage", "Can't save the topic cause not exists");
+            client.redirect(getCFHTopicsPath());
+            return;
+        }
+
+        if (sanctionReasonId.isEmpty() || sanctionReasonValue.isEmpty()) {
+            client.session().set("alertColour", "danger");
+            client.session().set("alertMessage", "Please fill a valid reason id and value");
+            client.redirect(getCFHTopicsPath());
+            return;
+        }
+
+        if (sanctionReasonId.length() > 255 || sanctionReasonValue.length() > 255 || sanctionReasonDesc.length() > 255) {
+            client.session().set("alertColour", "danger");
+            client.session().set("alertMessage", "The values are too long");
             client.redirect(getCFHTopicsPath());
             return;
         }
