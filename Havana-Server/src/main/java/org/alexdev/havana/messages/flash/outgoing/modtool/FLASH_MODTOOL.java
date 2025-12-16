@@ -1,18 +1,21 @@
 package org.alexdev.havana.messages.flash.outgoing.modtool;
 
+import org.alexdev.havana.dao.mysql.CFHTopicsDao;
+import org.alexdev.havana.game.moderation.cfh.topics.CFHTopics;
 import org.alexdev.havana.messages.types.MessageComposer;
 import org.alexdev.havana.server.netty.streams.NettyResponse;
 
 import java.util.List;
 
 public class FLASH_MODTOOL extends MessageComposer {
-    private List<String> userMessagePresets;
-    private List<String> roomMessagePresets;
+    private List<CFHTopics> userMessagePresets;
+    private List<CFHTopics> roomMessagePresets;
 
     public FLASH_MODTOOL() {
         // TODO: Remove this yucky hardcoded bullshit
-        this.userMessagePresets = List.of("test");
-        this.roomMessagePresets = List.of("room preset 1");
+        // Fixed: Now using actual topics from CFHTopicsDao. ;) -Sonykko
+        this.userMessagePresets = CFHTopicsDao.getCFHTopics();
+        this.roomMessagePresets = CFHTopicsDao.getCFHTopics();
     }
 
     @Override
@@ -20,8 +23,9 @@ public class FLASH_MODTOOL extends MessageComposer {
         response.writeInt(-1);
         response.writeInt(this.userMessagePresets.size());
 
-        for (String preset : this.userMessagePresets) {
-            response.writeString(preset);
+        for (CFHTopics preset : this.userMessagePresets) {
+            String topic = preset.getSanctionReasonValue() + ". " + (preset.getSanctionReasonDesc() != null ? preset.getSanctionReasonDesc() : "");
+            response.writeString(topic);
         }
 
         response.writeInt(0);
@@ -35,8 +39,9 @@ public class FLASH_MODTOOL extends MessageComposer {
 
         response.writeInt(this.roomMessagePresets.size());
 
-        for (String preset : this.roomMessagePresets) {
-            response.writeString(preset);
+        for (CFHTopics preset : this.roomMessagePresets) {
+            String topic = preset.getSanctionReasonValue() + ". " + (preset.getSanctionReasonDesc() != null ? preset.getSanctionReasonDesc() : "");
+            response.writeString(topic);
         }
 
         response.writeInt(1);
