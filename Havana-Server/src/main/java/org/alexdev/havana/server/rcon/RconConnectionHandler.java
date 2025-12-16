@@ -28,11 +28,13 @@ import org.alexdev.havana.game.pathfinder.Position;
 import org.alexdev.havana.game.player.Player;
 import org.alexdev.havana.game.player.PlayerDetails;
 import org.alexdev.havana.game.player.PlayerManager;
+import org.alexdev.havana.game.player.PlayerRank;
 import org.alexdev.havana.game.room.Room;
 import org.alexdev.havana.game.room.RoomManager;
 import org.alexdev.havana.game.wordfilter.WordfilterManager;
 import org.alexdev.havana.log.Log;
 import org.alexdev.havana.messages.flash.outgoing.FLASH_ROOMENTRYINFO;
+import org.alexdev.havana.messages.flash.outgoing.modtool.FLASH_MODTOOL;
 import org.alexdev.havana.messages.incoming.catalogue.GET_CATALOG_INDEX;
 import org.alexdev.havana.messages.outgoing.alerts.ALERT;
 import org.alexdev.havana.messages.outgoing.events.ROOMEEVENT_INFO;
@@ -446,16 +448,24 @@ public class RconConnectionHandler extends ChannelInboundHandlerAdapter {
                     break;
                 case REFRESH_GAMESRANKS:
                     List<Player> playersGamesRanks = PlayerManager.getInstance().getPlayers();
+                    var roomBattleBall = RoomManager.getInstance().getRoomByModel(GameType.BATTLEBALL.getLobbyModel());
+                    var roomSnowStorm = RoomManager.getInstance().getRoomByModel(GameType.SNOWSTORM.getLobbyModel());
 
                     for (Player player : playersGamesRanks) {
-                        var roomBattleBall = RoomManager.getInstance().getRoomByModel(GameType.BATTLEBALL.getLobbyModel());
-                        var roomSnowStorm = RoomManager.getInstance().getRoomByModel(GameType.SNOWSTORM.getLobbyModel());
-
                         roomBattleBall.send(new GAMEPLAYERINFO(GameType.BATTLEBALL, List.of(player)));
                         roomSnowStorm.send(new GAMEPLAYERINFO(GameType.SNOWSTORM, List.of(player)));
                         player.send(new LOUNGEINFO());
+                    }
 
-                        GameManager.reset();
+                    GameManager.reset();
+                    break;
+                case REFRESH_CFH_TOPICS:
+                    for (Player player : PlayerManager.getInstance().getPlayers()) {
+                        if (player.getNetwork().isFlashConnection()) {
+                            if (player.getDetails().getRank().getRankId() >= PlayerRank.MODERATOR.getRankId()) {
+                                player.send(new FLASH_MODTOOL());
+                            }
+                        }
                     }
                     break;
                 case REFRESH_CATALOGUE_PAGES:

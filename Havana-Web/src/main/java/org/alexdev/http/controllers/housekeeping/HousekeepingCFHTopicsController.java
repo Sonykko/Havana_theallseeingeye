@@ -3,15 +3,18 @@ package org.alexdev.http.controllers.housekeeping;
 import org.alexdev.duckhttpd.server.connection.WebConnection;
 import org.alexdev.duckhttpd.template.Template;
 import org.alexdev.havana.game.player.PlayerDetails;
+import org.alexdev.havana.server.rcon.messages.RconHeader;
 import org.alexdev.http.Routes;
 import org.alexdev.http.dao.housekeeping.HousekeepingCFHTopicsDao;
 import org.alexdev.http.dao.housekeeping.HousekeepingLogsDao;
 import org.alexdev.http.game.housekeeping.HousekeepingCFHTopics;
 import org.alexdev.http.game.housekeeping.HousekeepingManager;
+import org.alexdev.http.util.RconUtil;
 import org.alexdev.http.util.SessionUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
+import java.util.HashMap;
 import java.util.List;
 
 public class HousekeepingCFHTopicsController {
@@ -72,6 +75,9 @@ public class HousekeepingCFHTopicsController {
     private static String getCFHTopicsPath() {
         return "/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/cfh_topics";
     }
+    private static void refreshCFHTopics() {
+        RconUtil.sendCommand(RconHeader.REFRESH_CFH_TOPICS, new HashMap<>() {});
+    }
 
     private static void createTopic(WebConnection client, PlayerDetails playerDetails) {
         String sanctionReasonId = client.post().getString("sanctionReasonId");
@@ -93,6 +99,7 @@ public class HousekeepingCFHTopicsController {
         }
 
         HousekeepingCFHTopicsDao.create(sanctionReasonId, sanctionReasonValue, sanctionReasonDesc);
+        refreshCFHTopics();
 
         HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Created CFH topic. URL: " + client.request().uri(), client.getIpAddress());
 
@@ -153,6 +160,7 @@ public class HousekeepingCFHTopicsController {
         topic.setSanctionReasonDesc(sanctionReasonDesc);
 
         HousekeepingCFHTopicsDao.save(topic);
+        refreshCFHTopics();
 
         HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Updated the CFH topic with the ID " + topic.getId() + ". URL: " + client.request().uri(), client.getIpAddress());
 
@@ -175,6 +183,7 @@ public class HousekeepingCFHTopicsController {
         }
 
         HousekeepingCFHTopicsDao.delete(topic.getId());
+        refreshCFHTopics();
 
         HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Deleted the CFH topic with the ID " + topic.getId() + ". URL: " + client.request().uri(), client.getIpAddress());
 
