@@ -23,6 +23,7 @@ import org.alexdev.havana.game.item.base.ItemBehaviour;
 import org.alexdev.havana.game.messenger.MessengerUser;
 import org.alexdev.havana.game.moderation.cfh.CallForHelp;
 import org.alexdev.havana.game.moderation.cfh.CallForHelpManager;
+import org.alexdev.havana.game.moderation.cfh.enums.CFHAction;
 import org.alexdev.havana.game.navigator.NavigatorManager;
 import org.alexdev.havana.game.pathfinder.Position;
 import org.alexdev.havana.game.player.Player;
@@ -163,10 +164,8 @@ public class RconConnectionHandler extends ChannelInboundHandlerAdapter {
                         return;
                     }
 
-                    CFHDao.updateReplyType(cfh, "REPLY", messageReplyDecoded);
-
                     caller.send(new CRY_REPLY(messageReplyDecoded));
-                    CallForHelpManager.getInstance().deleteCall(cfh);
+                    CallForHelpManager.getInstance().deleteCall(cfh, CFHAction.REPLY, messageReplyDecoded);
                     break;
                 case CFH_BLOCK:
                     Player moderatorBlock = PlayerManager.getInstance().getPlayerByName(message.getValues().get("moderatorBlock"));
@@ -187,9 +186,7 @@ public class RconConnectionHandler extends ChannelInboundHandlerAdapter {
                         return;
                     }
 
-                    CFHDao.updateReplyType(cfhDelete, "BLOCK", "");
-
-                    CallForHelpManager.getInstance().deleteCall(cfhDelete);
+                    CallForHelpManager.getInstance().deleteCall(cfhDelete, CFHAction.BLOCK, null);
                     break;
                 case CFH_FOLLOW:
                     Player moderatorFollow = PlayerManager.getInstance().getPlayerByName(message.getValues().get("moderatorFollow"));
@@ -214,10 +211,8 @@ public class RconConnectionHandler extends ChannelInboundHandlerAdapter {
                         return;
                     }
 
-                    CFHDao.updateReplyType(cfhFollow, "FOLLOW", "");
-
                     cfhFollow.getRoom().forward(moderatorFollow, false);
-                    CallForHelpManager.getInstance().deleteCall(cfhFollow);
+                    CallForHelpManager.getInstance().deleteCall(cfhFollow, CFHAction.FOLLOW, null);
                     break;
                 case COPY_PRIVATE_ROOM:
                     String moderatorCopy = message.getValues().get("moderator");
@@ -444,17 +439,16 @@ public class RconConnectionHandler extends ChannelInboundHandlerAdapter {
                     break;
                 case REFRESH_GAMESRANKS:
                     List<Player> playersGamesRanks = PlayerManager.getInstance().getPlayers();
+                    var roomBattleBall = RoomManager.getInstance().getRoomByModel(GameType.BATTLEBALL.getLobbyModel());
+                    var roomSnowStorm = RoomManager.getInstance().getRoomByModel(GameType.SNOWSTORM.getLobbyModel());
 
                     for (Player player : playersGamesRanks) {
-                        var roomBattleBall = RoomManager.getInstance().getRoomByModel(GameType.BATTLEBALL.getLobbyModel());
-                        var roomSnowStorm = RoomManager.getInstance().getRoomByModel(GameType.SNOWSTORM.getLobbyModel());
-
                         roomBattleBall.send(new GAMEPLAYERINFO(GameType.BATTLEBALL, List.of(player)));
                         roomSnowStorm.send(new GAMEPLAYERINFO(GameType.SNOWSTORM, List.of(player)));
                         player.send(new LOUNGEINFO());
-
-                        GameManager.reset();
                     }
+
+                    GameManager.reset();
                     break;
                 case REFRESH_CATALOGUE_PAGES:
                     ItemManager.reset();

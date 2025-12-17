@@ -2,6 +2,7 @@ package org.alexdev.havana.game.moderation.cfh;
 
 import org.alexdev.havana.dao.mysql.CFHDao;
 import org.alexdev.havana.game.fuserights.Fuseright;
+import org.alexdev.havana.game.moderation.cfh.enums.CFHAction;
 import org.alexdev.havana.game.player.Player;
 import org.alexdev.havana.game.player.PlayerManager;
 import org.alexdev.havana.game.room.Room;
@@ -45,7 +46,7 @@ public class CallForHelpManager {
         CFHDao.getInstance().insertCall(cfh);
 
         sendToModerators(new CALL_FOR_HELP(cfh));
-        caller.send(new CRY_RECEIVED());
+        caller.send(new CRY_RECEIVED());;
     }
 
     /**
@@ -106,11 +107,9 @@ public class CallForHelpManager {
     public void pickUp(CallForHelp cfh, Player moderator) {
         cfh.setPickedUpBy(moderator);
 
-        //CFHDao.updateIsDeletedInDatabase(cfh);
-        CFHDao.updateReplyType(cfh, "PICK UP", "");
-
         // Send the updated CallForHelp to all moderators
         sendToModerators(new PICKED_CRY(cfh));
+        CFHDao.updateReplyType(cfh, CFHAction.PICK_UP, null);
     }
 
     /**
@@ -133,9 +132,10 @@ public class CallForHelpManager {
      *
      * @param cfh the cfh to delete
      */
-    public void deleteCall(CallForHelp cfh) {
+    public void deleteCall(CallForHelp cfh, CFHAction cfhAction, String message) {
         cfh.setDeleted(true);
         sendToModerators(new DELETE_CRY(cfh.getCryId()));
+        CFHDao.updateReplyType(cfh, cfhAction, message);
     }
 
     /**
@@ -146,6 +146,7 @@ public class CallForHelpManager {
 
         this.callsForHelp.values().stream().filter(filter).collect(Collectors.toList()).forEach(x -> {
             sendToModerators(new DELETE_CRY(x.getCryId()));
+            CFHDao.deletePurgedCfh(x);
         });
 
         this.callsForHelp.values().removeIf(filter);

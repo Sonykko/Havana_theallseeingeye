@@ -4,6 +4,7 @@ import org.alexdev.havana.dao.mysql.CFHDao;
 import org.alexdev.havana.game.fuserights.Fuseright;
 import org.alexdev.havana.game.moderation.cfh.CallForHelp;
 import org.alexdev.havana.game.moderation.cfh.CallForHelpManager;
+import org.alexdev.havana.game.moderation.cfh.enums.CFHAction;
 import org.alexdev.havana.game.player.Player;
 import org.alexdev.havana.messages.types.MessageEvent;
 import org.alexdev.havana.server.netty.streams.NettyRequest;
@@ -26,9 +27,7 @@ public class FOLLOW_CRYFORHELP implements MessageEvent {
             return;
         }
 
-        CFHDao.updateReplyType(cfh, "FOLLOW", "");
-
         cfh.getRoom().forward(player, false);
-        CallForHelpManager.getInstance().deleteCall(cfh);
+        CallForHelpManager.getInstance().deleteCall(cfh, CFHAction.FOLLOW, null);
     }
 }
