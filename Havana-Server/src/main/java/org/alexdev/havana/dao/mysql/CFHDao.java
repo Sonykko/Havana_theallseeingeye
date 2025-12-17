@@ -2,6 +2,7 @@ package org.alexdev.havana.dao.mysql;
 
 import org.alexdev.havana.dao.Storage;
 import org.alexdev.havana.game.moderation.cfh.CallForHelp;
+import org.alexdev.havana.game.moderation.cfh.enums.CFHAction;
 
 import java.security.SecureRandom;
 import java.sql.Connection;
@@ -54,23 +55,7 @@ public class CFHDao {
         }
     }
 
-    private static final String ALLOWED_CHARACTERS = "0123456789";
-    private static final int CALL_ID_LENGTH = 6;
-
-    public static String generateRandomCallId() {
-        Random random = new SecureRandom();
-        StringBuilder sb = new StringBuilder(CALL_ID_LENGTH);
-
-        for (int i = 0; i < CALL_ID_LENGTH; i++) {
-            int randomIndex = random.nextInt(ALLOWED_CHARACTERS.length());
-            char randomChar = ALLOWED_CHARACTERS.charAt(randomIndex);
-            sb.append(randomChar);
-        }
-
-        return sb.toString();
-    }
-
-    public static void updateReplyType(CallForHelp cfh, String type, String message) {
+    public static void updateReplyType(CallForHelp cfh, CFHAction type, String message) {
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm d/MM/yyyy");
         String formattedTimestamp = sdf.format(new Date());
 
@@ -88,7 +73,7 @@ public class CFHDao {
 
             preparedStatement.setString(1, PlayerDao.getName(cfh.getPickedUpBy()));
             preparedStatement.setString(2, formattedTimestamp);
-            preparedStatement.setString(3, type);
+            preparedStatement.setString(3, type.toString());
             preparedStatement.setString(4, message);
             preparedStatement.setInt(5, cfh.getCryId());
 
@@ -101,5 +86,43 @@ public class CFHDao {
             Storage.closeSilently(preparedStatement);
             Storage.closeSilently(sqlConnection);
         }
+    }
+
+    public static void deletePurgedCfh(CallForHelp cfh) {
+        Connection sqlConnection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+
+        try {
+            sqlConnection = Storage.getStorage().getConnection();
+            preparedStatement = Storage.getStorage().prepare("UPDATE cfh_logs SET is_deleted = 1 WHERE cry_id = ?", sqlConnection);
+
+            preparedStatement.setInt(1, cfh.getCryId());
+
+            resultSet = preparedStatement.executeQuery();
+
+        } catch (Exception e) {
+            Storage.logError(e);
+        } finally {
+            Storage.closeSilently(resultSet);
+            Storage.closeSilently(preparedStatement);
+            Storage.closeSilently(sqlConnection);
+        }
+    }
+
+    private static final String ALLOWED_CHARACTERS = "0123456789";
+    private static final int CALL_ID_LENGTH = 6;
+
+    public static String generateRandomCallId() {
+        Random random = new SecureRandom();
+        StringBuilder sb = new StringBuilder(CALL_ID_LENGTH);
+
+        for (int i = 0; i < CALL_ID_LENGTH; i++) {
+            int randomIndex = random.nextInt(ALLOWED_CHARACTERS.length());
+            char randomChar = ALLOWED_CHARACTERS.charAt(randomIndex);
+            sb.append(randomChar);
+        }
+
+        return sb.toString();
     }
 }

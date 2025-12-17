@@ -3,6 +3,7 @@ package org.alexdev.havana.messages.incoming.moderation;
 import org.alexdev.havana.dao.mysql.CFHDao;
 import org.alexdev.havana.game.moderation.cfh.CallForHelp;
 import org.alexdev.havana.game.moderation.cfh.CallForHelpManager;
+import org.alexdev.havana.game.moderation.cfh.enums.CFHAction;
 import org.alexdev.havana.game.player.Player;
 import org.alexdev.havana.messages.outgoing.moderation.CFH_ACK;
 import org.alexdev.havana.messages.types.MessageEvent;
@@ -17,9 +18,7 @@ public class DELETE_CRY implements MessageEvent {
             return;
         }
 
-        CFHDao.updateReplyType(cfh, "DELETE", "");
-
-        CallForHelpManager.getInstance().deleteCall(cfh);
+        CallForHelpManager.getInstance().deleteCall(cfh, CFHAction.DELETE, null);
         player.send(new CFH_ACK(null));
     }
 }
