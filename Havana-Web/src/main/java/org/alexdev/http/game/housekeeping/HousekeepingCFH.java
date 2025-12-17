@@ -8,6 +8,7 @@ public class HousekeepingCFH {
     private final String roomName;
     private final int roomId;
     private final String createdTime;
+    private final long expireTime;
     private final boolean deleted;
     private final String cryId;
     private final String moderator;
@@ -15,7 +16,7 @@ public class HousekeepingCFH {
     private final String action;
     private final String messageToUser;
 
-    public HousekeepingCFH(int cfhId, int userId, String username, String reason, String roomName, int roomId, String createdTime, boolean deleted, String cryId, String moderator,
+    public HousekeepingCFH(int cfhId, int userId, String username, String reason, String roomName, int roomId, String createdTime, long expireTime, boolean deleted, String cryId, String moderator,
                            String pickedTime, String action, String messageToUser) {
         this.cfhId = cfhId;
         this.userId = userId;
@@ -24,6 +25,7 @@ public class HousekeepingCFH {
         this.roomName = roomName;
         this.roomId = roomId;
         this.createdTime = createdTime;
+        this.expireTime = expireTime;
         this.deleted = deleted;
         this.cryId = cryId;
         this.moderator = moderator;
@@ -58,6 +60,10 @@ public class HousekeepingCFH {
 
     public String getCreatedTime() {
         return createdTime;
+    }
+
+    public long getExpireTime() {
+        return expireTime;
     }
 
     public boolean isDeleted() {
