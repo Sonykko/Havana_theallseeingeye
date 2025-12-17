@@ -82,6 +82,7 @@ public class HousekeepingCFHController {
             tpl.set("previousCFHlogs", HousekeepingCFHDao.getCFHlog(currentPage - 1, sortBy));
             tpl.set("page", currentPage);
             tpl.set("sortBy", sortBy);
+            tpl.set("now", System.currentTimeMillis() / 1000);
             tpl.render();
 
             // Delete alert after it's been rendered
@@ -195,6 +196,7 @@ public class HousekeepingCFHController {
             tpl.set("previousCFHlogs", HousekeepingCFHDao.getCFHlog(currentPage - 1, sortBy));
             tpl.set("page", currentPage);
             tpl.set("sortBy", sortBy);
+            tpl.set("now", System.currentTimeMillis() / 1000);
             tpl.render();
 
             // Delete alert after it's been rendered

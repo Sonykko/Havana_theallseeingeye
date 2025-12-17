@@ -84,6 +84,7 @@ public class HousekeepingCFHDao {
                 resultSet.getString("room"),
                 resultSet.getInt("room_id"),
                 resultSet.getString("created_time"),
+                resultSet.getLong("expire_time"),
                 resultSet.getBoolean("is_deleted"),
                 resultSet.getString("cry_id"),
                 resultSet.getString("moderator"),

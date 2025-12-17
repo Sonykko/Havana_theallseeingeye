@@ -44,7 +44,7 @@
 				  <td>{% if cfhlog.getPickedTime() == null %}-{% else %}{{ cfhlog.getPickedTime() }}{% endif %}</td>
 				  <td>{% if cfhlog.getAction() == null %}-{% else %}{{ cfhlog.getAction() }}{% endif %}</td>
 				  <td>{% if cfhlog.getAction() == 'REPLY' %}{{ cfhlog.getMessageToUser() }}{% else %}-{% endif %}</td>				  					  
-				  {% if cfhlog.isDeleted() %}
+				  {% if cfhlog.isDeleted() or (now > cfhlog.getExpireTime()) %}
 				  <td>-</td>				  
 				  {% else %}
 				  <td><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/api/cfh.pick?cryId={{ cfhlog.getCryId() }}">Pick Up</a></td>
