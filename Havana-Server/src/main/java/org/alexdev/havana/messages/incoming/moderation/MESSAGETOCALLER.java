@@ -4,6 +4,7 @@ import org.alexdev.havana.dao.mysql.CFHDao;
 import org.alexdev.havana.game.moderation.cfh.CallForHelp;
 import org.alexdev.havana.game.moderation.cfh.CallForHelpManager;
 import org.alexdev.havana.game.fuserights.Fuseright;
+import org.alexdev.havana.game.moderation.cfh.enums.CFHAction;
 import org.alexdev.havana.game.player.Player;
 import org.alexdev.havana.game.player.PlayerManager;
 import org.alexdev.havana.messages.outgoing.moderation.CRY_REPLY;
@@ -32,9 +33,7 @@ public class MESSAGETOCALLER implements MessageEvent {
             return;
         }
 
-        CFHDao.updateReplyType(cfh, "REPLY", message);
-
         caller.send(new CRY_REPLY(message));
-        CallForHelpManager.getInstance().deleteCall(cfh);
+        CallForHelpManager.getInstance().deleteCall(cfh, CFHAction.REPLY, message);
     }
 }
