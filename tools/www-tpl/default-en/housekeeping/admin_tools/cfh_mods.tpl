@@ -36,7 +36,7 @@
 				  <td>{{ cfhlog.getCreatedTime() }}</td>
 				  <td>{{ cfhlog.getRoomName() }} (id: {{ cfhlog.getRoomId() }})</td>				  
 				  <td>{{ cfhlog.getReason() }}</td>			  
-				  {% if cfhlog.isDeleted() %}
+				  {% if cfhlog.isDeleted() or (now > cfhlog.getExpireTime()) %}
 				  <td>-</td>				  
 				  {% else %}
 				  <td><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools/api/cfh.pick?cryId={{ cfhlog.getCryId() }}">Pick Up</a></td>

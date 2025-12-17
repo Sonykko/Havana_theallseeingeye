@@ -15,7 +15,7 @@
                 </tr>
               </thead>
               <tbody>
-				{% if cfhlog.getAction() != "PICK UP" %}
+				{% if cfhlog.getAction() != "PICK_UP" %}
 				<div class="alert alert-danger">
 					<text>The CFH is already picked up or it's not picked up by any Moderator yet</text>
 				</div>
