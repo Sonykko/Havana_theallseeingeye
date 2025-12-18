@@ -10,6 +10,7 @@ import org.alexdev.http.dao.housekeeping.HousekeepingCFHTopicsDao;
 import org.alexdev.http.dao.housekeeping.HousekeepingLogsDao;
 import org.alexdev.http.dao.housekeeping.HousekeepingMiniMailDao;
 import org.alexdev.http.game.housekeeping.HousekeepingManager;
+import org.alexdev.http.game.housekeeping.enums.HousekeepingLogType;
 import org.alexdev.http.game.minimail.MinimailMessage;
 import org.alexdev.http.util.SessionUtil;
 import org.alexdev.http.util.housekeeping.ModerationApiUtil;
@@ -31,7 +32,7 @@ public class HousekeepingMiniMailController {
 
         if (!HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "bans")) {
             client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/permissions");
-            HousekeepingLogsDao.logHousekeepingAction("BAD_PERMISSIONS", playerDetails.getId(), playerDetails.getName(), "URL: " + client.request().uri(), client.getIpAddress());
+            HousekeepingLogsDao.logHousekeepingAction(HousekeepingLogType.BAD_PERMISSIONS, playerDetails.getId(), playerDetails.getName(), "URL: " + client.request().uri(), client.getIpAddress());
             return;
         }
 
@@ -121,7 +122,7 @@ public class HousekeepingMiniMailController {
             String[] messagesId = messagesIdsString.split(",");
             for (String messageId : messagesId) {
                 HousekeepingMiniMailDao.archiveReportedMessage(Integer.parseInt(messageId));
-                HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Archived and deleted MiniMail message (id: " + messageId + "). URL: " + client.request().uri(), client.getIpAddress());
+                HousekeepingLogsDao.logHousekeepingAction(HousekeepingLogType.STAFF_ACTION, playerDetails.getId(), playerDetails.getName(), "Archived and deleted MiniMail message (id: " + messageId + "). URL: " + client.request().uri(), client.getIpAddress());
             }
         }
 
@@ -156,7 +157,7 @@ public class HousekeepingMiniMailController {
                 String[] messagesId = messagesIdsString.split(",");
                 for (String messageId : messagesId) {
                     HousekeepingMiniMailDao.archiveReportedMessage(Integer.parseInt(messageId));
-                    HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Archived and deleted MiniMail message (id: " + messageId + "). URL: " + client.request().uri(), client.getIpAddress());
+                    HousekeepingLogsDao.logHousekeepingAction(HousekeepingLogType.STAFF_ACTION, playerDetails.getId(), playerDetails.getName(), "Archived and deleted MiniMail message (id: " + messageId + "). URL: " + client.request().uri(), client.getIpAddress());
                 }
             }
 

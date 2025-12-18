@@ -10,6 +10,7 @@ import org.alexdev.http.Routes;
 import org.alexdev.http.dao.housekeeping.HousekeepingLogsDao;
 import org.alexdev.http.dao.housekeeping.HousekeepingRoomDao;
 import org.alexdev.http.game.housekeeping.HousekeepingManager;
+import org.alexdev.http.game.housekeeping.enums.HousekeepingLogType;
 import org.alexdev.http.util.RconUtil;
 import org.alexdev.http.util.SessionUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -33,7 +34,7 @@ public class HousekeepingRoomsController {
 
         if (!HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "bans")) {
             client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/permissions");
-            HousekeepingLogsDao.logHousekeepingAction("BAD_PERMISSIONS", playerDetails.getId(), playerDetails.getName(), "URL: " + client.request().uri(), client.getIpAddress());
+            HousekeepingLogsDao.logHousekeepingAction(HousekeepingLogType.BAD_PERMISSIONS, playerDetails.getId(), playerDetails.getName(), "URL: " + client.request().uri(), client.getIpAddress());
             return;
         }
 
@@ -123,7 +124,7 @@ public class HousekeepingRoomsController {
             put("roomId", roomId);
         }});
 
-        HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Copy/clone the room with the ID " + room.getId() + " . URL: " + client.request().uri(), client.getIpAddress());
+        HousekeepingLogsDao.logHousekeepingAction(HousekeepingLogType.STAFF_ACTION, playerDetails.getId(), playerDetails.getName(), "Copy/clone the room with the ID " + room.getId() + " . URL: " + client.request().uri(), client.getIpAddress());
 
         var clonedRoomId = getClonedRoom(playerDetails);
 
@@ -149,7 +150,7 @@ public class HousekeepingRoomsController {
 
         if (!HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "user/edit")) {
             client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/permissions");
-            HousekeepingLogsDao.logHousekeepingAction("BAD_PERMISSIONS", playerDetails.getId(), playerDetails.getName(), "URL: " + client.request().uri(), client.getIpAddress());
+            HousekeepingLogsDao.logHousekeepingAction(HousekeepingLogType.BAD_PERMISSIONS, playerDetails.getId(), playerDetails.getName(), "URL: " + client.request().uri(), client.getIpAddress());
             return;
         }
 
@@ -205,7 +206,7 @@ public class HousekeepingRoomsController {
                         put("showOwnerName", showOwnerName);
                     }});
 
-                    HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Edited Private Room with the ID " + roomId + ". URL: " + client.request().uri(), client.getIpAddress());
+                    HousekeepingLogsDao.logHousekeepingAction(HousekeepingLogType.STAFF_ACTION, playerDetails.getId(), playerDetails.getName(), "Edited Private Room with the ID " + roomId + ". URL: " + client.request().uri(), client.getIpAddress());
 
                     client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/admin_tools/rooms/edit?id=" + roomId);
 

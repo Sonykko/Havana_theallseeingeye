@@ -11,6 +11,7 @@ import org.alexdev.http.dao.housekeeping.HousekeepingLogsDao;
 import org.alexdev.http.dao.housekeeping.HousekeepingRankDao;
 import org.alexdev.http.game.housekeeping.HousekeepingManager;
 import org.alexdev.http.game.housekeeping.HousekeepingRankVar;
+import org.alexdev.http.game.housekeeping.enums.HousekeepingLogType;
 import org.alexdev.http.util.RconUtil;
 import org.alexdev.http.util.SessionUtil;
 import org.alexdev.http.util.housekeeping.MessageEncoderUtil;
@@ -33,7 +34,7 @@ public class HousekeepingRanksController {
 
         if (!HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "user/ranks") && playerDetails.getId() != 1) {
             client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/permissions");
-            HousekeepingLogsDao.logHousekeepingAction("BAD_PERMISSIONS", playerDetails.getId(), playerDetails.getName(), "URL: " + client.request().uri(), client.getIpAddress());
+            HousekeepingLogsDao.logHousekeepingAction(HousekeepingLogType.BAD_PERMISSIONS, playerDetails.getId(), playerDetails.getName(), "URL: " + client.request().uri(), client.getIpAddress());
             return;
         }
 
@@ -137,7 +138,7 @@ public class HousekeepingRanksController {
         }
 
         HousekeepingRankDao.setRank(user, rankId);
-        HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Set the rank ID " + rankId + " (" + newRankName + ") to player " + user + ". URL: " + client.request().uri(), client.getIpAddress());
+        HousekeepingLogsDao.logHousekeepingAction(HousekeepingLogType.STAFF_ACTION, playerDetails.getId(), playerDetails.getName(), "Set the rank ID " + rankId + " (" + newRankName + ") to player " + user + ". URL: " + client.request().uri(), client.getIpAddress());
 
         client.session().set("alertColour", "success");
         client.session().set("alertMessage", "Successfully set the rank ID " + rankId + " (" + newRankName + ") to the player " + user);
@@ -193,7 +194,7 @@ public class HousekeepingRanksController {
         rankVar.setDescription(rankDescription);
 
         HousekeepingRankDao.setRankTextVars(rankVar.getId(), rankVar.getName(), rankVar.getBadge(), rankVar.getDescription());
-        HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Updated the variables for rank " + rankVar.getName() + " (id: " + rankVar.getId() + "). URL: " + client.request().uri(), client.getIpAddress());
+        HousekeepingLogsDao.logHousekeepingAction(HousekeepingLogType.STAFF_ACTION, playerDetails.getId(), playerDetails.getName(), "Updated the variables for rank " + rankVar.getName() + " (id: " + rankVar.getId() + "). URL: " + client.request().uri(), client.getIpAddress());
 
         client.session().set("alertColour", "success");
         client.session().set("alertMessage", "Successfully update the texts variables for rank " + rankVar.getName() + " (id: " + rankVar.getId() + ")");

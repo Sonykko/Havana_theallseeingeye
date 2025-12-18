@@ -10,6 +10,7 @@ import org.alexdev.havana.server.rcon.messages.RconHeader;
 import org.alexdev.http.Routes;
 import org.alexdev.http.dao.housekeeping.HousekeepingLogsDao;
 import org.alexdev.http.game.housekeeping.HousekeepingManager;
+import org.alexdev.http.game.housekeeping.enums.HousekeepingLogType;
 import org.alexdev.http.util.RconUtil;
 import org.alexdev.http.util.SessionUtil;
 
@@ -38,7 +39,7 @@ public class HousekeepingAdsController {
 
         if (!HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "room_ads")) {
             client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/permissions");
-            HousekeepingLogsDao.logHousekeepingAction("BAD_PERMISSIONS", playerDetails.getId(), playerDetails.getName(), "URL: " + client.request().uri(), client.getIpAddress());
+            HousekeepingLogsDao.logHousekeepingAction(HousekeepingLogType.BAD_PERMISSIONS, playerDetails.getId(), playerDetails.getName(), "URL: " + client.request().uri(), client.getIpAddress());
             return;
         }
 
@@ -61,7 +62,7 @@ public class HousekeepingAdsController {
                     String url = client.post().getString("roomad-" + value + "-url");
 
                     advertisementList.add(new Advertisement(Integer.parseInt(value), isLoadingAd, roomId, image, url, isEnabled));
-                    HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Created Room Ad with the ID " + value + ". URL: " + client.request().uri(), client.getIpAddress());
+                    HousekeepingLogsDao.logHousekeepingAction(HousekeepingLogType.STAFF_ACTION, playerDetails.getId(), playerDetails.getName(), "Created Room Ad with the ID " + value + ". URL: " + client.request().uri(), client.getIpAddress());
 
                 }
 
@@ -110,13 +111,13 @@ public class HousekeepingAdsController {
 
         if (!HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "room_ads")) {
             client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/permissions");
-            HousekeepingLogsDao.logHousekeepingAction("BAD_PERMISSIONS", playerDetails.getId(), playerDetails.getName(), "URL: " + client.request().uri(), client.getIpAddress());            return;
+            HousekeepingLogsDao.logHousekeepingAction(HousekeepingLogType.BAD_PERMISSIONS, playerDetails.getId(), playerDetails.getName(), "URL: " + client.request().uri(), client.getIpAddress());            return;
         }
 
         try {
             int id = client.get().getInt("id");
             AdvertisementsDao.deleteAd(id);
-            HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Deleted Room Ad with the ID " + id + ". URL: " + client.request().uri(), client.getIpAddress());
+            HousekeepingLogsDao.logHousekeepingAction(HousekeepingLogType.STAFF_ACTION, playerDetails.getId(), playerDetails.getName(), "Deleted Room Ad with the ID " + id + ". URL: " + client.request().uri(), client.getIpAddress());
 
             client.session().set("alertColour", "danger");
             client.session().set("alertMessage", "Room ad has been deleted successfully");
@@ -151,7 +152,7 @@ public class HousekeepingAdsController {
 
         if (!HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "room_ads")) {
             client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/permissions");
-            HousekeepingLogsDao.logHousekeepingAction("BAD_PERMISSIONS", playerDetails.getId(), playerDetails.getName(), "URL: " + client.request().uri(), client.getIpAddress());            return;
+            HousekeepingLogsDao.logHousekeepingAction(HousekeepingLogType.BAD_PERMISSIONS, playerDetails.getId(), playerDetails.getName(), "URL: " + client.request().uri(), client.getIpAddress());            return;
         }
 
         try {
@@ -163,7 +164,7 @@ public class HousekeepingAdsController {
                 boolean isRoomLoadingAd = client.post().contains("loading-ad") && client.post().getString("loading-ad").equalsIgnoreCase("on");
 
                 AdvertisementsDao.create(roomId, url, image, isEnabled, isRoomLoadingAd);
-                HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Created a Room Ad in the Room with the ID " + roomId + ". URL: " + client.request().uri(), client.getIpAddress());
+                HousekeepingLogsDao.logHousekeepingAction(HousekeepingLogType.STAFF_ACTION, playerDetails.getId(), playerDetails.getName(), "Created a Room Ad in the Room with the ID " + roomId + ". URL: " + client.request().uri(), client.getIpAddress());
                 AdManager.getInstance().reset();
 
                 client.session().set("alertColour", "success");

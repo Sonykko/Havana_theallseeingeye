@@ -7,6 +7,7 @@ import org.alexdev.http.Routes;
 import org.alexdev.http.dao.housekeeping.HousekeepingBannersDao;
 import org.alexdev.http.dao.housekeeping.HousekeepingLogsDao;
 import org.alexdev.http.game.housekeeping.HousekeepingManager;
+import org.alexdev.http.game.housekeeping.enums.HousekeepingLogType;
 import org.alexdev.http.util.SessionUtil;
 import org.apache.commons.lang3.StringUtils;
 
@@ -24,7 +25,7 @@ public class HousekeepingBannersController {
 
         if (!HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "articles/create")) {
             client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/permissions");
-            HousekeepingLogsDao.logHousekeepingAction("BAD_PERMISSIONS", playerDetails.getId(), playerDetails.getName(), "URL: " + client.request().uri(), client.getIpAddress());
+            HousekeepingLogsDao.logHousekeepingAction(HousekeepingLogType.BAD_PERMISSIONS, playerDetails.getId(), playerDetails.getName(), "URL: " + client.request().uri(), client.getIpAddress());
 
             return;
         }
@@ -92,7 +93,7 @@ public class HousekeepingBannersController {
         }
 
         HousekeepingBannersDao.createBanner(textBanner, createBanner, urlBanner, statusBanner, advancedBanner, orderIdBanner);
-        HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Created Ad Banner. URL: " + client.request().uri(), client.getIpAddress());
+        HousekeepingLogsDao.logHousekeepingAction(HousekeepingLogType.STAFF_ACTION, playerDetails.getId(), playerDetails.getName(), "Created Ad Banner. URL: " + client.request().uri(), client.getIpAddress());
 
         client.session().set("alertColour", "success");
         client.session().set("alertMessage", "The Banner has been successfully created");
@@ -113,7 +114,7 @@ public class HousekeepingBannersController {
         }
 
         HousekeepingBannersDao.deleteBanner(bannerId);
-        HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Deleted Ad Banner with the ID " + bannerId + ". URL: " + client.request().uri(), client.getIpAddress());
+        HousekeepingLogsDao.logHousekeepingAction(HousekeepingLogType.STAFF_ACTION, playerDetails.getId(), playerDetails.getName(), "Deleted Ad Banner with the ID " + bannerId + ". URL: " + client.request().uri(), client.getIpAddress());
 
         client.session().set("alertColour", "success");
         client.session().set("alertMessage", "The Banner has been successfully deleted");
@@ -189,7 +190,7 @@ public class HousekeepingBannersController {
 
         HousekeepingBannersDao.saveBanner(banner);
 
-        HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Edit Ad Banner with the ID " + bannerId + ". URL: " + client.request().uri(), client.getIpAddress());
+        HousekeepingLogsDao.logHousekeepingAction(HousekeepingLogType.STAFF_ACTION, playerDetails.getId(), playerDetails.getName(), "Edit Ad Banner with the ID " + bannerId + ". URL: " + client.request().uri(), client.getIpAddress());
 
         client.session().set("alertColour", "success");
         client.session().set("alertMessage", "The Banner has been successfully saved");

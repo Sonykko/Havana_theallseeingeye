@@ -12,6 +12,7 @@ import org.alexdev.http.dao.housekeeping.HousekeepingPickRecoDao;
 import org.alexdev.http.game.housekeeping.HousekeepingManager;
 import org.alexdev.http.game.housekeeping.HousekeepingPickReco;
 import org.alexdev.http.game.housekeeping.HousekeepingPickRecoDTO;
+import org.alexdev.http.game.housekeeping.enums.HousekeepingLogType;
 import org.alexdev.http.util.SessionUtil;
 import org.apache.commons.lang3.StringUtils;
 
@@ -32,7 +33,7 @@ public class HousekeepingRecommendedController {
 
         if (!HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "articles/create")) {
             client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/permissions");
-            HousekeepingLogsDao.logHousekeepingAction("BAD_PERMISSIONS", playerDetails.getId(), playerDetails.getName(), "URL: " + client.request().uri(), client.getIpAddress());
+            HousekeepingLogsDao.logHousekeepingAction(HousekeepingLogType.BAD_PERMISSIONS, playerDetails.getId(), playerDetails.getName(), "URL: " + client.request().uri(), client.getIpAddress());
             return;
         }
 
@@ -132,7 +133,7 @@ public class HousekeepingRecommendedController {
         }
 
         HousekeepingPickRecoDao.createPickReco((int) recoId, "GROUP", 0);
-        HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Created Recommended group with the ID " + recoId + ". URL: " + client.request().uri(), client.getIpAddress());
+        HousekeepingLogsDao.logHousekeepingAction(HousekeepingLogType.STAFF_ACTION, playerDetails.getId(), playerDetails.getName(), "Created Recommended group with the ID " + recoId + ". URL: " + client.request().uri(), client.getIpAddress());
 
         client.session().set("alertColour", "success");
         client.session().set("alertMessage", "The Recommended has been successfully created");
@@ -163,7 +164,7 @@ public class HousekeepingRecommendedController {
         }
 
         HousekeepingPickRecoDao.deletePickReco(pickReco.getRecommendedId(), "GROUP", 0);
-        HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Deleted Recommended group with the ID " + recoId + ". URL: " + client.request().uri(), client.getIpAddress());
+        HousekeepingLogsDao.logHousekeepingAction(HousekeepingLogType.STAFF_ACTION, playerDetails.getId(), playerDetails.getName(), "Deleted Recommended group with the ID " + recoId + ". URL: " + client.request().uri(), client.getIpAddress());
 
         client.session().set("alertColour", "success");
         client.session().set("alertMessage", "The Recommended has been successfully deleted");
@@ -247,7 +248,7 @@ public class HousekeepingRecommendedController {
         }
 
         HousekeepingPickRecoDao.SavePickReco(recoIdSave, "GROUP", setStaffPick, (int) recoId, "GROUP", 0);
-        HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Edited Recommended group with the ID " + recoId + " (anterior), " + recoIdSave + "(posterior). URL: " + client.request().uri(), client.getIpAddress());
+        HousekeepingLogsDao.logHousekeepingAction(HousekeepingLogType.STAFF_ACTION, playerDetails.getId(), playerDetails.getName(), "Edited Recommended group with the ID " + recoId + " (anterior), " + recoIdSave + "(posterior). URL: " + client.request().uri(), client.getIpAddress());
 
         client.session().set("alertColour", "success");
         client.session().set("alertMessage", "The Recommended has been successfully saved");
