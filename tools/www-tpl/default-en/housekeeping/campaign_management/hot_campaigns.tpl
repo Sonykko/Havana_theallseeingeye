@@ -1,6 +1,6 @@
 {% include "housekeeping/base/header.tpl" %}
   <body>
-    {% set articlesCreateActive = " active " %}
+    {% set campaignManagementActive = "active" %}
 	{% include "housekeeping/base/navigation.tpl" %}
 	{% include "housekeeping/base/navigation_campaign_management.tpl" %}
 	<script type="text/javascript">
