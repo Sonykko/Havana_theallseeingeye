@@ -188,6 +188,14 @@ Developed by Sonykko.
       - Access to Housekeeping user chatlog
       - All activity log system
       - Room/user CFH topics
+      - Calls for help for Flash client
+        - Pick CFH
+        - Reply CFH
+        - Release CFH
+        - Block CFH
+        - Follow CFH room
+        - Close CFH
+        - Delete CFH
   - Navigator
     - Pets count for room visitors count
   - Room
