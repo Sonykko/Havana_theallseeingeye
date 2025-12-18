@@ -12,6 +12,7 @@ import org.alexdev.http.dao.housekeeping.HousekeepingLogsDao;
 import org.alexdev.http.dao.housekeeping.HousekeepingStickieNotesDao;
 import org.alexdev.http.game.housekeeping.HousekeepingManager;
 import org.alexdev.http.game.housekeeping.HousekeepingStickieNote;
+import org.alexdev.http.game.housekeeping.enums.HousekeepingLogType;
 import org.alexdev.http.util.RconUtil;
 import org.alexdev.http.util.SessionUtil;
 import org.alexdev.http.util.housekeeping.MessageEncoderUtil;
@@ -36,7 +37,7 @@ public class HousekeepingStickieNotesController {
 
         if (!HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "bans")) {
             client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/permissions");
-            HousekeepingLogsDao.logHousekeepingAction("BAD_PERMISSIONS", playerDetails.getId(), playerDetails.getName(), "URL: " + client.request().uri(), client.getIpAddress());
+            HousekeepingLogsDao.logHousekeepingAction(HousekeepingLogType.BAD_PERMISSIONS, playerDetails.getId(), playerDetails.getName(), "URL: " + client.request().uri(), client.getIpAddress());
             return;
         }
 
@@ -153,7 +154,7 @@ public class HousekeepingStickieNotesController {
             }
             client.session().set("alertColour", "success");
             client.session().set("alertMessage", "Selected Stickie Notes have been archived successfully.");
-            HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Archived Stickie Notes (id's: " + stickieIdsString + "). URL: " + client.request().uri(), client.getIpAddress());
+            HousekeepingLogsDao.logHousekeepingAction(HousekeepingLogType.STAFF_ACTION, playerDetails.getId(), playerDetails.getName(), "Archived Stickie Notes (id's: " + stickieIdsString + "). URL: " + client.request().uri(), client.getIpAddress());
         } else {
             client.session().set("alertColour", "warning");
             client.session().set("alertMessage", "No Stickie Notes were selected for archiving.");
@@ -179,7 +180,7 @@ public class HousekeepingStickieNotesController {
             }
             client.session().set("alertColour", "success");
             client.session().set("alertMessage", "Selected Stickie Notes have been deleted successfully.");
-            HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Deleted and Archived Stickie Notes (id's: " + stickieIdsString + "). URL: " + client.request().uri(), client.getIpAddress());
+            HousekeepingLogsDao.logHousekeepingAction(HousekeepingLogType.STAFF_ACTION, playerDetails.getId(), playerDetails.getName(), "Deleted and Archived Stickie Notes (id's: " + stickieIdsString + "). URL: " + client.request().uri(), client.getIpAddress());
         } else {
             client.session().set("alertColour", "warning");
             client.session().set("alertMessage", "No Stickie Notes were selected for deletion.");
@@ -215,7 +216,7 @@ public class HousekeepingStickieNotesController {
                 }
                 client.session().set("alertColour", "success");
                 client.session().set("alertMessage", "Selected Stickie Notes have been deleted successfully.");
-                HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Banned and Deleted Stickie Notes (id's: " + stickieIdsString + "). URL: " + client.request().uri(), client.getIpAddress());
+                HousekeepingLogsDao.logHousekeepingAction(HousekeepingLogType.STAFF_ACTION, playerDetails.getId(), playerDetails.getName(), "Banned and Deleted Stickie Notes (id's: " + stickieIdsString + "). URL: " + client.request().uri(), client.getIpAddress());
             }
 
             if (usernames != null && !usernames.isEmpty()) {

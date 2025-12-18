@@ -13,6 +13,7 @@ import org.alexdev.http.dao.housekeeping.HousekeepingGroupsDao;
 import org.alexdev.http.dao.housekeeping.HousekeepingLogsDao;
 import org.alexdev.http.dao.housekeeping.HousekeepingPlayerDao;
 import org.alexdev.http.game.housekeeping.HousekeepingManager;
+import org.alexdev.http.game.housekeeping.enums.HousekeepingLogType;
 import org.alexdev.http.util.GroupUtil;
 import org.alexdev.http.util.HtmlUtil;
 import org.alexdev.http.util.SessionUtil;
@@ -35,7 +36,7 @@ public class HousekeepingGroupsController {
 
         if (!HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "bans")) {
             client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/permissions");
-            HousekeepingLogsDao.logHousekeepingAction("BAD_PERMISSIONS", playerDetails.getId(), playerDetails.getName(), "URL: " + client.request().uri(), client.getIpAddress());
+            HousekeepingLogsDao.logHousekeepingAction(HousekeepingLogType.BAD_PERMISSIONS, playerDetails.getId(), playerDetails.getName(), "URL: " + client.request().uri(), client.getIpAddress());
             return;
         }
 
@@ -173,7 +174,7 @@ public class HousekeepingGroupsController {
 
             GroupUtil.refreshGroup(Integer.parseInt(groupId));
 
-            HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Updated the group with the ID " + groupId + ". URL: " + client.request().uri(), client.getIpAddress());
+            HousekeepingLogsDao.logHousekeepingAction(HousekeepingLogType.STAFF_ACTION, playerDetails.getId(), playerDetails.getName(), "Updated the group with the ID " + groupId + ". URL: " + client.request().uri(), client.getIpAddress());
 
             client.session().set("alertColour", "success");
             client.session().set("alertMessage", "Successfully update the group with the ID " + groupId);

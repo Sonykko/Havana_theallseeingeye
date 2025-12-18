@@ -11,6 +11,7 @@ import org.alexdev.http.Routes;
 import org.alexdev.http.dao.housekeeping.HousekeepingLogsDao;
 import org.alexdev.http.dao.housekeeping.HousekeepingSettingsDao;
 import org.alexdev.http.game.housekeeping.HousekeepingManager;
+import org.alexdev.http.game.housekeeping.enums.HousekeepingLogType;
 import org.alexdev.http.util.ConfigEntry;
 import org.alexdev.http.util.RconUtil;
 import org.alexdev.http.util.SessionUtil;
@@ -45,7 +46,7 @@ public class HousekeepingConfigController {
         if (!HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "configuration")) {
             if (GameConfiguration.getInstance().getBoolean("hk.trusted.person.enabled") && !playerDetails.isTrustedPerson() || !GameConfiguration.getInstance().getBoolean("hk.trusted.person.enabled")) {
                 client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/permissions");
-                HousekeepingLogsDao.logHousekeepingAction("BAD_PERMISSIONS", playerDetails.getId(), playerDetails.getName(), "URL: " + client.request().uri(), client.getIpAddress());
+                HousekeepingLogsDao.logHousekeepingAction(HousekeepingLogType.BAD_PERMISSIONS, playerDetails.getId(), playerDetails.getName(), "URL: " + client.request().uri(), client.getIpAddress());
                 return;
             }
         }
@@ -62,7 +63,7 @@ public class HousekeepingConfigController {
 
             RconUtil.sendCommand(RconHeader.REFRESH_SETTINGS, new HashMap<>());
 
-            HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Updated settings of System status. URL: " + client.request().uri(), client.getIpAddress());
+            HousekeepingLogsDao.logHousekeepingAction(HousekeepingLogType.STAFF_ACTION, playerDetails.getId(), playerDetails.getName(), "Updated settings of System status. URL: " + client.request().uri(), client.getIpAddress());
 
             // Reload config
             // GameConfiguration.getInstance(new WebSettingsConfigWriter());

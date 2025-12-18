@@ -8,6 +8,7 @@ import org.alexdev.http.dao.housekeeping.HousekeepingCFHTopicsDao;
 import org.alexdev.http.dao.housekeeping.HousekeepingLogsDao;
 import org.alexdev.http.game.housekeeping.HousekeepingCFHTopics;
 import org.alexdev.http.game.housekeeping.HousekeepingManager;
+import org.alexdev.http.game.housekeeping.enums.HousekeepingLogType;
 import org.alexdev.http.util.SessionUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
@@ -28,7 +29,7 @@ public class HousekeepingCFHTopicsController {
 
         if (!HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "cfh/topics")) {
             client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/permissions");
-            HousekeepingLogsDao.logHousekeepingAction("BAD_PERMISSIONS", playerDetails.getId(), playerDetails.getName(), "URL: " + client.request().uri(), client.getIpAddress());
+            HousekeepingLogsDao.logHousekeepingAction(HousekeepingLogType.BAD_PERMISSIONS, playerDetails.getId(), playerDetails.getName(), "URL: " + client.request().uri(), client.getIpAddress());
             return;
         }
 
@@ -87,7 +88,7 @@ public class HousekeepingCFHTopicsController {
 
         HousekeepingCFHTopicsDao.create(sanctionReasonId, sanctionReasonValue, sanctionReasonDesc);
 
-        HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Created CFH topic. URL: " + client.request().uri(), client.getIpAddress());
+        HousekeepingLogsDao.logHousekeepingAction(HousekeepingLogType.STAFF_ACTION, playerDetails.getId(), playerDetails.getName(), "Created CFH topic. URL: " + client.request().uri(), client.getIpAddress());
 
         client.session().set("alertColour", "success");
         client.session().set("alertMessage", "Successfully created CFH topic");
@@ -133,7 +134,7 @@ public class HousekeepingCFHTopicsController {
 
         HousekeepingCFHTopicsDao.save(topic);
 
-        HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Updated the CFH topic with the ID " + topic.getId() + ". URL: " + client.request().uri(), client.getIpAddress());
+        HousekeepingLogsDao.logHousekeepingAction(HousekeepingLogType.STAFF_ACTION, playerDetails.getId(), playerDetails.getName(), "Updated the CFH topic with the ID " + topic.getId() + ". URL: " + client.request().uri(), client.getIpAddress());
 
         client.session().set("alertColour", "success");
         client.session().set("alertMessage", "Successfully update the CFH topic with the ID " + topic.getId());
@@ -155,7 +156,7 @@ public class HousekeepingCFHTopicsController {
 
         HousekeepingCFHTopicsDao.delete(topic.getId());
 
-        HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Deleted the CFH topic with the ID " + topic.getId() + ". URL: " + client.request().uri(), client.getIpAddress());
+        HousekeepingLogsDao.logHousekeepingAction(HousekeepingLogType.STAFF_ACTION, playerDetails.getId(), playerDetails.getName(), "Deleted the CFH topic with the ID " + topic.getId() + ". URL: " + client.request().uri(), client.getIpAddress());
 
         client.session().set("alertColour", "success");
         client.session().set("alertMessage", "Successfully deleted the CFH topic");
