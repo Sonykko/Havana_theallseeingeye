@@ -6,6 +6,7 @@ import org.alexdev.havana.game.moderation.cfh.enums.CFHAction;
 import org.alexdev.havana.game.player.Player;
 import org.alexdev.havana.game.player.PlayerManager;
 import org.alexdev.havana.game.room.Room;
+import org.alexdev.havana.messages.flash.outgoing.modtool.FLASH_CFH;
 import org.alexdev.havana.messages.outgoing.moderation.CALL_FOR_HELP;
 import org.alexdev.havana.messages.outgoing.moderation.DELETE_CRY;
 import org.alexdev.havana.messages.outgoing.moderation.PICKED_CRY;
@@ -13,6 +14,7 @@ import org.alexdev.havana.messages.outgoing.moderation.CRY_RECEIVED;
 import org.alexdev.havana.messages.types.MessageComposer;
 import org.alexdev.havana.util.DateUtil;
 
+import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -46,6 +48,22 @@ public class CallForHelpManager {
         CFHDao.getInstance().insertCall(cfh);
 
         sendToModerators(new CALL_FOR_HELP(cfh));
+        sendToModerators(new FLASH_CFH(cfh));
+        caller.send(new CRY_RECEIVED());
+    }
+
+    public void submitCall(Player caller, int category, int reportedUser, Room room, String message) {
+        Date timestamp = new Date();
+        int callId = this.latestCallId.getAndIncrement();
+        int callerId = caller.getDetails().getId();
+
+        CallForHelp cfh = new CallForHelp(callId, callerId, room, message);
+        this.callsForHelp.put(callId, cfh);
+
+        CFHDao.getInstance().insertCall(cfh);
+
+        sendToModerators(new CALL_FOR_HELP(cfh));
+        sendToModerators(new FLASH_CFH(cfh));
         caller.send(new CRY_RECEIVED());
     }
 
@@ -151,6 +169,20 @@ public class CallForHelpManager {
 
         this.callsForHelp.values().removeIf(filter);
 
+    }
+
+    public void sendCfhsToMod(Player player) {
+        Predicate<CallForHelp> filter = cfh -> DateUtil.getCurrentTimeSeconds() < cfh.getExpireTime();
+        this.callsForHelp.values().stream().filter(filter).toList().forEach(x -> {
+            player.send(new FLASH_CFH(x));
+        });
+    }
+
+    public void sendCfhsToMods() {
+        Predicate<CallForHelp> filter = cfh -> DateUtil.getCurrentTimeSeconds() < cfh.getExpireTime();
+        this.callsForHelp.values().stream().filter(filter).toList().forEach(x -> {
+            sendToModerators(new FLASH_CFH(x));
+        });
     }
 
     /**

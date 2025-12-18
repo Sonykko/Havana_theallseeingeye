@@ -18,6 +18,7 @@ public class CallForHelp {
     private int category = 2;
     private long expireTime;
     private boolean isDeleted;
+    private int reportedUser;
 
     CallForHelp(int cryId, int callerId, Room room, String message) {
         this.cryId = cryId;
@@ -25,6 +26,17 @@ public class CallForHelp {
         this.message = message;
         this.pickedUpBy = 0;
         this.room = room;
+        this.requestTime = System.currentTimeMillis();
+        this.expireTime = DateUtil.getCurrentTimeSeconds() + TimeUnit.MINUTES.toSeconds(30);
+    }
+
+    CallForHelp(int cryId, int callerId, Room room, String message, int reportedUser) {
+        this.cryId = cryId;
+        this.callerId = callerId;
+        this.message = message;
+        this.pickedUpBy = 0;
+        this.room = room;
+        this.reportedUser = reportedUser;
         this.requestTime = System.currentTimeMillis();
         this.expireTime = DateUtil.getCurrentTimeSeconds() + TimeUnit.MINUTES.toSeconds(30);
     }
@@ -71,6 +83,11 @@ public class CallForHelp {
         this.pickedUpBy = moderator.getDetails().getId();
     }
 
+    public void releaseCfh() {
+        this.pickedUpBy = 0;
+        this.isDeleted = false;
+    }
+
     public long getExpireTime() {
         return expireTime;
     }
@@ -85,5 +102,9 @@ public class CallForHelp {
 
     public void setDeleted(boolean deleted) {
         isDeleted = deleted;
+    }
+
+    public int getReportedUser() {
+        return this.reportedUser;
     }
 }

@@ -35,6 +35,7 @@ import org.alexdev.havana.game.room.RoomManager;
 import org.alexdev.havana.game.wordfilter.WordfilterManager;
 import org.alexdev.havana.log.Log;
 import org.alexdev.havana.messages.flash.outgoing.FLASH_ROOMENTRYINFO;
+import org.alexdev.havana.messages.flash.outgoing.modtool.FLASH_CFH;
 import org.alexdev.havana.messages.flash.outgoing.modtool.FLASH_MODTOOL;
 import org.alexdev.havana.messages.incoming.catalogue.GET_CATALOG_INDEX;
 import org.alexdev.havana.messages.outgoing.alerts.ALERT;
@@ -133,10 +134,11 @@ public class RconConnectionHandler extends ChannelInboundHandlerAdapter {
 
                     for (Player player : PlayerManager.getInstance().getPlayers()) {
                         if (player.hasFuse(Fuseright.RECEIVE_CALLS_FOR_HELP)) {
-
-                            player.send(new PICKED_CRY(call));
-                            //player.send(new DELETE_CRY(cfh));
-                            //player.send(new DELETE_CRY(callId));
+                            if (player.getNetwork().isFlashConnection()) {
+                                player.send(new FLASH_CFH(call));
+                            } else {
+                                player.send(new PICKED_CRY(call));
+                            }
                         }
                     }
                     break;
@@ -168,7 +170,12 @@ public class RconConnectionHandler extends ChannelInboundHandlerAdapter {
                         return;
                     }
 
-                    caller.send(new CRY_REPLY(messageReplyDecoded));
+                    if (caller.getNetwork().isFlashConnection()) {
+                        caller.send(new MODERATOR_ALERT(messageReplyDecoded));
+                    } else {
+                        caller.send(new CRY_REPLY(messageReplyDecoded));
+                    }
+
                     CallForHelpManager.getInstance().deleteCall(cfh, CFHAction.REPLY, messageReplyDecoded);
                     break;
                 case CFH_BLOCK:

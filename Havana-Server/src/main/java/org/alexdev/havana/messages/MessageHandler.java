@@ -7,8 +7,7 @@ import org.alexdev.havana.game.room.Room;
 import org.alexdev.havana.game.room.RoomManager;
 import org.alexdev.havana.log.Log;
 import org.alexdev.havana.messages.flash.incoming.SET_HOME_ROOM;
-import org.alexdev.havana.messages.flash.incoming.modtool.FLASH_MODTOOL_ROOMINFO;
-import org.alexdev.havana.messages.flash.incoming.modtool.FLASH_MODTOOL_ROOM_CHATLOG;
+import org.alexdev.havana.messages.flash.incoming.modtool.*;
 import org.alexdev.havana.messages.flash.incoming.navigator.*;
 import org.alexdev.havana.messages.flash.incoming.navigator.beta.FLASH_GETGUESTROOMS;
 import org.alexdev.havana.messages.flash.incoming.rooms.*;
@@ -580,6 +579,10 @@ public class MessageHandler {
     private void registerFlashModTool() {
         registerEvent(459, new FLASH_MODTOOL_ROOMINFO());
         registerEvent(456, new FLASH_MODTOOL_ROOM_CHATLOG());
+        registerEvent(453, new FLASH_CFH_SUBMIT());
+        registerEvent(450, new FLASH_CFH_PICK());
+        registerEvent(451, new FLASH_CFH_RELEASE());
+        registerEvent(452, new FLASH_CFH_CLOSE());
     }
 
     /**
