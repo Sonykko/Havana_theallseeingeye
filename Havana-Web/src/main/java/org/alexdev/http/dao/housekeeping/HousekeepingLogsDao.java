@@ -3,6 +3,7 @@ package org.alexdev.http.dao.housekeeping;
 import org.alexdev.havana.dao.Storage;
 import org.alexdev.http.game.housekeeping.HousekeepingLog;
 import org.alexdev.http.game.housekeeping.HousekeepingLoginLog;
+import org.alexdev.http.game.housekeeping.enums.HousekeepingLogType;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -13,14 +14,14 @@ import java.util.Date;
 import java.util.List;
 
 public class HousekeepingLogsDao {
-    public static void logHousekeepingAction(String type, int userId, String username, String description, String userIp) {
+    public static void logHousekeepingAction(HousekeepingLogType type, int userId, String username, String description, String userIp) {
         Connection sqlConnection = null;
         PreparedStatement preparedStatement = null;
 
         try {
             sqlConnection = Storage.getStorage().getConnection();
             preparedStatement = Storage.getStorage().prepare("INSERT INTO housekeeping_staff_logs (type, user_id, username, description, user_ip, timestamp) VALUES (?, ?, ?, ?, ?, ?)", sqlConnection);
-            preparedStatement.setString(1, type);
+            preparedStatement.setString(1, type.toString());
             preparedStatement.setInt(2, userId);
             preparedStatement.setString(3, username);
             preparedStatement.setString(4, description);

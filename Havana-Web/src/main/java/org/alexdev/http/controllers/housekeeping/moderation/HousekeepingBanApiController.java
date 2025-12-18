@@ -10,6 +10,7 @@ import org.alexdev.havana.util.config.GameConfiguration;
 import org.alexdev.http.Routes;
 import org.alexdev.http.dao.housekeeping.HousekeepingLogsDao;
 import org.alexdev.http.dao.housekeeping.HousekeepingPlayerDao;
+import org.alexdev.http.game.housekeeping.enums.HousekeepingLogType;
 import org.alexdev.http.util.RconUtil;
 import org.alexdev.http.util.SessionUtil;
 import org.alexdev.http.util.housekeeping.ModerationApiUtil;
@@ -179,7 +180,7 @@ public class HousekeepingBanApiController {
 
             HousekeepingPlayerDao.unbanUser(playerDetails.getId());
 
-            HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", staffDetails.getId(), staffDetails.getName(), "Ha desbaneado al " + GameConfiguration.getInstance().getString("site.name") + " '" + username + " (id: " + playerDetails.getId() + ")'. URL: " + client.request().uri(), client.getIpAddress());
+            HousekeepingLogsDao.logHousekeepingAction(HousekeepingLogType.STAFF_ACTION, staffDetails.getId(), staffDetails.getName(), "Ha desbaneado al " + GameConfiguration.getInstance().getString("site.name") + " '" + username + " (id: " + playerDetails.getId() + ")'. URL: " + client.request().uri(), client.getIpAddress());
 
             client.session().set("alertColour", "success");
             client.session().set("alertMessage", "The players " + users + " has been unbanned.");

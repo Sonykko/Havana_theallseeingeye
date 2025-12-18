@@ -9,6 +9,7 @@ import org.alexdev.http.Routes;
 import org.alexdev.http.dao.NewsDao;
 import org.alexdev.http.dao.housekeeping.HousekeepingLogsDao;
 import org.alexdev.http.game.housekeeping.HousekeepingManager;
+import org.alexdev.http.game.housekeeping.enums.HousekeepingLogType;
 import org.alexdev.http.game.news.NewsArticle;
 import org.alexdev.http.game.news.NewsCategory;
 import org.alexdev.http.game.news.NewsDateKey;
@@ -41,7 +42,7 @@ public class HousekeepingNewsController {
 
         if (!HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "articles/create")) {
             client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/permissions");
-            HousekeepingLogsDao.logHousekeepingAction("BAD_PERMISSIONS", playerDetails.getId(), playerDetails.getName(), "URL: " + client.request().uri(), client.getIpAddress());
+            HousekeepingLogsDao.logHousekeepingAction(HousekeepingLogType.BAD_PERMISSIONS, playerDetails.getId(), playerDetails.getName(), "URL: " + client.request().uri(), client.getIpAddress());
             return;
         }
 
@@ -68,7 +69,7 @@ public class HousekeepingNewsController {
 
         if (!HousekeepingManager.getInstance().hasPermission(session.getRank(), "articles/create")) {
             client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/permissions");
-            HousekeepingLogsDao.logHousekeepingAction("BAD_PERMISSIONS", client.session().getInt("user.id"), session.getName(), client.request().uri(), client.getIpAddress());
+            HousekeepingLogsDao.logHousekeepingAction(HousekeepingLogType.BAD_PERMISSIONS, client.session().getInt("user.id"), session.getName(), client.request().uri(), client.getIpAddress());
             return;
         }
 
@@ -101,7 +102,7 @@ public class HousekeepingNewsController {
             );
 
             NewsDao.insertCategories(articleId, categories);
-            HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", client.session().getInt("user.id"), session.getName(), "Created News Article with the ID " + articleId + ". URL: " + client.request().uri(), client.getIpAddress());
+            HousekeepingLogsDao.logHousekeepingAction(HousekeepingLogType.STAFF_ACTION, client.session().getInt("user.id"), session.getName(), "Created News Article with the ID " + articleId + ". URL: " + client.request().uri(), client.getIpAddress());
 
             client.session().set("alertColour", "success");
             client.session().set("alertMessage", "The submission of the news article was successful");
@@ -145,14 +146,14 @@ public class HousekeepingNewsController {
         if (article.getAuthorId() != playerDetails.getId()) {
             if (!HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "articles/delete_any")) {
                 client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/permissions");
-                HousekeepingLogsDao.logHousekeepingAction("BAD_PERMISSIONS", playerDetails.getId(), playerDetails.getName(), "URL: " + client.request().uri(), client.getIpAddress());
+                HousekeepingLogsDao.logHousekeepingAction(HousekeepingLogType.BAD_PERMISSIONS, playerDetails.getId(), playerDetails.getName(), "URL: " + client.request().uri(), client.getIpAddress());
                 return;
             }
         }
 
         if (!HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "articles/delete_own")) {
             client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/permissions");
-            HousekeepingLogsDao.logHousekeepingAction("BAD_PERMISSIONS", playerDetails.getId(), playerDetails.getName(), "URL: " + client.request().uri(), client.getIpAddress());
+            HousekeepingLogsDao.logHousekeepingAction(HousekeepingLogType.BAD_PERMISSIONS, playerDetails.getId(), playerDetails.getName(), "URL: " + client.request().uri(), client.getIpAddress());
             return;
         }
 
@@ -166,7 +167,7 @@ public class HousekeepingNewsController {
             client.session().set("alertColour", "success");
             client.session().set("alertMessage", "Successfully deleted the article");
             NewsDao.delete(client.get().getInt("id"));
-            HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Deleted News Article with the ID " + client.get().getInt("id") + ". URL: " + client.request().uri(), client.getIpAddress());
+            HousekeepingLogsDao.logHousekeepingAction(HousekeepingLogType.STAFF_ACTION, playerDetails.getId(), playerDetails.getName(), "Deleted News Article with the ID " + client.get().getInt("id") + ". URL: " + client.request().uri(), client.getIpAddress());
         }
 
 
@@ -197,7 +198,7 @@ public class HousekeepingNewsController {
 
         if (!HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "articles/edit_own")) {
             client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/permissions");
-            HousekeepingLogsDao.logHousekeepingAction("BAD_PERMISSIONS", playerDetails.getId(), playerDetails.getName(), "URL: " + client.request().uri(), client.getIpAddress());
+            HousekeepingLogsDao.logHousekeepingAction(HousekeepingLogType.BAD_PERMISSIONS, playerDetails.getId(), playerDetails.getName(), "URL: " + client.request().uri(), client.getIpAddress());
             return;
         }
 
@@ -215,7 +216,7 @@ public class HousekeepingNewsController {
             if (article.getAuthorId() != playerDetails.getId()) {
                 if (!HousekeepingManager.getInstance().hasPermission(playerDetails.getRank(), "articles/edit_any")) {
                     client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/permissions");
-                    HousekeepingLogsDao.logHousekeepingAction("BAD_PERMISSIONS", playerDetails.getId(), playerDetails.getName(), "URL: " + client.request().uri(), client.getIpAddress());
+                    HousekeepingLogsDao.logHousekeepingAction(HousekeepingLogType.BAD_PERMISSIONS, playerDetails.getId(), playerDetails.getName(), "URL: " + client.request().uri(), client.getIpAddress());
                     return;
                 }
             }
@@ -250,7 +251,7 @@ public class HousekeepingNewsController {
                 article.getCategories().addAll(categories);
 
                 NewsDao.save(article);
-                HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", playerDetails.getId(), playerDetails.getName(), "Edited News Article with the ID " + article.getId() + ". URL: " + client.request().uri(), client.getIpAddress());
+                HousekeepingLogsDao.logHousekeepingAction(HousekeepingLogType.STAFF_ACTION, playerDetails.getId(), playerDetails.getName(), "Edited News Article with the ID " + article.getId() + ". URL: " + client.request().uri(), client.getIpAddress());
 
                 client.session().set("alertColour", "success");
                 client.session().set("alertMessage", "The article was successfully saved");

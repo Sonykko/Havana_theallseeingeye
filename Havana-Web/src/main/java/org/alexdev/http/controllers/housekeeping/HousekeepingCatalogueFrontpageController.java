@@ -10,6 +10,7 @@ import org.alexdev.http.Routes;
 import org.alexdev.http.dao.NewsDao;
 import org.alexdev.http.dao.housekeeping.HousekeepingLogsDao;
 import org.alexdev.http.game.housekeeping.HousekeepingManager;
+import org.alexdev.http.game.housekeeping.enums.HousekeepingLogType;
 import org.alexdev.http.util.RconUtil;
 import org.alexdev.http.util.SessionUtil;
 
@@ -27,7 +28,7 @@ public class HousekeepingCatalogueFrontpageController {
 
         if (!HousekeepingManager.getInstance().hasPermission(session.getRank(), "catalogue/edit_frontpage")) {
             client.redirect("/" + Routes.HOUSEKEEPING_PATH + "/permissions");
-            HousekeepingLogsDao.logHousekeepingAction("BAD_PERMISSIONS", client.session().getInt("user.id"), session.getName(), client.request().uri(), client.getIpAddress());
+            HousekeepingLogsDao.logHousekeepingAction(HousekeepingLogType.BAD_PERMISSIONS, client.session().getInt("user.id"), session.getName(), client.request().uri(), client.getIpAddress());
             return;
         }
 
@@ -48,7 +49,7 @@ public class HousekeepingCatalogueFrontpageController {
             GameConfiguration.getInstance().updateSetting("catalogue.frontpage.input.3",  client.post().getString("subtext"));
             GameConfiguration.getInstance().updateSetting("catalogue.frontpage.input.4",  client.post().getString("link"));
 
-            HousekeepingLogsDao.logHousekeepingAction("STAFF_ACTION", client.session().getInt("user.id"), session.getName(), "Updated Catalogue frontpage. URL: " + client.request().uri(), client.getIpAddress());
+            HousekeepingLogsDao.logHousekeepingAction(HousekeepingLogType.STAFF_ACTION, client.session().getInt("user.id"), session.getName(), "Updated Catalogue frontpage. URL: " + client.request().uri(), client.getIpAddress());
 
             RconUtil.sendCommand(RconHeader.REFRESH_CATALOGUE_FRONTPAGE, new HashMap<>());
         }
