@@ -1,6 +1,6 @@
 {% include "housekeeping/base/header.tpl" %}
   <body>
-	{% set bansActive = " active " %}
+	{% set adminToolsActive = "active" %}
 	{% include "housekeeping/base/navigation.tpl" %}
 	{% include "housekeeping/base/navigation_admin_tools.tpl" %}
      <h2 class="mt-4">Group Description Reports</h2>		
