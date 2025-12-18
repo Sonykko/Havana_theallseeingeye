@@ -1,6 +1,6 @@
 {% include "housekeeping/base/header.tpl" %}
   <body>
-    {% set articlesCreateActive = " active " %}
+    {% set campaignManagementActive = "active" %}
 	{% include "housekeeping/base/navigation.tpl" %}
 	{% include "housekeeping/base/navigation_campaign_management.tpl" %}	
      <h2 class="mt-4">Edit Room Ads</h2>

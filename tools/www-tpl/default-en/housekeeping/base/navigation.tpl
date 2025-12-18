@@ -5,19 +5,19 @@
 	  <div>
 	 <div class="nav-fix">
 			{% if (housekeepingManager.hasPermission(playerDetails.getRank(), 'configuration')) or (playerDetails.isTrustedPerson()) and (gameConfig.getBoolean('hk.trusted.person.enabled')) %}
-		<a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/system_status" class="nav-links {{ configurationsActive }}">System status</a>
+		<a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/system_status" class="nav-links {{ systemStatusActive }}">System status</a>
 				{% endif %}
 			
 			{% if housekeepingManager.hasPermission(playerDetails.getRank(), 'root/login') %}
-		<a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/statistics" class="nav-links {{ dashboardActive }}">Statistics</a>
+		<a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/statistics" class="nav-links {{ statisticsActive }}">Statistics</a>
 				{% endif %}
 	  
 			{% if housekeepingManager.hasPermission(playerDetails.getRank(), 'bans') %}
-		<a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools" class="nav-links {{ bansActive }}">Admin tools</a>
+		<a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/admin_tools" class="nav-links {{ adminToolsActive }}">Admin tools</a>
 				{% endif %}
 			
 			{% if housekeepingManager.hasPermission(playerDetails.getRank(), 'articles/create') %}
-		<a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/campaign_management" class="nav-links {{ articlesCreateActive }}">Campaign management</a>
+		<a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/campaign_management" class="nav-links {{ campaignManagementActive }}">Campaign management</a>
 				{% endif %}
 		</div>
 

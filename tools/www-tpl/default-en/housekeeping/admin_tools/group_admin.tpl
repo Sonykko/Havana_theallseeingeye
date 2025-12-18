@@ -1,6 +1,6 @@
 {% include "housekeeping/base/header.tpl" %}
 <body>
-    {% set bansActive = " active " %}
+    {% set adminToolsActive = "active" %}
     {% set ruffleActive = "active" %}
     {% include "housekeeping/base/navigation.tpl" %}
     {% include "housekeeping/base/navigation_admin_tools.tpl" %}
