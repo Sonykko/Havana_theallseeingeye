@@ -16,6 +16,7 @@ public enum RconHeader {
     REFRESH_PRIVATE_ROOM("refresh_private_room"),
     REFRESH_WORDFILTER("refresh_wordfilter"),
     REFRESH_GAMESRANKS("refresh_gamesranks"),
+    REFRESH_BOTS("refresh_bots"),
     MOD_ALERT_USER("mod_alert_user"),
     MOD_KICK_USER("mod_kick_user"),
     HOTEL_ALERT("hotel_alert"),

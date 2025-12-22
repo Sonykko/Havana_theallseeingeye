@@ -9,6 +9,7 @@ import org.alexdev.havana.game.achievements.AchievementManager;
 import org.alexdev.havana.game.achievements.AchievementType;
 import org.alexdev.havana.game.ads.AdManager;
 import org.alexdev.havana.game.badges.Badge;
+import org.alexdev.havana.game.bot.BotManager;
 import org.alexdev.havana.game.catalogue.CatalogueManager;
 import org.alexdev.havana.game.events.Event;
 import org.alexdev.havana.game.events.EventsManager;
@@ -436,6 +437,17 @@ public class RconConnectionHandler extends ChannelInboundHandlerAdapter {
                     break;
                 case REFRESH_SETTINGS:
                     GameConfiguration.reset(new GameConfigWriter());
+                    break;
+                case REFRESH_BOTS:
+                    int roomIdBot = Integer.parseInt(message.getValues().get("roomId"));
+                    var roomBot = RoomManager.getInstance().getRoomById(roomIdBot);
+
+                    if (roomBot == null) {
+                        return;
+                    }
+
+                    BotManager.getInstance().removeBots(roomBot);
+                    BotManager.getInstance().addBots(roomBot);
                     break;
                 case REFRESH_GAMESRANKS:
                     List<Player> playersGamesRanks = PlayerManager.getInstance().getPlayers();

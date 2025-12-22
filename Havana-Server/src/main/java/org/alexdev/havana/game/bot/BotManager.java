@@ -1,6 +1,7 @@
 package org.alexdev.havana.game.bot;
 
 import org.alexdev.havana.dao.mysql.BotDao;
+import org.alexdev.havana.game.entity.Entity;
 import org.alexdev.havana.game.pathfinder.Position;
 import org.alexdev.havana.game.player.Player;
 import org.alexdev.havana.game.room.Room;
@@ -38,6 +39,12 @@ public class BotManager {
 
         if (botDataList.size() > 0) {
             room.getTaskManager().scheduleTask("BotCommandTask", new BotTask(room), 0, 1, TimeUnit.SECONDS);
+        }
+    }
+
+    public void removeBots(Room room) {
+        for (Entity bots : room.getEntityManager().getEntitiesByClass(Bot.class)) {
+            room.getEntityManager().leaveRoom(bots, true);
         }
     }
 

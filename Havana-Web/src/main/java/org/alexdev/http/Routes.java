@@ -415,5 +415,6 @@ public class Routes {
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/badges/wipe", HousekeepingBadgesController::wipe);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/campaign_management/catalogue/pages", HousekeepingCataloguePagesController::pages);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/campaign_management/catalogue/pages/create", HousekeepingCataloguePagesController::pagesCreate);
+        RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/campaign_management/bots", HousekeepingBotsController::bots);
     }
 }
