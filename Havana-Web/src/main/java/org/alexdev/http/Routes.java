@@ -396,5 +396,6 @@ public class Routes {
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/campaign_management/catalogue/edit_frontpage", HousekeepingCatalogueFrontpageController::edit);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/campaign_management/catalogue/pages", HousekeepingCataloguePagesController::pages);
         RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/campaign_management/catalogue/pages/create", HousekeepingCataloguePagesController::pagesCreate);
+        RouteManager.addRoute("/" + HOUSEKEEPING_PATH + "/campaign_management/bots", HousekeepingBotsController::bots);
     }
 }

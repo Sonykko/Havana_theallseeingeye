@@ -25,7 +25,10 @@
 			{% if housekeepingManager.hasPermission(playerDetails.getRank(), 'room_badges') %}
 			<text><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/campaign_management/room_badges/create?id=" class="subnav-link">Create room badge</a></text>
 			<text><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/campaign_management/room_badges" class="subnav-link">Edit & delete rooms badges</a></text>
-			{% endif %}	
+			{% endif %}
+			{% if housekeepingManager.hasPermission(playerDetails.getRank(), 'bots') %}
+			<text><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/campaign_management/bots" class="subnav-link">Bot admin</a></text>
+			{% endif %}
       </div>
     </div>
 {% endif %}	

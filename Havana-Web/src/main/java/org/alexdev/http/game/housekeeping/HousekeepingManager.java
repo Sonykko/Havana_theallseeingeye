@@ -42,6 +42,7 @@ public class HousekeepingManager {
         this.permissions.put("user/ranks", PlayerRank.ADMINISTRATOR);
         this.permissions.put("trusted_person/manage", PlayerRank.ADMINISTRATOR);
         this.permissions.put("cfh/topics", PlayerRank.HOTEL_MANAGER);
+        this.permissions.put("bots", PlayerRank.COMMUNITY_MANAGER);
     }
 
     /**
