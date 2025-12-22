@@ -148,6 +148,9 @@ Developed by Sonykko.
         - Edit pages
         - Copy pages
         - Delete pages
+    - Bot admin
+        - Search bots
+        - Save bots
 - theallseeingeye - Hobbanet design
 
 ### Website
