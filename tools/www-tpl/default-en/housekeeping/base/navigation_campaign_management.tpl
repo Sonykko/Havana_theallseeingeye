@@ -29,6 +29,9 @@
 			{% if housekeepingManager.hasPermission(playerDetails.getRank(), 'bots') %}
 			<text><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/campaign_management/bots" class="subnav-link">Bot admin</a></text>
 			{% endif %}
+			{% if housekeepingManager.hasPermission(playerDetails.getRank(), 'bots') %}
+			<text><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/campaign_management/botguide" class="subnav-link">Bot Guide tool</a></text>
+			{% endif %}
       </div>
     </div>
 {% endif %}	
