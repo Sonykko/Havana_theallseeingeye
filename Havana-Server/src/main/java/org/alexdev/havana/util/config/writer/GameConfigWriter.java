@@ -172,6 +172,8 @@ public class GameConfigWriter implements ConfigWriter {
 
         config.put("rcon.catalogue.refresh.message", "Hemos hecho unos cambios en la Habbo Tienda. Para evitar errores, hemos cerrado por unos instantes la ventana de compras. Ya la puedes abrir de nuevo.");
 
+        config.put("botguide.id", "46");
+
         for (var set : CommandManager.getCommands()) {
             if (set.getValue().getPlayerRank().getRankId() > 1) {
                 config.put("groups.ids.permission." + set.getKey()[0], "");

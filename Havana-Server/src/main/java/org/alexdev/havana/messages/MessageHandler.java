@@ -7,6 +7,8 @@ import org.alexdev.havana.game.room.Room;
 import org.alexdev.havana.game.room.RoomManager;
 import org.alexdev.havana.log.Log;
 import org.alexdev.havana.messages.flash.incoming.SET_HOME_ROOM;
+import org.alexdev.havana.messages.flash.incoming.bots.FLASH_GET_BOT_GUIDE;
+import org.alexdev.havana.messages.flash.incoming.bots.FLASH_KICK_BOT_GUIDE;
 import org.alexdev.havana.messages.flash.incoming.modtool.*;
 import org.alexdev.havana.messages.flash.incoming.navigator.*;
 import org.alexdev.havana.messages.flash.incoming.navigator.beta.FLASH_GETGUESTROOMS;
@@ -114,6 +116,7 @@ public class MessageHandler {
         registerPollPackets();
         registerTutorPackets();
         registerFlashModTool();
+        registerGuideBot();
 
         registerEvent(230, (player, reader) -> {
             if (player.getRoomUser().getRoom() == null) {
@@ -583,6 +586,11 @@ public class MessageHandler {
         registerEvent(450, new FLASH_CFH_PICK());
         registerEvent(451, new FLASH_CFH_RELEASE());
         registerEvent(452, new FLASH_CFH_CLOSE());
+    }
+
+    private void registerGuideBot() {
+        registerEvent(440, new FLASH_GET_BOT_GUIDE());
+        registerEvent(441, new FLASH_KICK_BOT_GUIDE());
     }
 
     /**

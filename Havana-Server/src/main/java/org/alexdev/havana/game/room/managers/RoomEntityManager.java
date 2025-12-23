@@ -404,6 +404,11 @@ public class RoomEntityManager {
             }
         }
 
+        // If the room has a guide bot, delete it when the owner leaves the room
+        if (room.getTaskManager().hasTask("BotGuideCommandTask") && room.getData().getOwnerId() == entity.getDetails().getId()) {
+            BotManager.getInstance().removeGuideBots(room);
+        }
+
         player.getMessenger().sendStatusUpdate();
         RoomDao.saveVisitors(this.room.getId(), this.room.getEntityManager().getPlayers().size());
 
