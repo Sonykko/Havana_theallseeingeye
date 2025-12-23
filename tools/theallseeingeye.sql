@@ -213,6 +213,18 @@ CREATE TABLE `ranks` (
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `rooms_botguide_speech`
+--
+
+CREATE TABLE `rooms_botguide_speech` (
+  `speech_key` varchar(255) NOT NULL,
+  `response` mediumtext NOT NULL,
+  `speech_trigger` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `settings_desc`
 --
 
@@ -267,6 +279,34 @@ INSERT INTO `ranks` (`id`, `name`, `badge`, `description`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Volcado de datos para la tabla `rooms_botguide_speech`
+--
+
+INSERT INTO `rooms_botguide_speech` (`speech_key`, `response`, `speech_trigger`) VALUES
+('BOT', 'El Bot más famoso en el mundo entero es R2-D2. Yo sólo soy un humilde seguidor de sus pasos.', 'BOT'),
+('DANCE', 'Si te ves con ganas de bailar, haz clic en tu cara y luego en \'bailar\'', 'BAILAR'),
+('EVENT', '¿Buscas gente con la que pasar el rato? Abre el Navegador y mira a ver dónde están todos.', 'EVENTO'),
+('FRAUD', 'Algunas personas podrían intentar entrar en contacto contigo para, al final, tratar de hacerse con tu contraseña y quitarte tu personaje. Ten cuidado.', 'TIMO'),
+('GAMES', 'Otros usuarios andan organizando eventos. Puedes echar un vistazo a las propuestas en la lista de eventos del Navegador.', 'JUEGOS'),
+('HELLO', '¿Qué tal?', 'HOLA'),
+('HIT', 'Ehh, eso me ha dolido. *Avisando a uno de los Hotel Managers*', 'GOLPE'),
+('INTRODUCE', 'Soy un Bot Guía y estoy aquí para responder a calquier pregunta en las próximas 24 horas.', NULL),
+('STAFF', 'Sí, siempre andan trabajando muy duro.', 'STAFF'),
+('WAVE', 'Si te ves con ganas de saludar, haz clic en tu cara y luego en \'saludar\'', 'SALUDAR'),
+('WELCOME', 'Hola. Bienvenido a Habbo, es un placer conocerte. ¿Necesitas ayuda?', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Volcado de datos para la tabla `rooms_bots`
+--
+
+INSERT INTO `rooms_bots` (`id`, `name`, `mission`, `x`, `y`, `start_look`, `figure`, `figure_flash`, `walkspace`, `room_id`, `speech`, `response`, `unrecognised_response`, `hand_items`) VALUES
+(46, 'Bot Guía', '¿Te guío en tus primeras 24 horas?', 8, 21, '2,2', 'sd=001&sh=003/41,41,41&lg=006/51,51,51&ch=202/139,24,32&lh=001/255,210,179&rh=001/255,210,179&hd=001/255,204,153&ey=001&fc=001/255,204,153&hr=203/103,78,59&hrb=203/2,3,4&rs=001/255,255,255&ls=001/255,255,255&bd=001/255,204,153', 'hr-836-61.hd-600-1.ch-824-110.lg-710-110.sh-730-110.he-1607-.ca-1813-', '9,18 9,16 9,17 9,19 9,20 9,21 9,22 9,23 8,18 8,16 8,17 8,19 8,20 8,21 8,22 8,23', 0, 'Puedes mover los Furnis o Muebles por toda tu Sala|Puedes encontrar nuevos amigos explorando las Salas de otros usuarios y pidiéndoles que te agreguen como amigo.|Si no me necesitas, simplemente expúlsame de la Sala.|¿Quieres oír unos cuantos consejos sobre lo que puedes hacer aquí?', '', '', '');
+
+-- --------------------------------------------------------
+
+--
 -- Volcado de datos para la tabla `settings_desc`
 --
 
@@ -281,6 +321,7 @@ INSERT INTO `settings_desc` (`setting`, `description`, `category`) VALUES
 ('battleball.restart.game.seconds', 'Set the restart game time of BattleBall in seconds', 'games'),
 ('battleball.start.minimum.active.teams', 'Set the minimum teams needed to start a game of BattleBall', 'games'),
 ('battleball.ticket.charge', 'Set the ticket charge of BattleBall', 'games'),
+('botguide.id', 'Set the bot id of Guide Bot', 'bots'),
 ('carry.timer.seconds', 'Set the carry timer in seconds', 'client'),
 ('catalogue.frontpage.input.1', 'ts_coll_09_sept_asteroid.gif', NULL),
 ('catalogue.frontpage.input.2', '¡Servidor Beta!', NULL),
@@ -555,6 +596,12 @@ ALTER TABLE `ranks`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indices de la tabla `rooms_botguide_speech`
+--
+ALTER TABLE `rooms_botguide_speech`
+  ADD PRIMARY KEY (`speech_key`);
+
+--
 -- Indices de la tabla `settings_desc`
 --
 ALTER TABLE `settings_desc`
@@ -681,6 +728,7 @@ UPDATE `settings` SET
       WHEN `setting` = 'battleball.restart.game.seconds' THEN 'games'
       WHEN `setting` = 'battleball.start.minimum.active.teams' THEN 'games'
       WHEN `setting` = 'battleball.ticket.charge' THEN 'games'
+      WHEN `setting` = 'botguide.id' THEN 'bots'
       WHEN `setting` = 'carry.timer.seconds' THEN 'client'
       WHEN `setting` = 'catalogue.frontpage.input.1' THEN NULL
       WHEN `setting` = 'catalogue.frontpage.input.2' THEN NULL
