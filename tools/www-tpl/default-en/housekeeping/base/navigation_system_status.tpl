@@ -48,6 +48,9 @@
 			{% if (housekeepingManager.hasPermission(playerDetails.getRank(), 'configuration')) or (playerDetails.isTrustedPerson()) and (gameConfig.getBoolean('hk.trusted.person.enabled')) %}
 			<text><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/system_status/configurations?settings=coins" class="subnav-link">Coins settings</a></text>
 			{% endif %}
+			{% if (housekeepingManager.hasPermission(playerDetails.getRank(), 'configuration')) or (playerDetails.isTrustedPerson()) and (gameConfig.getBoolean('hk.trusted.person.enabled')) %}
+			<text><a href="{{ site.sitePath }}/{{ site.housekeepingPath }}/system_status/configurations?settings=bots" class="subnav-link">Bots settings</a></text>
+			{% endif %}
       </div>
     </div>
 {% endif %}
