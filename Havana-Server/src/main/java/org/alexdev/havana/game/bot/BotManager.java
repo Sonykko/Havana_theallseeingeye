@@ -5,7 +5,9 @@ import org.alexdev.havana.game.entity.Entity;
 import org.alexdev.havana.game.pathfinder.Position;
 import org.alexdev.havana.game.player.Player;
 import org.alexdev.havana.game.room.Room;
+import org.alexdev.havana.game.room.tasks.BotGuideTask;
 import org.alexdev.havana.game.room.tasks.BotTask;
+import org.alexdev.havana.util.config.GameConfiguration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,10 +44,35 @@ public class BotManager {
         }
     }
 
+    public void addGuideBot(Room room) {
+        List<BotData> botDataList = BotDao.getBotDataByBotId(GameConfiguration.getInstance().getInteger("botguide.id"));
+
+        for (BotData botData : botDataList) {
+            Bot bot = new Bot(botData);
+            bot.getDetails().fill(0, botData.getName(), botData.getFigure(), botData.getMission(), "M");
+
+            Position startPosition = room.getModel().getDoorLocation();
+
+            room.getEntityManager().enterRoom(bot, startPosition);
+        }
+
+        if (botDataList.size() > 0) {
+            room.getTaskManager().scheduleTask("BotGuideCommandTask", new BotGuideTask(room), 0, 1, TimeUnit.SECONDS);
+        }
+    }
+
     public void removeBots(Room room) {
         for (Entity bots : room.getEntityManager().getEntitiesByClass(Bot.class)) {
             room.getEntityManager().leaveRoom(bots, true);
         }
+    }
+
+    public void removeGuideBots(Room room) {
+        for (Entity bots : room.getEntityManager().getEntitiesByClass(Bot.class)) {
+            room.getEntityManager().leaveRoom(bots, true);
+        }
+
+        room.getTaskManager().cancelTask("BotGuideCommandTask");
     }
 
     /**

@@ -7,6 +7,8 @@ package org.alexdev.havana.messages;
 import org.alexdev.havana.game.player.Player;
 import org.alexdev.havana.game.room.Room;
 import org.alexdev.havana.messages.incoming.TRYFLAT_FLASH;
+import org.alexdev.havana.messages.incoming.bots.FLASH_GET_BOT_GUIDE;
+import org.alexdev.havana.messages.incoming.bots.FLASH_KICK_BOT_GUIDE;
 import org.alexdev.havana.messages.incoming.handshake.HOMEROOM_FLASH;
 import org.alexdev.havana.messages.incoming.handshake.INIT_CRYPTO_FLASH;
 import org.alexdev.havana.messages.incoming.handshake.SSO;
@@ -29,6 +31,7 @@ public class MessageHandlerFlash extends MessageHandler {
         super(true);
 
         registerFlashPackets();
+        registerGuideBot();
     }
 
     private void registerFlashPackets() {
@@ -66,5 +69,10 @@ public class MessageHandlerFlash extends MessageHandler {
         registerEvent(388, new GETPUBLICSPACE_FLASH());
         registerEvent(386, new ROOM_EDIT_SAVE_ICON_FLASH());
         registerEvent(376, new SAVE_WARDROBE_OUTFIT_FLASH());
+    }
+
+    private void registerGuideBot() {
+        registerEvent(440, new FLASH_GET_BOT_GUIDE());
+        registerEvent(441, new FLASH_KICK_BOT_GUIDE());
     }
 }
