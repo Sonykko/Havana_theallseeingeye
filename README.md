@@ -151,6 +151,11 @@ Developed by Sonykko.
     - Bot admin
         - Search bots
         - Save bots
+    - Bot Guide tool
+        - Create speeches
+        - Search speeches
+        - Save speeches
+        - Delete speeches
 - theallseeingeye - Hobbanet design
 
 ### Website
@@ -191,6 +196,12 @@ Developed by Sonykko.
       - All activity log system
   - Navigator
     - Pets count for room visitors count
+  - Guide Bot
+    - Call Guide Bot
+    - Default welcome/enter room messages
+    - Ask to Guide Bot
+    - Guide Bot answer to user
+    - Kick Guide Bot
 
 # Screenshots
 
