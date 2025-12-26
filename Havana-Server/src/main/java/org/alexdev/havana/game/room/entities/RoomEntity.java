@@ -1,7 +1,7 @@
 package org.alexdev.havana.game.room.entities;
 
 import org.alexdev.havana.game.bot.BotManager;
-import org.alexdev.havana.game.bot.handlers.BotGuideSpeechHandler;
+import org.alexdev.havana.game.bot.handlers.BotGuideHandler;
 import org.alexdev.havana.game.entity.Entity;
 import org.alexdev.havana.game.entity.EntityType;
 import org.alexdev.havana.game.item.Item;
@@ -624,7 +624,7 @@ public abstract class RoomEntity {
             if (chatMessageType != CHAT_MESSAGE.ChatMessageType.WHISPER) {
                 BotManager.getInstance().handleSpeech((Player) this.entity, this.room, message);
                 PetManager.getInstance().handleSpeech((Player) this.entity, this.room, message);
-                BotGuideSpeechHandler.handleSpeech(this.room, message);
+                BotGuideHandler.handleSpeech(this.room, message);
             }
 
             if (saveToDb) {

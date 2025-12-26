@@ -283,17 +283,23 @@ INSERT INTO `ranks` (`id`, `name`, `badge`, `description`) VALUES
 --
 
 INSERT INTO `rooms_botguide_speech` (`speech_key`, `response`, `speech_trigger`) VALUES
+('BADGES', 'Puedes ganar Placas si tomas parte en determinadas competiciones o completas ciertas tareas.', 'PLACAS'),
 ('BOT', 'El Bot más famoso en el mundo entero es R2-D2. Yo sólo soy un humilde seguidor de sus pasos.', 'BOT'),
-('DANCE', 'Si te ves con ganas de bailar, haz clic en tu cara y luego en \'bailar\'', 'BAILAR'),
+('DANCE', 'Haz clic en el icono de tu cabeza|Si te ves con ganas de bailar, haz clic en tu cara y luego en \'bailar\'', 'BAILAR'),
 ('EVENT', '¿Buscas gente con la que pasar el rato? Abre el Navegador y mira a ver dónde están todos.', 'EVENTO'),
 ('FRAUD', 'Algunas personas podrían intentar entrar en contacto contigo para, al final, tratar de hacerse con tu contraseña y quitarte tu personaje. Ten cuidado.', 'TIMO'),
 ('GAMES', 'Otros usuarios andan organizando eventos. Puedes echar un vistazo a las propuestas en la lista de eventos del Navegador.', 'JUEGOS'),
+('GUIDE', 'Soy un Bot Guía, pero si buscas un Guía real, seguro que logras encontar a varios usuarios con una Placa de Guía.', 'GUÍA'),
+('HC', 'El Habbo Club te proporciona un regalo especial cada mes, más opciones de ropa y diseños de salas e incluso acceso a Sala Públicas exclusivas|Infórmate en la página del Habbo Club en la web', 'HC'),
 ('HELLO', '¿Qué tal?', 'HOLA'),
 ('HIT', 'Ehh, eso me ha dolido. *Avisando a uno de los Hotel Managers*', 'GOLPE'),
-('INTRODUCE', 'Soy un Bot Guía y estoy aquí para responder a calquier pregunta en las próximas 24 horas.', NULL),
+('INTRODUCE', 'Soy un Bot Guía y estoy aquí para responder a cualquier pregunta en las próximas 24 horas.', NULL),
+('ROOMS', '¿Buscas gente con la que pasar el rato? Abre el Navegador y mira a ver dónde están todos', 'SALAS'),
 ('STAFF', 'Sí, siempre andan trabajando muy duro.', 'STAFF'),
-('WAVE', 'Si te ves con ganas de saludar, haz clic en tu cara y luego en \'saludar\'', 'SALUDAR'),
-('WELCOME', 'Hola. Bienvenido a Habbo, es un placer conocerte. ¿Necesitas ayuda?', NULL);
+('TEST', '¿Qué me dices de una buena carrera a través de Teleports? Podrás pasar por múltiples Salas, probablemente temáticas, hasta llegar a la línea de meta', 'PRUEBA'),
+('WAVE', 'Haz clic en el icono de tu cabeza|Si te ves con ganas de saludar, haz clic en tu cara y luego en \'saludar\'', 'SALUDAR'),
+('WELCOME', 'Hola. Bienvenido a Habbo, es un placer conocerte. ¿Necesitas ayuda?', NULL),
+('WORK', 'Algunos Habbos te darán Créditos o Furni por ayudarles en sus Salas.', 'TRABAJAR');
 
 -- --------------------------------------------------------
 
@@ -302,7 +308,7 @@ INSERT INTO `rooms_botguide_speech` (`speech_key`, `response`, `speech_trigger`)
 --
 
 INSERT INTO `rooms_bots` (`id`, `name`, `mission`, `x`, `y`, `start_look`, `figure`, `figure_flash`, `walkspace`, `room_id`, `speech`, `response`, `unrecognised_response`, `hand_items`) VALUES
-(46, 'Bot Guía', '¿Te guío en tus primeras 24 horas?', 8, 21, '2,2', 'sd=001&sh=003/41,41,41&lg=006/51,51,51&ch=202/139,24,32&lh=001/255,210,179&rh=001/255,210,179&hd=001/255,204,153&ey=001&fc=001/255,204,153&hr=203/103,78,59&hrb=203/2,3,4&rs=001/255,255,255&ls=001/255,255,255&bd=001/255,204,153', 'hr-836-61.hd-600-1.ch-824-110.lg-710-110.sh-730-110.he-1607-.ca-1813-', '9,18 9,16 9,17 9,19 9,20 9,21 9,22 9,23 8,18 8,16 8,17 8,19 8,20 8,21 8,22 8,23', 0, 'Puedes mover los Furnis o Muebles por toda tu Sala|Puedes encontrar nuevos amigos explorando las Salas de otros usuarios y pidiéndoles que te agreguen como amigo.|Si no me necesitas, simplemente expúlsame de la Sala.|¿Quieres oír unos cuantos consejos sobre lo que puedes hacer aquí?', '', '', '');
+(46, 'Bot Guía', '¿Te guío en tus primeras 24 horas?', 8, 21, '2,2', 'sd=001&sh=003/41,41,41&lg=006/51,51,51&ch=202/139,24,32&lh=001/255,210,179&rh=001/255,210,179&hd=001/255,204,153&ey=001&fc=001/255,204,153&hr=203/103,78,59&hrb=203/2,3,4&rs=001/255,255,255&ls=001/255,255,255&bd=001/255,204,153', 'hr-836-61.hd-600-1.ch-824-110.lg-710-110.sh-730-110.he-1607-.ca-1813-', '9,18 9,16 9,17 9,19 9,20 9,21 9,22 9,23 8,18 8,16 8,17 8,19 8,20 8,21 8,22 8,23', 0, 'Puedes mover los Furnis o Muebles por toda tu Sala|Puedes encontrar nuevos amigos explorando las Salas de otros usuarios y pidiéndoles que te agreguen como amigo.|Si no me necesitas, simplemente expúlsame de la Sala.|¿Quieres oír unos cuantos consejos sobre lo que puedes hacer aquí?|Puedes crear y decorar tu propia Sala.|Si quieres, puedes marcar esta sala como tu Central o tu preferida.|Ésta es tu Sala.|Te puedes mover como yo haciendo clic en el suelo.', '', '', '');
 
 -- --------------------------------------------------------
 

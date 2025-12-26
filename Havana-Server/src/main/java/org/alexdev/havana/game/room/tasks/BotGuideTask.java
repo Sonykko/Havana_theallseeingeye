@@ -36,13 +36,13 @@ public class BotGuideTask implements Runnable {
     @Override
     public void run() {
         for (Bot bot : this.room.getEntityManager().getEntitiesByClass(Bot.class)) {
-            var frontTile = this.room.getModel().getDoorLocation().getSquareInFront();
+            if (DateUtil.getCurrentTimeSeconds() >= getNextRandomBoundTime()) {
+                Position newBound = room.getMapping().getRandomWalkableBound(bot);
 
-            bot.getRoomUser().walkTo(frontTile.getX(), frontTile.getY());
-            Position newBound = room.getMapping().getRandomWalkableBound(bot);
-
-            if (newBound != null) {
-                bot.getRoomUser().walkTo(newBound.getX(), newBound.getY());
+                if (newBound != null) {
+                    bot.getRoomUser().walkTo(newBound.getX(), newBound.getY());
+                }
+                setNextRandomBoundTime(DateUtil.getCurrentTimeSeconds() + 5);
             }
 
             if (DateUtil.getCurrentTimeSeconds() > bot.getNextWalkTime()) {
@@ -70,5 +70,15 @@ public class BotGuideTask implements Runnable {
                 }
             }
         }
+    }
+
+    private long nextRandomBoundTime;
+
+    public long getNextRandomBoundTime() {
+        return nextRandomBoundTime;
+    }
+
+    public void setNextRandomBoundTime(long nextRandomBoundTime) {
+        this.nextRandomBoundTime = nextRandomBoundTime;
     }
 }
