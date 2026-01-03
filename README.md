@@ -126,6 +126,7 @@ Developed by Sonykko.
       - Search rank
       - Delete rank
       - Save rank
+    - Hobba activity log
   - Campaign management
     - Ads banners tool
       - Create Ads banners
@@ -190,8 +191,22 @@ Developed by Sonykko.
       - Follow user
       - Go to room
   - Mod Tools
-    - Room kick 
-      - Stop event automatically
+    - Room actions
+      - Room kick
+        - Stop event automatically
+      - Change room lock to doorbell
+      - Change room name to 'Inappropriate to hotel management'
+      - Room caution
+      - Room alert
+    - User actions
+      - View all user details
+      - View Chatlog
+      - Message
+      - View Room Visits
+      - Mod Action
+        - Send caution
+        - Kick
+        - Ban
     - Calls for help
       - Access to Housekeeping user chatlog
       - All activity log system
