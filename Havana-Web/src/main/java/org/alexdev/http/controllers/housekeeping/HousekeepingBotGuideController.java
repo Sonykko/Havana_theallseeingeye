@@ -1,18 +1,20 @@
-
 package org.alexdev.http.controllers.housekeeping;
 
 import org.alexdev.duckhttpd.server.connection.WebConnection;
 import org.alexdev.duckhttpd.template.Template;
 import org.alexdev.havana.game.bot.enums.BotGuideSpeechDefaultType;
 import org.alexdev.havana.game.player.PlayerDetails;
+import org.alexdev.havana.util.config.GameConfiguration;
 import org.alexdev.http.Routes;
 import org.alexdev.http.dao.housekeeping.HousekeepingBotGuideDao;
+import org.alexdev.http.dao.housekeeping.HousekeepingBotsDao;
 import org.alexdev.http.dao.housekeeping.HousekeepingLogsDao;
 import org.alexdev.http.game.housekeeping.HousekeepingBotGuide;
 import org.alexdev.http.game.housekeeping.HousekeepingManager;
 import org.alexdev.http.game.housekeeping.enums.HousekeepingLogType;
 import org.alexdev.http.util.SessionUtil;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 
 import java.util.List;
 
@@ -41,6 +43,11 @@ public class HousekeepingBotGuideController {
             return;
         }
 
+        if ("saveBotGuide".equals(action)) {
+            saveBotGuide(client, playerDetails);
+            return;
+        }
+
         if ("searchSpeech".equals(action)) {
             searchSpeech(client, tpl);
         }
@@ -62,6 +69,7 @@ public class HousekeepingBotGuideController {
         }
 
         tpl.set("pageName", "Bot Guide tool");
+        tpl.set("botguide", HousekeepingBotsDao.getBotByBotId(GameConfiguration.getInstance().getInteger("botguide.id")));
         tpl.set("botguideSpeech", HousekeepingBotGuideDao.getAllSpeech(currentPage));
         tpl.set("nextSpeeches", HousekeepingBotGuideDao.getAllSpeech(currentPage + 1));
         tpl.set("previousSpeeches", HousekeepingBotGuideDao.getAllSpeech(currentPage - 1));
@@ -109,6 +117,46 @@ public class HousekeepingBotGuideController {
 
         client.session().set("alertColour", "success");
         client.session().set("alertMessage", "Successfully created speech");
+        client.redirect(getBotGuidePath());
+    }
+
+    private static void saveBotGuide(WebConnection client, PlayerDetails playerDetails) {
+        String botIdStr = client.post().getString("botId");
+        int botId = !NumberUtils.isParsable(botIdStr) ? 0 : Integer.parseInt(botIdStr);
+        String name = client.post().getString("name");
+        String mission = client.post().getString("mission");
+        String figure = client.post().getString("figure");
+        String figureFlash = client.post().getString("figureFlash");
+        String speech = client.post().getString("speech");
+
+        var bot = HousekeepingBotsDao.getBotByBotId(botId);
+
+        if (bot == null) {
+            client.session().set("alertColour", "danger");
+            client.session().set("alertMessage", "Can't save the Guide Bot cause not exists");
+            client.redirect(getBotGuidePath());
+            return;
+        }
+
+        if (name.isEmpty() || mission.isEmpty() || figure.isEmpty() || figureFlash.isEmpty() || speech.isEmpty()) {
+            client.session().set("alertColour", "danger");
+            client.session().set("alertMessage", "Please enter all valid values");
+            client.redirect(getBotGuidePath());
+            return;
+        }
+
+        bot.setName(name);
+        bot.setMission(mission);
+        bot.setFigure(figure);
+        bot.setFigureFlash(figureFlash);
+        bot.setSpeeches(speech);
+
+        HousekeepingBotGuideDao.saveGuideBot(bot);
+
+        HousekeepingLogsDao.logHousekeepingAction(HousekeepingLogType.STAFF_ACTION, playerDetails.getId(), playerDetails.getName(), "Updated the Guide Bot details with the ID " + bot.getId() + ". URL: " + client.request().uri(), client.getIpAddress());
+
+        client.session().set("alertColour", "success");
+        client.session().set("alertMessage", "Successfully update the Guide Bot details");
         client.redirect(getBotGuidePath());
     }
 

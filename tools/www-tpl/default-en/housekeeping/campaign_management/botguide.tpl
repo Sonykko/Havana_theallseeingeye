@@ -3,7 +3,7 @@
     {% set campaignManagementActive = "active" %}
     {% include "housekeeping/base/navigation.tpl" %}
     {% include "housekeeping/base/navigation_campaign_management.tpl" %}
-		<h2 class="mt-4">Bot Guide tool</h2>				  		
+		<h2 class="mt-4">Bot Guide tool {{ botguideId }}</h2>				  		
 		  {% include "housekeeping/base/alert.tpl" %}
 		  <br />		  
 		  <p><b>Create speech</b></p>
@@ -27,6 +27,42 @@
 				</div>
 			  </form>
 		  </div>
+		  <hr />
+		<p><b>Manage Guide Bot</b></p>
+		  <p>This tool allows you to manage all Guide Bot details.</p>
+				<table class="table table-striped">
+					<thead>
+						<tr>
+							<th>Name</th>							
+							<th>Mission</th>
+							<th>Figure</th>
+							<th>Automatic speech</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+						{% autoescape 'html' %}
+							<form method="post">
+								<input type="hidden" name="botId" value="{{ botguide.getId() }}" />
+								<td><input type="text" name="name" value="{{ botguide.getName() }}" style="width:100%" /></td>
+								<td><input type="text" name="mission" value="{{ botguide.getMission() }}" style="width:100%" /></td>
+								<td>
+									<div style="display: flex;width: 100%;">
+										<div style="width: 100%;">
+											<text style="display:flex;margin-bottom:10px;">v31: <input type="text" name="figure" value="{{ botguide.getFigure() }}" style="width:100%" /></text>
+											<text style="display:flex;">r39: <input type="text" name="figureFlash" value="{{ botguide.getFigureFlash() }}" style="width:100%" /></text>
+										</div>
+										<div style="display: flex;align-items: center;">-<img src="{{ site.habboImagingPath }}/habbo-imaging/avatarimage?figure={{ botguide.getFigureFlash() }}&size=s"></div>
+									</div>
+								</td>	
+								<td><textarea name="speech" style="width:100%;">{{ botguide.getSpeeches() }}</textarea></td>									
+								<td><button type="submit" name="action" value="saveBotGuide">Save</button></td>
+							</form>
+						{% endautoescape %}
+						</tr>
+					</tbody>
+				</table>
 		  <hr />		  
 		  <p><b>Find speech</b></p>
 		  <p>This tool allows you to search a Bot Guide speech with response starting or by key.</p>
@@ -59,7 +95,7 @@
 							<form method="post">
 								<input type="hidden" name="speechKeyOriginal" value="{{ speeches.getSpeechKey() }}" />
 								<td><input type="text" name="speechKey" value="{{ speeches.getSpeechKey() }}" style="width:100%" /></td>
-								<td><input type="text" name="response" value="{{ speeches.getResponse() }}" style="width:100%" /></td>
+								<td><textarea name="response" style="width:100%;">{{ speeches.getResponse() }}</textarea></td>
 								<td><input type="text" name="speechTrigger" value="{{ speeches.getSpeechTrigger() }}" style="width:100%" /></td>	
 								<td><button type="submit" name="action" value="saveSpeech">Save</button><button type="submit" name="action" value="deleteSpeech">Delete</button></td>
 							</form>
@@ -106,7 +142,7 @@
 							<form method="post">
 								<input type="hidden" name="speechKeyOriginal" value="{{ speeches.getSpeechKey() }}" />
 								<td><input type="text" name="speechKey" value="{{ speeches.getSpeechKey() }}" style="width:100%" /></td>
-								<td><input type="text" name="response" value="{{ speeches.getResponse() }}" style="width:100%" /></td>
+								<td><textarea name="response" style="width:100%;">{{ speeches.getResponse() }}</textarea></td>
 								<td><input type="text" name="speechTrigger" value="{{ speeches.getSpeechTrigger() }}" style="width:100%" /></td>	
 								<td><button type="submit" name="action" value="saveSpeech">Save</button><button type="submit" name="action" value="deleteSpeech">Delete</button></td>
 							</form>

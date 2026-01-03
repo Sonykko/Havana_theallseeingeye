@@ -1,7 +1,8 @@
-
 package org.alexdev.http.dao.housekeeping;
 
 import org.alexdev.havana.dao.Storage;
+import org.alexdev.havana.util.config.GameConfiguration;
+import org.alexdev.http.game.housekeeping.HousekeepingBot;
 import org.alexdev.http.game.housekeeping.HousekeepingBotGuide;
 
 import java.sql.Connection;
@@ -151,6 +152,31 @@ public class HousekeepingBotGuideDao {
             sqlConnection = Storage.getStorage().getConnection();
             preparedStatement = Storage.getStorage().prepare("DELETE FROM rooms_botguide_speech WHERE speech_key = ?", sqlConnection);
             preparedStatement.setString(1, speechKey);
+            preparedStatement.execute();
+        } catch (Exception e) {
+            Storage.logError(e);
+        } finally {
+            Storage.closeSilently(preparedStatement);
+            Storage.closeSilently(sqlConnection);
+        }
+    }
+
+    public static void saveGuideBot(HousekeepingBot bot) {
+        Connection sqlConnection = null;
+        PreparedStatement preparedStatement = null;
+
+        try {
+            sqlConnection = Storage.getStorage().getConnection();
+            preparedStatement = Storage.getStorage().prepare("UPDATE rooms_bots SET name = ?, mission = ?, figure = ?, figure_flash = ?, speech = ?, response = ?, unrecognised_response = ?, hand_items = ? WHERE id = ?", sqlConnection);
+            preparedStatement.setString(1, bot.getName());
+            preparedStatement.setString(2, bot.getMission());
+            preparedStatement.setString(3, bot.getFigure());
+            preparedStatement.setString(4, bot.getFigureFlash());
+            preparedStatement.setString(5, bot.getSpeeches());
+            preparedStatement.setString(6, bot.getResponses());
+            preparedStatement.setString(7, bot.getUnrecognisedSpeech());
+            preparedStatement.setString(8, bot.getDrinks());
+            preparedStatement.setInt(9, GameConfiguration.getInstance().getInteger("botguide.id"));
             preparedStatement.execute();
         } catch (Exception e) {
             Storage.logError(e);
