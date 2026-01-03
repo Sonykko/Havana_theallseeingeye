@@ -1,6 +1,7 @@
 package org.alexdev.http.dao.housekeeping;
 
 import org.alexdev.havana.dao.Storage;
+import org.alexdev.havana.util.config.GameConfiguration;
 import org.alexdev.http.game.housekeeping.HousekeepingBot;
 
 import java.sql.Connection;
@@ -10,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HousekeepingBotsDao {
+    private static final int botGuideId = GameConfiguration.getInstance().getInteger("botguide.id");
     public static HousekeepingBot getBotByBotId(int botId) {
         HousekeepingBot botData = null;
 
@@ -47,7 +49,9 @@ public class HousekeepingBotsDao {
 
         try {
             sqlConnection = Storage.getStorage().getConnection();
-            preparedStatement = Storage.getStorage().prepare("SELECT * FROM rooms_bots", sqlConnection);
+            preparedStatement = Storage.getStorage().prepare("SELECT * FROM rooms_bots WHERE id != ?", sqlConnection);
+            preparedStatement.setInt(1, botGuideId);
+
             resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
@@ -74,9 +78,10 @@ public class HousekeepingBotsDao {
 
         try {
             sqlConnection = Storage.getStorage().getConnection();
-            preparedStatement = Storage.getStorage().prepare("SELECT * FROM rooms_bots WHERE name LIKE ? OR id = ? LIMIT 20", sqlConnection);
+            preparedStatement = Storage.getStorage().prepare("SELECT * FROM rooms_bots WHERE (name LIKE ? OR id = ?) AND id != ? LIMIT 20", sqlConnection);
             preparedStatement.setString(1, query + "%");
             preparedStatement.setString(2, query + "%");
+            preparedStatement.setInt(3, botGuideId);
 
             resultSet = preparedStatement.executeQuery();
 
@@ -101,7 +106,7 @@ public class HousekeepingBotsDao {
 
         try {
             sqlConnection = Storage.getStorage().getConnection();
-            preparedStatement = Storage.getStorage().prepare("UPDATE rooms_bots SET name = ?, mission = ?, figure = ?, figure_flash = ?, speech = ?, response = ?, unrecognised_response = ?, hand_items = ? WHERE id = ?", sqlConnection);
+            preparedStatement = Storage.getStorage().prepare("UPDATE rooms_bots SET name = ?, mission = ?, figure = ?, figure_flash = ?, speech = ?, response = ?, unrecognised_response = ?, hand_items = ? WHERE id = ? AND id != ?", sqlConnection);
             preparedStatement.setString(1, bot.getName());
             preparedStatement.setString(2, bot.getMission());
             preparedStatement.setString(3, bot.getFigure());
@@ -111,6 +116,7 @@ public class HousekeepingBotsDao {
             preparedStatement.setString(7, bot.getUnrecognisedSpeech());
             preparedStatement.setString(8, bot.getDrinks());
             preparedStatement.setInt(9, bot.getId());
+            preparedStatement.setInt(10, botGuideId);
             preparedStatement.execute();
         } catch (Exception e) {
             Storage.logError(e);
