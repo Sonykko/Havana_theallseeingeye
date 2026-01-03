@@ -1,9 +1,6 @@
 package org.alexdev.havana.game.player;
 
-import org.alexdev.havana.dao.mysql.BanDao;
-import org.alexdev.havana.dao.mysql.GroupDao;
-import org.alexdev.havana.dao.mysql.GroupMemberDao;
-import org.alexdev.havana.dao.mysql.PlayerDao;
+import org.alexdev.havana.dao.mysql.*;
 import org.alexdev.havana.game.ban.BanType;
 import org.alexdev.havana.game.club.ClubSubscription;
 import org.alexdev.havana.game.groups.Group;
@@ -560,5 +557,22 @@ public class PlayerDetails {
 
     public String getRankName() {
         return PlayerDao.getRankName(this.getRank().getRankId());
+    }
+
+
+    public int getCFHCount() {
+        return CFHDao.countCFHByUserId(this.getId());
+    }
+
+    public int getCFHAbusiveCount() {
+        return CFHDao.countCFHAbusiveByUserId(this.getId());
+    }
+
+    public int getCFHCautionsCount() {
+        return CFHDao.countCFHCautionsByUserId(this.getId()) + CFHDao.countRemoteCFHCautionsByUserId(this.getName());
+    }
+
+    public int getBanCount() {
+        return BanDao.getTotalBans(this.getId());
     }
 }

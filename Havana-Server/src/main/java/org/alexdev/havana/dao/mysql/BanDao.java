@@ -149,4 +149,30 @@ public class BanDao {
 
         return banList;
     }
+
+    public static int getTotalBans(int playerId) {
+        int count = 0;
+
+        Connection sqlConnection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        try {
+            sqlConnection = Storage.getStorage().getConnection();
+            preparedStatement = Storage.getStorage().prepare("SELECT COUNT(*) AS counted FROM users_bans WHERE ban_type = 'USER_ID' AND banned_value = ?", sqlConnection);
+            preparedStatement.setInt(1, playerId);
+            resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                count = resultSet.getInt("counted");
+            }
+        } catch (Exception e) {
+            Storage.logError(e);
+        } finally {
+            Storage.closeSilently(sqlConnection);
+            Storage.closeSilently(preparedStatement);
+            Storage.closeSilently(resultSet);
+        }
+
+        return count;
+    }
 }

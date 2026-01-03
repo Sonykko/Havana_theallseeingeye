@@ -582,6 +582,14 @@ public class MessageHandler {
     private void registerFlashModTool() {
         registerEvent(459, new FLASH_MODTOOL_ROOMINFO());
         registerEvent(456, new FLASH_MODTOOL_ROOM_CHATLOG());
+        registerEvent(460, new FLASH_MODTOOL_ROOM_ACTION());
+        registerEvent(454, new FLASH_MODTOOL_GET_USER_INFO());
+        registerEvent(455, new FLASH_MODTOOL_GET_PLAYER_CHATLOGS());
+        registerEvent(458, new FLASH_MODTOOL_GET_ROOM_VISITS());
+        registerEvent(461, new FLASH_MODTOOL_USER_ALERT());
+        registerEvent(462, new FLASH_MODTOOL_USER_ALERT());
+        registerEvent(463, new FLASH_MODTOOL_USER_KICK());
+        registerEvent(464, new FLASH_MODTOOL_USER_BAN());
         registerEvent(453, new FLASH_CFH_SUBMIT());
         registerEvent(450, new FLASH_CFH_PICK());
         registerEvent(451, new FLASH_CFH_RELEASE());
