@@ -30,7 +30,7 @@
 							<input type="text" name="hkusername" id="inputUsername" class="form-control">
 							<label for="inputPassword" class="sr-only">Password</label>Password:
 							<input type="password" name="hkpassword" id="inputPassword" class="form-control">
-							<button type="submit">Log in</button>				
+							<input type="submit" value="Log in">					
 						</form>
 					</div>
 				</div>		
