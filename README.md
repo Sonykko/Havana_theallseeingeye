@@ -126,6 +126,7 @@ Developed by Sonykko.
         - Search rank
         - Delete rank
         - Save rank
+    - Hobba activity log
 - Campaign management
     - Ads banners tool
         - Create Ads banners
