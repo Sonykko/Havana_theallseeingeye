@@ -232,13 +232,13 @@ Developed by Sonykko.
 
 # Screenshots
 
-![image](https://i.imgur.com/CVrMF0x.png)
+![image](https://i.imgur.com/7YTQWmm.png)
 
-![image](https://i.imgur.com/YVU36ac.png)
+![image](https://i.imgur.com/t19wXe5.png)
 
 ![image](https://i.imgur.com/BMNleoU.png)
 
-![image](https://i.imgur.com/12lUtG1.gif)
+![image](https://i.imgur.com/VQ3bKPA.gif)
 
 ### (theallseeingeye with new r39 dual client support)
 
